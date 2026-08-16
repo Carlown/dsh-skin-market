@@ -1,0 +1,40 @@
+id: caoyiwei850.dsh-client-ui-skins
+name:
+  zh: dsh-client-ui-skins
+  en: dsh-client-ui-skins
+author: caoyiwei850
+description: DSH Web 换肤插件：4 套内置皮肤 + 自定义图片皮肤，图片作为全界面背景，配色自动跟随图片主色调。
+repo: https://github.com/caoyiwei850/dsh-client-ui-skins
+package: dsh-client-ui-skins
+rowId: ui-skins
+category: theme
+tags:
+  - wallpaper
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:caoyiwei850/dsh-client-ui-skins#1321f06c4be992b678661c1d9758356c05f0e620
+  version: 0.1.9
+  commit: 1321f06c4be992b678661c1d9758356c05f0e620
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/mint-forest-dsh.jpg
+  - https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/ocean-guardian-dsh.jpg
+  - https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/crimson-moon-dsh.jpg
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 9
+starsSnapshot: 4
+releaseUpdatedAt: 2026-08-16T12:32:24.075Z
+metadataUpdatedAt: 2026-08-16T13:25:32.174Z
+starsUpdatedAt: 2026-08-16T13:25:32.174Z
+updatedAt: 2026-08-16T13:25:32.174Z

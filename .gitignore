@@ -1,0 +1,7 @@
+node_modules/
+*.tgz
+*.tgz
+coverage/
+.preview/
+design-qa-*.png
+design-qa.md

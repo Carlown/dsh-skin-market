@@ -1,0 +1,41 @@
+id: kingao294.dsh-skin
+name:
+  zh: dsh-skin
+  en: dsh-skin
+author: KinGao294
+description: Codex 风格皮肤切换器 + 自定义壁纸层，可调透明度与模糊。
+repo: https://github.com/KinGao294/dsh-skin
+package: dsh-skin
+rowId: skin
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:KinGao294/dsh-skin#65c79b09d4c5f23e72076ff6b6b6b26c883f935c
+  version: 0.3.1
+  commit: 65c79b09d4c5f23e72076ff6b6b6b26c883f935c
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/KinGao294/dsh-skin
+review:
+  compatibility: verified
+  preview: repository-card
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 18
+starsSnapshot: 15
+releaseUpdatedAt: 2026-08-16T12:15:32.137Z
+metadataUpdatedAt: 2026-08-16T13:24:09.577Z
+starsUpdatedAt: 2026-08-16T12:15:32.137Z
+updatedAt: 2026-08-16T13:24:09.577Z

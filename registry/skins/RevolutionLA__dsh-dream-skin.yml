@@ -1,0 +1,41 @@
+id: revolutionla.dsh-dream-skin
+name:
+  zh: dsh-dream-skin
+  en: dsh-dream-skin
+author: RevolutionLA
+description: 一键换肤插件：8 套原创主题、背景壁纸（透明度/模糊）、强调色、主题包导入/导出+分享链接、收藏与随机，纯原生 token 系统接入。
+repo: https://github.com/RevolutionLA/dsh-dream-skin
+package: dsh-dream-skin
+rowId: dream-skin
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:RevolutionLA/dsh-dream-skin#4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603
+  version: 0.2.5
+  commit: 4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/RevolutionLA/dsh-dream-skin/4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603/docs/screenshots/preview.png
+  - https://raw.githubusercontent.com/RevolutionLA/dsh-dream-skin/4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603/docs/screenshots/settings.png
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 4
+starsSnapshot: 27
+releaseUpdatedAt: 2026-08-16T12:47:55.813Z
+metadataUpdatedAt: 2026-08-16T13:24:05.771Z
+starsUpdatedAt: 2026-08-16T13:24:05.771Z
+updatedAt: 2026-08-16T13:24:05.771Z

@@ -1,0 +1,37 @@
+id: isilsolme.dsh-anthropic-fonts
+name:
+  zh: dsh-anthropic-fonts
+  en: dsh-anthropic-fonts
+author: Isilsolme
+description: Anthropic Sans/Serif/Mono 字体：界面 Sans、对话 Serif、代码 Mono，中文回退思源字体。
+repo: https://github.com/Isilsolme/dsh-anthropic-fonts
+package: dsh-anthropic-fonts
+rowId: anthropic-fonts
+category: theme
+tags:
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:Isilsolme/dsh-anthropic-fonts#1b74cfdd4c17b155e666c1becd63da35cb44846a
+  version: 0.2.0
+  commit: 1b74cfdd4c17b155e666c1becd63da35cb44846a
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/1b74cfdd4c17b155e666c1becd63da35cb44846a/Isilsolme/dsh-anthropic-fonts
+review:
+  compatibility: unverified
+  preview: repository-card
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 34
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T12:16:47.899Z
+metadataUpdatedAt: 2026-08-16T13:27:17.033Z
+starsUpdatedAt: 2026-08-16T12:16:47.899Z
+updatedAt: 2026-08-16T13:27:17.033Z

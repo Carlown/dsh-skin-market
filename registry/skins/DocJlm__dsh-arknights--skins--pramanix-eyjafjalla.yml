@@ -1,0 +1,41 @@
+id: docjlm.pramanix-eyjafjalla
+name:
+  zh: pramanix-eyjafjalla
+  en: pramanix-eyjafjalla
+author: DocJlm
+description: DSH Web 明日方舟同人皮肤“初雪和小羊”，包含昼夜星海庭园背景与双角色布局。
+repo: https://github.com/DocJlm/dsh-arknights
+subpath: skins/pramanix-eyjafjalla
+package: dsh-arknights
+rowId: ui-skin-arknights
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:DocJlm/dsh-arknights#6419ea4d249945daa4bc05112b32ee868f5d2d6c&path:skins/pramanix-eyjafjalla
+  version: 0.1.0
+  commit: 6419ea4d249945daa4bc05112b32ee868f5d2d6c
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/DocJlm/dsh-arknights/6419ea4d249945daa4bc05112b32ee868f5d2d6c/skins/pramanix-eyjafjalla/preview/cover.webp
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 17
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T12:32:55.976Z
+metadataUpdatedAt: 2026-08-16T13:26:23.483Z
+starsUpdatedAt: 2026-08-16T12:32:55.976Z
+updatedAt: 2026-08-16T13:26:23.483Z

@@ -1,0 +1,3175 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-16T11:56:42.007Z",
+  "source": "GitHub Search API: topic:dsh-plugin, sorted by stargazers_count during discovery",
+  "searchTerms": [
+    "skin",
+    "theme",
+    "wallpaper",
+    "background"
+  ],
+  "discoveredRepositories": 144,
+  "inspectedRepositories": 144,
+  "requested": 20,
+  "returned": 20,
+  "skins": [
+    {
+      "repository": "https://github.com/zhu1090093659/dsh-web-ui",
+      "fullName": "zhu1090093659/dsh-web-ui",
+      "description": "Plugin and skin collection for DeepSeek Harness (DSH) Web UI - task board, git graph, right-side panel, remote mobile UI, pet, live token stats, and skin center.",
+      "stars": 3144,
+      "forks": 183,
+      "updatedAt": "2026-08-16T11:53:45Z",
+      "pushedAt": "2026-08-16T10:31:39Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-web-ui",
+        "version": "0.1.1"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 5,
+      "accepted": true,
+      "rank": 1
+    },
+    {
+      "repository": "https://github.com/Small-tailqwq/dsh-deep-whale",
+      "fullName": "Small-tailqwq/dsh-deep-whale",
+      "description": "DSH Web 鲸鱼娘皮肤系列(深海女仆工坊 maid-atelier)——CC BY-NC-SA 4.0",
+      "stars": 1015,
+      "forks": 33,
+      "updatedAt": "2026-08-16T11:50:36Z",
+      "pushedAt": "2026-08-16T06:34:28Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 9,
+      "accepted": true,
+      "rank": 2
+    },
+    {
+      "repository": "https://github.com/WYH66666666/DSH-Transparent-UI-Plugin",
+      "fullName": "WYH66666666/DSH-Transparent-UI-Plugin",
+      "description": "是一层高自由度的玻璃质感主题，套在 DeepSeek Harness 网页端。顶栏、侧边栏、输入框、统计行、轨迹视图都成了磨砂玻璃片。玻璃模糊度、磨砂度、背景（流体或自定义壁纸，壁纸还能单独调模糊和磨砂）全都能在设置卡片里自由调节。关掉开关就回到原生界面，不改 DSH 任何一行源码。",
+      "stars": 105,
+      "forks": 6,
+      "updatedAt": "2026-08-16T11:54:32Z",
+      "pushedAt": "2026-08-16T08:38:20Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@deepseek-ai/dsh-client-ui-aqua",
+        "version": "1.1.2"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 11,
+      "accepted": true,
+      "rank": 3
+    },
+    {
+      "repository": "https://github.com/kingOfSoySauce/dsh-liang-skin",
+      "fullName": "kingOfSoySauce/dsh-liang-skin",
+      "description": "DeepSeek Harness 滑动变阻器皮肤",
+      "stars": 44,
+      "forks": 3,
+      "updatedAt": "2026-08-16T11:53:27Z",
+      "pushedAt": "2026-08-16T08:32:42Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-client-liang-intensity-skin",
+        "version": "0.1.4"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 4
+    },
+    {
+      "repository": "https://github.com/HeiGeAi/deepseek-harness-skin",
+      "fullName": "HeiGeAi/deepseek-harness-skin",
+      "description": "DeepSeek Harness 换肤系统：21 套内置皮肤 + 一张图生成整套配色的自定义皮肤。数据源驱动，保对比度推导，构建期校验可读性。",
+      "stars": 38,
+      "forks": 2,
+      "updatedAt": "2026-08-16T09:02:01Z",
+      "pushedAt": "2026-08-14T03:09:09Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 9,
+      "accepted": true,
+      "rank": 5
+    },
+    {
+      "repository": "https://github.com/dancingmemory/dskin",
+      "fullName": "dancingmemory/dskin",
+      "description": "DSKIN · DeepSeek Harness（DSH）卡通像素皮肤插件 / Cartoon pixel skin plugin for DSH Web GUI — 原始界面不动，像素宠物会散步、眨眼、跳跃 / living pixel pets that stroll, blink and hop",
+      "stars": 33,
+      "forks": 0,
+      "updatedAt": "2026-08-16T11:44:33Z",
+      "pushedAt": "2026-08-16T04:02:33Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dskin",
+        "version": "1.0.13"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": true,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 20,
+      "accepted": true,
+      "rank": 6
+    },
+    {
+      "repository": "https://github.com/RevolutionLA/dsh-dream-skin",
+      "fullName": "RevolutionLA/dsh-dream-skin",
+      "description": "DeepSeek Harness 换肤 / 壁纸 / 主题包插件 (dsh-plugin) — 8 套 Mirage 主题、每用户强调色、壁纸2.0、主题包导入导出/分享链接、收藏与随机，纯原生 token 系统实现。",
+      "stars": 25,
+      "forks": 2,
+      "updatedAt": "2026-08-16T11:50:57Z",
+      "pushedAt": "2026-08-15T06:24:47Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-dream-skin",
+        "version": "0.2.5"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 7
+    },
+    {
+      "repository": "https://github.com/147228/dsh-xiaoyao-skins",
+      "fullName": "147228/dsh-xiaoyao-skins",
+      "description": "夕小瑶 × DeepSeek Harness Web 皮肤合集、安装器与社区创作工具链",
+      "stars": 23,
+      "forks": 2,
+      "updatedAt": "2026-08-15T15:52:46Z",
+      "pushedAt": "2026-08-14T11:02:03Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@xiaoyao-ai/dsh-xiaoyao-skins",
+        "version": "0.1.3"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 9,
+      "accepted": true,
+      "rank": 8
+    },
+    {
+      "repository": "https://github.com/nevertoday/dsh-theme-plugin",
+      "fullName": "nevertoday/dsh-theme-plugin",
+      "description": "Chinese traditional colors as a DeepSeek Harness theme pack. ",
+      "stars": 16,
+      "forks": 1,
+      "updatedAt": "2026-08-16T11:11:58Z",
+      "pushedAt": "2026-08-15T11:41:14Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-theme-plugin",
+        "version": "0.3.3"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 9
+    },
+    {
+      "repository": "https://github.com/KinGao294/dsh-skin",
+      "fullName": "KinGao294/dsh-skin",
+      "description": "Skin switcher + custom wallpaper for DeepSeek Harness (dsh): curated --dsw-alias-* palettes, translucent wallpaper with opacity/blur controls, persisted per browser (like Codex themes) — 换皮肤 / 自定义背景插件",
+      "stars": 15,
+      "forks": 6,
+      "updatedAt": "2026-08-16T05:55:30Z",
+      "pushedAt": "2026-08-15T19:55:57Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-skin",
+        "version": "0.3.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 10
+    },
+    {
+      "repository": "https://github.com/xiake595/touhou-hakurei",
+      "fullName": "xiake595/touhou-hakurei",
+      "description": "灵梦（Reimu）·博丽神社（东方Project）美化版皮肤：神社昼夜实景背景、灵梦立绘、画框侧边栏与输入框、纸白透明界面 — DeepSeek Harness Web GUI skin",
+      "stars": 12,
+      "forks": 1,
+      "updatedAt": "2026-08-16T07:11:23Z",
+      "pushedAt": "2026-08-15T07:26:00Z",
+      "defaultBranch": "master",
+      "package": {
+        "name": "@dsh-external/dsh-client-ui-skin-hakurei-shrine",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": true,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 16,
+      "accepted": true,
+      "rank": 11
+    },
+    {
+      "repository": "https://github.com/suzike/freestyle-dsh-theme",
+      "fullName": "suzike/freestyle-dsh-theme",
+      "description": "DeepSeek Harness 主题体验插件：OKLCH 主题提案 + 主题设计器（跨重启持久化）",
+      "stars": 11,
+      "forks": 0,
+      "updatedAt": "2026-08-16T02:44:33Z",
+      "pushedAt": "2026-08-14T06:20:54Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@linxin666/freestyle-dsh-theme",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 12
+    },
+    {
+      "repository": "https://github.com/LaplaceYoung/dsh-qq2006",
+      "fullName": "LaplaceYoung/dsh-qq2006",
+      "description": "DSH (DeepSeek Harness) 的 QQ2006 皮肤插件：注册 qq2006 主题、镜像 body[data-ds-skin]、全局皮肤表与完整素材",
+      "stars": 11,
+      "forks": 0,
+      "updatedAt": "2026-08-15T16:13:12Z",
+      "pushedAt": "2026-08-15T07:28:27Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@dsh-external/dsh-qq2006",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 11,
+      "accepted": true,
+      "rank": 13
+    },
+    {
+      "repository": "https://github.com/Small-tailqwq/dsh-deepcel",
+      "fullName": "Small-tailqwq/dsh-deepcel",
+      "description": "一款模仿 excel 的 dsh 皮肤",
+      "stars": 9,
+      "forks": 0,
+      "updatedAt": "2026-08-16T10:19:17Z",
+      "pushedAt": "2026-08-13T13:02:10Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 5,
+      "accepted": true,
+      "rank": 14
+    },
+    {
+      "repository": "https://github.com/xingyingyuzhui/dsh-liquid-glass",
+      "fullName": "xingyingyuzhui/dsh-liquid-glass",
+      "description": "Wallpaper plus optional Liquid Glass overlay for DeepSeek Harness Web UI",
+      "stars": 7,
+      "forks": 0,
+      "updatedAt": "2026-08-16T06:52:37Z",
+      "pushedAt": "2026-08-15T06:36:12Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-liquid-glass",
+        "version": "0.12.82"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 15
+    },
+    {
+      "repository": "https://github.com/zhijun-dai/Catppuccin-dsh-theme",
+      "fullName": "zhijun-dai/Catppuccin-dsh-theme",
+      "description": "🐱 Soothing pastel theme for DeepSeek Harness",
+      "stars": 7,
+      "forks": 1,
+      "updatedAt": "2026-08-16T11:18:05Z",
+      "pushedAt": "2026-08-16T11:17:41Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-catppuccin",
+        "version": "0.1.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 16
+    },
+    {
+      "repository": "https://github.com/Tkingxiao/dsh-any-background",
+      "fullName": "Tkingxiao/dsh-any-background",
+      "description": "一个自定义主题插件，包括背景图（大小和位置），主界面和设置界面（透明度，色轮全色主题色）插件",
+      "stars": 6,
+      "forks": 0,
+      "updatedAt": "2026-08-16T10:24:00Z",
+      "pushedAt": "2026-08-16T10:23:53Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-any-background",
+        "version": "0.1.6"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 17
+    },
+    {
+      "repository": "https://github.com/starslittle/dsh-blue-whale",
+      "fullName": "starslittle/dsh-blue-whale",
+      "description": "复刻 DeepSeek Chat 蓝鲸配色的皮肤，亮色/深色跟随系统外观。",
+      "stars": 6,
+      "forks": 0,
+      "updatedAt": "2026-08-15T14:24:52Z",
+      "pushedAt": "2026-08-15T05:07:03Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-blue-whale",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 11,
+      "accepted": true,
+      "rank": 18
+    },
+    {
+      "repository": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+      "fullName": "PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+      "description": "Claude-style skin for DeepSeek Harness (dsh) Web GUI — warm-black canvas, Anthropic clay accent, serif UI",
+      "stars": 5,
+      "forks": 1,
+      "updatedAt": "2026-08-15T15:54:56Z",
+      "pushedAt": "2026-08-15T05:11:56Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@pakiknowledge/dsh-client-ui-skin-claude",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": true,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 20,
+      "accepted": true,
+      "rank": 19
+    },
+    {
+      "repository": "https://github.com/Vim0x3c/dsh-skin-appearance",
+      "fullName": "Vim0x3c/dsh-skin-appearance",
+      "description": "DeepSeek Harness 外观定制插件：八套内置主题 + 自定义壁纸（透明度/模糊），Host 设置持久化 | Appearance plugin for dsh web",
+      "stars": 5,
+      "forks": 0,
+      "updatedAt": "2026-08-15T14:27:59Z",
+      "pushedAt": "2026-08-14T22:23:10Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-skin-appearance",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": true,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 15,
+      "accepted": true,
+      "rank": 20
+    }
+  ],
+  "rejectedDuringInspection": [
+    {
+      "repository": "https://github.com/nexu-io/open-design",
+      "fullName": "nexu-io/open-design",
+      "description": "🎨 Best DeepSeek Harness Design Plugin. The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding agent becomes the design engine: prototypes, landing pages, dashboards, slides, images & video — real files, HTML/PDF/PPTX/MP4 export. 🤖 Claude Code / Codex / Cursor / DeepSeek Harness / OpenCode & 20+ CLIs via BYOK.",
+      "stars": 87253,
+      "forks": 10132,
+      "updatedAt": "2026-08-16T11:54:12Z",
+      "pushedAt": "2026-08-16T10:31:25Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "open-design",
+        "version": "0.19.2"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/volcengine/OpenViking",
+      "fullName": "volcengine/OpenViking",
+      "description": "Self-evolving Context Database for AI Agents. Unify Agent Memory, Knowledge RAG and Skills.",
+      "stars": 28583,
+      "forks": 2260,
+      "updatedAt": "2026-08-16T11:54:11Z",
+      "pushedAt": "2026-08-16T11:25:11Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/tt-a1i/archify",
+      "fullName": "tt-a1i/archify",
+      "description": "Agent skill for beautiful, verifiable architecture, workflow, sequence, data-flow, and lifecycle diagrams—self-contained HTML with motion and crisp export.",
+      "stars": 13122,
+      "forks": 965,
+      "updatedAt": "2026-08-16T11:52:46Z",
+      "pushedAt": "2026-08-14T16:30:40Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/freestylefly/awesome-gpt-image-2",
+      "fullName": "freestylefly/awesome-gpt-image-2",
+      "description": "Prompt as Code | GPT-Image2 工业级提示词引擎与模板库，470+ 个案例逆向工程，20+ 套工业级模板，并提炼出Skills，持续更新中",
+      "stars": 10452,
+      "forks": 1245,
+      "updatedAt": "2026-08-16T11:53:16Z",
+      "pushedAt": "2026-07-22T16:57:36Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "awesome-gpt-image-2-site",
+        "version": "1.0.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ZSeven-W/openpencil",
+      "fullName": "ZSeven-W/openpencil",
+      "description": "The world's first open-source AI-native vector design tool and the first to feature concurrent Agent Teams. Design-as-Code. Turn prompts into UI directly on the live canvas. A modern alternative to Pencil.",
+      "stars": 5045,
+      "forks": 462,
+      "updatedAt": "2026-08-16T11:45:13Z",
+      "pushedAt": "2026-08-16T08:55:24Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/awesome-dsh-plugin/awesome-dsh-plugin",
+      "fullName": "awesome-dsh-plugin/awesome-dsh-plugin",
+      "description": "A curated list of plugins for DeepSeek Harness (dsh) · DeepSeek Harness 插件精选列表",
+      "stars": 4013,
+      "forks": 767,
+      "updatedAt": "2026-08-16T11:54:36Z",
+      "pushedAt": "2026-08-16T11:33:49Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "awesome-dsh-plugin",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/edison7009/EchoBird",
+      "fullName": "edison7009/EchoBird",
+      "description": "One-click install + model switch:Claude Code,Codex CLI (OpenAI), Grok Build (xAI), DeepSeek Harness, Kimi Code (Moonshot) ,Qwen Code,Aider,OpenCode,MiMo Code (Xiaomi),ZCode (Z.AI),OpenClaw,Pi,OpenScience,Vibe-Trading,Claude Desktop (3P profile),ChatGPT desktop,OpenCode Desktop,",
+      "stars": 3038,
+      "forks": 341,
+      "updatedAt": "2026-08-16T11:13:06Z",
+      "pushedAt": "2026-08-16T10:39:07Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "echobird",
+        "version": "5.6.5"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/whiteguo233/OpenBiliClaw",
+      "fullName": "whiteguo233/OpenBiliClaw",
+      "description": "本地私有、开源的自进化跨平台 AI 内容发现 Agent：先理解你，再主动从 B站、小红书、抖音、YouTube、X、知乎、Reddit、微博等平台与开放 Web 寻找内容。（支持 deepseek harness 插件） | Local-first open-source cross-platform AI content discovery agent: understands you, then proactively finds content across Bilibili, Xiaohongshu, Douyin, YouTube, X, Zhihu, Reddit, Weibo and the open web.（support deepseek harness plugin）",
+      "stars": 2687,
+      "forks": 126,
+      "updatedAt": "2026-08-16T11:43:51Z",
+      "pushedAt": "2026-08-16T09:35:47Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/liustack/modlens",
+      "fullName": "liustack/modlens",
+      "description": "The first vision plugin for DeepSeek Harness, and the vision bridge for every text-only coding agent. Paste an image, get structured JSON evidence (OCR, layout, semantics). | 全网最强 DeepSeek Harness 外挂视觉插件，为 DeepSeek、GLM 等纯文本模型外挂视觉能力，粘贴图片即得结构化 JSON 证据（OCR、版面、语义）。",
+      "stars": 2193,
+      "forks": 56,
+      "updatedAt": "2026-08-16T11:54:42Z",
+      "pushedAt": "2026-08-16T09:43:36Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@liustack/modlens",
+        "version": "3.17.3"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ccch1mneyyy/dsh-TUI",
+      "fullName": "ccch1mneyyy/dsh-TUI",
+      "description": "DSH 官方公众号收录的 TUI 补位插件：Claude Code 风，鲸鱼顶栏/实时状态/流式思考/双击 Esc 回滚/上下文进度+TPS。npm 一键装。  DSH official WeChat featured TUI plugin — Claude Code style: whale bar, live status, streaming thoughts, double-Esc rollback, context bar + TPS. npm one-click.",
+      "stars": 1438,
+      "forks": 59,
+      "updatedAt": "2026-08-16T11:45:04Z",
+      "pushedAt": "2026-08-16T11:45:21Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@deepseek-harness-tui/dsh-tui",
+        "version": "0.7.2"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/AdamPlatin123/awesome-dsh-plugins",
+      "fullName": "AdamPlatin123/awesome-dsh-plugins",
+      "description": "前部索引仓库（Radar）：自动扫描发现的所有 dsh 插件候选；经测试合格的将移入后序精选目录仓库",
+      "stars": 1025,
+      "forks": 91,
+      "updatedAt": "2026-08-16T11:53:35Z",
+      "pushedAt": "2026-08-16T11:53:02Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/GanyuanRan/Aegis",
+      "fullName": "GanyuanRan/Aegis",
+      "description": "Make AI coding agents architecture-aware: baseline-first, evidence-verified, drift-checked, and safe across long tasks.",
+      "stars": 1023,
+      "forks": 46,
+      "updatedAt": "2026-08-16T11:29:27Z",
+      "pushedAt": "2026-08-16T05:57:38Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "aegis",
+        "version": "2.8.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 3,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/0xsline/awesome-deepseek-harness",
+      "fullName": "0xsline/awesome-deepseek-harness",
+      "description": "DeepSeek Harness (DSH) ecosystem: curated plugins, tools, and infrastructure from dsh-external/hub and the public dsh-plugin topic.",
+      "stars": 557,
+      "forks": 203,
+      "updatedAt": "2026-08-16T11:54:11Z",
+      "pushedAt": "2026-08-16T06:40:55Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/nutshellai-tech/mobius",
+      "fullName": "nutshellai-tech/mobius",
+      "description": "The first self-evolving open-source Agent OS, connecting your team, AI agents, devices, and compute",
+      "stars": 553,
+      "forks": 11,
+      "updatedAt": "2026-08-16T10:32:23Z",
+      "pushedAt": "2026-08-16T10:31:39Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/dsh-market/dsh-market",
+      "fullName": "dsh-market/dsh-market",
+      "description": "The plugin market inside DeepSeek Harness — browse, search, one-click install · DSH 可视化插件市场",
+      "stars": 453,
+      "forks": 38,
+      "updatedAt": "2026-08-16T11:51:09Z",
+      "pushedAt": "2026-08-16T11:02:00Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dshmarket",
+        "version": "1.9.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/superdesigndev/superdesign-skill",
+      "fullName": "superdesigndev/superdesign-skill",
+      "description": "The design skill for Claude Code, Cursor and any coding agent. Stop shipping AI-slop UI: turn it into shippable, tasteful frontend. Install: npx skills add superdesigndev/superdesign-skill. Powered by superdesign.dev",
+      "stars": 417,
+      "forks": 28,
+      "updatedAt": "2026-08-16T05:14:15Z",
+      "pushedAt": "2026-08-15T07:28:42Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "superdesign-dsh",
+        "version": "0.4.3"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 3,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/morluto/rea",
+      "fullName": "morluto/rea",
+      "description": "Reverse engineer anything with agents, from app behavior down to native binaries.",
+      "stars": 332,
+      "forks": 26,
+      "updatedAt": "2026-08-16T11:43:49Z",
+      "pushedAt": "2026-08-14T06:38:37Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "rea-agents",
+        "version": "3.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/PM-Shawn/Abu-Cowork",
+      "fullName": "PM-Shawn/Abu-Cowork",
+      "description": "Open-source alternative to Claude Cowork — a local-first AI agent desktop app · multi-model · self-evolving skills · privacy-first · multi-Harness roadmap · DeepSeek Harness integration in progress",
+      "stars": 329,
+      "forks": 78,
+      "updatedAt": "2026-08-16T11:12:29Z",
+      "pushedAt": "2026-08-16T11:11:52Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "abu",
+        "version": "0.38.1"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ysr666/dsh-vision-router",
+      "fullName": "ysr666/dsh-vision-router",
+      "description": "Eyes for text-only DeepSeek Harness agents: built-in free vision chain (no key) + pixel-level vision tools (Q&A, grounding, crop, pixel diff, colors, OCR, SVG trace, cutout, screenshots). One-command install, no Python, image turns work like ordinary tool-calling turns.",
+      "stars": 310,
+      "forks": 18,
+      "updatedAt": "2026-08-16T11:49:52Z",
+      "pushedAt": "2026-08-16T11:50:18Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-vision-router",
+        "version": "1.4.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/text2future/flowix",
+      "fullName": "text2future/flowix",
+      "description": "Notes for you, Memory for your agents.",
+      "stars": 291,
+      "forks": 38,
+      "updatedAt": "2026-08-16T11:52:20Z",
+      "pushedAt": "2026-08-16T11:51:58Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "flowix",
+        "version": "1.2.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/SepineTam/mcp-for-stata",
+      "fullName": "SepineTam/mcp-for-stata",
+      "description": "A MCP server for Stata to integrate Stata into your agent. ",
+      "stars": 244,
+      "forks": 33,
+      "updatedAt": "2026-08-15T07:49:14Z",
+      "pushedAt": "2026-08-14T07:13:54Z",
+      "defaultBranch": "master",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/hust-open-atom-club/oh-dsh",
+      "fullName": "hust-open-atom-club/oh-dsh",
+      "description": " 一套 DSH runtime，Desktop、Web 与 TUI 三种开发体验。",
+      "stars": 210,
+      "forks": 18,
+      "updatedAt": "2026-08-16T10:11:05Z",
+      "pushedAt": "2026-08-16T08:58:07Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@oh-dsh/desktop",
+        "version": "0.1.5"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/vibeinging/deepseek-harness-desktop-app",
+      "fullName": "vibeinging/deepseek-harness-desktop-app",
+      "description": "DeepSeek Harness Desktop App: a local AI desktop workspace for DSH Sessions, projects, files, web research, plugins, and Office artifacts.",
+      "stars": 209,
+      "forks": 4,
+      "updatedAt": "2026-08-16T11:27:55Z",
+      "pushedAt": "2026-08-15T08:56:28Z",
+      "defaultBranch": "dev",
+      "package": {
+        "name": "dsh-desktop",
+        "version": "0.0.1"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": true
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Lum1104/dsh-browser",
+      "fullName": "Lum1104/dsh-browser",
+      "description": "dsh plugin: Chrome sidebar extension that lets DSH operate your browser directly, no vision capabilities required. 一款 Chrome 侧边栏扩展程序，可让 DSH 直接操控您的浏览器，无需视觉能力。",
+      "stars": 186,
+      "forks": 13,
+      "updatedAt": "2026-08-16T11:53:07Z",
+      "pushedAt": "2026-08-16T11:48:33Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-browser",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/huiliyi37/dsh-tianshu-tui",
+      "fullName": "huiliyi37/dsh-tianshu-tui",
+      "description": "dsh-tianshu-tui — 是官方 Dsh web端的交互式终端极简风格 UI 插件。以自研ansi为渲染核心，极度丝滑流畅，在官方的基础上增加了TDD、证据门、视觉图像模块等工作流。",
+      "stars": 184,
+      "forks": 7,
+      "updatedAt": "2026-08-16T11:27:41Z",
+      "pushedAt": "2026-08-16T09:34:18Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@huiliyi37/dsh-tianshu-tui",
+        "version": "0.1.2-rc.10"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/bruc3van/awesome-dsh-plugin",
+      "fullName": "bruc3van/awesome-dsh-plugin",
+      "description": "用 30 秒为你的 DeepSeek Harness（DSH）找到合适的插件。 这不是又一个仓库清单：GitHub 上所有打着 dsh-plugin 标签的仓库由脚本每天自动抓取，再经人工逐个核实——真插件进目录，蹭热度的进黑名单，每条剔除理由公开可查。并告诉你每个插件适合谁、从哪里开始。",
+      "stars": 168,
+      "forks": 38,
+      "updatedAt": "2026-08-16T11:49:08Z",
+      "pushedAt": "2026-08-16T09:04:58Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/tinqiao-oss/engramory",
+      "fullName": "tinqiao-oss/engramory",
+      "description": "A portable memory protocol for AI agents — load it as standing rules; a curation discipline + reference spec + optional cap hook.",
+      "stars": 154,
+      "forks": 11,
+      "updatedAt": "2026-08-16T09:39:42Z",
+      "pushedAt": "2026-08-16T09:31:43Z",
+      "defaultBranch": "master",
+      "package": {
+        "name": "dsh-engramory",
+        "version": "0.2.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 3,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/drewnekota/cetus",
+      "fullName": "drewnekota/cetus",
+      "description": "One macOS app for Claude Code, Codex, and every agent runtime you use — scheduled runs, global hotkey launcher, per-run git worktrees, one review board.",
+      "stars": 115,
+      "forks": 6,
+      "updatedAt": "2026-08-16T09:51:21Z",
+      "pushedAt": "2026-08-14T15:23:16Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "cetus",
+        "version": "0.3.60"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Sikao-Engine/KimiX",
+      "fullName": "Sikao-Engine/KimiX",
+      "description": "The next-gen lightweight coding agent cli",
+      "stars": 105,
+      "forks": 13,
+      "updatedAt": "2026-08-16T10:20:53Z",
+      "pushedAt": "2026-08-16T10:20:30Z",
+      "defaultBranch": "master",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ChisaAlter/Deepseek-Harness-Desktop",
+      "fullName": "ChisaAlter/Deepseek-Harness-Desktop",
+      "description": "DSH桌面端，支持主题和背景图等多种个性化配置。Electron desktop shell for DeepSeek Harness web UI",
+      "stars": 94,
+      "forks": 9,
+      "updatedAt": "2026-08-16T10:13:34Z",
+      "pushedAt": "2026-08-16T01:30:11Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "deepseek-harness-desktop",
+        "version": "0.1.3"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": true
+      },
+      "score": 5,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ZSeven-W/dsh-openpencil",
+      "fullName": "ZSeven-W/dsh-openpencil",
+      "description": "The DeepSeek Harness plugin for OpenPencil — preview, inspect, and edit real .op documents inside a conversation.",
+      "stars": 94,
+      "forks": 3,
+      "updatedAt": "2026-08-16T11:38:58Z",
+      "pushedAt": "2026-08-14T14:36:17Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@zseven-w/dsh-openpencil",
+        "version": "0.1.0-rc.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/pulseaiclub/phi",
+      "fullName": "pulseaiclub/phi",
+      "description": "a coding Agent from pi. ∞ providers, sub-agents, hashline edits, and a permission gate",
+      "stars": 90,
+      "forks": 5,
+      "updatedAt": "2026-08-16T10:58:16Z",
+      "pushedAt": "2026-08-16T10:58:12Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Zhiyuan-Fan/Awesome-DeepSeek-Harness-Plugins",
+      "fullName": "Zhiyuan-Fan/Awesome-DeepSeek-Harness-Plugins",
+      "description": "Curated DeepSeek Harness (DSH) plugins, extensions, tools, skills, clients, runtimes, integrations, and verified references — English and Chinese.",
+      "stars": 87,
+      "forks": 16,
+      "updatedAt": "2026-08-16T11:15:40Z",
+      "pushedAt": "2026-08-15T17:28:39Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ZSeven-W/dsh-noema",
+      "fullName": "ZSeven-W/dsh-noema",
+      "description": "Noema long-term memory plugin for DSH: durable, inspectable agent memory with recall tools and a settings page.",
+      "stars": 77,
+      "forks": 6,
+      "updatedAt": "2026-08-16T10:29:27Z",
+      "pushedAt": "2026-08-15T06:05:30Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@zseven-w/dsh-noema",
+        "version": "0.1.0-rc.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Dominic789654/awesome-deepseek-harness",
+      "fullName": "Dominic789654/awesome-deepseek-harness",
+      "description": "A curated list of plugins, skills, MCP servers, patch/profile layers, orchestrators & UIs for DeepSeek Harness (DSH). Visualization · PPT · Coding · Agents · Loops (auto-research) and more. #dsh",
+      "stars": 76,
+      "forks": 42,
+      "updatedAt": "2026-08-16T11:31:15Z",
+      "pushedAt": "2026-08-16T10:39:28Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/wink-run/tokenbank",
+      "fullName": "wink-run/tokenbank",
+      "description": "Token Bank — the local LLM gateway that sits between your AI agents and every provider.  Know where tokens go · Spend less with smart routing to Ollama, Groq, GitHub Models · Earn by sharing idle quota on a community P2P network.  One-click onboarding for Cursor, Claude Code, Codex CLI, Gemini CLI — no agent changes. Full trace, seamless model swap",
+      "stars": 75,
+      "forks": 11,
+      "updatedAt": "2026-08-16T08:36:43Z",
+      "pushedAt": "2026-08-14T08:24:51Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Co-Engram/Co-Engram",
+      "fullName": "Co-Engram/Co-Engram",
+      "description": "Self-evolving team memory",
+      "stars": 66,
+      "forks": 2,
+      "updatedAt": "2026-08-16T10:03:09Z",
+      "pushedAt": "2026-08-16T10:02:55Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Alex-Yanggg/awesome-DSH-plugin",
+      "fullName": "Alex-Yanggg/awesome-DSH-plugin",
+      "description": "A meticulously curated list of useful plugins, extensions, tools and development resources built for DSH, covering productivity enhancement, functional expansion, debugging utilities and custom development modules.",
+      "stars": 65,
+      "forks": 60,
+      "updatedAt": "2026-08-16T01:53:54Z",
+      "pushedAt": "2026-08-15T03:22:05Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/JingbiaoMei/Tokdash",
+      "fullName": "JingbiaoMei/Tokdash",
+      "description": "Agent Dashboard: Visualization and analytics for Sessions and Quota Usage. Track, analyze, and optimize token usage across providers with heatmaps, cost tracking, token counting and quota resets..",
+      "stars": 55,
+      "forks": 10,
+      "updatedAt": "2026-08-16T08:06:22Z",
+      "pushedAt": "2026-08-15T08:41:26Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/mishibeikejie/zat-dsh-engine",
+      "fullName": "mishibeikejie/zat-dsh-engine",
+      "description": "Visual plugin marketplace for DeepSeek Harness — browse, search and install community plugins",
+      "stars": 54,
+      "forks": 2,
+      "updatedAt": "2026-08-16T11:48:39Z",
+      "pushedAt": "2026-08-16T05:12:14Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "zat-dsh-engine",
+        "version": "0.5.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ningbainb/deepseek-harness-desktop",
+      "fullName": "ningbainb/deepseek-harness-desktop",
+      "description": "Open-source Windows desktop client and GUI for DeepSeek Harness — zero-setup installer with Codex, plugins, skills, SSH, mobile remote access, and 11 skins.",
+      "stars": 54,
+      "forks": 4,
+      "updatedAt": "2026-08-16T10:47:37Z",
+      "pushedAt": "2026-08-16T09:59:40Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-web-ui",
+        "version": "0.1.9"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": true
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/fwerkor/local-shell-mcp",
+      "fullName": "fwerkor/local-shell-mcp",
+      "description": "Enables LLM to use a cli environment. ",
+      "stars": 48,
+      "forks": 9,
+      "updatedAt": "2026-08-16T11:37:29Z",
+      "pushedAt": "2026-08-16T11:41:34Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "local-shell-mcp-dsh",
+        "version": "4.0.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/beancookie/awesome-dsh-plugin",
+      "fullName": "beancookie/awesome-dsh-plugin",
+      "description": "Awesome DeepSeek Harness (DSH) Plugin",
+      "stars": 47,
+      "forks": 31,
+      "updatedAt": "2026-08-16T11:48:04Z",
+      "pushedAt": "2026-08-16T11:42:40Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "awesome-dsh-plugin",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/omdsh-dev/dsh-mnemon",
+      "fullName": "omdsh-dev/dsh-mnemon",
+      "description": "Cross-agent, local-first persistent memory plugin for DeepSeek Harness (DSH), powered by Mnemon. It shares long-term memory across Mnemon-enabled agents and adds runtime memory, searchable project documents, semantic recall, knowledge graph, and a Sidebar UI.",
+      "stars": 45,
+      "forks": 2,
+      "updatedAt": "2026-08-16T11:13:22Z",
+      "pushedAt": "2026-08-16T09:21:54Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-mnemon",
+        "version": "0.1.6"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Devin-AXIS/deepseek-design",
+      "fullName": "Devin-AXIS/deepseek-design",
+      "description": "DeepSeek Harness 可编辑设计系统：AI 生成、可视化编辑、模板市场与 PPT｜Native Design & PPT Studio for DeepSeek Harness.",
+      "stars": 44,
+      "forks": 12,
+      "updatedAt": "2026-08-16T11:26:04Z",
+      "pushedAt": "2026-08-16T05:22:43Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/titanwings/dsh-automation",
+      "fullName": "titanwings/dsh-automation",
+      "description": "DSH 自动化插件：让 Coding 任务按计划在全新 Agent Session 中运行，并由用户或 Agent 创建和管理定时任务。 / Run coding tasks in fresh Agent sessions and manage schedules from DSH Web or an Agent.",
+      "stars": 44,
+      "forks": 5,
+      "updatedAt": "2026-08-16T07:06:21Z",
+      "pushedAt": "2026-08-14T06:43:27Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@dsh-external/dsh-automation",
+        "version": "0.1.5"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/whyihaveyou/dsh-suite",
+      "fullName": "whyihaveyou/dsh-suite",
+      "description": "The living DeepSeek Harness plugin directory — refreshed hourly, compat-tested daily, with an in-app plugin store and scaffolder. DSH 插件活目录：每小时刷新，每日兼容实测，内置插件商店与脚手架。",
+      "stars": 36,
+      "forks": 5,
+      "updatedAt": "2026-08-16T11:48:18Z",
+      "pushedAt": "2026-08-16T11:35:57Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-suite",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/cpj-dev/dsh-plugin-cc",
+      "fullName": "cpj-dev/dsh-plugin-cc",
+      "description": "Bridge Deepseek-harness into Claude Code for review, critique, delegation, and session import.",
+      "stars": 25,
+      "forks": 2,
+      "updatedAt": "2026-08-16T10:05:25Z",
+      "pushedAt": "2026-08-16T10:05:13Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-plugin-cc",
+        "version": "1.0.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/whitelonng/dshcode",
+      "fullName": "whitelonng/dshcode",
+      "description": "Community desktop companion for DeepSeek Harness — one-click Electron app for macOS and Windows",
+      "stars": 24,
+      "forks": 3,
+      "updatedAt": "2026-08-16T11:04:15Z",
+      "pushedAt": "2026-08-16T10:33:16Z",
+      "defaultBranch": "master",
+      "package": {
+        "name": "@deepseek-ai/dsh-root",
+        "version": "0.1.0-rc.5"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/the-beating-light-of-the-nail/dsh-meme-hub",
+      "fullName": "the-beating-light-of-the-nail/dsh-meme-hub",
+      "description": "🐋 The meme side of DeepSeek Harness — 贪玩蓝鲸/QQ2006/whale girls/mini-games · A curated tour of the wildest dsh plugins",
+      "stars": 23,
+      "forks": 1,
+      "updatedAt": "2026-08-16T05:38:52Z",
+      "pushedAt": "2026-08-15T11:18:38Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Francis-Xavier-code/dsh-balance-plugin",
+      "fullName": "Francis-Xavier-code/dsh-balance-plugin",
+      "description": "deepSeek 余额监控与用量统计（DSH 动态 Cordis 插件）：余额监控 · 官方充值入口 · 用量统计 · 三方插件管理",
+      "stars": 21,
+      "forks": 2,
+      "updatedAt": "2026-08-16T03:38:25Z",
+      "pushedAt": "2026-08-15T03:07:54Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-balance-plugin",
+        "version": "1.0.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Aik358/dsh-auto-memory",
+      "fullName": "Aik358/dsh-auto-memory",
+      "description": "DSH 自动记忆插件:三层记忆(用户级/项目笔记/每日日志)自动注入与检索、每日反思、可视化面板与设置页,支持继承其他 AI 工具的历史记忆。An auto-memory plugin for the DeepSeek Harness Web GUI: three-layer memory (user-level / project notes / daily logs) with automatic injection and retrieval, daily reflections, a visual panel and settings page, and inheritance of memories from other AI tools.",
+      "stars": 20,
+      "forks": 2,
+      "updatedAt": "2026-08-16T11:50:45Z",
+      "pushedAt": "2026-08-16T11:09:22Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@a9i5k4/dsh-auto-memory",
+        "version": "0.1.23"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Anionex/dsh-computer-use",
+      "fullName": "Anionex/dsh-computer-use",
+      "description": "为 DeepSeek Harness 提供电脑控制插件：新鲜 Accessibility 观测、过期状态拒绝、作用域权限与安全输入（目前支持macos）｜Accessibility-first macOS Computer Use bundle for DSH with fresh observations, stale-state rejection, scoped permissions, and safe input.",
+      "stars": 20,
+      "forks": 3,
+      "updatedAt": "2026-08-16T09:50:00Z",
+      "pushedAt": "2026-08-14T12:53:56Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@anionex/dsh-computer-use",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/feibi-mochi/deepseek-harness-wallet",
+      "fullName": "feibi-mochi/deepseek-harness-wallet",
+      "description": "Balance monitoring, per-session spend & token tracking, low-balance alerts, and an official recharge shortcut for DeepSeek Harness. / 余额监控和充值插件",
+      "stars": 19,
+      "forks": 3,
+      "updatedAt": "2026-08-16T09:25:35Z",
+      "pushedAt": "2026-08-16T01:19:33Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "deepseek-harness-wallet",
+        "version": "0.1.3"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/bill9109/dsh-web-ui-notify",
+      "fullName": "bill9109/dsh-web-ui-notify",
+      "description": "为 DSH 增加桌面通知提醒",
+      "stars": 17,
+      "forks": 0,
+      "updatedAt": "2026-08-16T09:10:31Z",
+      "pushedAt": "2026-08-14T07:40:47Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@bill9109/dsh-web-ui-notify",
+        "version": "0.1.3"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/kejixiaoliang/awesome-dsh-plugins",
+      "fullName": "kejixiaoliang/awesome-dsh-plugins",
+      "description": "DeepSeek Harness (DSH) 插件精选目录 — 14 类 280+ 个社区插件，覆盖 MCP / Skill / TUI / 多 Agent / 上下文记忆 / UI 皮肤，点链接直达仓库。Curated directory of dsh plugins for DeepSeek Harness.",
+      "stars": 17,
+      "forks": 9,
+      "updatedAt": "2026-08-16T11:04:41Z",
+      "pushedAt": "2026-08-16T09:15:56Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 5,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/mexiaosqwq/dsh-web-mobile",
+      "fullName": "mexiaosqwq/dsh-web-mobile",
+      "description": "DeepSeek Harness Web UI 移动端适配插件:窄屏下侧边栏变为 overlay 抽屉,会话独占全宽。",
+      "stars": 17,
+      "forks": 1,
+      "updatedAt": "2026-08-16T10:39:16Z",
+      "pushedAt": "2026-08-16T10:39:03Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@dsh-external/dsh-mobile-nav",
+        "version": "0.2.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/unitarylab/quantum-practices",
+      "fullName": "unitarylab/quantum-practices",
+      "description": "Quantum Algorithms Best Practices",
+      "stars": 17,
+      "forks": 3,
+      "updatedAt": "2026-08-15T03:36:29Z",
+      "pushedAt": "2026-08-14T08:30:36Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-unitarylab-quantum-practices",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 4,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "fullName": "CAPTAIN1275/dsh-ui-web",
+      "description": null,
+      "stars": 16,
+      "forks": 2,
+      "updatedAt": "2026-08-16T03:37:18Z",
+      "pushedAt": "2026-08-15T20:09:13Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-web-ui",
+        "version": "0.1.1"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/dingyi222666/dsh-focus-chat",
+      "fullName": "dingyi222666/dsh-focus-chat",
+      "description": "为 dsh 提供新的「聚焦会话」精简会话视图，更轻松易于阅读，只关注最终产出结果。",
+      "stars": 16,
+      "forks": 1,
+      "updatedAt": "2026-08-16T09:26:01Z",
+      "pushedAt": "2026-08-16T09:25:25Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@dingyi222666/dsh-focus-chat",
+        "version": "0.1.5"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Nexus-Aethra/DSHBox",
+      "fullName": "Nexus-Aethra/DSHBox",
+      "description": "Manage DeepSeek Harness locally: run multiple DSH versions in isolated containers, open the UI in an embedded WebView, import plugins/skills with one click, share extension bundles, and let a queued task system handle installs with live logs. Zero-dependency installer.",
+      "stars": 16,
+      "forks": 0,
+      "updatedAt": "2026-08-16T10:48:18Z",
+      "pushedAt": "2026-08-15T05:45:23Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dshbox",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/CheshireJCat/blender",
+      "fullName": "CheshireJCat/blender",
+      "description": "DeepSeek Harness plugin for complete Blender 3D modeling, reconstruction, rendering, validation, and export workflows",
+      "stars": 15,
+      "forks": 0,
+      "updatedAt": "2026-08-16T11:02:30Z",
+      "pushedAt": "2026-08-14T11:52:56Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-blender",
+        "version": "0.2.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 4,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/dsh-tui/dsh-tui",
+      "fullName": "dsh-tui/dsh-tui",
+      "description": "Claude Code-style terminal UI for DeepSeek Harness agents, as an out-of-tree dsh plugin bundle",
+      "stars": 15,
+      "forks": 1,
+      "updatedAt": "2026-08-15T11:01:33Z",
+      "pushedAt": "2026-08-14T02:42:10Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@dsh-tui/dsh-tui",
+        "version": "0.1.2"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Ericwong5021/deepseek-plugin-store",
+      "fullName": "Ericwong5021/deepseek-plugin-store",
+      "description": "DeepSeek Harness 独立社区插件商店：发现、安装并提交经过验证的插件、工具与扩展。 | Independent community plugin directory.",
+      "stars": 15,
+      "forks": 1,
+      "updatedAt": "2026-08-16T01:37:46Z",
+      "pushedAt": "2026-08-15T16:25:26Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "deepseek-plugin-store",
+        "version": "0.1.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/modusensus/dsh-mneme",
+      "fullName": "modusensus/dsh-mneme",
+      "description": "Structured memory engine for DeepSeek Harness. Offline semantic search, entity-attribute-timeline, autoDream self-consolidation, and human-editable Markdown storage.",
+      "stars": 15,
+      "forks": 3,
+      "updatedAt": "2026-08-16T11:52:25Z",
+      "pushedAt": "2026-08-16T11:52:18Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/ZRui-C/dsh-computer-use",
+      "fullName": "ZRui-C/dsh-computer-use",
+      "description": "Text-first browser & background macOS control for DeepSeek Harness (DSH): target the right process and window without taking the user's pointer. 为 DSH 提供文本优先的电脑控制：后台操作 Chromium 与 macOS，不抢前台、不移动鼠标。",
+      "stars": 15,
+      "forks": 0,
+      "updatedAt": "2026-08-16T09:44:51Z",
+      "pushedAt": "2026-08-14T17:10:31Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-computer-use",
+        "version": "0.3.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 4,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Nyasers/dsh-hanako",
+      "fullName": "Nyasers/dsh-hanako",
+      "description": "DSH for Hanako",
+      "stars": 14,
+      "forks": 1,
+      "updatedAt": "2026-08-16T11:31:12Z",
+      "pushedAt": "2026-08-16T11:30:46Z",
+      "defaultBranch": "master",
+      "package": {
+        "name": "dsh-hanako",
+        "version": "0.10.8"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/weijiafu14/pi2dsh",
+      "fullName": "weijiafu14/pi2dsh",
+      "description": "Bridge the Pi and DeepSeek Harness ecosystems: one Pi Host ABI runs unmodified Pi extensions as native DSH plugins. 打通 Pi 与 DSH 生态。",
+      "stars": 14,
+      "forks": 1,
+      "updatedAt": "2026-08-16T11:10:27Z",
+      "pushedAt": "2026-08-16T11:09:50Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "pi2dsh",
+        "version": "0.12.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 4,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/chokwinlee/deepseek-harness-desktop",
+      "fullName": "chokwinlee/deepseek-harness-desktop",
+      "description": "Compact DeepSeek Harness desktop host. macOS downloads under 90 MB with Tauri; Windows uses Electron.",
+      "stars": 13,
+      "forks": 1,
+      "updatedAt": "2026-08-16T10:03:27Z",
+      "pushedAt": "2026-08-16T08:01:32Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "deepseek-harness-desktop",
+        "version": "0.1.6"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": true
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/agi-fans/oh-my-dsh",
+      "fullName": "agi-fans/oh-my-dsh",
+      "description": "omdsh is a plugin-first terminal coding agent built on DeepSeek Harness, with an interaction model inspired by oh-my-pi.",
+      "stars": 12,
+      "forks": 2,
+      "updatedAt": "2026-08-16T07:34:19Z",
+      "pushedAt": "2026-08-15T18:29:06Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "oh-my-dsh",
+        "version": "0.3.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/cosyncing/cosyncing",
+      "fullName": "cosyncing/cosyncing",
+      "description": "Synchronize and Orchestrate agents from CLI to GUI, across desktop to phone.",
+      "stars": 12,
+      "forks": 4,
+      "updatedAt": "2026-08-16T07:50:56Z",
+      "pushedAt": "2026-08-16T02:27:30Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "cosyncing",
+        "version": "0.3.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Hilbert-beinghappy/seektty",
+      "fullName": "Hilbert-beinghappy/seektty",
+      "description": "Pluggable DeepSeek-colored TUI for DeepSeek Harness",
+      "stars": 12,
+      "forks": 2,
+      "updatedAt": "2026-08-16T11:45:55Z",
+      "pushedAt": "2026-08-16T09:15:46Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "seektty",
+        "version": "1.0.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/imsai-sh/awesome-deepseek-harness-plugins",
+      "fullName": "imsai-sh/awesome-deepseek-harness-plugins",
+      "description": "DeepSeek Harness plugin store, marketplace and hub — 3,100+ dsh plugins with search, rankings, install commands and a free public API. DeepSeek Harness 插件市场 / 插件商店：自动收集与格式校验，免费搜索 API。deepseek1024.com",
+      "stars": 12,
+      "forks": 7,
+      "updatedAt": "2026-08-16T11:35:22Z",
+      "pushedAt": "2026-08-16T08:54:26Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-1024store-monorepo",
+        "version": "0.2.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/shuguang1994/project-blueprint",
+      "fullName": "shuguang1994/project-blueprint",
+      "description": "Make any project AI-agent-ready in one command. Adaptive tech stack detection (7 languages × 14 frameworks × 61 components), auto-generates AGENTS.md, docs skeleton, CI/CD, and testing infrastructure. 一句话让任何项目具备 AI 开发能力。",
+      "stars": 12,
+      "forks": 1,
+      "updatedAt": "2026-08-15T11:10:07Z",
+      "pushedAt": "2026-08-14T03:49:42Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "project-blueprint",
+        "version": "1.7.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 3,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/kanghelyu/dsh-deepseek-flow",
+      "fullName": "kanghelyu/dsh-deepseek-flow",
+      "description": null,
+      "stars": 11,
+      "forks": 1,
+      "updatedAt": "2026-08-16T11:10:49Z",
+      "pushedAt": "2026-08-16T07:35:07Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "deepseek-flow",
+        "version": "0.3.20"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/Zhenyu98/dsh-context-doctor",
+      "fullName": "Zhenyu98/dsh-context-doctor",
+      "description": "DSH 上下文注入审计插件：统计 AGENTS.md 指令链/技能目录/工具 schema 的 token 成本，检测重复与冲突；Web UI 圆环面板 + context_audit 工具。Context Doctor for DeepSeek Harness: audit instruction-chain / skill catalog / tool schemas token cost.",
+      "stars": 11,
+      "forks": 3,
+      "updatedAt": "2026-08-16T08:02:24Z",
+      "pushedAt": "2026-08-13T16:29:47Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-context-doctor",
+        "version": "0.5.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/billLiao/awesome-dsh-plugin",
+      "fullName": "billLiao/awesome-dsh-plugin",
+      "description": "A curated list of plugins for DeepSeek Harness (dsh) — 精选 DeepSeek Harness 插件列表",
+      "stars": 10,
+      "forks": 5,
+      "updatedAt": "2026-08-16T08:04:08Z",
+      "pushedAt": "2026-08-16T08:03:57Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/NoWint/Oh-My-DSH",
+      "fullName": "NoWint/Oh-My-DSH",
+      "description": "🐋 Oh-My-DSH — DeepSeek Harness Plugin Ecosystem【每一小时更新】",
+      "stars": 9,
+      "forks": 1,
+      "updatedAt": "2026-08-16T10:10:53Z",
+      "pushedAt": "2026-08-16T10:10:12Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/zetaluolang-cyber/deepseek-harness-phone-remote",
+      "fullName": "zetaluolang-cyber/deepseek-harness-phone-remote",
+      "description": "DeepSeek Harness phone remote control via Tailscale - persistent file/workspace plugin - tested on OPPO Find X8 Ultra",
+      "stars": 9,
+      "forks": 1,
+      "updatedAt": "2026-08-16T10:32:16Z",
+      "pushedAt": "2026-08-16T10:31:22Z",
+      "defaultBranch": "master",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/chenw2759-wq/dsh-plugin-healthcheck",
+      "fullName": "chenw2759-wq/dsh-plugin-healthcheck",
+      "description": "害怕插件装了就崩溃？用这个插件帮你检测插件是否正常/是否含木马！",
+      "stars": 8,
+      "forks": 0,
+      "updatedAt": "2026-08-16T10:28:07Z",
+      "pushedAt": "2026-08-15T12:15:59Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-plugin-healthcheck",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/gxinxing/deepseek-harness-tui",
+      "fullName": "gxinxing/deepseek-harness-tui",
+      "description": "Terminal-native interactive TUI for DeepSeek Harness (dsh) — built with Ink, React for terminals",
+      "stars": 7,
+      "forks": 0,
+      "updatedAt": "2026-08-14T20:07:57Z",
+      "pushedAt": "2026-08-13T21:00:54Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "deepseek-harness-tui",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 6,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/6Mikao9/dsh-wsl-workspace",
+      "fullName": "6Mikao9/dsh-wsl-workspace",
+      "description": "WSL workspace support for DeepSeek Harness——无缝的 WSL 工作区使用体验，无需在 WSL 之中再安装一个dsh，安装该插件后在 GUI 里直接添加 WSL 工作区即可。WSL workspace support for DeepSeek Harness — Enjoy a seamless WSL workspace experience without needing to install dsh inside WSL. Once this plugin is installed, you can directly add a WSL workspace right from the GUI.",
+      "stars": 6,
+      "forks": 3,
+      "updatedAt": "2026-08-16T10:47:20Z",
+      "pushedAt": "2026-08-16T07:45:59Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-wsl-workspace",
+        "version": "0.2.3"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/walkinglabs/awesome-deepseek-harness-plugins",
+      "fullName": "walkinglabs/awesome-deepseek-harness-plugins",
+      "description": "A curated, bilingual list of verified plugins, tools, design workflows, and learning resources for DeepSeek Harness (DSH).",
+      "stars": 6,
+      "forks": 10,
+      "updatedAt": "2026-08-16T09:09:42Z",
+      "pushedAt": "2026-08-16T02:05:59Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/vvlife/awesome-deepseek-harness-plugins",
+      "fullName": "vvlife/awesome-deepseek-harness-plugins",
+      "description": "A curated list of plugins, tools, skins, and extensions for DeepSeek Harness (DSH).",
+      "stars": 5,
+      "forks": 13,
+      "updatedAt": "2026-08-16T04:02:38Z",
+      "pushedAt": "2026-08-16T04:02:35Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/wangshunnn/oh-my-dsh",
+      "fullName": "wangshunnn/oh-my-dsh",
+      "description": "🐋 All you need is oh-my-dsh ｜ DeepSeek Harness 社区插件索引与精选（自动更新）",
+      "stars": 5,
+      "forks": 1,
+      "updatedAt": "2026-08-16T08:50:34Z",
+      "pushedAt": "2026-08-16T08:50:22Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "oh-my-dsh",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/KhanZou/Deepseek-Harness-as-Desktop",
+      "fullName": "KhanZou/Deepseek-Harness-as-Desktop",
+      "description": "Turn DeepSeek Harness into a Codex-style desktop app: native WebView2 shell, system tray, auto-start, Windows toasts, and a Desktop settings tab with a one-of-N skin center.",
+      "stars": 4,
+      "forks": 0,
+      "updatedAt": "2026-08-15T08:39:32Z",
+      "pushedAt": "2026-08-15T08:39:19Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": true
+      },
+      "score": 5,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/wsxwj123/dsh-plugins",
+      "fullName": "wsxwj123/dsh-plugins",
+      "description": "Independent plugins for DeepSeek Harness, organized as isolated packages in one monorepo.",
+      "stars": 4,
+      "forks": 1,
+      "updatedAt": "2026-08-16T08:11:56Z",
+      "pushedAt": "2026-08-15T16:03:25Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-plugins",
+        "version": "0.1.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/xiaohai-78/Top",
+      "fullName": "xiaohai-78/Top",
+      "description": "📊 Daily leaderboard for the dsh-external plugin ecosystem — tracks every repo, ranks by stars, archives daily snapshots, and shows the latest ranking on the homepage.",
+      "stars": 4,
+      "forks": 0,
+      "updatedAt": "2026-08-14T13:53:26Z",
+      "pushedAt": "2026-08-13T13:11:22Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/cccakeee/awesome-dsh-plugins",
+      "fullName": "cccakeee/awesome-dsh-plugins",
+      "description": "A curated, evidence-led directory of DeepSeek Harness (DSH) plugins: verified loadable extensions, skills, and permission-aware installation guidance.",
+      "stars": 3,
+      "forks": 3,
+      "updatedAt": "2026-08-15T08:26:37Z",
+      "pushedAt": "2026-08-14T10:00:10Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": null,
+        "version": null
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 2,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/lwmxiaobei/dsh-plugins",
+      "fullName": "lwmxiaobei/dsh-plugins",
+      "description": "DeepSeek Harness 社区插件目录，自动汇总并基础校验 GitHub 插件，支持搜索、筛选、双语详情与最新版本安装命令复制。Community directory for DeepSeek Harness plugins with automated discovery, basic validation, search, filters, bilingual details, and latest version install commands.",
+      "stars": 3,
+      "forks": 0,
+      "updatedAt": "2026-08-16T02:35:32Z",
+      "pushedAt": "2026-08-16T02:35:23Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "dsh-plugins",
+        "version": "1.0.0"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": false,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": false,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 0,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/honghudavy-star/DSH_plugins_4U",
+      "fullName": "honghudavy-star/DSH_plugins_4U",
+      "description": "DSH 自建插件集合：微信桥接器 + GUI 微信入口补丁，一键安装",
+      "stars": 2,
+      "forks": 0,
+      "updatedAt": "2026-08-16T09:27:59Z",
+      "pushedAt": "2026-08-16T09:27:25Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@dsh-plugins/4u",
+        "version": "2.1.1"
+      },
+      "signals": {
+        "dshBundle": true,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": true,
+        "nameMatch": false,
+        "descriptionMatch": false,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": false,
+        "looksLikeDesktopShell": false
+      },
+      "score": 8,
+      "accepted": false
+    },
+    {
+      "repository": "https://github.com/yoli-mi/dsh-client-ui-custom",
+      "fullName": "yoli-mi/dsh-client-ui-custom",
+      "description": "Configurable DSH web-surface plugin: wallpaper & frosted-glass themes, accent colors, custom keyboard shortcuts, app-usage panel, history strip, message Markdown — zero shell edits.",
+      "stars": 2,
+      "forks": 0,
+      "updatedAt": "2026-08-16T01:52:40Z",
+      "pushedAt": "2026-08-16T01:32:13Z",
+      "defaultBranch": "main",
+      "package": {
+        "name": "@deepseek-ai/dsh-client-ui-custom",
+        "version": "0.1.0-rc.5"
+      },
+      "signals": {
+        "dshBundle": false,
+        "dshClient": true,
+        "skinManifest": false,
+        "patch": false,
+        "nameMatch": false,
+        "descriptionMatch": true,
+        "readmeMatch": true,
+        "looksLikeTool": false,
+        "looksLikeCatalog": true,
+        "looksLikeDesktopShell": false
+      },
+      "score": 7,
+      "accepted": false
+    }
+  ]
+}

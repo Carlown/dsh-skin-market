@@ -1,0 +1,46 @@
+id: tkingxiao.dsh-any-background
+name:
+  zh: dsh-any-background
+  en: dsh-any-background
+author: Tkingxiao
+description: 自定义外观插件：换背景图（可调大小和位置）、用色轮自定义主题色，主界面和设置界面的透明度都能单独调。
+repo: https://github.com/Tkingxiao/dsh-any-background
+package: dsh-any-background
+rowId: dsh-any-background
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:Tkingxiao/dsh-any-background#13acd6f4866dc3ce60a918b588ba38c4d4edd3ce
+  version: 0.1.6
+  commit: 13acd6f4866dc3ce60a918b588ba38c4d4edd3ce
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image.png
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-2.png
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-3.png
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-4.png
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-6.png
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-9.png
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 7
+starsSnapshot: 6
+releaseUpdatedAt: 2026-08-16T12:31:59.883Z
+metadataUpdatedAt: 2026-08-16T13:24:55.417Z
+starsUpdatedAt: 2026-08-16T12:31:59.883Z
+updatedAt: 2026-08-16T13:24:55.417Z

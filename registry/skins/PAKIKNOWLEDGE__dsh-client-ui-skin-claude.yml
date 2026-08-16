@@ -1,0 +1,39 @@
+id: pakiknowledge.dsh-client-ui-skin-claude
+name:
+  zh: dsh-client-ui-skin-claude
+  en: dsh-client-ui-skin-claude
+author: PAKIKNOWLEDGE
+description: Claude 风格皮肤：暖黑画布、陶橙点缀、衬线 UI，跟随原生亮/暗主题。
+repo: https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude
+package: "@pakiknowledge/dsh-client-ui-skin-claude"
+rowId: ui-skin-claude
+category: theme
+tags:
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:PAKIKNOWLEDGE/dsh-client-ui-skin-claude#78690f8449b61c0ea00e827c7427934810b9c554
+  version: 0.1.0
+  commit: 78690f8449b61c0ea00e827c7427934810b9c554
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude/78690f8449b61c0ea00e827c7427934810b9c554/docs/dark.png
+  - https://raw.githubusercontent.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude/78690f8449b61c0ea00e827c7427934810b9c554/docs/light.png
+review:
+  compatibility: unverified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 23
+starsSnapshot: 5
+releaseUpdatedAt: 2026-08-16T12:15:53.427Z
+metadataUpdatedAt: 2026-08-16T12:15:53.427Z
+starsUpdatedAt: 2026-08-16T12:15:53.427Z
+updatedAt: 2026-08-16T12:15:53.427Z

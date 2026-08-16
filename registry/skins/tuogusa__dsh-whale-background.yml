@@ -1,0 +1,40 @@
+id: tuogusa.dsh-whale-background
+name:
+  zh: dsh-whale-background
+  en: dsh-whale-background
+author: tuogusa
+description: Web UI 鲸鱼娘壁纸背景，应用表面半透明磨砂。
+repo: https://github.com/tuogusa/dsh-whale-background
+package: dsh-whale-background
+rowId: whale-background
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:tuogusa/dsh-whale-background#544491c0723158b63dedf4a462af8a8bd2282098
+  version: 0.2.0
+  commit: 544491c0723158b63dedf4a462af8a8bd2282098
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/544491c0723158b63dedf4a462af8a8bd2282098/tuogusa/dsh-whale-background
+review:
+  compatibility: unverified
+  preview: repository-card
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 32
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T12:16:34.856Z
+metadataUpdatedAt: 2026-08-16T13:27:06.129Z
+starsUpdatedAt: 2026-08-16T12:16:34.856Z
+updatedAt: 2026-08-16T13:27:06.129Z

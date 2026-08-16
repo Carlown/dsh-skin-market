@@ -1,0 +1,36 @@
+id: kinmat-a.dsh-theme-switch
+name:
+  zh: dsh-theme-switch
+  en: dsh-theme-switch
+author: kinmat-A
+description: DSH 主题切换：自动检测已安装的皮肤/主题，在设置页一键互斥切换，全部停用时回退官方默认外观，切换即时生效并跨重启保留。
+repo: https://github.com/kinmat-A/dsh-theme-switch
+package: "@dsh-external/dsh-theme-switch"
+rowId: ui-theme-switch
+category: theme
+tags:
+  - token-theme
+modes:
+  - dark
+install:
+  target: github:kinmat-A/dsh-theme-switch#320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67
+  version: 0.0.1
+  commit: 320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67
+compatibility:
+  dsh: ">=0.0.1-rc <2"
+  platform:
+    - web
+screenshots:
+  - https://cdn.jsdelivr.net/gh/kinmat-A/dsh-theme-switch@main/docs/screenshot-zh.png
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: BSD-3-Clause
+  commercialUse: true
+featuredRank: 13
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T12:33:06.282Z
+metadataUpdatedAt: 2026-08-16T13:26:38.346Z
+starsUpdatedAt: 2026-08-16T12:33:06.282Z
+updatedAt: 2026-08-16T13:26:38.346Z

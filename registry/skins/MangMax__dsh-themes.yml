@@ -1,0 +1,39 @@
+id: mangmax.dsh-themes
+name:
+  zh: dsh-themes
+  en: dsh-themes
+author: MangMax
+description: DSH Web UI 外观与主题插件：内置调色板、明 / 暗 / 跟随系统外观模式、Open VSX 主题搜索导入与 VS Code 主题导入，主题库持久化。
+repo: https://github.com/MangMax/dsh-themes
+package: dsh-themes
+rowId: dsh-themes
+category: theme
+tags:
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:MangMax/dsh-themes#9194cd266a113837f8a31a972405c1b647f5ce8c
+  version: 0.1.7
+  commit: 9194cd266a113837f8a31a972405c1b647f5ce8c
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/MangMax/dsh-themes/9194cd266a113837f8a31a972405c1b647f5ce8c/assets/screenshot.png
+review:
+  compatibility: unverified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 30
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T12:16:26.193Z
+metadataUpdatedAt: 2026-08-16T13:26:44.625Z
+starsUpdatedAt: 2026-08-16T12:16:26.193Z
+updatedAt: 2026-08-16T13:26:44.625Z

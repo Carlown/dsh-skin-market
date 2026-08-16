@@ -1,0 +1,40 @@
+id: tommy00748.dsh-theme-cyberpunk2077
+name:
+  zh: dsh-theme-cyberpunk2077
+  en: dsh-theme-cyberpunk2077
+author: Tommy00748
+description: Cyberpunk 2077 / 夜之城主题：NC 黄 × 霓虹青配色、CRT 扫描线、Kiroshi 悬停锁定、战斗状态 HUD、合成打字机与消息音效，以及隐藏彩蛋（relic / johnny）。
+repo: https://github.com/Tommy00748/dsh-theme-cyberpunk2077
+package: dsh-theme-cyberpunk2077
+rowId: ui-theme-cyberpunk
+category: theme
+tags:
+  - retro
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:Tommy00748/dsh-theme-cyberpunk2077#a3681ee431f59c64b8bf37d34ee609ddc7811278
+  version: 0.1.4
+  commit: a3681ee431f59c64b8bf37d34ee609ddc7811278
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/Tommy00748/dsh-theme-cyberpunk2077/a3681ee431f59c64b8bf37d34ee609ddc7811278/assets/screenshot.png
+  - https://raw.githubusercontent.com/Tommy00748/dsh-theme-cyberpunk2077/a3681ee431f59c64b8bf37d34ee609ddc7811278/assets/relic-easter-egg.png
+review:
+  compatibility: unverified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 19
+starsSnapshot: 8
+releaseUpdatedAt: 2026-08-16T12:15:36.557Z
+metadataUpdatedAt: 2026-08-16T12:15:36.557Z
+starsUpdatedAt: 2026-08-16T12:15:36.557Z
+updatedAt: 2026-08-16T12:15:36.557Z

@@ -1,0 +1,40 @@
+id: wsxwj123.theme-gallery
+name:
+  zh: theme-gallery
+  en: theme-gallery
+author: wsxwj123
+description: 15 个精选主题家族 + CSS-only 自定义主题，支持导入、试穿、应用、删除和恢复默认，跟随 DSH 原生浅色/深色/跟随系统模式。
+repo: https://github.com/wsxwj123/dsh-plugins
+subpath: packages/theme-gallery
+package: dsh-theme-gallery
+rowId: theme-gallery
+category: theme
+tags:
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:wsxwj123/dsh-plugins#ae7b7d50efdc0151477735ccadf4d59807abfec3&path:packages/theme-gallery
+  version: 0.6.0
+  commit: ae7b7d50efdc0151477735ccadf4d59807abfec3
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/wsxwj123/dsh-plugins/ae7b7d50efdc0151477735ccadf4d59807abfec3/packages/theme-gallery/../../assets/screenshots/theme-gallery-real.png
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 8
+starsSnapshot: 4
+releaseUpdatedAt: 2026-08-16T12:32:14.655Z
+metadataUpdatedAt: 2026-08-16T13:25:20.151Z
+starsUpdatedAt: 2026-08-16T12:32:14.655Z
+updatedAt: 2026-08-16T13:25:20.151Z

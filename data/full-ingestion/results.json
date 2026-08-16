@@ -1,0 +1,5335 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-16T13:28:16.198Z",
+  "source": "https://awesome-dsh-plugin.com/plugins.json",
+  "sourceUpdated": "2026-08-16",
+  "selected": 40,
+  "totalRegistry": 36,
+  "unchanged": 0,
+  "updated": 35,
+  "promoted": 1,
+  "blocked": 4,
+  "starsVerified": 39,
+  "promotions": [
+    {
+      "id": "tqsy114514.dsh-ui-appearance",
+      "file": "TQSY114514__dsh-ui-appearance.yml",
+      "repository": "https://github.com/TQSY114514/dsh-ui-appearance",
+      "stars": 5
+    }
+  ],
+  "updates": [
+    {
+      "id": "small-tailqwq.maid-atelier",
+      "file": "Small-tailqwq__dsh-deep-whale--maid-atelier.yml",
+      "repository": "https://github.com/Small-tailqwq/dsh-deep-whale/tree/main/maid-atelier",
+      "version": "0.0.1",
+      "commit": "873f5c6d7f52aa4e4283a5ffd5598229595184da",
+      "stars": 1031
+    },
+    {
+      "id": "king-of-soy-sauce.liang-intensity",
+      "file": "kingOfSoySauce__dsh-liang-skin.yml",
+      "repository": "https://github.com/kingOfSoySauce/dsh-liang-skin",
+      "version": "0.1.4",
+      "commit": "75692c83c3c8219736a607c1089dffafda310e7a",
+      "stars": 53
+    },
+    {
+      "id": "revolutionla.dsh-dream-skin",
+      "file": "RevolutionLA__dsh-dream-skin.yml",
+      "repository": "https://github.com/RevolutionLA/dsh-dream-skin",
+      "version": "0.2.5",
+      "commit": "4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603",
+      "stars": 27
+    },
+    {
+      "id": "kingao294.dsh-skin",
+      "file": "KinGao294__dsh-skin.yml",
+      "repository": "https://github.com/KinGao294/dsh-skin",
+      "version": "0.3.1",
+      "commit": "65c79b09d4c5f23e72076ff6b6b6b26c883f935c",
+      "stars": 15
+    },
+    {
+      "id": "tommy00748.dsh-theme-cyberpunk2077",
+      "file": "Tommy00748__dsh-theme-cyberpunk2077.yml",
+      "repository": "https://github.com/Tommy00748/dsh-theme-cyberpunk2077",
+      "version": "0.1.4",
+      "commit": "a3681ee431f59c64b8bf37d34ee609ddc7811278",
+      "stars": 8
+    },
+    {
+      "id": "nonamelego.dsh-catppuccin",
+      "file": "NoNameLeGo__dsh-catppuccin.yml",
+      "repository": "https://github.com/NoNameLeGo/dsh-catppuccin",
+      "version": "0.2.1",
+      "commit": "cbc79977e36c15b8a529ae5657676b58e6c4a14b",
+      "stars": 7
+    },
+    {
+      "id": "tianyhjg-lab.dsh-font",
+      "file": "tianyhjg-lab__dsh-font.yml",
+      "repository": "https://github.com/tianyhjg-lab/dsh-font",
+      "version": "1.1.0",
+      "commit": "d299f56bde1e10e7fef152848e74cff2eecd7917",
+      "stars": 7
+    },
+    {
+      "id": "xingyingyuzhui.dsh-liquid-glass",
+      "file": "xingyingyuzhui__dsh-liquid-glass.yml",
+      "repository": "https://github.com/xingyingyuzhui/dsh-liquid-glass",
+      "version": "0.12.82",
+      "commit": "573a81d66ddff86216a61ebee4c755ed49ae31de",
+      "stars": 7
+    },
+    {
+      "id": "yunxiiqwq.maid-whale-webui",
+      "file": "yunxiiQwQ__dsh-maid-whale-webUI--maid-whale-webui.yml",
+      "repository": "https://github.com/yunxiiQwQ/dsh-maid-whale-webUI/tree/main/maid-whale-webui",
+      "version": "0.1.0",
+      "commit": "f574f151bdfde7e8569797962eb8ff6aad4b3bf1",
+      "stars": 8
+    },
+    {
+      "id": "zhijun-dai.catppuccin",
+      "file": "zhijun-dai__Catppuccin-dsh-theme.yml",
+      "repository": "https://github.com/zhijun-dai/Catppuccin-dsh-theme",
+      "version": "0.1.1",
+      "commit": "fb76b4ed38cb31c53f919c32f65931e1e4d354af",
+      "stars": 7
+    },
+    {
+      "id": "starslittle.dsh-blue-whale",
+      "file": "starslittle__dsh-blue-whale.yml",
+      "repository": "https://github.com/starslittle/dsh-blue-whale",
+      "version": "0.1.0",
+      "commit": "1abc6eea453011c7449af8e1aef5c7754784738d",
+      "stars": 6
+    },
+    {
+      "id": "tkingxiao.dsh-any-background",
+      "file": "Tkingxiao__dsh-any-background.yml",
+      "repository": "https://github.com/Tkingxiao/dsh-any-background",
+      "version": "0.1.6",
+      "commit": "13acd6f4866dc3ce60a918b588ba38c4d4edd3ce",
+      "stars": 6
+    },
+    {
+      "id": "pakiknowledge.dsh-client-ui-skin-claude",
+      "file": "PAKIKNOWLEDGE__dsh-client-ui-skin-claude.yml",
+      "repository": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+      "version": "0.1.0",
+      "commit": "78690f8449b61c0ea00e827c7427934810b9c554",
+      "stars": 5
+    },
+    {
+      "id": "wsxwj123.skin-gallery",
+      "file": "wsxwj123__dsh-plugins--packages--skin-gallery.yml",
+      "repository": "https://github.com/wsxwj123/dsh-plugins/tree/main/packages/skin-gallery",
+      "version": "0.1.0",
+      "commit": "ae7b7d50efdc0151477735ccadf4d59807abfec3",
+      "stars": 4
+    },
+    {
+      "id": "wsxwj123.theme-gallery",
+      "file": "wsxwj123__dsh-plugins--packages--theme-gallery.yml",
+      "repository": "https://github.com/wsxwj123/dsh-plugins/tree/main/packages/theme-gallery",
+      "version": "0.6.0",
+      "commit": "ae7b7d50efdc0151477735ccadf4d59807abfec3",
+      "stars": 4
+    },
+    {
+      "id": "aks1st.dsh-cyber-particle",
+      "file": "AKS1st__dsh-cyber-particle.yml",
+      "repository": "https://github.com/AKS1st/dsh-cyber-particle",
+      "version": "0.2.2",
+      "commit": "fbe8186bb54be3b2485ea3cb5184fe1513cd2828",
+      "stars": 4
+    },
+    {
+      "id": "caoyiwei850.dsh-client-ui-skins",
+      "file": "caoyiwei850__dsh-client-ui-skins.yml",
+      "repository": "https://github.com/caoyiwei850/dsh-client-ui-skins",
+      "version": "0.1.9",
+      "commit": "1321f06c4be992b678661c1d9758356c05f0e620",
+      "stars": 4
+    },
+    {
+      "id": "zhxqc.dsh-oh-my-theme",
+      "file": "zhxqc__dsh-oh-my-theme.yml",
+      "repository": "https://github.com/zhxqc/dsh-oh-my-theme",
+      "version": "0.6.0",
+      "commit": "5052f83f4ccc21da11f37b27824f2c95052fb25b",
+      "stars": 3
+    },
+    {
+      "id": "beizi6.dsh-theme-plugin",
+      "file": "BeiZi6__dsh-theme-plugin.yml",
+      "repository": "https://github.com/BeiZi6/dsh-theme-plugin",
+      "version": "0.1.0",
+      "commit": "b3e7e143532c4b6df71da753d2336bb018949d2a",
+      "stars": 2
+    },
+    {
+      "id": "chinarxq.dsh-wallpaper",
+      "file": "chinaRXQ__dsh-wallpaper.yml",
+      "repository": "https://github.com/chinaRXQ/dsh-wallpaper",
+      "version": "0.2.0",
+      "commit": "ac35d036582b1e2b16f1138c01d5417ce6dc93ea",
+      "stars": 2
+    },
+    {
+      "id": "lhy723.dsh-neu-theme",
+      "file": "Lhy723__dsh-neu-theme.yml",
+      "repository": "https://github.com/Lhy723/dsh-neu-theme",
+      "version": "0.1.0",
+      "commit": "c6ecbe421298b0e89791655b153cfb3287a5c522",
+      "stars": 2
+    },
+    {
+      "id": "samizuhm.dsh-client-ui-theme-xp",
+      "file": "SamizuHM__dsh-client-ui-theme-xp.yml",
+      "repository": "https://github.com/SamizuHM/dsh-client-ui-theme-xp",
+      "version": "0.1.1",
+      "commit": "3cc412f4e877c127dea2e5b6e3413e5ddc95ce97",
+      "stars": 2
+    },
+    {
+      "id": "zhijun-dai.solarized-dsh-theme",
+      "file": "zhijun-dai__Solarized-dsh-theme.yml",
+      "repository": "https://github.com/zhijun-dai/Solarized-dsh-theme",
+      "version": "0.1.1",
+      "commit": "6b0614e53a4314c1705967b7e3c437b64dee64f2",
+      "stars": 2
+    },
+    {
+      "id": "aks1st.ikun-theme-skin",
+      "file": "AKS1st__ikun-theme-skin.yml",
+      "repository": "https://github.com/AKS1st/ikun-theme-skin",
+      "version": "1.0.0",
+      "commit": "c0e59e61332a5e3317365848f73240308d9d9345",
+      "stars": 2
+    },
+    {
+      "id": "docjlm.pramanix-eyjafjalla",
+      "file": "DocJlm__dsh-arknights--skins--pramanix-eyjafjalla.yml",
+      "repository": "https://github.com/DocJlm/dsh-arknights/tree/main/skins/pramanix-eyjafjalla",
+      "version": "0.1.0",
+      "commit": "6419ea4d249945daa4bc05112b32ee868f5d2d6c",
+      "stars": 1
+    },
+    {
+      "id": "dsh-plugins.dsh-thought-buddy",
+      "file": "dsh-plugins__dsh-thought-buddy.yml",
+      "repository": "https://github.com/dsh-plugins/dsh-thought-buddy",
+      "version": "0.2.0",
+      "commit": "bb8f1aa5972aab844b0c9793f0793b34f4a486b8",
+      "stars": 1
+    },
+    {
+      "id": "kinmat-a.dsh-theme-switch",
+      "file": "kinmat-A__dsh-theme-switch.yml",
+      "repository": "https://github.com/kinmat-A/dsh-theme-switch",
+      "version": "0.0.1",
+      "commit": "320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67",
+      "stars": 1
+    },
+    {
+      "id": "mangmax.dsh-themes",
+      "file": "MangMax__dsh-themes.yml",
+      "repository": "https://github.com/MangMax/dsh-themes",
+      "version": "0.1.7",
+      "commit": "9194cd266a113837f8a31a972405c1b647f5ce8c",
+      "stars": 1
+    },
+    {
+      "id": "senrylee.dsh-frosted-window",
+      "file": "SenryLee__dsh-frosted-window.yml",
+      "repository": "https://github.com/SenryLee/dsh-frosted-window",
+      "version": "0.1.0",
+      "commit": "ccee61d02837d2e3e3160743c07c8627a40c3438",
+      "stars": 1
+    },
+    {
+      "id": "tuogusa.dsh-whale-background",
+      "file": "tuogusa__dsh-whale-background.yml",
+      "repository": "https://github.com/tuogusa/dsh-whale-background",
+      "version": "0.2.0",
+      "commit": "544491c0723158b63dedf4a462af8a8bd2282098",
+      "stars": 1
+    },
+    {
+      "id": "isilsolme.dsh-anthropic-fonts",
+      "file": "Isilsolme__dsh-anthropic-fonts.yml",
+      "repository": "https://github.com/Isilsolme/dsh-anthropic-fonts",
+      "version": "0.2.0",
+      "commit": "1b74cfdd4c17b155e666c1becd63da35cb44846a",
+      "stars": 0
+    },
+    {
+      "id": "leemancheung.dsh-qq2007-skin",
+      "file": "LeemanCheung__dsh-qq2007-skin.yml",
+      "repository": "https://github.com/LeemanCheung/dsh-qq2007-skin",
+      "version": "0.3.0",
+      "commit": "e7c61af021dab1d387566a07d3528dc563e4f070",
+      "stars": 1
+    },
+    {
+      "id": "sim-xia.dsh-vscode-theme",
+      "file": "Sim-xia__dsh-vscode-theme.yml",
+      "repository": "https://github.com/Sim-xia/dsh-vscode-theme",
+      "version": "0.1.0",
+      "commit": "1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8",
+      "stars": 0
+    },
+    {
+      "id": "yushi-xxh.dsh-homepage-skin",
+      "file": "yushi-xxh__dsh-homepage-skin.yml",
+      "repository": "https://github.com/yushi-xxh/dsh-homepage-skin",
+      "version": "0.1.12",
+      "commit": "44933213da11f82caefd609ad1bdfe84ac95b3e0",
+      "stars": 0
+    },
+    {
+      "id": "zhijun-dai.dsh-fonts",
+      "file": "zhijun-dai__dsh-Fonts.yml",
+      "repository": "https://github.com/zhijun-dai/dsh-Fonts",
+      "version": "0.1.0",
+      "commit": "46014ec5663435bdd39acee2e77c3979810b1967",
+      "stars": 0
+    }
+  ],
+  "results": [
+    {
+      "plugin": {
+        "name": "dsh-deep-whale#maid-atelier",
+        "owner": "Small-tailqwq",
+        "url": "https://github.com/Small-tailqwq/dsh-deep-whale/tree/main/maid-atelier",
+        "page": "https://awesome-dsh-plugin.com/p/Small-tailqwq/dsh-deep-whale--maid-atelier/",
+        "category": "theme",
+        "description": {
+          "en": "Whale-girl skin series for the DSH Web UI (maid-atelier).",
+          "zh": "DSH Web 鲸鱼娘皮肤系列（深海女仆工坊 maid-atelier）。"
+        },
+        "npm": null,
+        "stars": 1031,
+        "install": "dsh plugin --profile web add github:Small-tailqwq/dsh-deep-whale#path:/maid-atelier",
+        "added": "2026-08-16"
+      },
+      "target": {
+        "owner": "Small-tailqwq",
+        "repo": "dsh-deep-whale",
+        "fullName": "Small-tailqwq/dsh-deep-whale",
+        "subpath": "maid-atelier",
+        "repository": "https://github.com/Small-tailqwq/dsh-deep-whale"
+      },
+      "sha": "873f5c6d7f52aa4e4283a5ffd5598229595184da",
+      "prior": {
+        "file": "Small-tailqwq__dsh-deep-whale--maid-atelier.yml",
+        "value": {
+          "id": "small-tailqwq.maid-atelier",
+          "name": {
+            "zh": "深海女仆工坊",
+            "en": "Abyssal Maid Atelier"
+          },
+          "author": "Small-tailqwq",
+          "description": "DSH Web 鲸鱼娘皮肤系列（深海女仆工坊 maid-atelier）。",
+          "repo": "https://github.com/Small-tailqwq/dsh-deep-whale",
+          "subpath": "maid-atelier",
+          "package": "@dsh-external/dsh-client-ui-skin-maid-atelier",
+          "rowId": "ui-skin-maid-atelier",
+          "category": "anime",
+          "tags": [
+            "anime",
+            "maid",
+            "whale",
+            "navy",
+            "ornate",
+            "glass"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:Small-tailqwq/dsh-deep-whale#873f5c6d7f52aa4e4283a5ffd5598229595184da&path:maid-atelier",
+            "version": "0.0.1",
+            "commit": "873f5c6d7f52aa4e4283a5ffd5598229595184da"
+          },
+          "compatibility": {
+            "dsh": "0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/Small-tailqwq/dsh-deep-whale/873f5c6d7f52aa4e4283a5ffd5598229595184da/maid-atelier/preview/light.webp",
+            "https://raw.githubusercontent.com/Small-tailqwq/dsh-deep-whale/873f5c6d7f52aa4e4283a5ffd5598229595184da/maid-atelier/preview/dark.webp"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "CC-BY-NC-SA-4.0",
+            "commercialUse": false,
+            "notice": "仅限非商业使用；详情页必须保留原仓库 NOTICE 署名链。"
+          },
+          "featuredRank": 2,
+          "starsSnapshot": 1023,
+          "updatedAt": "2026-08-16T12:47:30.553Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "small-tailqwq.maid-atelier",
+        "name": {
+          "zh": "深海女仆工坊",
+          "en": "Abyssal Maid Atelier"
+        },
+        "author": "Small-tailqwq",
+        "description": "DSH Web 鲸鱼娘皮肤系列（深海女仆工坊 maid-atelier）。",
+        "repo": "https://github.com/Small-tailqwq/dsh-deep-whale",
+        "subpath": "maid-atelier",
+        "package": "@dsh-external/dsh-client-ui-skin-maid-atelier",
+        "rowId": "ui-skin-maid-atelier",
+        "category": "anime",
+        "tags": [
+          "anime",
+          "maid",
+          "whale",
+          "navy",
+          "ornate",
+          "glass"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:Small-tailqwq/dsh-deep-whale#873f5c6d7f52aa4e4283a5ffd5598229595184da&path:maid-atelier",
+          "version": "0.0.1",
+          "commit": "873f5c6d7f52aa4e4283a5ffd5598229595184da"
+        },
+        "compatibility": {
+          "dsh": "0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/Small-tailqwq/dsh-deep-whale/873f5c6d7f52aa4e4283a5ffd5598229595184da/maid-atelier/preview/light.webp",
+          "https://raw.githubusercontent.com/Small-tailqwq/dsh-deep-whale/873f5c6d7f52aa4e4283a5ffd5598229595184da/maid-atelier/preview/dark.webp"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "CC-BY-NC-SA-4.0",
+          "commercialUse": false,
+          "notice": "仅限非商业使用；详情页必须保留原仓库 NOTICE 署名链。"
+        },
+        "featuredRank": 2,
+        "starsSnapshot": 1031,
+        "releaseUpdatedAt": "2026-08-16T12:47:30.553Z",
+        "metadataUpdatedAt": "2026-08-16T12:47:30.553Z",
+        "starsUpdatedAt": "2026-08-16T13:23:48.048Z",
+        "updatedAt": "2026-08-16T13:23:48.048Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "deep-whale-day-night-theme",
+        "owner": "GGBond2424648901",
+        "url": "https://github.com/GGBond2424648901/deep-whale-day-night-theme",
+        "page": "https://awesome-dsh-plugin.com/p/GGBond2424648901/deep-whale-day-night-theme/",
+        "category": "theme",
+        "description": {
+          "en": "Day/night whale-girl skin: a crystal workshop by day and a moon-tide observatory by night, with paired scenes, chibi companions, ornaments, and lightweight bubble and star ambience.",
+          "zh": "鲸鱼娘昼夜皮肤：白昼水晶工坊与夜晚月潮观测室双场景，成对角色、Q 版侧栏宠物、花边与气泡/星点轻量氛围。"
+        },
+        "npm": null,
+        "stars": 58,
+        "install": "dsh plugin --profile web add github:GGBond2424648901/deep-whale-day-night-theme",
+        "added": "2026-08-16"
+      },
+      "target": {
+        "owner": "GGBond2424648901",
+        "repo": "deep-whale-day-night-theme",
+        "fullName": "GGBond2424648901/deep-whale-day-night-theme",
+        "subpath": null,
+        "repository": "https://github.com/GGBond2424648901/deep-whale-day-night-theme"
+      },
+      "sha": "4833f4f4dd582ead0a23fec59256e652830ca0ac",
+      "changed": true,
+      "starsVerified": true,
+      "status": "blocked",
+      "entry": {
+        "id": "ggbond2424648901.deep-whale-day-night-theme",
+        "name": {
+          "zh": "deep-whale-day-night-theme",
+          "en": "deep-whale-day-night-theme"
+        },
+        "author": "GGBond2424648901",
+        "description": "鲸鱼娘昼夜皮肤：白昼水晶工坊与夜晚月潮观测室双场景，成对角色、Q 版侧栏宠物、花边与气泡/星点轻量氛围。",
+        "repo": "https://github.com/GGBond2424648901/deep-whale-day-night-theme",
+        "package": "@dsh-external/dsh-client-ui-skin-maid-atelier",
+        "rowId": "ui-skin-maid-atelier",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "motion",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:GGBond2424648901/deep-whale-day-night-theme#4833f4f4dd582ead0a23fec59256e652830ca0ac",
+          "version": "0.1.7",
+          "commit": "4833f4f4dd582ead0a23fec59256e652830ca0ac"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.5",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/GGBond2424648901/deep-whale-day-night-theme/4833f4f4dd582ead0a23fec59256e652830ca0ac/screenshots/day.png",
+          "https://raw.githubusercontent.com/GGBond2424648901/deep-whale-day-night-theme/4833f4f4dd582ead0a23fec59256e652830ca0ac/screenshots/night.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "CC-BY-NC-SA-4.0",
+          "commercialUse": false
+        },
+        "featuredRank": 942,
+        "starsSnapshot": 58,
+        "releaseUpdatedAt": "2026-08-16T13:23:55.496Z",
+        "metadataUpdatedAt": "2026-08-16T13:23:55.496Z",
+        "starsUpdatedAt": "2026-08-16T13:23:55.496Z",
+        "updatedAt": "2026-08-16T13:23:55.496Z"
+      },
+      "blockers": [
+        "registry identity conflicts with an existing entry"
+      ]
+    },
+    {
+      "plugin": {
+        "owner": "kingOfSoySauce",
+        "name": "Liang Intensity Skin",
+        "url": "https://github.com/kingOfSoySauce/dsh-liang-skin",
+        "category": "theme",
+        "description": "滑动变祖：an opt-in adaptive reasoning slider skin for DeepSeek Harness",
+        "stars": 53,
+        "screenshots": [
+          "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/preview.png",
+          "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/demo.gif"
+        ],
+        "registryOnly": true
+      },
+      "target": {
+        "owner": "kingOfSoySauce",
+        "repo": "dsh-liang-skin",
+        "fullName": "kingOfSoySauce/dsh-liang-skin",
+        "subpath": null,
+        "repository": "https://github.com/kingOfSoySauce/dsh-liang-skin"
+      },
+      "sha": "75692c83c3c8219736a607c1089dffafda310e7a",
+      "prior": {
+        "file": "kingOfSoySauce__dsh-liang-skin.yml",
+        "value": {
+          "id": "king-of-soy-sauce.liang-intensity",
+          "name": {
+            "zh": "滑动变祖",
+            "en": "Liang Intensity Skin"
+          },
+          "author": "kingOfSoySauce",
+          "description": "滑动变祖：an opt-in adaptive reasoning slider skin for DeepSeek Harness",
+          "repo": "https://github.com/kingOfSoySauce/dsh-liang-skin",
+          "package": "dsh-client-liang-intensity-skin",
+          "rowId": "liang-intensity-skin",
+          "category": "interactive",
+          "tags": [
+            "black-gold",
+            "reasoning-slider",
+            "motion",
+            "composer"
+          ],
+          "modes": [
+            "dark"
+          ],
+          "install": {
+            "target": "github:kingOfSoySauce/dsh-liang-skin#75692c83c3c8219736a607c1089dffafda310e7a",
+            "version": "0.1.4",
+            "commit": "75692c83c3c8219736a607c1089dffafda310e7a"
+          },
+          "compatibility": {
+            "dsh": "0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/preview.png",
+            "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/demo.gif"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "NOASSERTION",
+            "commercialUse": false,
+            "notice": "仓库当前未声明许可证；安装和再分发前请向作者确认授权。"
+          },
+          "featuredRank": 1,
+          "starsSnapshot": 49,
+          "updatedAt": "2026-08-16T12:50:44.804Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "king-of-soy-sauce.liang-intensity",
+        "name": {
+          "zh": "滑动变祖",
+          "en": "Liang Intensity Skin"
+        },
+        "author": "kingOfSoySauce",
+        "description": "滑动变祖：an opt-in adaptive reasoning slider skin for DeepSeek Harness",
+        "repo": "https://github.com/kingOfSoySauce/dsh-liang-skin",
+        "package": "dsh-client-liang-intensity-skin",
+        "rowId": "liang-intensity-skin",
+        "category": "interactive",
+        "tags": [
+          "black-gold",
+          "reasoning-slider",
+          "motion",
+          "composer"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "install": {
+          "target": "github:kingOfSoySauce/dsh-liang-skin#75692c83c3c8219736a607c1089dffafda310e7a",
+          "version": "0.1.4",
+          "commit": "75692c83c3c8219736a607c1089dffafda310e7a"
+        },
+        "compatibility": {
+          "dsh": "0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/preview.png",
+          "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/demo.gif"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "NOASSERTION",
+          "commercialUse": false,
+          "notice": "仓库当前未声明许可证；安装和再分发前请向作者确认授权。"
+        },
+        "featuredRank": 1,
+        "starsSnapshot": 53,
+        "releaseUpdatedAt": "2026-08-16T12:50:44.804Z",
+        "metadataUpdatedAt": "2026-08-16T12:50:44.804Z",
+        "starsUpdatedAt": "2026-08-16T13:24:00.865Z",
+        "updatedAt": "2026-08-16T13:24:00.865Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-dream-skin",
+        "owner": "RevolutionLA",
+        "url": "https://github.com/RevolutionLA/dsh-dream-skin",
+        "page": "https://awesome-dsh-plugin.com/p/RevolutionLA/dsh-dream-skin/",
+        "category": "theme",
+        "description": {
+          "en": "One-command skin plugin: 8 original themes, translucent wallpaper with opacity/blur, per-user accent, and shareable theme-pack import/export, favorites and surprise-me — purely native on DSH's token system.",
+          "zh": "一键换肤插件：8 套原创主题、背景壁纸（透明度/模糊）、强调色、主题包导入/导出+分享链接、收藏与随机，纯原生 token 系统接入。"
+        },
+        "npm": "dsh-dream-skin",
+        "stars": 27,
+        "install": "dsh plugin --profile web add dsh-dream-skin",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "RevolutionLA",
+        "repo": "dsh-dream-skin",
+        "fullName": "RevolutionLA/dsh-dream-skin",
+        "subpath": null,
+        "repository": "https://github.com/RevolutionLA/dsh-dream-skin"
+      },
+      "sha": "4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603",
+      "prior": {
+        "file": "RevolutionLA__dsh-dream-skin.yml",
+        "value": {
+          "id": "revolutionla.dsh-dream-skin",
+          "name": {
+            "zh": "dsh-dream-skin",
+            "en": "dsh-dream-skin"
+          },
+          "author": "RevolutionLA",
+          "description": "一键换肤插件：8 套原创主题、背景壁纸（透明度/模糊）、强调色、主题包导入/导出+分享链接、收藏与随机，纯原生 token 系统接入。",
+          "repo": "https://github.com/RevolutionLA/dsh-dream-skin",
+          "package": "dsh-dream-skin",
+          "rowId": "dream-skin",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:RevolutionLA/dsh-dream-skin#4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603",
+            "version": "0.2.5",
+            "commit": "4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/RevolutionLA/dsh-dream-skin/4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603/docs/screenshots/preview.png",
+            "https://raw.githubusercontent.com/RevolutionLA/dsh-dream-skin/4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603/docs/screenshots/settings.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 4,
+          "starsSnapshot": 26,
+          "updatedAt": "2026-08-16T12:47:55.813Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "revolutionla.dsh-dream-skin",
+        "name": {
+          "zh": "dsh-dream-skin",
+          "en": "dsh-dream-skin"
+        },
+        "author": "RevolutionLA",
+        "description": "一键换肤插件：8 套原创主题、背景壁纸（透明度/模糊）、强调色、主题包导入/导出+分享链接、收藏与随机，纯原生 token 系统接入。",
+        "repo": "https://github.com/RevolutionLA/dsh-dream-skin",
+        "package": "dsh-dream-skin",
+        "rowId": "dream-skin",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:RevolutionLA/dsh-dream-skin#4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603",
+          "version": "0.2.5",
+          "commit": "4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/RevolutionLA/dsh-dream-skin/4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603/docs/screenshots/preview.png",
+          "https://raw.githubusercontent.com/RevolutionLA/dsh-dream-skin/4b23d230dbeaac1f915ccb3c1a80dd3c19e7e603/docs/screenshots/settings.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 4,
+        "starsSnapshot": 27,
+        "releaseUpdatedAt": "2026-08-16T12:47:55.813Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:05.771Z",
+        "starsUpdatedAt": "2026-08-16T13:24:05.771Z",
+        "updatedAt": "2026-08-16T13:24:05.771Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-skin",
+        "owner": "KinGao294",
+        "url": "https://github.com/KinGao294/dsh-skin",
+        "page": "https://awesome-dsh-plugin.com/p/KinGao294/dsh-skin/",
+        "category": "theme",
+        "description": {
+          "en": "Codex-style skin switcher plus a custom wallpaper layer with opacity and blur controls.",
+          "zh": "Codex 风格皮肤切换器 + 自定义壁纸层，可调透明度与模糊。"
+        },
+        "npm": null,
+        "stars": 15,
+        "install": "dsh plugin --profile web add github:KinGao294/dsh-skin",
+        "added": "2026-08-14"
+      },
+      "target": {
+        "owner": "KinGao294",
+        "repo": "dsh-skin",
+        "fullName": "KinGao294/dsh-skin",
+        "subpath": null,
+        "repository": "https://github.com/KinGao294/dsh-skin"
+      },
+      "sha": "65c79b09d4c5f23e72076ff6b6b6b26c883f935c",
+      "prior": {
+        "file": "KinGao294__dsh-skin.yml",
+        "value": {
+          "id": "kingao294.dsh-skin",
+          "name": {
+            "zh": "dsh-skin",
+            "en": "dsh-skin"
+          },
+          "author": "KinGao294",
+          "description": "Codex 风格皮肤切换器 + 自定义壁纸层，可调透明度与模糊。",
+          "repo": "https://github.com/KinGao294/dsh-skin",
+          "package": "dsh-skin",
+          "rowId": "skin",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:KinGao294/dsh-skin#65c79b09d4c5f23e72076ff6b6b6b26c883f935c",
+            "version": "0.3.1",
+            "commit": "65c79b09d4c5f23e72076ff6b6b6b26c883f935c"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/KinGao294/dsh-skin"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 18,
+          "starsSnapshot": 15,
+          "updatedAt": "2026-08-16T12:15:32.137Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "kingao294.dsh-skin",
+        "name": {
+          "zh": "dsh-skin",
+          "en": "dsh-skin"
+        },
+        "author": "KinGao294",
+        "description": "Codex 风格皮肤切换器 + 自定义壁纸层，可调透明度与模糊。",
+        "repo": "https://github.com/KinGao294/dsh-skin",
+        "package": "dsh-skin",
+        "rowId": "skin",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:KinGao294/dsh-skin#65c79b09d4c5f23e72076ff6b6b6b26c883f935c",
+          "version": "0.3.1",
+          "commit": "65c79b09d4c5f23e72076ff6b6b6b26c883f935c"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/KinGao294/dsh-skin"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 18,
+        "starsSnapshot": 15,
+        "releaseUpdatedAt": "2026-08-16T12:15:32.137Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:09.577Z",
+        "starsUpdatedAt": "2026-08-16T12:15:32.137Z",
+        "updatedAt": "2026-08-16T13:24:09.577Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-theme-cyberpunk2077",
+        "owner": "Tommy00748",
+        "url": "https://github.com/Tommy00748/dsh-theme-cyberpunk2077",
+        "page": "https://awesome-dsh-plugin.com/p/Tommy00748/dsh-theme-cyberpunk2077/",
+        "category": "theme",
+        "description": {
+          "en": "Cyberpunk 2077 / Night City theme: NC yellow and neon cyan identity, CRT scanlines, Kiroshi hover lock-on, combat-state HUD, synthesized typewriter and message SFX, and hidden easter eggs (relic / johnny).",
+          "zh": "Cyberpunk 2077 / 夜之城主题：NC 黄 × 霓虹青配色、CRT 扫描线、Kiroshi 悬停锁定、战斗状态 HUD、合成打字机与消息音效，以及隐藏彩蛋（relic / johnny）。"
+        },
+        "npm": null,
+        "stars": 8,
+        "install": "dsh plugin --profile web add github:Tommy00748/dsh-theme-cyberpunk2077",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "Tommy00748",
+        "repo": "dsh-theme-cyberpunk2077",
+        "fullName": "Tommy00748/dsh-theme-cyberpunk2077",
+        "subpath": null,
+        "repository": "https://github.com/Tommy00748/dsh-theme-cyberpunk2077"
+      },
+      "sha": "a3681ee431f59c64b8bf37d34ee609ddc7811278",
+      "prior": {
+        "file": "Tommy00748__dsh-theme-cyberpunk2077.yml",
+        "value": {
+          "id": "tommy00748.dsh-theme-cyberpunk2077",
+          "name": {
+            "zh": "dsh-theme-cyberpunk2077",
+            "en": "dsh-theme-cyberpunk2077"
+          },
+          "author": "Tommy00748",
+          "description": "Cyberpunk 2077 / 夜之城主题：NC 黄 × 霓虹青配色、CRT 扫描线、Kiroshi 悬停锁定、战斗状态 HUD、合成打字机与消息音效，以及隐藏彩蛋（relic / johnny）。",
+          "repo": "https://github.com/Tommy00748/dsh-theme-cyberpunk2077",
+          "package": "dsh-theme-cyberpunk2077",
+          "rowId": "ui-theme-cyberpunk",
+          "category": "theme",
+          "tags": [
+            "retro",
+            "motion",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:Tommy00748/dsh-theme-cyberpunk2077#a3681ee431f59c64b8bf37d34ee609ddc7811278",
+            "version": "0.1.4",
+            "commit": "a3681ee431f59c64b8bf37d34ee609ddc7811278"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/Tommy00748/dsh-theme-cyberpunk2077/a3681ee431f59c64b8bf37d34ee609ddc7811278/assets/screenshot.png",
+            "https://raw.githubusercontent.com/Tommy00748/dsh-theme-cyberpunk2077/a3681ee431f59c64b8bf37d34ee609ddc7811278/assets/relic-easter-egg.png"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": true
+          },
+          "featuredRank": 19,
+          "starsSnapshot": 8,
+          "updatedAt": "2026-08-16T12:15:36.557Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "tommy00748.dsh-theme-cyberpunk2077",
+        "name": {
+          "zh": "dsh-theme-cyberpunk2077",
+          "en": "dsh-theme-cyberpunk2077"
+        },
+        "author": "Tommy00748",
+        "description": "Cyberpunk 2077 / 夜之城主题：NC 黄 × 霓虹青配色、CRT 扫描线、Kiroshi 悬停锁定、战斗状态 HUD、合成打字机与消息音效，以及隐藏彩蛋（relic / johnny）。",
+        "repo": "https://github.com/Tommy00748/dsh-theme-cyberpunk2077",
+        "package": "dsh-theme-cyberpunk2077",
+        "rowId": "ui-theme-cyberpunk",
+        "category": "theme",
+        "tags": [
+          "retro",
+          "motion",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:Tommy00748/dsh-theme-cyberpunk2077#a3681ee431f59c64b8bf37d34ee609ddc7811278",
+          "version": "0.1.4",
+          "commit": "a3681ee431f59c64b8bf37d34ee609ddc7811278"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/Tommy00748/dsh-theme-cyberpunk2077/a3681ee431f59c64b8bf37d34ee609ddc7811278/assets/screenshot.png",
+          "https://raw.githubusercontent.com/Tommy00748/dsh-theme-cyberpunk2077/a3681ee431f59c64b8bf37d34ee609ddc7811278/assets/relic-easter-egg.png"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 19,
+        "starsSnapshot": 8,
+        "releaseUpdatedAt": "2026-08-16T12:15:36.557Z",
+        "metadataUpdatedAt": "2026-08-16T12:15:36.557Z",
+        "starsUpdatedAt": "2026-08-16T12:15:36.557Z",
+        "updatedAt": "2026-08-16T12:15:36.557Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-catppuccin",
+        "owner": "NoNameLeGo",
+        "url": "https://github.com/NoNameLeGo/dsh-catppuccin",
+        "page": "https://awesome-dsh-plugin.com/p/NoNameLeGo/dsh-catppuccin/",
+        "category": "theme",
+        "description": {
+          "en": "Catppuccin themes for the DSH Web GUI: Latte, Frappé, Macchiato and Mocha registered into the native theme runtime, one-click switching with a persisted choice.",
+          "zh": "DSH Web GUI 的 Catppuccin 主题插件：Latte、Frappé、Macchiato、Mocha 四套主题接入原生主题系统，一键切换并记住选择。"
+        },
+        "npm": "@nonamelego/dsh-catppuccin",
+        "stars": 7,
+        "install": "dsh plugin --profile web add @nonamelego/dsh-catppuccin",
+        "added": "2026-08-15",
+        "screenshots": [
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/main/assets/previews/latte.png",
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/main/assets/previews/frappe.png",
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/main/assets/previews/macchiato.png",
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/main/assets/previews/mocha.png"
+        ]
+      },
+      "target": {
+        "owner": "NoNameLeGo",
+        "repo": "dsh-catppuccin",
+        "fullName": "NoNameLeGo/dsh-catppuccin",
+        "subpath": null,
+        "repository": "https://github.com/NoNameLeGo/dsh-catppuccin"
+      },
+      "sha": "cbc79977e36c15b8a529ae5657676b58e6c4a14b",
+      "prior": {
+        "file": "NoNameLeGo__dsh-catppuccin.yml",
+        "value": {
+          "id": "nonamelego.dsh-catppuccin",
+          "name": {
+            "zh": "dsh-catppuccin",
+            "en": "dsh-catppuccin"
+          },
+          "author": "NoNameLeGo",
+          "description": "DSH Web GUI 的 Catppuccin 主题插件：Latte、Frappé、Macchiato、Mocha 四套主题接入原生主题系统，一键切换并记住选择。",
+          "repo": "https://github.com/NoNameLeGo/dsh-catppuccin",
+          "package": "@nonamelego/dsh-catppuccin",
+          "rowId": "dsh-catppuccin",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "pastel",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:NoNameLeGo/dsh-catppuccin#cbc79977e36c15b8a529ae5657676b58e6c4a14b",
+            "version": "0.2.1",
+            "commit": "cbc79977e36c15b8a529ae5657676b58e6c4a14b"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/latte.png",
+            "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/frappe.png",
+            "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/macchiato.png",
+            "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/mocha.png",
+            "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/logos/exports/1544x1544_circle.png",
+            "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/misc/transparent.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 5,
+          "starsSnapshot": 7,
+          "updatedAt": "2026-08-16T12:31:33.507Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "nonamelego.dsh-catppuccin",
+        "name": {
+          "zh": "dsh-catppuccin",
+          "en": "dsh-catppuccin"
+        },
+        "author": "NoNameLeGo",
+        "description": "DSH Web GUI 的 Catppuccin 主题插件：Latte、Frappé、Macchiato、Mocha 四套主题接入原生主题系统，一键切换并记住选择。",
+        "repo": "https://github.com/NoNameLeGo/dsh-catppuccin",
+        "package": "@nonamelego/dsh-catppuccin",
+        "rowId": "dsh-catppuccin",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "pastel",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:NoNameLeGo/dsh-catppuccin#cbc79977e36c15b8a529ae5657676b58e6c4a14b",
+          "version": "0.2.1",
+          "commit": "cbc79977e36c15b8a529ae5657676b58e6c4a14b"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/latte.png",
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/frappe.png",
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/macchiato.png",
+          "https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/mocha.png",
+          "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/logos/exports/1544x1544_circle.png",
+          "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/misc/transparent.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 5,
+        "starsSnapshot": 7,
+        "releaseUpdatedAt": "2026-08-16T12:31:33.507Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:22.839Z",
+        "starsUpdatedAt": "2026-08-16T12:31:33.507Z",
+        "updatedAt": "2026-08-16T13:24:22.839Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-font",
+        "owner": "tianyhjg-lab",
+        "url": "https://github.com/tianyhjg-lab/dsh-font",
+        "page": "https://awesome-dsh-plugin.com/p/tianyhjg-lab/dsh-font/",
+        "category": "theme",
+        "description": {
+          "en": "Font switcher for the DSH Web GUI: 99 UI fonts and 31 code fonts with CJK-Latin pairing stacks, instant apply and localStorage persistence.",
+          "zh": "DSH Web GUI 字体切换器：99 个界面字体与 31 个代码字体，中西文自动搭配，即选即生效，localStorage 持久化。"
+        },
+        "npm": null,
+        "stars": 7,
+        "install": "dsh plugin --profile web add github:tianyhjg-lab/dsh-font",
+        "added": "2026-08-14"
+      },
+      "target": {
+        "owner": "tianyhjg-lab",
+        "repo": "dsh-font",
+        "fullName": "tianyhjg-lab/dsh-font",
+        "subpath": null,
+        "repository": "https://github.com/tianyhjg-lab/dsh-font"
+      },
+      "sha": "d299f56bde1e10e7fef152848e74cff2eecd7917",
+      "prior": {
+        "file": "tianyhjg-lab__dsh-font.yml",
+        "value": {
+          "id": "tianyhjg-lab.dsh-font",
+          "name": {
+            "zh": "dsh-font",
+            "en": "dsh-font"
+          },
+          "author": "tianyhjg-lab",
+          "description": "DSH Web GUI 字体切换器：99 个界面字体与 31 个代码字体，中西文自动搭配，即选即生效，localStorage 持久化。",
+          "repo": "https://github.com/tianyhjg-lab/dsh-font",
+          "package": "dsh-font",
+          "rowId": "font",
+          "category": "theme",
+          "tags": [
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:tianyhjg-lab/dsh-font#d299f56bde1e10e7fef152848e74cff2eecd7917",
+            "version": "1.1.0",
+            "commit": "d299f56bde1e10e7fef152848e74cff2eecd7917"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/d299f56bde1e10e7fef152848e74cff2eecd7917/tianyhjg-lab/dsh-font"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": true
+          },
+          "featuredRank": 20,
+          "starsSnapshot": 7,
+          "updatedAt": "2026-08-16T12:15:41.349Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "tianyhjg-lab.dsh-font",
+        "name": {
+          "zh": "dsh-font",
+          "en": "dsh-font"
+        },
+        "author": "tianyhjg-lab",
+        "description": "DSH Web GUI 字体切换器：99 个界面字体与 31 个代码字体，中西文自动搭配，即选即生效，localStorage 持久化。",
+        "repo": "https://github.com/tianyhjg-lab/dsh-font",
+        "package": "dsh-font",
+        "rowId": "font",
+        "category": "theme",
+        "tags": [
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:tianyhjg-lab/dsh-font#d299f56bde1e10e7fef152848e74cff2eecd7917",
+          "version": "1.1.0",
+          "commit": "d299f56bde1e10e7fef152848e74cff2eecd7917"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/d299f56bde1e10e7fef152848e74cff2eecd7917/tianyhjg-lab/dsh-font"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 20,
+        "starsSnapshot": 7,
+        "releaseUpdatedAt": "2026-08-16T12:15:41.349Z",
+        "metadataUpdatedAt": "2026-08-16T12:15:41.349Z",
+        "starsUpdatedAt": "2026-08-16T12:15:41.349Z",
+        "updatedAt": "2026-08-16T12:15:41.349Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-liquid-glass",
+        "owner": "xingyingyuzhui",
+        "url": "https://github.com/xingyingyuzhui/dsh-liquid-glass",
+        "page": "https://awesome-dsh-plugin.com/p/xingyingyuzhui/dsh-liquid-glass/",
+        "category": "theme",
+        "description": {
+          "en": "Wallpaper plus optional Liquid Glass islands for the DSH Web UI: Ice/Deepwater presets, import, wallpaper opacity, and per-island blur on official light/dark/system.",
+          "zh": "DSH Web 液态玻璃皮肤：冰原/深水壁纸、可导入、壁纸透明度，以及叠在官方浅色/深色/跟随系统上的分岛模糊。"
+        },
+        "npm": null,
+        "stars": 7,
+        "install": "dsh plugin --profile web add github:xingyingyuzhui/dsh-liquid-glass",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "xingyingyuzhui",
+        "repo": "dsh-liquid-glass",
+        "fullName": "xingyingyuzhui/dsh-liquid-glass",
+        "subpath": null,
+        "repository": "https://github.com/xingyingyuzhui/dsh-liquid-glass"
+      },
+      "sha": "573a81d66ddff86216a61ebee4c755ed49ae31de",
+      "prior": {
+        "file": "xingyingyuzhui__dsh-liquid-glass.yml",
+        "value": {
+          "id": "xingyingyuzhui.dsh-liquid-glass",
+          "name": {
+            "zh": "dsh-liquid-glass",
+            "en": "dsh-liquid-glass"
+          },
+          "author": "xingyingyuzhui",
+          "description": "DSH Web 液态玻璃皮肤：冰原/深水壁纸、可导入、壁纸透明度，以及叠在官方浅色/深色/跟随系统上的分岛模糊。",
+          "repo": "https://github.com/xingyingyuzhui/dsh-liquid-glass",
+          "package": "dsh-liquid-glass",
+          "rowId": "dsh-liquid-glass",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:xingyingyuzhui/dsh-liquid-glass#573a81d66ddff86216a61ebee4c755ed49ae31de",
+            "version": "0.12.82",
+            "commit": "573a81d66ddff86216a61ebee4c755ed49ae31de"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/ice-hero.jpg",
+            "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/deepwater-chat.jpg",
+            "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/settings.jpg",
+            "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/custom-wallpaper.jpg"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 21,
+          "starsSnapshot": 7,
+          "updatedAt": "2026-08-16T12:15:45.060Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "xingyingyuzhui.dsh-liquid-glass",
+        "name": {
+          "zh": "dsh-liquid-glass",
+          "en": "dsh-liquid-glass"
+        },
+        "author": "xingyingyuzhui",
+        "description": "DSH Web 液态玻璃皮肤：冰原/深水壁纸、可导入、壁纸透明度，以及叠在官方浅色/深色/跟随系统上的分岛模糊。",
+        "repo": "https://github.com/xingyingyuzhui/dsh-liquid-glass",
+        "package": "dsh-liquid-glass",
+        "rowId": "dsh-liquid-glass",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:xingyingyuzhui/dsh-liquid-glass#573a81d66ddff86216a61ebee4c755ed49ae31de",
+          "version": "0.12.82",
+          "commit": "573a81d66ddff86216a61ebee4c755ed49ae31de"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/ice-hero.jpg",
+          "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/deepwater-chat.jpg",
+          "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/settings.jpg",
+          "https://raw.githubusercontent.com/xingyingyuzhui/dsh-liquid-glass/573a81d66ddff86216a61ebee4c755ed49ae31de/docs/preview/custom-wallpaper.jpg"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 21,
+        "starsSnapshot": 7,
+        "releaseUpdatedAt": "2026-08-16T12:15:45.060Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:33.952Z",
+        "starsUpdatedAt": "2026-08-16T12:15:45.060Z",
+        "updatedAt": "2026-08-16T13:24:33.952Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-maid-whale-webUI#maid-whale-webui",
+        "owner": "yunxiiQwQ",
+        "url": "https://github.com/yunxiiQwQ/dsh-maid-whale-webUI/tree/main/maid-whale-webui",
+        "page": "https://awesome-dsh-plugin.com/p/yunxiiQwQ/dsh-maid-whale-webUI--maid-whale-webui/",
+        "category": "theme",
+        "description": {
+          "en": "Whale-maid paper theme for the DSH Web UI with light and dark palettes, ocean illustrations, hand-drawn frames, decorative assets, and a persistent pet.",
+          "zh": "DSH Web UI 鲸鱼女仆纸面主题：亮暗配色、海洋插画、手绘边框、装饰素材与常驻桌宠。"
+        },
+        "npm": null,
+        "stars": 8,
+        "install": "dsh plugin --profile web add github:yunxiiQwQ/dsh-maid-whale-webUI#path:/maid-whale-webui",
+        "added": "2026-08-15",
+        "screenshots": [
+          "https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/main/maid-whale-webui/preview/light.webp",
+          "https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/main/maid-whale-webui/preview/dark.webp"
+        ]
+      },
+      "target": {
+        "owner": "yunxiiQwQ",
+        "repo": "dsh-maid-whale-webUI",
+        "fullName": "yunxiiQwQ/dsh-maid-whale-webUI",
+        "subpath": "maid-whale-webui",
+        "repository": "https://github.com/yunxiiQwQ/dsh-maid-whale-webUI"
+      },
+      "sha": "f574f151bdfde7e8569797962eb8ff6aad4b3bf1",
+      "prior": {
+        "file": "yunxiiQwQ__dsh-maid-whale-webUI--maid-whale-webui.yml",
+        "value": {
+          "id": "yunxiiqwq.maid-whale-webui",
+          "name": {
+            "zh": "maid-whale-webui",
+            "en": "maid-whale-webui"
+          },
+          "author": "yunxiiQwQ",
+          "description": "DSH Web UI 鲸鱼女仆纸面主题：亮暗配色、海洋插画、手绘边框、装饰素材与常驻桌宠。",
+          "repo": "https://github.com/yunxiiQwQ/dsh-maid-whale-webUI",
+          "subpath": "maid-whale-webui",
+          "package": "@dsh-external/dsh-client-ui-skin-maid-whale-webui",
+          "rowId": "ui-skin-maid-whale-webui",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "anime",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:yunxiiQwQ/dsh-maid-whale-webUI#f574f151bdfde7e8569797962eb8ff6aad4b3bf1&path:maid-whale-webui",
+            "version": "0.1.0",
+            "commit": "f574f151bdfde7e8569797962eb8ff6aad4b3bf1"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/f574f151bdfde7e8569797962eb8ff6aad4b3bf1/maid-whale-webui/preview/light.webp",
+            "https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/f574f151bdfde7e8569797962eb8ff6aad4b3bf1/maid-whale-webui/preview/dark.webp"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "BSD-3-Clause",
+            "commercialUse": false
+          },
+          "featuredRank": 22,
+          "starsSnapshot": 8,
+          "updatedAt": "2026-08-16T12:48:35.081Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "yunxiiqwq.maid-whale-webui",
+        "name": {
+          "zh": "maid-whale-webui",
+          "en": "maid-whale-webui"
+        },
+        "author": "yunxiiQwQ",
+        "description": "DSH Web UI 鲸鱼女仆纸面主题：亮暗配色、海洋插画、手绘边框、装饰素材与常驻桌宠。",
+        "repo": "https://github.com/yunxiiQwQ/dsh-maid-whale-webUI",
+        "subpath": "maid-whale-webui",
+        "package": "@dsh-external/dsh-client-ui-skin-maid-whale-webui",
+        "rowId": "ui-skin-maid-whale-webui",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "anime",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:yunxiiQwQ/dsh-maid-whale-webUI#f574f151bdfde7e8569797962eb8ff6aad4b3bf1&path:maid-whale-webui",
+          "version": "0.1.0",
+          "commit": "f574f151bdfde7e8569797962eb8ff6aad4b3bf1"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/f574f151bdfde7e8569797962eb8ff6aad4b3bf1/maid-whale-webui/preview/light.webp",
+          "https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/f574f151bdfde7e8569797962eb8ff6aad4b3bf1/maid-whale-webui/preview/dark.webp"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "BSD-3-Clause",
+          "commercialUse": true
+        },
+        "featuredRank": 22,
+        "starsSnapshot": 8,
+        "releaseUpdatedAt": "2026-08-16T12:48:35.081Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:37.803Z",
+        "starsUpdatedAt": "2026-08-16T12:48:35.081Z",
+        "updatedAt": "2026-08-16T13:24:37.803Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "Catppuccin-dsh-theme",
+        "owner": "zhijun-dai",
+        "url": "https://github.com/zhijun-dai/Catppuccin-dsh-theme",
+        "page": "https://awesome-dsh-plugin.com/p/zhijun-dai/Catppuccin-dsh-theme/",
+        "category": "theme",
+        "description": {
+          "en": "Catppuccin theme plugin: Latte, Frappé, Macchiato, and Mocha skins for the DSH Web theme runtime.",
+          "zh": "Catppuccin 主题插件：为 DSH Web 主题运行时提供 Latte、Frappé、Macchiato、Mocha 四套皮肤。"
+        },
+        "npm": "dsh-catppuccin",
+        "stars": 7,
+        "install": "dsh plugin --profile web add dsh-catppuccin",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "zhijun-dai",
+        "repo": "Catppuccin-dsh-theme",
+        "fullName": "zhijun-dai/Catppuccin-dsh-theme",
+        "subpath": null,
+        "repository": "https://github.com/zhijun-dai/Catppuccin-dsh-theme"
+      },
+      "sha": "fb76b4ed38cb31c53f919c32f65931e1e4d354af",
+      "prior": {
+        "file": "zhijun-dai__Catppuccin-dsh-theme.yml",
+        "value": {
+          "id": "zhijun-dai.catppuccin",
+          "name": {
+            "zh": "Catppuccin 四味主题",
+            "en": "Catppuccin for DSH"
+          },
+          "author": "zhijun-dai",
+          "description": "Catppuccin 主题插件：为 DSH Web 主题运行时提供 Latte、Frappé、Macchiato、Mocha 四套皮肤。",
+          "repo": "https://github.com/zhijun-dai/Catppuccin-dsh-theme",
+          "package": "dsh-catppuccin",
+          "rowId": "catppuccin",
+          "category": "theme",
+          "tags": [
+            "catppuccin",
+            "pastel",
+            "token-theme",
+            "syntax",
+            "light",
+            "dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:zhijun-dai/Catppuccin-dsh-theme#1d40a3b30499f9459f52ee23968cd2264e47b3b5",
+            "version": "0.1.1",
+            "commit": "1d40a3b30499f9459f52ee23968cd2264e47b3b5"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/logos/exports/1544x1544_circle.png",
+            "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/misc/transparent.png",
+            "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/1d40a3b30499f9459f52ee23968cd2264e47b3b5/assets/preview.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/1d40a3b30499f9459f52ee23968cd2264e47b3b5/assets/latte.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/1d40a3b30499f9459f52ee23968cd2264e47b3b5/assets/frappe.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/1d40a3b30499f9459f52ee23968cd2264e47b3b5/assets/macchiato.webp"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": true,
+            "notice": "Catppuccin palette 源自 catppuccin/palette，并按 MIT 许可证使用。"
+          },
+          "featuredRank": 3,
+          "starsSnapshot": 7,
+          "updatedAt": "2026-08-16T12:48:41.596Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "zhijun-dai.catppuccin",
+        "name": {
+          "zh": "Catppuccin 四味主题",
+          "en": "Catppuccin for DSH"
+        },
+        "author": "zhijun-dai",
+        "description": "Catppuccin 主题插件：为 DSH Web 主题运行时提供 Latte、Frappé、Macchiato、Mocha 四套皮肤。",
+        "repo": "https://github.com/zhijun-dai/Catppuccin-dsh-theme",
+        "package": "dsh-catppuccin",
+        "rowId": "catppuccin",
+        "category": "theme",
+        "tags": [
+          "catppuccin",
+          "pastel",
+          "token-theme",
+          "syntax",
+          "light",
+          "dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:zhijun-dai/Catppuccin-dsh-theme#fb76b4ed38cb31c53f919c32f65931e1e4d354af",
+          "version": "0.1.1",
+          "commit": "fb76b4ed38cb31c53f919c32f65931e1e4d354af"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/logos/exports/1544x1544_circle.png",
+          "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/misc/transparent.png",
+          "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/fb76b4ed38cb31c53f919c32f65931e1e4d354af/assets/preview.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/fb76b4ed38cb31c53f919c32f65931e1e4d354af/assets/latte.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/fb76b4ed38cb31c53f919c32f65931e1e4d354af/assets/frappe.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/Catppuccin-dsh-theme/fb76b4ed38cb31c53f919c32f65931e1e4d354af/assets/macchiato.webp"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true,
+          "notice": "Catppuccin palette 源自 catppuccin/palette，并按 MIT 许可证使用。"
+        },
+        "featuredRank": 3,
+        "starsSnapshot": 7,
+        "releaseUpdatedAt": "2026-08-16T13:24:43.612Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:43.612Z",
+        "starsUpdatedAt": "2026-08-16T12:48:41.596Z",
+        "updatedAt": "2026-08-16T13:24:43.612Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-blue-whale",
+        "owner": "starslittle",
+        "url": "https://github.com/starslittle/dsh-blue-whale",
+        "page": "https://awesome-dsh-plugin.com/p/starslittle/dsh-blue-whale/",
+        "category": "theme",
+        "description": {
+          "en": "A DeepSeek Chat-style blue-whale color skin. Light and dark follow the built-in appearance.",
+          "zh": "复刻 DeepSeek Chat 蓝鲸配色的皮肤，亮色/深色跟随系统外观。"
+        },
+        "npm": null,
+        "stars": 6,
+        "install": "dsh plugin --profile web add github:starslittle/dsh-blue-whale",
+        "added": "2026-08-14",
+        "screenshots": [
+          "https://raw.githubusercontent.com/starslittle/dsh-blue-whale/main/docs/compare-home.png",
+          "https://raw.githubusercontent.com/starslittle/dsh-blue-whale/main/docs/compare-brand.png"
+        ]
+      },
+      "target": {
+        "owner": "starslittle",
+        "repo": "dsh-blue-whale",
+        "fullName": "starslittle/dsh-blue-whale",
+        "subpath": null,
+        "repository": "https://github.com/starslittle/dsh-blue-whale"
+      },
+      "sha": "1abc6eea453011c7449af8e1aef5c7754784738d",
+      "prior": {
+        "file": "starslittle__dsh-blue-whale.yml",
+        "value": {
+          "id": "starslittle.dsh-blue-whale",
+          "name": {
+            "zh": "dsh-blue-whale",
+            "en": "dsh-blue-whale"
+          },
+          "author": "starslittle",
+          "description": "复刻 DeepSeek Chat 蓝鲸配色的皮肤，亮色/深色跟随系统外观。",
+          "repo": "https://github.com/starslittle/dsh-blue-whale",
+          "package": "dsh-blue-whale",
+          "rowId": "blue-whale",
+          "category": "theme",
+          "tags": [
+            "retro",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:starslittle/dsh-blue-whale#1abc6eea453011c7449af8e1aef5c7754784738d",
+            "version": "0.1.0",
+            "commit": "1abc6eea453011c7449af8e1aef5c7754784738d"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/starslittle/dsh-blue-whale/1abc6eea453011c7449af8e1aef5c7754784738d/docs/compare-home.png",
+            "https://raw.githubusercontent.com/starslittle/dsh-blue-whale/1abc6eea453011c7449af8e1aef5c7754784738d/docs/compare-brand.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 6,
+          "starsSnapshot": 6,
+          "updatedAt": "2026-08-16T12:31:55.720Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "starslittle.dsh-blue-whale",
+        "name": {
+          "zh": "dsh-blue-whale",
+          "en": "dsh-blue-whale"
+        },
+        "author": "starslittle",
+        "description": "复刻 DeepSeek Chat 蓝鲸配色的皮肤，亮色/深色跟随系统外观。",
+        "repo": "https://github.com/starslittle/dsh-blue-whale",
+        "package": "dsh-blue-whale",
+        "rowId": "blue-whale",
+        "category": "theme",
+        "tags": [
+          "retro",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:starslittle/dsh-blue-whale#1abc6eea453011c7449af8e1aef5c7754784738d",
+          "version": "0.1.0",
+          "commit": "1abc6eea453011c7449af8e1aef5c7754784738d"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/starslittle/dsh-blue-whale/1abc6eea453011c7449af8e1aef5c7754784738d/docs/compare-home.png",
+          "https://raw.githubusercontent.com/starslittle/dsh-blue-whale/1abc6eea453011c7449af8e1aef5c7754784738d/docs/compare-brand.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 6,
+        "starsSnapshot": 6,
+        "releaseUpdatedAt": "2026-08-16T12:31:55.720Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:50.296Z",
+        "starsUpdatedAt": "2026-08-16T12:31:55.720Z",
+        "updatedAt": "2026-08-16T13:24:50.296Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-any-background",
+        "owner": "Tkingxiao",
+        "url": "https://github.com/Tkingxiao/dsh-any-background",
+        "page": "https://awesome-dsh-plugin.com/p/Tkingxiao/dsh-any-background/",
+        "category": "theme",
+        "description": {
+          "en": "A DeepSeek Harness appearance plugin that lets you fully customize the Web UI with a custom theme color, background wallpaper, and fine-grained opacity controls.",
+          "zh": "自定义外观插件：换背景图（可调大小和位置）、用色轮自定义主题色，主界面和设置界面的透明度都能单独调。"
+        },
+        "npm": "dsh-any-background",
+        "stars": 6,
+        "install": "dsh plugin --profile web add dsh-any-background",
+        "added": "2026-08-15",
+        "screenshots": [
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/main/example_img/image.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/main/example_img/image-2.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/main/example_img/image-3.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/main/example_img/image-4.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/main/example_img/image-6.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/main/example_img/image-9.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/main/example_img/image-10.png"
+        ]
+      },
+      "target": {
+        "owner": "Tkingxiao",
+        "repo": "dsh-any-background",
+        "fullName": "Tkingxiao/dsh-any-background",
+        "subpath": null,
+        "repository": "https://github.com/Tkingxiao/dsh-any-background"
+      },
+      "sha": "13acd6f4866dc3ce60a918b588ba38c4d4edd3ce",
+      "prior": {
+        "file": "Tkingxiao__dsh-any-background.yml",
+        "value": {
+          "id": "tkingxiao.dsh-any-background",
+          "name": {
+            "zh": "dsh-any-background",
+            "en": "dsh-any-background"
+          },
+          "author": "Tkingxiao",
+          "description": "自定义外观插件：换背景图（可调大小和位置）、用色轮自定义主题色，主界面和设置界面的透明度都能单独调。",
+          "repo": "https://github.com/Tkingxiao/dsh-any-background",
+          "package": "dsh-any-background",
+          "rowId": "dsh-any-background",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:Tkingxiao/dsh-any-background#13acd6f4866dc3ce60a918b588ba38c4d4edd3ce",
+            "version": "0.1.6",
+            "commit": "13acd6f4866dc3ce60a918b588ba38c4d4edd3ce"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image.png",
+            "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-2.png",
+            "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-3.png",
+            "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-4.png",
+            "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-6.png",
+            "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-9.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 7,
+          "starsSnapshot": 6,
+          "updatedAt": "2026-08-16T12:31:59.883Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "tkingxiao.dsh-any-background",
+        "name": {
+          "zh": "dsh-any-background",
+          "en": "dsh-any-background"
+        },
+        "author": "Tkingxiao",
+        "description": "自定义外观插件：换背景图（可调大小和位置）、用色轮自定义主题色，主界面和设置界面的透明度都能单独调。",
+        "repo": "https://github.com/Tkingxiao/dsh-any-background",
+        "package": "dsh-any-background",
+        "rowId": "dsh-any-background",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:Tkingxiao/dsh-any-background#13acd6f4866dc3ce60a918b588ba38c4d4edd3ce",
+          "version": "0.1.6",
+          "commit": "13acd6f4866dc3ce60a918b588ba38c4d4edd3ce"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-2.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-3.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-4.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-6.png",
+          "https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-9.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 7,
+        "starsSnapshot": 6,
+        "releaseUpdatedAt": "2026-08-16T12:31:59.883Z",
+        "metadataUpdatedAt": "2026-08-16T13:24:55.417Z",
+        "starsUpdatedAt": "2026-08-16T12:31:59.883Z",
+        "updatedAt": "2026-08-16T13:24:55.417Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-client-ui-skin-claude",
+        "owner": "PAKIKNOWLEDGE",
+        "url": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+        "page": "https://awesome-dsh-plugin.com/p/PAKIKNOWLEDGE/dsh-client-ui-skin-claude/",
+        "category": "theme",
+        "description": {
+          "en": "Claude-style skin with a warm-black canvas, clay accent, and serif UI that follows the native light and dark themes.",
+          "zh": "Claude 风格皮肤：暖黑画布、陶橙点缀、衬线 UI，跟随原生亮/暗主题。"
+        },
+        "npm": "@pakiknowledge/dsh-client-ui-skin-claude",
+        "stars": 5,
+        "install": "dsh plugin --profile web add @pakiknowledge/dsh-client-ui-skin-claude",
+        "added": "2026-08-14"
+      },
+      "target": {
+        "owner": "PAKIKNOWLEDGE",
+        "repo": "dsh-client-ui-skin-claude",
+        "fullName": "PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+        "subpath": null,
+        "repository": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude"
+      },
+      "sha": "78690f8449b61c0ea00e827c7427934810b9c554",
+      "prior": {
+        "file": "PAKIKNOWLEDGE__dsh-client-ui-skin-claude.yml",
+        "value": {
+          "id": "pakiknowledge.dsh-client-ui-skin-claude",
+          "name": {
+            "zh": "dsh-client-ui-skin-claude",
+            "en": "dsh-client-ui-skin-claude"
+          },
+          "author": "PAKIKNOWLEDGE",
+          "description": "Claude 风格皮肤：暖黑画布、陶橙点缀、衬线 UI，跟随原生亮/暗主题。",
+          "repo": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+          "package": "@pakiknowledge/dsh-client-ui-skin-claude",
+          "rowId": "ui-skin-claude",
+          "category": "theme",
+          "tags": [
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:PAKIKNOWLEDGE/dsh-client-ui-skin-claude#78690f8449b61c0ea00e827c7427934810b9c554",
+            "version": "0.1.0",
+            "commit": "78690f8449b61c0ea00e827c7427934810b9c554"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude/78690f8449b61c0ea00e827c7427934810b9c554/docs/dark.png",
+            "https://raw.githubusercontent.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude/78690f8449b61c0ea00e827c7427934810b9c554/docs/light.png"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": true
+          },
+          "featuredRank": 23,
+          "starsSnapshot": 5,
+          "updatedAt": "2026-08-16T12:15:53.427Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "pakiknowledge.dsh-client-ui-skin-claude",
+        "name": {
+          "zh": "dsh-client-ui-skin-claude",
+          "en": "dsh-client-ui-skin-claude"
+        },
+        "author": "PAKIKNOWLEDGE",
+        "description": "Claude 风格皮肤：暖黑画布、陶橙点缀、衬线 UI，跟随原生亮/暗主题。",
+        "repo": "https://github.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude",
+        "package": "@pakiknowledge/dsh-client-ui-skin-claude",
+        "rowId": "ui-skin-claude",
+        "category": "theme",
+        "tags": [
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:PAKIKNOWLEDGE/dsh-client-ui-skin-claude#78690f8449b61c0ea00e827c7427934810b9c554",
+          "version": "0.1.0",
+          "commit": "78690f8449b61c0ea00e827c7427934810b9c554"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude/78690f8449b61c0ea00e827c7427934810b9c554/docs/dark.png",
+          "https://raw.githubusercontent.com/PAKIKNOWLEDGE/dsh-client-ui-skin-claude/78690f8449b61c0ea00e827c7427934810b9c554/docs/light.png"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 23,
+        "starsSnapshot": 5,
+        "releaseUpdatedAt": "2026-08-16T12:15:53.427Z",
+        "metadataUpdatedAt": "2026-08-16T12:15:53.427Z",
+        "starsUpdatedAt": "2026-08-16T12:15:53.427Z",
+        "updatedAt": "2026-08-16T12:15:53.427Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-ui-appearance",
+        "owner": "TQSY114514",
+        "url": "https://github.com/TQSY114514/dsh-ui-appearance",
+        "page": "https://awesome-dsh-plugin.com/p/TQSY114514/dsh-ui-appearance/",
+        "category": "theme",
+        "description": {
+          "en": "Appearance customization for the DeepSeek Harness WebUI: theme palette, wallpaper and video backgrounds, translucency and glassmorphism.",
+          "zh": "DeepSeek Harness 外观自定义:主题调色、壁纸与视频背景、半透明与毛玻璃。"
+        },
+        "npm": "dsh-ui-appearance",
+        "stars": 5,
+        "install": "dsh plugin --profile web add dsh-ui-appearance",
+        "added": "2026-08-16",
+        "screenshots": [
+          "https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/main/docs/screenshot-settings.png",
+          "https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/main/docs/screenshot-wallpaper.png"
+        ]
+      },
+      "target": {
+        "owner": "TQSY114514",
+        "repo": "dsh-ui-appearance",
+        "fullName": "TQSY114514/dsh-ui-appearance",
+        "subpath": null,
+        "repository": "https://github.com/TQSY114514/dsh-ui-appearance"
+      },
+      "sha": "ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5",
+      "changed": true,
+      "starsVerified": true,
+      "status": "promoted",
+      "entry": {
+        "id": "tqsy114514.dsh-ui-appearance",
+        "name": {
+          "zh": "dsh-ui-appearance",
+          "en": "dsh-ui-appearance"
+        },
+        "author": "TQSY114514",
+        "description": "DeepSeek Harness 外观自定义:主题调色、壁纸与视频背景、半透明与毛玻璃。",
+        "repo": "https://github.com/TQSY114514/dsh-ui-appearance",
+        "package": "dsh-ui-appearance",
+        "rowId": "ui-appearance",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:TQSY114514/dsh-ui-appearance#ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5",
+          "version": "0.1.1",
+          "commit": "ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5/docs/screenshot-settings.png",
+          "https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5/docs/screenshot-wallpaper.png",
+          "https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5/docs/demo.gif"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 36,
+        "starsSnapshot": 5,
+        "releaseUpdatedAt": "2026-08-16T13:25:07.230Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:07.230Z",
+        "starsUpdatedAt": "2026-08-16T13:25:07.230Z",
+        "updatedAt": "2026-08-16T13:25:07.230Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-plugins#skin-gallery",
+        "owner": "wsxwj123",
+        "url": "https://github.com/wsxwj123/dsh-plugins/tree/main/packages/skin-gallery",
+        "page": "https://awesome-dsh-plugin.com/p/wsxwj123/dsh-plugins--packages-skin-gallery/",
+        "category": "theme",
+        "description": {
+          "en": "Nine complete dsh-web-ui skin replicas with custom skin-pack import, preview, apply, delete, restore-default, and readability fixes for bubbles and code blocks.",
+          "zh": "9 个完整 dsh-web-ui 皮肤复刻，支持自定义皮肤包导入、试穿、应用、删除、恢复默认，并修正气泡与代码块可读性。"
+        },
+        "npm": null,
+        "stars": 4,
+        "install": "dsh plugin --profile web add github:wsxwj123/dsh-plugins#path:/packages/skin-gallery",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "wsxwj123",
+        "repo": "dsh-plugins",
+        "fullName": "wsxwj123/dsh-plugins",
+        "subpath": "packages/skin-gallery",
+        "repository": "https://github.com/wsxwj123/dsh-plugins"
+      },
+      "sha": "ae7b7d50efdc0151477735ccadf4d59807abfec3",
+      "prior": {
+        "file": "wsxwj123__dsh-plugins--packages--skin-gallery.yml",
+        "value": {
+          "id": "wsxwj123.skin-gallery",
+          "name": {
+            "zh": "skin-gallery",
+            "en": "skin-gallery"
+          },
+          "author": "wsxwj123",
+          "description": "9 个完整 dsh-web-ui 皮肤复刻，支持自定义皮肤包导入、试穿、应用、删除、恢复默认，并修正气泡与代码块可读性。",
+          "repo": "https://github.com/wsxwj123/dsh-plugins",
+          "subpath": "packages/skin-gallery",
+          "package": "dsh-skin-gallery",
+          "rowId": "skin-gallery",
+          "category": "theme",
+          "tags": [
+            "retro",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:wsxwj123/dsh-plugins#ae7b7d50efdc0151477735ccadf4d59807abfec3&path:packages/skin-gallery",
+            "version": "0.1.0",
+            "commit": "ae7b7d50efdc0151477735ccadf4d59807abfec3"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/ae7b7d50efdc0151477735ccadf4d59807abfec3/wsxwj123/dsh-plugins"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 24,
+          "starsSnapshot": 4,
+          "updatedAt": "2026-08-16T12:15:58.715Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "wsxwj123.skin-gallery",
+        "name": {
+          "zh": "skin-gallery",
+          "en": "skin-gallery"
+        },
+        "author": "wsxwj123",
+        "description": "9 个完整 dsh-web-ui 皮肤复刻，支持自定义皮肤包导入、试穿、应用、删除、恢复默认，并修正气泡与代码块可读性。",
+        "repo": "https://github.com/wsxwj123/dsh-plugins",
+        "subpath": "packages/skin-gallery",
+        "package": "dsh-skin-gallery",
+        "rowId": "skin-gallery",
+        "category": "theme",
+        "tags": [
+          "retro",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:wsxwj123/dsh-plugins#ae7b7d50efdc0151477735ccadf4d59807abfec3&path:packages/skin-gallery",
+          "version": "0.1.0",
+          "commit": "ae7b7d50efdc0151477735ccadf4d59807abfec3"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/ae7b7d50efdc0151477735ccadf4d59807abfec3/wsxwj123/dsh-plugins"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 24,
+        "starsSnapshot": 4,
+        "releaseUpdatedAt": "2026-08-16T12:15:58.715Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:13.552Z",
+        "starsUpdatedAt": "2026-08-16T12:15:58.715Z",
+        "updatedAt": "2026-08-16T13:25:13.552Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-plugins#theme-gallery",
+        "owner": "wsxwj123",
+        "url": "https://github.com/wsxwj123/dsh-plugins/tree/main/packages/theme-gallery",
+        "page": "https://awesome-dsh-plugin.com/p/wsxwj123/dsh-plugins--packages-theme-gallery/",
+        "category": "theme",
+        "description": {
+          "en": "Fifteen curated theme families plus custom CSS-only themes with import, preview, apply, delete, and restore-default flows that follow the native Light, Dark, and Follow system modes.",
+          "zh": "15 个精选主题家族 + CSS-only 自定义主题，支持导入、试穿、应用、删除和恢复默认，跟随 DSH 原生浅色/深色/跟随系统模式。"
+        },
+        "npm": null,
+        "stars": 4,
+        "install": "dsh plugin --profile web add github:wsxwj123/dsh-plugins#path:/packages/theme-gallery",
+        "added": "2026-08-14"
+      },
+      "target": {
+        "owner": "wsxwj123",
+        "repo": "dsh-plugins",
+        "fullName": "wsxwj123/dsh-plugins",
+        "subpath": "packages/theme-gallery",
+        "repository": "https://github.com/wsxwj123/dsh-plugins"
+      },
+      "sha": "ae7b7d50efdc0151477735ccadf4d59807abfec3",
+      "prior": {
+        "file": "wsxwj123__dsh-plugins--packages--theme-gallery.yml",
+        "value": {
+          "id": "wsxwj123.theme-gallery",
+          "name": {
+            "zh": "theme-gallery",
+            "en": "theme-gallery"
+          },
+          "author": "wsxwj123",
+          "description": "15 个精选主题家族 + CSS-only 自定义主题，支持导入、试穿、应用、删除和恢复默认，跟随 DSH 原生浅色/深色/跟随系统模式。",
+          "repo": "https://github.com/wsxwj123/dsh-plugins",
+          "subpath": "packages/theme-gallery",
+          "package": "dsh-theme-gallery",
+          "rowId": "theme-gallery",
+          "category": "theme",
+          "tags": [
+            "retro",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:wsxwj123/dsh-plugins#ae7b7d50efdc0151477735ccadf4d59807abfec3&path:packages/theme-gallery",
+            "version": "0.6.0",
+            "commit": "ae7b7d50efdc0151477735ccadf4d59807abfec3"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/wsxwj123/dsh-plugins/ae7b7d50efdc0151477735ccadf4d59807abfec3/packages/theme-gallery/../../assets/screenshots/theme-gallery-real.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 8,
+          "starsSnapshot": 4,
+          "updatedAt": "2026-08-16T12:32:14.655Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "wsxwj123.theme-gallery",
+        "name": {
+          "zh": "theme-gallery",
+          "en": "theme-gallery"
+        },
+        "author": "wsxwj123",
+        "description": "15 个精选主题家族 + CSS-only 自定义主题，支持导入、试穿、应用、删除和恢复默认，跟随 DSH 原生浅色/深色/跟随系统模式。",
+        "repo": "https://github.com/wsxwj123/dsh-plugins",
+        "subpath": "packages/theme-gallery",
+        "package": "dsh-theme-gallery",
+        "rowId": "theme-gallery",
+        "category": "theme",
+        "tags": [
+          "retro",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:wsxwj123/dsh-plugins#ae7b7d50efdc0151477735ccadf4d59807abfec3&path:packages/theme-gallery",
+          "version": "0.6.0",
+          "commit": "ae7b7d50efdc0151477735ccadf4d59807abfec3"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/wsxwj123/dsh-plugins/ae7b7d50efdc0151477735ccadf4d59807abfec3/packages/theme-gallery/../../assets/screenshots/theme-gallery-real.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 8,
+        "starsSnapshot": 4,
+        "releaseUpdatedAt": "2026-08-16T12:32:14.655Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:20.151Z",
+        "starsUpdatedAt": "2026-08-16T12:32:14.655Z",
+        "updatedAt": "2026-08-16T13:25:20.151Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-cyber-particle",
+        "owner": "AKS1st",
+        "url": "https://github.com/AKS1st/dsh-cyber-particle",
+        "page": "https://awesome-dsh-plugin.com/p/AKS1st/dsh-cyber-particle/",
+        "category": "theme",
+        "description": {
+          "en": "Particle-network background overlay for the DSH Web shell: full-screen, click-through, zero runtime dependencies.",
+          "zh": "为 DSH Web 界面提供粒子网络动态背景：全屏覆盖、点击穿透、零运行时依赖；以及开放事件源：其他插件可注入 notifier 服务（ctx.notifier）并订阅 dsh-notifier/sent 发送事件——复用通知能力而无需耦合。"
+        },
+        "npm": null,
+        "stars": 4,
+        "install": "dsh plugin --profile web add github:AKS1st/dsh-cyber-particle",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "AKS1st",
+        "repo": "dsh-cyber-particle",
+        "fullName": "AKS1st/dsh-cyber-particle",
+        "subpath": null,
+        "repository": "https://github.com/AKS1st/dsh-cyber-particle"
+      },
+      "sha": "fbe8186bb54be3b2485ea3cb5184fe1513cd2828",
+      "prior": {
+        "file": "AKS1st__dsh-cyber-particle.yml",
+        "value": {
+          "id": "aks1st.dsh-cyber-particle",
+          "name": {
+            "zh": "dsh-cyber-particle",
+            "en": "dsh-cyber-particle"
+          },
+          "author": "AKS1st",
+          "description": "为 DSH Web 界面提供粒子网络动态背景：全屏覆盖、点击穿透、零运行时依赖；以及开放事件源：其他插件可注入 notifier 服务（ctx.notifier）并订阅 dsh-notifier/sent 发送事件——复用通知能力而无需耦合。",
+          "repo": "https://github.com/AKS1st/dsh-cyber-particle",
+          "package": "cyber-particle",
+          "rowId": "cyber-particle",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "motion",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:AKS1st/dsh-cyber-particle#fbe8186bb54be3b2485ea3cb5184fe1513cd2828",
+            "version": "0.2.2",
+            "commit": "fbe8186bb54be3b2485ea3cb5184fe1513cd2828"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/AKS1st/dsh-cyber-particle/fbe8186bb54be3b2485ea3cb5184fe1513cd2828/assets/image_light.png",
+            "https://raw.githubusercontent.com/AKS1st/dsh-cyber-particle/fbe8186bb54be3b2485ea3cb5184fe1513cd2828/assets/image_dark.png"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 25,
+          "starsSnapshot": 3,
+          "updatedAt": "2026-08-16T12:16:03.923Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "aks1st.dsh-cyber-particle",
+        "name": {
+          "zh": "dsh-cyber-particle",
+          "en": "dsh-cyber-particle"
+        },
+        "author": "AKS1st",
+        "description": "为 DSH Web 界面提供粒子网络动态背景：全屏覆盖、点击穿透、零运行时依赖；以及开放事件源：其他插件可注入 notifier 服务（ctx.notifier）并订阅 dsh-notifier/sent 发送事件——复用通知能力而无需耦合。",
+        "repo": "https://github.com/AKS1st/dsh-cyber-particle",
+        "package": "cyber-particle",
+        "rowId": "cyber-particle",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "motion",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:AKS1st/dsh-cyber-particle#fbe8186bb54be3b2485ea3cb5184fe1513cd2828",
+          "version": "0.2.2",
+          "commit": "fbe8186bb54be3b2485ea3cb5184fe1513cd2828"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/AKS1st/dsh-cyber-particle/fbe8186bb54be3b2485ea3cb5184fe1513cd2828/assets/image_light.png",
+          "https://raw.githubusercontent.com/AKS1st/dsh-cyber-particle/fbe8186bb54be3b2485ea3cb5184fe1513cd2828/assets/image_dark.png"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 25,
+        "starsSnapshot": 4,
+        "releaseUpdatedAt": "2026-08-16T12:16:03.923Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:24.969Z",
+        "starsUpdatedAt": "2026-08-16T13:25:24.969Z",
+        "updatedAt": "2026-08-16T13:25:24.969Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-client-ui-skins",
+        "owner": "caoyiwei850",
+        "url": "https://github.com/caoyiwei850/dsh-client-ui-skins",
+        "page": "https://awesome-dsh-plugin.com/p/caoyiwei850/dsh-client-ui-skins/",
+        "category": "theme",
+        "description": {
+          "en": "Skin plugin for the DSH Web UI: 4 built-in skins plus custom image skins with the photo as a full-interface background and the palette following its dominant hue.",
+          "zh": "DSH Web 换肤插件：4 套内置皮肤 + 自定义图片皮肤，图片作为全界面背景，配色自动跟随图片主色调。"
+        },
+        "npm": null,
+        "stars": 4,
+        "install": "dsh plugin --profile web add github:caoyiwei850/dsh-client-ui-skins",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "caoyiwei850",
+        "repo": "dsh-client-ui-skins",
+        "fullName": "caoyiwei850/dsh-client-ui-skins",
+        "subpath": null,
+        "repository": "https://github.com/caoyiwei850/dsh-client-ui-skins"
+      },
+      "sha": "1321f06c4be992b678661c1d9758356c05f0e620",
+      "prior": {
+        "file": "caoyiwei850__dsh-client-ui-skins.yml",
+        "value": {
+          "id": "caoyiwei850.dsh-client-ui-skins",
+          "name": {
+            "zh": "dsh-client-ui-skins",
+            "en": "dsh-client-ui-skins"
+          },
+          "author": "caoyiwei850",
+          "description": "DSH Web 换肤插件：4 套内置皮肤 + 自定义图片皮肤，图片作为全界面背景，配色自动跟随图片主色调。",
+          "repo": "https://github.com/caoyiwei850/dsh-client-ui-skins",
+          "package": "dsh-client-ui-skins",
+          "rowId": "ui-skins",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:caoyiwei850/dsh-client-ui-skins#1321f06c4be992b678661c1d9758356c05f0e620",
+            "version": "0.1.9",
+            "commit": "1321f06c4be992b678661c1d9758356c05f0e620"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/mint-forest-dsh.jpg",
+            "https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/ocean-guardian-dsh.jpg",
+            "https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/crimson-moon-dsh.jpg"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 9,
+          "starsSnapshot": 3,
+          "updatedAt": "2026-08-16T12:32:24.075Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "caoyiwei850.dsh-client-ui-skins",
+        "name": {
+          "zh": "dsh-client-ui-skins",
+          "en": "dsh-client-ui-skins"
+        },
+        "author": "caoyiwei850",
+        "description": "DSH Web 换肤插件：4 套内置皮肤 + 自定义图片皮肤，图片作为全界面背景，配色自动跟随图片主色调。",
+        "repo": "https://github.com/caoyiwei850/dsh-client-ui-skins",
+        "package": "dsh-client-ui-skins",
+        "rowId": "ui-skins",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:caoyiwei850/dsh-client-ui-skins#1321f06c4be992b678661c1d9758356c05f0e620",
+          "version": "0.1.9",
+          "commit": "1321f06c4be992b678661c1d9758356c05f0e620"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/mint-forest-dsh.jpg",
+          "https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/ocean-guardian-dsh.jpg",
+          "https://raw.githubusercontent.com/caoyiwei850/dsh-client-ui-skins/1321f06c4be992b678661c1d9758356c05f0e620/assets/screenshots/crimson-moon-dsh.jpg"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 9,
+        "starsSnapshot": 4,
+        "releaseUpdatedAt": "2026-08-16T12:32:24.075Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:32.174Z",
+        "starsUpdatedAt": "2026-08-16T13:25:32.174Z",
+        "updatedAt": "2026-08-16T13:25:32.174Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-oh-my-theme",
+        "owner": "zhxqc",
+        "url": "https://github.com/zhxqc/dsh-oh-my-theme",
+        "page": "https://awesome-dsh-plugin.com/p/zhxqc/dsh-oh-my-theme/",
+        "category": "theme",
+        "description": {
+          "en": "Web theme and file workspace plugin with global typography controls, @file mentions, a project file tree, Markdown preview, and a resizable side panel.",
+          "zh": "DSH Web 主题与文件工作台：全局字体设置、@ 文件引用、项目文件树、Markdown 预览和可拖拽侧边面板。"
+        },
+        "npm": "dsh-oh-my-theme",
+        "stars": 3,
+        "install": "dsh plugin --profile web add dsh-oh-my-theme",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "zhxqc",
+        "repo": "dsh-oh-my-theme",
+        "fullName": "zhxqc/dsh-oh-my-theme",
+        "subpath": null,
+        "repository": "https://github.com/zhxqc/dsh-oh-my-theme"
+      },
+      "sha": "5052f83f4ccc21da11f37b27824f2c95052fb25b",
+      "prior": {
+        "file": "zhxqc__dsh-oh-my-theme.yml",
+        "value": {
+          "id": "zhxqc.dsh-oh-my-theme",
+          "name": {
+            "zh": "dsh-oh-my-theme",
+            "en": "dsh-oh-my-theme"
+          },
+          "author": "zhxqc",
+          "description": "DSH Web 主题与文件工作台：全局字体设置、@ 文件引用、项目文件树、Markdown 预览和可拖拽侧边面板。",
+          "repo": "https://github.com/zhxqc/dsh-oh-my-theme",
+          "package": "dsh-oh-my-theme",
+          "rowId": "oh-my-theme",
+          "category": "theme",
+          "tags": [
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "dark"
+          ],
+          "install": {
+            "target": "github:zhxqc/dsh-oh-my-theme#5052f83f4ccc21da11f37b27824f2c95052fb25b",
+            "version": "0.6.0",
+            "commit": "5052f83f4ccc21da11f37b27824f2c95052fb25b"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/setting.png",
+            "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/at.png",
+            "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/slider-icon.png",
+            "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/file-sys.png",
+            "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/md-preview.png",
+            "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/git-changes.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 10,
+          "starsSnapshot": 3,
+          "updatedAt": "2026-08-16T12:32:28.705Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "zhxqc.dsh-oh-my-theme",
+        "name": {
+          "zh": "dsh-oh-my-theme",
+          "en": "dsh-oh-my-theme"
+        },
+        "author": "zhxqc",
+        "description": "DSH Web 主题与文件工作台：全局字体设置、@ 文件引用、项目文件树、Markdown 预览和可拖拽侧边面板。",
+        "repo": "https://github.com/zhxqc/dsh-oh-my-theme",
+        "package": "dsh-oh-my-theme",
+        "rowId": "oh-my-theme",
+        "category": "theme",
+        "tags": [
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "install": {
+          "target": "github:zhxqc/dsh-oh-my-theme#5052f83f4ccc21da11f37b27824f2c95052fb25b",
+          "version": "0.6.0",
+          "commit": "5052f83f4ccc21da11f37b27824f2c95052fb25b"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/setting.png",
+          "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/at.png",
+          "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/slider-icon.png",
+          "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/file-sys.png",
+          "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/md-preview.png",
+          "https://raw.githubusercontent.com/zhxqc/dsh-oh-my-theme/5052f83f4ccc21da11f37b27824f2c95052fb25b/docs/assets/git-changes.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 10,
+        "starsSnapshot": 3,
+        "releaseUpdatedAt": "2026-08-16T12:32:28.705Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:36.714Z",
+        "starsUpdatedAt": "2026-08-16T12:32:28.705Z",
+        "updatedAt": "2026-08-16T13:25:36.714Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-theme-plugin",
+        "owner": "BeiZi6",
+        "url": "https://github.com/BeiZi6/dsh-theme-plugin",
+        "page": "https://awesome-dsh-plugin.com/p/BeiZi6/dsh-theme-plugin/",
+        "category": "theme",
+        "description": {
+          "en": "Theme studio for the DSH Web GUI: five built-in presets plus fully customizable light/dark palettes (accent, background, foreground, UI and code fonts, translucent sidebar, contrast), hot-swapped instantly and persisted in localStorage.",
+          "zh": "DSH Web GUI 主题工作室：5 套内置预设 + 完全可自定义的浅/深配色（强调色、背景、前景、UI 与代码字体、半透明侧栏、对比度），即时热切换并持久化到 localStorage。"
+        },
+        "npm": null,
+        "stars": 2,
+        "install": "dsh plugin --profile web add github:BeiZi6/dsh-theme-plugin",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "BeiZi6",
+        "repo": "dsh-theme-plugin",
+        "fullName": "BeiZi6/dsh-theme-plugin",
+        "subpath": null,
+        "repository": "https://github.com/BeiZi6/dsh-theme-plugin"
+      },
+      "sha": "b3e7e143532c4b6df71da753d2336bb018949d2a",
+      "prior": {
+        "file": "BeiZi6__dsh-theme-plugin.yml",
+        "value": {
+          "id": "beizi6.dsh-theme-plugin",
+          "name": {
+            "zh": "dsh-theme-plugin",
+            "en": "dsh-theme-plugin"
+          },
+          "author": "BeiZi6",
+          "description": "DSH Web GUI 主题工作室：5 套内置预设 + 完全可自定义的浅/深配色（强调色、背景、前景、UI 与代码字体、半透明侧栏、对比度），即时热切换并持久化到 localStorage。",
+          "repo": "https://github.com/BeiZi6/dsh-theme-plugin",
+          "package": "dsh-theme-plugin",
+          "rowId": "theme-plugin",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:BeiZi6/dsh-theme-plugin#b3e7e143532c4b6df71da753d2336bb018949d2a",
+            "version": "0.1.0",
+            "commit": "b3e7e143532c4b6df71da753d2336bb018949d2a"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/b3e7e143532c4b6df71da753d2336bb018949d2a/BeiZi6/dsh-theme-plugin"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 26,
+          "starsSnapshot": 2,
+          "updatedAt": "2026-08-16T12:16:08.600Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "beizi6.dsh-theme-plugin",
+        "name": {
+          "zh": "dsh-theme-plugin",
+          "en": "dsh-theme-plugin"
+        },
+        "author": "BeiZi6",
+        "description": "DSH Web GUI 主题工作室：5 套内置预设 + 完全可自定义的浅/深配色（强调色、背景、前景、UI 与代码字体、半透明侧栏、对比度），即时热切换并持久化到 localStorage。",
+        "repo": "https://github.com/BeiZi6/dsh-theme-plugin",
+        "package": "dsh-theme-plugin",
+        "rowId": "theme-plugin",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:BeiZi6/dsh-theme-plugin#b3e7e143532c4b6df71da753d2336bb018949d2a",
+          "version": "0.1.0",
+          "commit": "b3e7e143532c4b6df71da753d2336bb018949d2a"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/b3e7e143532c4b6df71da753d2336bb018949d2a/BeiZi6/dsh-theme-plugin"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 26,
+        "starsSnapshot": 2,
+        "releaseUpdatedAt": "2026-08-16T12:16:08.600Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:40.795Z",
+        "starsUpdatedAt": "2026-08-16T12:16:08.600Z",
+        "updatedAt": "2026-08-16T13:25:40.795Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-wallpaper",
+        "owner": "chinaRXQ",
+        "url": "https://github.com/chinaRXQ/dsh-wallpaper",
+        "page": "https://awesome-dsh-plugin.com/p/chinaRXQ/dsh-wallpaper/",
+        "category": "theme",
+        "description": {
+          "en": "Wallpaper skin for the DSH Web UI: image background with opacity, mask and blur controls.",
+          "zh": "DSH Web 壁纸皮肤：图片背景，可调透明度、压暗遮罩与模糊。"
+        },
+        "npm": null,
+        "stars": 2,
+        "install": "dsh plugin --profile web add github:chinaRXQ/dsh-wallpaper",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "chinaRXQ",
+        "repo": "dsh-wallpaper",
+        "fullName": "chinaRXQ/dsh-wallpaper",
+        "subpath": null,
+        "repository": "https://github.com/chinaRXQ/dsh-wallpaper"
+      },
+      "sha": "ac35d036582b1e2b16f1138c01d5417ce6dc93ea",
+      "prior": {
+        "file": "chinaRXQ__dsh-wallpaper.yml",
+        "value": {
+          "id": "chinarxq.dsh-wallpaper",
+          "name": {
+            "zh": "dsh-wallpaper",
+            "en": "dsh-wallpaper"
+          },
+          "author": "chinaRXQ",
+          "description": "DSH Web 壁纸皮肤：图片背景，可调透明度、压暗遮罩与模糊。",
+          "repo": "https://github.com/chinaRXQ/dsh-wallpaper",
+          "package": "dsh-wallpaper",
+          "rowId": "wallpaper",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:chinaRXQ/dsh-wallpaper#ac35d036582b1e2b16f1138c01d5417ce6dc93ea",
+            "version": "0.2.0",
+            "commit": "ac35d036582b1e2b16f1138c01d5417ce6dc93ea"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/ac35d036582b1e2b16f1138c01d5417ce6dc93ea/chinaRXQ/dsh-wallpaper"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": true
+          },
+          "featuredRank": 27,
+          "starsSnapshot": 2,
+          "updatedAt": "2026-08-16T12:16:12.637Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "chinarxq.dsh-wallpaper",
+        "name": {
+          "zh": "dsh-wallpaper",
+          "en": "dsh-wallpaper"
+        },
+        "author": "chinaRXQ",
+        "description": "DSH Web 壁纸皮肤：图片背景，可调透明度、压暗遮罩与模糊。",
+        "repo": "https://github.com/chinaRXQ/dsh-wallpaper",
+        "package": "dsh-wallpaper",
+        "rowId": "wallpaper",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:chinaRXQ/dsh-wallpaper#ac35d036582b1e2b16f1138c01d5417ce6dc93ea",
+          "version": "0.2.0",
+          "commit": "ac35d036582b1e2b16f1138c01d5417ce6dc93ea"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/ac35d036582b1e2b16f1138c01d5417ce6dc93ea/chinaRXQ/dsh-wallpaper"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 27,
+        "starsSnapshot": 2,
+        "releaseUpdatedAt": "2026-08-16T12:16:12.637Z",
+        "metadataUpdatedAt": "2026-08-16T12:16:12.637Z",
+        "starsUpdatedAt": "2026-08-16T12:16:12.637Z",
+        "updatedAt": "2026-08-16T12:16:12.637Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-neu-theme",
+        "owner": "Lhy723",
+        "url": "https://github.com/Lhy723/dsh-neu-theme",
+        "page": "https://awesome-dsh-plugin.com/p/Lhy723/dsh-neu-theme/",
+        "category": "theme",
+        "description": {
+          "en": "Neumorphic DSH Web theme with light and dark palettes, ambient lighting, material shadows, grain texture, frosted-glass surfaces, and micro-interactions.",
+          "zh": "DSH Web 轻拟物主题：提供浅色与深色配色、环境光影、材质阴影、纹理、磨砂玻璃表面与微交互。"
+        },
+        "npm": "dsh-neu-theme",
+        "stars": 2,
+        "install": "dsh plugin --profile web add dsh-neu-theme",
+        "added": "2026-08-16"
+      },
+      "target": {
+        "owner": "Lhy723",
+        "repo": "dsh-neu-theme",
+        "fullName": "Lhy723/dsh-neu-theme",
+        "subpath": null,
+        "repository": "https://github.com/Lhy723/dsh-neu-theme"
+      },
+      "sha": "c6ecbe421298b0e89791655b153cfb3287a5c522",
+      "prior": {
+        "file": "Lhy723__dsh-neu-theme.yml",
+        "value": {
+          "id": "lhy723.dsh-neu-theme",
+          "name": {
+            "zh": "dsh-neu-theme",
+            "en": "dsh-neu-theme"
+          },
+          "author": "Lhy723",
+          "description": "DSH Web 轻拟物主题：提供浅色与深色配色、环境光影、材质阴影、纹理、磨砂玻璃表面与微交互。",
+          "repo": "https://github.com/Lhy723/dsh-neu-theme",
+          "package": "dsh-neu-theme",
+          "rowId": "neu-theme",
+          "category": "theme",
+          "tags": [
+            "glass",
+            "motion",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:Lhy723/dsh-neu-theme#c6ecbe421298b0e89791655b153cfb3287a5c522",
+            "version": "0.1.0",
+            "commit": "c6ecbe421298b0e89791655b153cfb3287a5c522"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/Lhy723/dsh-neu-theme/c6ecbe421298b0e89791655b153cfb3287a5c522/.github/asset/dsh-neu-theme-hero.png",
+            "https://raw.githubusercontent.com/Lhy723/dsh-neu-theme/c6ecbe421298b0e89791655b153cfb3287a5c522/.github/asset/light.webp",
+            "https://raw.githubusercontent.com/Lhy723/dsh-neu-theme/c6ecbe421298b0e89791655b153cfb3287a5c522/.github/asset/dark.webp"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 11,
+          "starsSnapshot": 2,
+          "updatedAt": "2026-08-16T12:32:42.957Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "lhy723.dsh-neu-theme",
+        "name": {
+          "zh": "dsh-neu-theme",
+          "en": "dsh-neu-theme"
+        },
+        "author": "Lhy723",
+        "description": "DSH Web 轻拟物主题：提供浅色与深色配色、环境光影、材质阴影、纹理、磨砂玻璃表面与微交互。",
+        "repo": "https://github.com/Lhy723/dsh-neu-theme",
+        "package": "dsh-neu-theme",
+        "rowId": "neu-theme",
+        "category": "theme",
+        "tags": [
+          "glass",
+          "motion",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:Lhy723/dsh-neu-theme#c6ecbe421298b0e89791655b153cfb3287a5c522",
+          "version": "0.1.0",
+          "commit": "c6ecbe421298b0e89791655b153cfb3287a5c522"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/Lhy723/dsh-neu-theme/c6ecbe421298b0e89791655b153cfb3287a5c522/.github/asset/dsh-neu-theme-hero.png",
+          "https://raw.githubusercontent.com/Lhy723/dsh-neu-theme/c6ecbe421298b0e89791655b153cfb3287a5c522/.github/asset/light.webp",
+          "https://raw.githubusercontent.com/Lhy723/dsh-neu-theme/c6ecbe421298b0e89791655b153cfb3287a5c522/.github/asset/dark.webp"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 11,
+        "starsSnapshot": 2,
+        "releaseUpdatedAt": "2026-08-16T12:32:42.957Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:54.077Z",
+        "starsUpdatedAt": "2026-08-16T12:32:42.957Z",
+        "updatedAt": "2026-08-16T13:25:54.077Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-client-ui-theme-xp",
+        "owner": "SamizuHM",
+        "url": "https://github.com/SamizuHM/dsh-client-ui-theme-xp",
+        "page": "https://awesome-dsh-plugin.com/p/SamizuHM/dsh-client-ui-theme-xp/",
+        "category": "theme",
+        "description": {
+          "en": "Windows XP Luna desktop for the DSH Web UI: a floating window manager with taskbar and desktop icons, plus the era-accurate Luna skin.",
+          "zh": "Windows XP Luna 桌面化主题：浮动窗口管理器（任务栏、桌面图标）加上还原度很高的 Luna 皮肤。"
+        },
+        "npm": "dsh-client-ui-theme-xp",
+        "stars": 2,
+        "install": "dsh plugin --profile web add dsh-client-ui-theme-xp",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "SamizuHM",
+        "repo": "dsh-client-ui-theme-xp",
+        "fullName": "SamizuHM/dsh-client-ui-theme-xp",
+        "subpath": null,
+        "repository": "https://github.com/SamizuHM/dsh-client-ui-theme-xp"
+      },
+      "sha": "3cc412f4e877c127dea2e5b6e3413e5ddc95ce97",
+      "prior": {
+        "file": "SamizuHM__dsh-client-ui-theme-xp.yml",
+        "value": {
+          "id": "samizuhm.dsh-client-ui-theme-xp",
+          "name": {
+            "zh": "dsh-client-ui-theme-xp",
+            "en": "dsh-client-ui-theme-xp"
+          },
+          "author": "SamizuHM",
+          "description": "Windows XP Luna 桌面化主题：浮动窗口管理器（任务栏、桌面图标）加上还原度很高的 Luna 皮肤。",
+          "repo": "https://github.com/SamizuHM/dsh-client-ui-theme-xp",
+          "package": "dsh-client-ui-theme-xp",
+          "rowId": "ui-theme-xp",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "retro",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:SamizuHM/dsh-client-ui-theme-xp#3cc412f4e877c127dea2e5b6e3413e5ddc95ce97",
+            "version": "0.1.1",
+            "commit": "3cc412f4e877c127dea2e5b6e3413e5ddc95ce97"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/SamizuHM/dsh-client-ui-theme-xp/3cc412f4e877c127dea2e5b6e3413e5ddc95ce97/docs/screenshot.png"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 28,
+          "starsSnapshot": 2,
+          "updatedAt": "2026-08-16T12:16:17.062Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "samizuhm.dsh-client-ui-theme-xp",
+        "name": {
+          "zh": "dsh-client-ui-theme-xp",
+          "en": "dsh-client-ui-theme-xp"
+        },
+        "author": "SamizuHM",
+        "description": "Windows XP Luna 桌面化主题：浮动窗口管理器（任务栏、桌面图标）加上还原度很高的 Luna 皮肤。",
+        "repo": "https://github.com/SamizuHM/dsh-client-ui-theme-xp",
+        "package": "dsh-client-ui-theme-xp",
+        "rowId": "ui-theme-xp",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "retro",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:SamizuHM/dsh-client-ui-theme-xp#3cc412f4e877c127dea2e5b6e3413e5ddc95ce97",
+          "version": "0.1.1",
+          "commit": "3cc412f4e877c127dea2e5b6e3413e5ddc95ce97"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/SamizuHM/dsh-client-ui-theme-xp/3cc412f4e877c127dea2e5b6e3413e5ddc95ce97/docs/screenshot.png"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 28,
+        "starsSnapshot": 2,
+        "releaseUpdatedAt": "2026-08-16T12:16:17.062Z",
+        "metadataUpdatedAt": "2026-08-16T13:25:59.107Z",
+        "starsUpdatedAt": "2026-08-16T12:16:17.062Z",
+        "updatedAt": "2026-08-16T13:25:59.107Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "Solarized-dsh-theme",
+        "owner": "zhijun-dai",
+        "url": "https://github.com/zhijun-dai/Solarized-dsh-theme",
+        "page": "https://awesome-dsh-plugin.com/p/zhijun-dai/Solarized-dsh-theme/",
+        "category": "theme",
+        "description": {
+          "en": "Solarized and Selenized theme plugin: four faithful palettes registered with the DSH Web theme runtime.",
+          "zh": "Solarized 与 Selenized 主题插件：向 DSH Web 主题运行时注册四套忠实色板。"
+        },
+        "npm": "@yuquexianzhou/solarized-dsh-theme",
+        "stars": 2,
+        "install": "dsh plugin --profile web add @yuquexianzhou/solarized-dsh-theme",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "zhijun-dai",
+        "repo": "Solarized-dsh-theme",
+        "fullName": "zhijun-dai/Solarized-dsh-theme",
+        "subpath": null,
+        "repository": "https://github.com/zhijun-dai/Solarized-dsh-theme"
+      },
+      "sha": "6b0614e53a4314c1705967b7e3c437b64dee64f2",
+      "prior": {
+        "file": "zhijun-dai__Solarized-dsh-theme.yml",
+        "value": {
+          "id": "zhijun-dai.solarized-dsh-theme",
+          "name": {
+            "zh": "Solarized-dsh-theme",
+            "en": "Solarized-dsh-theme"
+          },
+          "author": "zhijun-dai",
+          "description": "Solarized 与 Selenized 主题插件：向 DSH Web 主题运行时注册四套忠实色板。",
+          "repo": "https://github.com/zhijun-dai/Solarized-dsh-theme",
+          "package": "@yuquexianzhou/solarized-dsh-theme",
+          "rowId": "solarized",
+          "category": "theme",
+          "tags": [
+            "pastel",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:zhijun-dai/Solarized-dsh-theme#6b0614e53a4314c1705967b7e3c437b64dee64f2",
+            "version": "0.1.1",
+            "commit": "6b0614e53a4314c1705967b7e3c437b64dee64f2"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/misc/transparent.png",
+            "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/preview.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/solarized-dark.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/solarized-light.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/selenized-dark.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/selenized-light.webp"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 12,
+          "starsSnapshot": 2,
+          "updatedAt": "2026-08-16T12:32:51.434Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "zhijun-dai.solarized-dsh-theme",
+        "name": {
+          "zh": "Solarized-dsh-theme",
+          "en": "Solarized-dsh-theme"
+        },
+        "author": "zhijun-dai",
+        "description": "Solarized 与 Selenized 主题插件：向 DSH Web 主题运行时注册四套忠实色板。",
+        "repo": "https://github.com/zhijun-dai/Solarized-dsh-theme",
+        "package": "@yuquexianzhou/solarized-dsh-theme",
+        "rowId": "solarized",
+        "category": "theme",
+        "tags": [
+          "pastel",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:zhijun-dai/Solarized-dsh-theme#6b0614e53a4314c1705967b7e3c437b64dee64f2",
+          "version": "0.1.1",
+          "commit": "6b0614e53a4314c1705967b7e3c437b64dee64f2"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/misc/transparent.png",
+          "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/preview.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/solarized-dark.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/solarized-light.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/selenized-dark.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/selenized-light.webp"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 12,
+        "starsSnapshot": 2,
+        "releaseUpdatedAt": "2026-08-16T12:32:51.434Z",
+        "metadataUpdatedAt": "2026-08-16T13:26:07.852Z",
+        "starsUpdatedAt": "2026-08-16T12:32:51.434Z",
+        "updatedAt": "2026-08-16T13:26:07.852Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "ikun-theme-skin",
+        "owner": "AKS1st",
+        "url": "https://github.com/AKS1st/ikun-theme-skin",
+        "page": "https://awesome-dsh-plugin.com/p/AKS1st/ikun-theme-skin/",
+        "category": "theme",
+        "description": {
+          "en": "IKUN fandom skin for the DSH Web UI: star-blue and black-gold palettes in the system theme list, full-screen photo wallpaper rotation, a music box, and a send-button voice line.",
+          "zh": "ikun 主题皮肤：星蓝昼/夜与背带裤黑金三套配色接入系统主题列表，全屏照片壁纸轮播、音乐盒与发送音效。"
+        },
+        "npm": null,
+        "stars": 2,
+        "install": "dsh plugin --profile web add github:AKS1st/ikun-theme-skin",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "AKS1st",
+        "repo": "ikun-theme-skin",
+        "fullName": "AKS1st/ikun-theme-skin",
+        "subpath": null,
+        "repository": "https://github.com/AKS1st/ikun-theme-skin"
+      },
+      "sha": "c0e59e61332a5e3317365848f73240308d9d9345",
+      "prior": {
+        "file": "AKS1st__ikun-theme-skin.yml",
+        "value": {
+          "id": "aks1st.ikun-theme-skin",
+          "name": {
+            "zh": "ikun-theme-skin",
+            "en": "ikun-theme-skin"
+          },
+          "author": "AKS1st",
+          "description": "ikun 主题皮肤：星蓝昼/夜与背带裤黑金三套配色接入系统主题列表，全屏照片壁纸轮播、音乐盒与发送音效。",
+          "repo": "https://github.com/AKS1st/ikun-theme-skin",
+          "package": "ikun-theme-skin",
+          "rowId": "ikun-theme-skin",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "motion",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:AKS1st/ikun-theme-skin#c0e59e61332a5e3317365848f73240308d9d9345",
+            "version": "1.0.0",
+            "commit": "c0e59e61332a5e3317365848f73240308d9d9345"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/c0e59e61332a5e3317365848f73240308d9d9345/AKS1st/ikun-theme-skin"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 33,
+          "starsSnapshot": 0,
+          "updatedAt": "2026-08-16T12:50:27.463Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "aks1st.ikun-theme-skin",
+        "name": {
+          "zh": "ikun-theme-skin",
+          "en": "ikun-theme-skin"
+        },
+        "author": "AKS1st",
+        "description": "ikun 主题皮肤：星蓝昼/夜与背带裤黑金三套配色接入系统主题列表，全屏照片壁纸轮播、音乐盒与发送音效。",
+        "repo": "https://github.com/AKS1st/ikun-theme-skin",
+        "package": "ikun-theme-skin",
+        "rowId": "ikun-theme-skin",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "motion",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:AKS1st/ikun-theme-skin#c0e59e61332a5e3317365848f73240308d9d9345",
+          "version": "1.0.0",
+          "commit": "c0e59e61332a5e3317365848f73240308d9d9345"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/c0e59e61332a5e3317365848f73240308d9d9345/AKS1st/ikun-theme-skin"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 33,
+        "starsSnapshot": 2,
+        "releaseUpdatedAt": "2026-08-16T12:50:27.463Z",
+        "metadataUpdatedAt": "2026-08-16T13:26:15.783Z",
+        "starsUpdatedAt": "2026-08-16T13:26:15.783Z",
+        "updatedAt": "2026-08-16T13:26:15.783Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-arknights#pramanix-eyjafjalla",
+        "owner": "DocJlm",
+        "url": "https://github.com/DocJlm/dsh-arknights/tree/main/skins/pramanix-eyjafjalla",
+        "page": "https://awesome-dsh-plugin.com/p/DocJlm/dsh-arknights--skins-pramanix-eyjafjalla/",
+        "category": "theme",
+        "description": {
+          "en": "Arknights-inspired fan skin for the DSH Web UI featuring Pramanix and Eyjafjalla in a day/night celestial garden.",
+          "zh": "DSH Web 明日方舟同人皮肤“初雪和小羊”，包含昼夜星海庭园背景与双角色布局。"
+        },
+        "npm": null,
+        "stars": 1,
+        "install": "dsh plugin --profile web add github:DocJlm/dsh-arknights#path:/skins/pramanix-eyjafjalla",
+        "added": "2026-08-16",
+        "screenshots": [
+          "https://raw.githubusercontent.com/DocJlm/dsh-arknights/main/skins/pramanix-eyjafjalla/preview/cover.webp"
+        ]
+      },
+      "target": {
+        "owner": "DocJlm",
+        "repo": "dsh-arknights",
+        "fullName": "DocJlm/dsh-arknights",
+        "subpath": "skins/pramanix-eyjafjalla",
+        "repository": "https://github.com/DocJlm/dsh-arknights"
+      },
+      "sha": "6419ea4d249945daa4bc05112b32ee868f5d2d6c",
+      "prior": {
+        "file": "DocJlm__dsh-arknights--skins--pramanix-eyjafjalla.yml",
+        "value": {
+          "id": "docjlm.pramanix-eyjafjalla",
+          "name": {
+            "zh": "pramanix-eyjafjalla",
+            "en": "pramanix-eyjafjalla"
+          },
+          "author": "DocJlm",
+          "description": "DSH Web 明日方舟同人皮肤“初雪和小羊”，包含昼夜星海庭园背景与双角色布局。",
+          "repo": "https://github.com/DocJlm/dsh-arknights",
+          "subpath": "skins/pramanix-eyjafjalla",
+          "package": "dsh-arknights",
+          "rowId": "ui-skin-arknights",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "motion",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:DocJlm/dsh-arknights#6419ea4d249945daa4bc05112b32ee868f5d2d6c&path:skins/pramanix-eyjafjalla",
+            "version": "0.1.0",
+            "commit": "6419ea4d249945daa4bc05112b32ee868f5d2d6c"
+          },
+          "compatibility": {
+            "dsh": "0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/DocJlm/dsh-arknights/6419ea4d249945daa4bc05112b32ee868f5d2d6c/skins/pramanix-eyjafjalla/preview/cover.webp"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 17,
+          "starsSnapshot": 1,
+          "updatedAt": "2026-08-16T12:32:55.976Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "docjlm.pramanix-eyjafjalla",
+        "name": {
+          "zh": "pramanix-eyjafjalla",
+          "en": "pramanix-eyjafjalla"
+        },
+        "author": "DocJlm",
+        "description": "DSH Web 明日方舟同人皮肤“初雪和小羊”，包含昼夜星海庭园背景与双角色布局。",
+        "repo": "https://github.com/DocJlm/dsh-arknights",
+        "subpath": "skins/pramanix-eyjafjalla",
+        "package": "dsh-arknights",
+        "rowId": "ui-skin-arknights",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "motion",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:DocJlm/dsh-arknights#6419ea4d249945daa4bc05112b32ee868f5d2d6c&path:skins/pramanix-eyjafjalla",
+          "version": "0.1.0",
+          "commit": "6419ea4d249945daa4bc05112b32ee868f5d2d6c"
+        },
+        "compatibility": {
+          "dsh": "0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/DocJlm/dsh-arknights/6419ea4d249945daa4bc05112b32ee868f5d2d6c/skins/pramanix-eyjafjalla/preview/cover.webp"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 17,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T12:32:55.976Z",
+        "metadataUpdatedAt": "2026-08-16T13:26:23.483Z",
+        "starsUpdatedAt": "2026-08-16T12:32:55.976Z",
+        "updatedAt": "2026-08-16T13:26:23.483Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-thought-buddy",
+        "owner": "dsh-plugins",
+        "url": "https://github.com/dsh-plugins/dsh-thought-buddy",
+        "page": "https://awesome-dsh-plugin.com/p/dsh-plugins/dsh-thought-buddy/",
+        "category": "theme",
+        "description": {
+          "en": "A GrokBot-style animated avatar with a synchronized typewriter status line — right in front of the \"Deep diving...\" indicator.",
+          "zh": "在「Deep diving...」状态提示前，放一只动态小伙伴——GrokBot 风格动画头像，状态文字还会同步打字机变换。"
+        },
+        "npm": "@dsh-plugin/dsh-thought-buddy",
+        "stars": 1,
+        "install": "dsh plugin --profile web add @dsh-plugin/dsh-thought-buddy",
+        "added": "2026-08-16"
+      },
+      "target": {
+        "owner": "dsh-plugins",
+        "repo": "dsh-thought-buddy",
+        "fullName": "dsh-plugins/dsh-thought-buddy",
+        "subpath": null,
+        "repository": "https://github.com/dsh-plugins/dsh-thought-buddy"
+      },
+      "sha": "bb8f1aa5972aab844b0c9793f0793b34f4a486b8",
+      "prior": {
+        "file": "dsh-plugins__dsh-thought-buddy.yml",
+        "value": {
+          "id": "dsh-plugins.dsh-thought-buddy",
+          "name": {
+            "zh": "dsh-thought-buddy",
+            "en": "dsh-thought-buddy"
+          },
+          "author": "dsh-plugins",
+          "description": "在「Deep diving...」状态提示前，放一只动态小伙伴——GrokBot 风格动画头像，状态文字还会同步打字机变换。",
+          "repo": "https://github.com/dsh-plugins/dsh-thought-buddy",
+          "package": "@dsh-plugin/dsh-thought-buddy",
+          "rowId": "thought-buddy",
+          "category": "theme",
+          "tags": [
+            "retro",
+            "motion",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:dsh-plugins/dsh-thought-buddy#bb8f1aa5972aab844b0c9793f0793b34f4a486b8",
+            "version": "0.2.0",
+            "commit": "bb8f1aa5972aab844b0c9793f0793b34f4a486b8"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/dsh-plugins/dsh-thought-buddy/bb8f1aa5972aab844b0c9793f0793b34f4a486b8/docs/banner.png",
+            "https://raw.githubusercontent.com/dsh-plugins/dsh-thought-buddy/bb8f1aa5972aab844b0c9793f0793b34f4a486b8/docs/effect.gif",
+            "https://raw.githubusercontent.com/dsh-plugins/dsh-thought-buddy/bb8f1aa5972aab844b0c9793f0793b34f4a486b8/docs/img.png"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "BSD-3-Clause",
+            "commercialUse": false
+          },
+          "featuredRank": 29,
+          "starsSnapshot": 1,
+          "updatedAt": "2026-08-16T12:16:21.589Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "dsh-plugins.dsh-thought-buddy",
+        "name": {
+          "zh": "dsh-thought-buddy",
+          "en": "dsh-thought-buddy"
+        },
+        "author": "dsh-plugins",
+        "description": "在「Deep diving...」状态提示前，放一只动态小伙伴——GrokBot 风格动画头像，状态文字还会同步打字机变换。",
+        "repo": "https://github.com/dsh-plugins/dsh-thought-buddy",
+        "package": "@dsh-plugin/dsh-thought-buddy",
+        "rowId": "thought-buddy",
+        "category": "theme",
+        "tags": [
+          "retro",
+          "motion",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:dsh-plugins/dsh-thought-buddy#bb8f1aa5972aab844b0c9793f0793b34f4a486b8",
+          "version": "0.2.0",
+          "commit": "bb8f1aa5972aab844b0c9793f0793b34f4a486b8"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/dsh-plugins/dsh-thought-buddy/bb8f1aa5972aab844b0c9793f0793b34f4a486b8/docs/banner.png",
+          "https://raw.githubusercontent.com/dsh-plugins/dsh-thought-buddy/bb8f1aa5972aab844b0c9793f0793b34f4a486b8/docs/effect.gif",
+          "https://raw.githubusercontent.com/dsh-plugins/dsh-thought-buddy/bb8f1aa5972aab844b0c9793f0793b34f4a486b8/docs/img.png"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "BSD-3-Clause",
+          "commercialUse": true
+        },
+        "featuredRank": 29,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T12:16:21.589Z",
+        "metadataUpdatedAt": "2026-08-16T13:26:33.176Z",
+        "starsUpdatedAt": "2026-08-16T12:16:21.589Z",
+        "updatedAt": "2026-08-16T13:26:33.176Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-theme-switch",
+        "owner": "kinmat-A",
+        "url": "https://github.com/kinmat-A/dsh-theme-switch",
+        "page": "https://awesome-dsh-plugin.com/p/kinmat-A/dsh-theme-switch/",
+        "category": "market",
+        "description": {
+          "en": "One-click skin switching for DSH Web settings: auto-detects installed themes, keeps exactly one active at a time, and falls back to the official look when all are off. Changes apply instantly and survive restarts.",
+          "zh": "DSH 主题切换：自动检测已安装的皮肤/主题，在设置页一键互斥切换，全部停用时回退官方默认外观，切换即时生效并跨重启保留。"
+        },
+        "npm": null,
+        "stars": 1,
+        "install": "dsh plugin --profile web add github:kinmat-A/dsh-theme-switch",
+        "added": "2026-08-16"
+      },
+      "target": {
+        "owner": "kinmat-A",
+        "repo": "dsh-theme-switch",
+        "fullName": "kinmat-A/dsh-theme-switch",
+        "subpath": null,
+        "repository": "https://github.com/kinmat-A/dsh-theme-switch"
+      },
+      "sha": "320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67",
+      "prior": {
+        "file": "kinmat-A__dsh-theme-switch.yml",
+        "value": {
+          "id": "kinmat-a.dsh-theme-switch",
+          "name": {
+            "zh": "dsh-theme-switch",
+            "en": "dsh-theme-switch"
+          },
+          "author": "kinmat-A",
+          "description": "DSH 主题切换：自动检测已安装的皮肤/主题，在设置页一键互斥切换，全部停用时回退官方默认外观，切换即时生效并跨重启保留。",
+          "repo": "https://github.com/kinmat-A/dsh-theme-switch",
+          "package": "@dsh-external/dsh-theme-switch",
+          "rowId": "ui-theme-switch",
+          "category": "theme",
+          "tags": [
+            "token-theme"
+          ],
+          "modes": [
+            "dark"
+          ],
+          "install": {
+            "target": "github:kinmat-A/dsh-theme-switch#320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67",
+            "version": "0.0.1",
+            "commit": "320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67"
+          },
+          "compatibility": {
+            "dsh": ">=0.0.1-rc <2",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://cdn.jsdelivr.net/gh/kinmat-A/dsh-theme-switch@main/docs/screenshot-zh.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "BSD-3-Clause",
+            "commercialUse": false
+          },
+          "featuredRank": 13,
+          "starsSnapshot": 1,
+          "updatedAt": "2026-08-16T12:33:06.282Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "kinmat-a.dsh-theme-switch",
+        "name": {
+          "zh": "dsh-theme-switch",
+          "en": "dsh-theme-switch"
+        },
+        "author": "kinmat-A",
+        "description": "DSH 主题切换：自动检测已安装的皮肤/主题，在设置页一键互斥切换，全部停用时回退官方默认外观，切换即时生效并跨重启保留。",
+        "repo": "https://github.com/kinmat-A/dsh-theme-switch",
+        "package": "@dsh-external/dsh-theme-switch",
+        "rowId": "ui-theme-switch",
+        "category": "theme",
+        "tags": [
+          "token-theme"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "install": {
+          "target": "github:kinmat-A/dsh-theme-switch#320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67",
+          "version": "0.0.1",
+          "commit": "320edb2601e4ff1d62ea8bb7bf14bb3a8d2c4d67"
+        },
+        "compatibility": {
+          "dsh": ">=0.0.1-rc <2",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://cdn.jsdelivr.net/gh/kinmat-A/dsh-theme-switch@main/docs/screenshot-zh.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "BSD-3-Clause",
+          "commercialUse": true
+        },
+        "featuredRank": 13,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T12:33:06.282Z",
+        "metadataUpdatedAt": "2026-08-16T13:26:38.346Z",
+        "starsUpdatedAt": "2026-08-16T12:33:06.282Z",
+        "updatedAt": "2026-08-16T13:26:38.346Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-themes",
+        "owner": "MangMax",
+        "url": "https://github.com/MangMax/dsh-themes",
+        "page": "https://awesome-dsh-plugin.com/p/MangMax/dsh-themes/",
+        "category": "theme",
+        "description": {
+          "en": "Look & theme plugin for the DSH Web UI: built-in palettes, light/dark/follow-system appearance modes, Open VSX theme search & install, and VS Code theme import with a persisted theme library.",
+          "zh": "DSH Web UI 外观与主题插件：内置调色板、明 / 暗 / 跟随系统外观模式、Open VSX 主题搜索导入与 VS Code 主题导入，主题库持久化。"
+        },
+        "npm": null,
+        "stars": 1,
+        "install": "dsh plugin --profile web add github:MangMax/dsh-themes",
+        "added": "2026-08-15",
+        "screenshots": [
+          "https://raw.githubusercontent.com/MangMax/dsh-themes/main/assets/screenshot.png"
+        ]
+      },
+      "target": {
+        "owner": "MangMax",
+        "repo": "dsh-themes",
+        "fullName": "MangMax/dsh-themes",
+        "subpath": null,
+        "repository": "https://github.com/MangMax/dsh-themes"
+      },
+      "sha": "9194cd266a113837f8a31a972405c1b647f5ce8c",
+      "prior": {
+        "file": "MangMax__dsh-themes.yml",
+        "value": {
+          "id": "mangmax.dsh-themes",
+          "name": {
+            "zh": "dsh-themes",
+            "en": "dsh-themes"
+          },
+          "author": "MangMax",
+          "description": "DSH Web UI 外观与主题插件：内置调色板、明 / 暗 / 跟随系统外观模式、Open VSX 主题搜索导入与 VS Code 主题导入，主题库持久化。",
+          "repo": "https://github.com/MangMax/dsh-themes",
+          "package": "dsh-themes",
+          "rowId": "dsh-themes",
+          "category": "theme",
+          "tags": [
+            "motion",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:MangMax/dsh-themes#9194cd266a113837f8a31a972405c1b647f5ce8c",
+            "version": "0.1.7",
+            "commit": "9194cd266a113837f8a31a972405c1b647f5ce8c"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/MangMax/dsh-themes/9194cd266a113837f8a31a972405c1b647f5ce8c/assets/screenshot.png"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 30,
+          "starsSnapshot": 1,
+          "updatedAt": "2026-08-16T12:16:26.193Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "mangmax.dsh-themes",
+        "name": {
+          "zh": "dsh-themes",
+          "en": "dsh-themes"
+        },
+        "author": "MangMax",
+        "description": "DSH Web UI 外观与主题插件：内置调色板、明 / 暗 / 跟随系统外观模式、Open VSX 主题搜索导入与 VS Code 主题导入，主题库持久化。",
+        "repo": "https://github.com/MangMax/dsh-themes",
+        "package": "dsh-themes",
+        "rowId": "dsh-themes",
+        "category": "theme",
+        "tags": [
+          "motion",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:MangMax/dsh-themes#9194cd266a113837f8a31a972405c1b647f5ce8c",
+          "version": "0.1.7",
+          "commit": "9194cd266a113837f8a31a972405c1b647f5ce8c"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/MangMax/dsh-themes/9194cd266a113837f8a31a972405c1b647f5ce8c/assets/screenshot.png"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 30,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T12:16:26.193Z",
+        "metadataUpdatedAt": "2026-08-16T13:26:44.625Z",
+        "starsUpdatedAt": "2026-08-16T12:16:26.193Z",
+        "updatedAt": "2026-08-16T13:26:44.625Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-frosted-window",
+        "owner": "SenryLee",
+        "url": "https://github.com/SenryLee/dsh-frosted-window",
+        "page": "https://awesome-dsh-plugin.com/p/SenryLee/dsh-frosted-window/",
+        "category": "theme",
+        "description": {
+          "en": "Upload an image as a full-window frosted-glass theme: sidebar/conversation/details share one frost layer, Save/Delete, official Light/Dark/System stay in charge.",
+          "zh": "上传图片作为整窗磨砂玻璃主题：侧栏/会话/详情同一层磨砂，保存/删除，官方浅色/深色/跟随系统仍有效。"
+        },
+        "npm": null,
+        "stars": 1,
+        "install": "dsh plugin --profile web add github:SenryLee/dsh-frosted-window",
+        "added": "2026-08-16"
+      },
+      "target": {
+        "owner": "SenryLee",
+        "repo": "dsh-frosted-window",
+        "fullName": "SenryLee/dsh-frosted-window",
+        "subpath": null,
+        "repository": "https://github.com/SenryLee/dsh-frosted-window"
+      },
+      "sha": "ccee61d02837d2e3e3160743c07c8627a40c3438",
+      "prior": {
+        "file": "SenryLee__dsh-frosted-window.yml",
+        "value": {
+          "id": "senrylee.dsh-frosted-window",
+          "name": {
+            "zh": "dsh-frosted-window",
+            "en": "dsh-frosted-window"
+          },
+          "author": "SenryLee",
+          "description": "上传图片作为整窗磨砂玻璃主题：侧栏/会话/详情同一层磨砂，保存/删除，官方浅色/深色/跟随系统仍有效。",
+          "repo": "https://github.com/SenryLee/dsh-frosted-window",
+          "package": "dsh-frosted-window",
+          "rowId": "dsh-frosted-window",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:SenryLee/dsh-frosted-window#ccee61d02837d2e3e3160743c07c8627a40c3438",
+            "version": "0.1.0",
+            "commit": "ccee61d02837d2e3e3160743c07c8627a40c3438"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/SenryLee/dsh-frosted-window/ccee61d02837d2e3e3160743c07c8627a40c3438/docs/preview.jpg"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 31,
+          "starsSnapshot": 1,
+          "updatedAt": "2026-08-16T12:16:30.062Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "senrylee.dsh-frosted-window",
+        "name": {
+          "zh": "dsh-frosted-window",
+          "en": "dsh-frosted-window"
+        },
+        "author": "SenryLee",
+        "description": "上传图片作为整窗磨砂玻璃主题：侧栏/会话/详情同一层磨砂，保存/删除，官方浅色/深色/跟随系统仍有效。",
+        "repo": "https://github.com/SenryLee/dsh-frosted-window",
+        "package": "dsh-frosted-window",
+        "rowId": "dsh-frosted-window",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:SenryLee/dsh-frosted-window#ccee61d02837d2e3e3160743c07c8627a40c3438",
+          "version": "0.1.0",
+          "commit": "ccee61d02837d2e3e3160743c07c8627a40c3438"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/SenryLee/dsh-frosted-window/ccee61d02837d2e3e3160743c07c8627a40c3438/docs/preview.jpg"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 31,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T12:16:30.062Z",
+        "metadataUpdatedAt": "2026-08-16T13:26:53.300Z",
+        "starsUpdatedAt": "2026-08-16T12:16:30.062Z",
+        "updatedAt": "2026-08-16T13:26:53.300Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-whale-background",
+        "owner": "tuogusa",
+        "url": "https://github.com/tuogusa/dsh-whale-background",
+        "page": "https://awesome-dsh-plugin.com/p/tuogusa/dsh-whale-background/",
+        "category": "theme",
+        "description": {
+          "en": "Whale-girl wallpaper background with a frosted semi-transparent app surface for the Web UI.",
+          "zh": "Web UI 鲸鱼娘壁纸背景，应用表面半透明磨砂。"
+        },
+        "npm": null,
+        "stars": 1,
+        "install": "dsh plugin --profile web add github:tuogusa/dsh-whale-background",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "tuogusa",
+        "repo": "dsh-whale-background",
+        "fullName": "tuogusa/dsh-whale-background",
+        "subpath": null,
+        "repository": "https://github.com/tuogusa/dsh-whale-background"
+      },
+      "sha": "544491c0723158b63dedf4a462af8a8bd2282098",
+      "prior": {
+        "file": "tuogusa__dsh-whale-background.yml",
+        "value": {
+          "id": "tuogusa.dsh-whale-background",
+          "name": {
+            "zh": "dsh-whale-background",
+            "en": "dsh-whale-background"
+          },
+          "author": "tuogusa",
+          "description": "Web UI 鲸鱼娘壁纸背景，应用表面半透明磨砂。",
+          "repo": "https://github.com/tuogusa/dsh-whale-background",
+          "package": "dsh-whale-background",
+          "rowId": "whale-background",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:tuogusa/dsh-whale-background#544491c0723158b63dedf4a462af8a8bd2282098",
+            "version": "0.2.0",
+            "commit": "544491c0723158b63dedf4a462af8a8bd2282098"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/544491c0723158b63dedf4a462af8a8bd2282098/tuogusa/dsh-whale-background"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 32,
+          "starsSnapshot": 1,
+          "updatedAt": "2026-08-16T12:16:34.856Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "tuogusa.dsh-whale-background",
+        "name": {
+          "zh": "dsh-whale-background",
+          "en": "dsh-whale-background"
+        },
+        "author": "tuogusa",
+        "description": "Web UI 鲸鱼娘壁纸背景，应用表面半透明磨砂。",
+        "repo": "https://github.com/tuogusa/dsh-whale-background",
+        "package": "dsh-whale-background",
+        "rowId": "whale-background",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:tuogusa/dsh-whale-background#544491c0723158b63dedf4a462af8a8bd2282098",
+          "version": "0.2.0",
+          "commit": "544491c0723158b63dedf4a462af8a8bd2282098"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/544491c0723158b63dedf4a462af8a8bd2282098/tuogusa/dsh-whale-background"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 32,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T12:16:34.856Z",
+        "metadataUpdatedAt": "2026-08-16T13:27:06.129Z",
+        "starsUpdatedAt": "2026-08-16T12:16:34.856Z",
+        "updatedAt": "2026-08-16T13:27:06.129Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-liquid-glass",
+        "owner": "Ultronen",
+        "url": "https://github.com/Ultronen/dsh-liquid-glass",
+        "page": "https://awesome-dsh-plugin.com/p/Ultronen/dsh-liquid-glass/",
+        "category": "theme",
+        "description": {
+          "en": "One toggle makes the whole DeepSeek Harness shell translucent, with an opacity slider and a custom full-page background.",
+          "zh": "一键让整个 DeepSeek Harness 界面通透起来：透明度滑块随心调，背景图自由换。"
+        },
+        "npm": "dsh-liquid-glass",
+        "stars": 1,
+        "install": "dsh plugin --profile web add dsh-liquid-glass",
+        "added": "2026-08-16",
+        "screenshots": [
+          "https://raw.githubusercontent.com/Ultronen/dsh-liquid-glass/main/assets/screenshots/1-settings.png",
+          "https://raw.githubusercontent.com/Ultronen/dsh-liquid-glass/main/assets/screenshots/2-glass-shell.png",
+          "https://raw.githubusercontent.com/Ultronen/dsh-liquid-glass/main/assets/screenshots/3-settings-wallpaper.png"
+        ]
+      },
+      "target": {
+        "owner": "Ultronen",
+        "repo": "dsh-liquid-glass",
+        "fullName": "Ultronen/dsh-liquid-glass",
+        "subpath": null,
+        "repository": "https://github.com/Ultronen/dsh-liquid-glass"
+      },
+      "sha": "f710ce2fbb1e91c82f72df49ee513e109d0f3ba3",
+      "changed": true,
+      "starsVerified": true,
+      "status": "blocked",
+      "entry": {
+        "id": "ultronen.dsh-liquid-glass",
+        "name": {
+          "zh": "dsh-liquid-glass",
+          "en": "dsh-liquid-glass"
+        },
+        "author": "Ultronen",
+        "description": "一键让整个 DeepSeek Harness 界面通透起来：透明度滑块随心调，背景图自由换。",
+        "repo": "https://github.com/Ultronen/dsh-liquid-glass",
+        "package": "dsh-liquid-glass",
+        "rowId": "liquid-glass",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:Ultronen/dsh-liquid-glass#f710ce2fbb1e91c82f72df49ee513e109d0f3ba3",
+          "version": "0.1.0",
+          "commit": "f710ce2fbb1e91c82f72df49ee513e109d0f3ba3"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/Ultronen/dsh-liquid-glass/f710ce2fbb1e91c82f72df49ee513e109d0f3ba3/assets/screenshots/1-settings.png",
+          "https://raw.githubusercontent.com/Ultronen/dsh-liquid-glass/f710ce2fbb1e91c82f72df49ee513e109d0f3ba3/assets/screenshots/2-glass-shell.png",
+          "https://raw.githubusercontent.com/Ultronen/dsh-liquid-glass/f710ce2fbb1e91c82f72df49ee513e109d0f3ba3/assets/screenshots/3-settings-wallpaper.png"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 999,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T13:27:12.365Z",
+        "metadataUpdatedAt": "2026-08-16T13:27:12.365Z",
+        "starsUpdatedAt": "2026-08-16T13:27:12.365Z",
+        "updatedAt": "2026-08-16T13:27:12.365Z"
+      },
+      "blockers": [
+        "registry identity conflicts with an existing entry"
+      ]
+    },
+    {
+      "plugin": {
+        "name": "dsh-anthropic-fonts",
+        "owner": "Isilsolme",
+        "url": "https://github.com/Isilsolme/dsh-anthropic-fonts",
+        "page": "https://awesome-dsh-plugin.com/p/Isilsolme/dsh-anthropic-fonts/",
+        "category": "theme",
+        "description": {
+          "en": "Anthropic Sans, Serif, and Mono fonts for the DSH Web UI, with Source Han fallback for CJK.",
+          "zh": "Anthropic Sans/Serif/Mono 字体：界面 Sans、对话 Serif、代码 Mono，中文回退思源字体。"
+        },
+        "npm": "dsh-anthropic-fonts",
+        "stars": 0,
+        "install": "dsh plugin --profile web add dsh-anthropic-fonts",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "Isilsolme",
+        "repo": "dsh-anthropic-fonts",
+        "fullName": "Isilsolme/dsh-anthropic-fonts",
+        "subpath": null,
+        "repository": "https://github.com/Isilsolme/dsh-anthropic-fonts"
+      },
+      "sha": "1b74cfdd4c17b155e666c1becd63da35cb44846a",
+      "prior": {
+        "file": "Isilsolme__dsh-anthropic-fonts.yml",
+        "value": {
+          "id": "isilsolme.dsh-anthropic-fonts",
+          "name": {
+            "zh": "dsh-anthropic-fonts",
+            "en": "dsh-anthropic-fonts"
+          },
+          "author": "Isilsolme",
+          "description": "Anthropic Sans/Serif/Mono 字体：界面 Sans、对话 Serif、代码 Mono，中文回退思源字体。",
+          "repo": "https://github.com/Isilsolme/dsh-anthropic-fonts",
+          "package": "dsh-anthropic-fonts",
+          "rowId": "anthropic-fonts",
+          "category": "theme",
+          "tags": [
+            "token-theme"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:Isilsolme/dsh-anthropic-fonts#1b74cfdd4c17b155e666c1becd63da35cb44846a",
+            "version": "0.2.0",
+            "commit": "1b74cfdd4c17b155e666c1becd63da35cb44846a"
+          },
+          "compatibility": {
+            "dsh": "unverified",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/1b74cfdd4c17b155e666c1becd63da35cb44846a/Isilsolme/dsh-anthropic-fonts"
+          ],
+          "review": {
+            "compatibility": "unverified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 34,
+          "starsSnapshot": 0,
+          "updatedAt": "2026-08-16T12:16:47.899Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "isilsolme.dsh-anthropic-fonts",
+        "name": {
+          "zh": "dsh-anthropic-fonts",
+          "en": "dsh-anthropic-fonts"
+        },
+        "author": "Isilsolme",
+        "description": "Anthropic Sans/Serif/Mono 字体：界面 Sans、对话 Serif、代码 Mono，中文回退思源字体。",
+        "repo": "https://github.com/Isilsolme/dsh-anthropic-fonts",
+        "package": "dsh-anthropic-fonts",
+        "rowId": "anthropic-fonts",
+        "category": "theme",
+        "tags": [
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:Isilsolme/dsh-anthropic-fonts#1b74cfdd4c17b155e666c1becd63da35cb44846a",
+          "version": "0.2.0",
+          "commit": "1b74cfdd4c17b155e666c1becd63da35cb44846a"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/1b74cfdd4c17b155e666c1becd63da35cb44846a/Isilsolme/dsh-anthropic-fonts"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 34,
+        "starsSnapshot": 0,
+        "releaseUpdatedAt": "2026-08-16T12:16:47.899Z",
+        "metadataUpdatedAt": "2026-08-16T13:27:17.033Z",
+        "starsUpdatedAt": "2026-08-16T12:16:47.899Z",
+        "updatedAt": "2026-08-16T13:27:17.033Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-wallpaper",
+        "owner": "keke050",
+        "url": "https://github.com/keke050/dsh-wallpaper",
+        "page": "https://awesome-dsh-plugin.com/p/keke050/dsh-wallpaper/",
+        "category": "theme",
+        "description": {
+          "en": "Wallpaper skin for the DSH Web UI: presets, image URL or upload, and an opacity slider that fades the interface to reveal the wallpaper.",
+          "zh": "DSH Web 壁纸皮肤：预设 / 图片 URL / 本地上传，透明度滑块让整面界面透出壁纸。"
+        },
+        "npm": null,
+        "stars": 0,
+        "install": "dsh plugin --profile web add github:keke050/dsh-wallpaper",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "keke050",
+        "repo": "dsh-wallpaper",
+        "fullName": "keke050/dsh-wallpaper",
+        "subpath": null,
+        "repository": "https://github.com/keke050/dsh-wallpaper"
+      },
+      "sha": "226ccd76c75291681d58709319b8d8da3dd6f44e",
+      "changed": true,
+      "starsVerified": true,
+      "status": "blocked",
+      "entry": {
+        "id": "keke050.dsh-wallpaper",
+        "name": {
+          "zh": "dsh-wallpaper",
+          "en": "dsh-wallpaper"
+        },
+        "author": "keke050",
+        "description": "DSH Web 壁纸皮肤：预设 / 图片 URL / 本地上传，透明度滑块让整面界面透出壁纸。",
+        "repo": "https://github.com/keke050/dsh-wallpaper",
+        "package": "dsh-wallpaper",
+        "rowId": "dsh-wallpaper",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "token-theme"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:keke050/dsh-wallpaper#226ccd76c75291681d58709319b8d8da3dd6f44e",
+          "version": "0.1.0",
+          "commit": "226ccd76c75291681d58709319b8d8da3dd6f44e"
+        },
+        "compatibility": {
+          "dsh": "unverified",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/226ccd76c75291681d58709319b8d8da3dd6f44e/keke050/dsh-wallpaper"
+        ],
+        "review": {
+          "compatibility": "unverified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 1000,
+        "starsSnapshot": 0,
+        "releaseUpdatedAt": "2026-08-16T13:27:25.182Z",
+        "metadataUpdatedAt": "2026-08-16T13:27:25.182Z",
+        "starsUpdatedAt": "2026-08-16T13:27:25.182Z",
+        "updatedAt": "2026-08-16T13:27:25.182Z"
+      },
+      "blockers": [
+        "registry identity conflicts with an existing entry"
+      ]
+    },
+    {
+      "plugin": {
+        "name": "dsh-qq2007-skin",
+        "owner": "LeemanCheung",
+        "url": "https://github.com/LeemanCheung/dsh-qq2007-skin",
+        "page": "https://awesome-dsh-plugin.com/p/LeemanCheung/dsh-qq2007-skin/",
+        "category": "theme",
+        "description": {
+          "en": "QQ 2007-inspired DSH Web skin: 72 native theme tokens, scoped three-pane chrome, original offline art and pixel buddy, an optional synthesized send chime, responsive/accessibility fallbacks, and reversible Settings switches.",
+          "zh": "DSH Web GUI 的 QQ 2007 风格皮肤：72 个原生主题 token、作用域三栏窗框、原创离线素材与像素伙伴、可选合成发送提示音、响应式/无障碍回退和可恢复设置开关。"
+        },
+        "npm": null,
+        "stars": 1,
+        "install": "dsh plugin --profile web add github:LeemanCheung/dsh-qq2007-skin",
+        "added": "2026-08-15",
+        "screenshots": [
+          "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/main/docs/screenshot.png",
+          "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/main/docs/preview.svg"
+        ]
+      },
+      "target": {
+        "owner": "LeemanCheung",
+        "repo": "dsh-qq2007-skin",
+        "fullName": "LeemanCheung/dsh-qq2007-skin",
+        "subpath": null,
+        "repository": "https://github.com/LeemanCheung/dsh-qq2007-skin"
+      },
+      "sha": "e7c61af021dab1d387566a07d3528dc563e4f070",
+      "prior": {
+        "file": "LeemanCheung__dsh-qq2007-skin.yml",
+        "value": {
+          "id": "leemancheung.dsh-qq2007-skin",
+          "name": {
+            "zh": "dsh-qq2007-skin",
+            "en": "dsh-qq2007-skin"
+          },
+          "author": "LeemanCheung",
+          "description": "DSH Web GUI 的 QQ 2007 风格皮肤：72 个原生主题 token、作用域三栏窗框、原创离线素材与像素伙伴、可选合成发送提示音、响应式/无障碍回退和可恢复设置开关。",
+          "repo": "https://github.com/LeemanCheung/dsh-qq2007-skin",
+          "package": "dsh-qq2007-skin",
+          "rowId": "qq2007-skin",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "retro",
+            "motion",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:LeemanCheung/dsh-qq2007-skin#e7c61af021dab1d387566a07d3528dc563e4f070",
+            "version": "0.3.0",
+            "commit": "e7c61af021dab1d387566a07d3528dc563e4f070"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/docs/screenshot.png",
+            "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/retro-buddy-stage.webp",
+            "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/blue-glass-chrome.webp",
+            "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/retro-toolbar-icons.webp",
+            "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/buddy-room-wallpaper.webp"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 14,
+          "starsSnapshot": 0,
+          "updatedAt": "2026-08-16T12:33:52.774Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "leemancheung.dsh-qq2007-skin",
+        "name": {
+          "zh": "dsh-qq2007-skin",
+          "en": "dsh-qq2007-skin"
+        },
+        "author": "LeemanCheung",
+        "description": "DSH Web GUI 的 QQ 2007 风格皮肤：72 个原生主题 token、作用域三栏窗框、原创离线素材与像素伙伴、可选合成发送提示音、响应式/无障碍回退和可恢复设置开关。",
+        "repo": "https://github.com/LeemanCheung/dsh-qq2007-skin",
+        "package": "dsh-qq2007-skin",
+        "rowId": "qq2007-skin",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "retro",
+          "motion",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:LeemanCheung/dsh-qq2007-skin#e7c61af021dab1d387566a07d3528dc563e4f070",
+          "version": "0.3.0",
+          "commit": "e7c61af021dab1d387566a07d3528dc563e4f070"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/docs/screenshot.png",
+          "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/retro-buddy-stage.webp",
+          "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/blue-glass-chrome.webp",
+          "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/retro-toolbar-icons.webp",
+          "https://raw.githubusercontent.com/LeemanCheung/dsh-qq2007-skin/e7c61af021dab1d387566a07d3528dc563e4f070/assets/runtime/buddy-room-wallpaper.webp"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 14,
+        "starsSnapshot": 1,
+        "releaseUpdatedAt": "2026-08-16T12:33:52.774Z",
+        "metadataUpdatedAt": "2026-08-16T13:27:35.466Z",
+        "starsUpdatedAt": "2026-08-16T13:27:35.466Z",
+        "updatedAt": "2026-08-16T13:27:35.466Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-skin-digital-arcade",
+        "owner": "RizenHNT",
+        "url": "https://github.com/RizenHNT/dsh-skin-digital-arcade",
+        "page": "https://awesome-dsh-plugin.com/p/RizenHNT/dsh-skin-digital-arcade/",
+        "category": "theme",
+        "description": {
+          "en": "Digital arcade HUD skin: neon cyan/violet/magenta palette, Ark Pixel fonts, animated sprites (city backdrop, data core, mascot), custom crosshair cursor; light and dark themes follow the system.",
+          "zh": "数码电玩风 HUD 皮肤：霓虹青/紫/品红配色、Ark Pixel 像素字体、动画精灵（背景城市/数据核心/吉祥物）、自定义十字准星光标，浅深双主题跟随系统。"
+        },
+        "npm": null,
+        "stars": 0,
+        "install": "dsh plugin --profile web add github:RizenHNT/dsh-skin-digital-arcade",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "RizenHNT",
+        "repo": "dsh-skin-digital-arcade",
+        "fullName": "RizenHNT/dsh-skin-digital-arcade",
+        "subpath": null,
+        "repository": "https://github.com/RizenHNT/dsh-skin-digital-arcade"
+      },
+      "sha": "04a29edc60e4a528e3967ebe688a9dfee994e4db",
+      "package": {
+        "name": "dsh-skin-digital-arcade",
+        "version": "0.1.1"
+      },
+      "status": "blocked",
+      "blockers": [
+        "dsh.client missing"
+      ],
+      "screenshots": [
+        "https://raw.githubusercontent.com/RizenHNT/dsh-skin-digital-arcade/04a29edc60e4a528e3967ebe688a9dfee994e4db/preview/preview-dark.png",
+        "https://raw.githubusercontent.com/RizenHNT/dsh-skin-digital-arcade/04a29edc60e4a528e3967ebe688a9dfee994e4db/preview/preview-light.png"
+      ]
+    },
+    {
+      "plugin": {
+        "name": "dsh-vscode-theme",
+        "owner": "Sim-xia",
+        "url": "https://github.com/Sim-xia/dsh-vscode-theme",
+        "page": "https://awesome-dsh-plugin.com/p/Sim-xia/dsh-vscode-theme/",
+        "category": "theme",
+        "description": {
+          "en": "Imports .vsix theme files made for Visual Studio Code and applies them to the DSH Web UI.",
+          "zh": "导入为 Visual Studio Code 设计的 .vsix 主题文件并应用到 DSH Web UI。"
+        },
+        "npm": null,
+        "stars": 0,
+        "install": "dsh plugin --profile web add github:Sim-xia/dsh-vscode-theme",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "Sim-xia",
+        "repo": "dsh-vscode-theme",
+        "fullName": "Sim-xia/dsh-vscode-theme",
+        "subpath": null,
+        "repository": "https://github.com/Sim-xia/dsh-vscode-theme"
+      },
+      "sha": "1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8",
+      "prior": {
+        "file": "Sim-xia__dsh-vscode-theme.yml",
+        "value": {
+          "id": "sim-xia.dsh-vscode-theme",
+          "name": {
+            "zh": "dsh-vscode-theme",
+            "en": "dsh-vscode-theme"
+          },
+          "author": "Sim-xia",
+          "description": "导入为 Visual Studio Code 设计的 .vsix 主题文件并应用到 DSH Web UI。",
+          "repo": "https://github.com/Sim-xia/dsh-vscode-theme",
+          "package": "dsh-vscode-theme",
+          "rowId": "vscode-theme",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "retro",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "dark"
+          ],
+          "install": {
+            "target": "github:Sim-xia/dsh-vscode-theme#1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8",
+            "version": "0.1.0",
+            "commit": "1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8"
+          },
+          "compatibility": {
+            "dsh": "^0.0.1-rc.1",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://opengraph.githubassets.com/1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8/Sim-xia/dsh-vscode-theme"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "repository-card"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 35,
+          "starsSnapshot": 0,
+          "updatedAt": "2026-08-16T12:17:02.328Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "sim-xia.dsh-vscode-theme",
+        "name": {
+          "zh": "dsh-vscode-theme",
+          "en": "dsh-vscode-theme"
+        },
+        "author": "Sim-xia",
+        "description": "导入为 Visual Studio Code 设计的 .vsix 主题文件并应用到 DSH Web UI。",
+        "repo": "https://github.com/Sim-xia/dsh-vscode-theme",
+        "package": "dsh-vscode-theme",
+        "rowId": "vscode-theme",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "retro",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "dark"
+        ],
+        "install": {
+          "target": "github:Sim-xia/dsh-vscode-theme#1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8",
+          "version": "0.1.0",
+          "commit": "1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8"
+        },
+        "compatibility": {
+          "dsh": "^0.0.1-rc.1",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://opengraph.githubassets.com/1e22fa74783f5f84e7ecb8d7b96fb2997dc9d4f8/Sim-xia/dsh-vscode-theme"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "repository-card"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 35,
+        "starsSnapshot": 0,
+        "releaseUpdatedAt": "2026-08-16T12:17:02.328Z",
+        "metadataUpdatedAt": "2026-08-16T13:27:54.700Z",
+        "starsUpdatedAt": "2026-08-16T12:17:02.328Z",
+        "updatedAt": "2026-08-16T13:27:54.700Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-homepage-skin",
+        "owner": "yushi-xxh",
+        "url": "https://github.com/yushi-xxh/dsh-homepage-skin",
+        "page": "https://awesome-dsh-plugin.com/p/yushi-xxh/dsh-homepage-skin/",
+        "category": "fun",
+        "description": {
+          "en": "Adds the DeepSeek Harness homepage background to dsh web: WebGL fluid light, dot-line grid and a digital point-cloud whale, with dark and light palettes.",
+          "zh": "给 dsh web 铺上 DeepSeek Harness 首页同款背景：WebGL 流体光效、点线网格与数字点云鲸鱼，深色/亮色两套配色。"
+        },
+        "npm": "dsh-homepage-skin",
+        "stars": 0,
+        "install": "dsh plugin --profile web add dsh-homepage-skin",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "yushi-xxh",
+        "repo": "dsh-homepage-skin",
+        "fullName": "yushi-xxh/dsh-homepage-skin",
+        "subpath": null,
+        "repository": "https://github.com/yushi-xxh/dsh-homepage-skin"
+      },
+      "sha": "44933213da11f82caefd609ad1bdfe84ac95b3e0",
+      "prior": {
+        "file": "yushi-xxh__dsh-homepage-skin.yml",
+        "value": {
+          "id": "yushi-xxh.dsh-homepage-skin",
+          "name": {
+            "zh": "dsh-homepage-skin",
+            "en": "dsh-homepage-skin"
+          },
+          "author": "yushi-xxh",
+          "description": "给 dsh web 铺上 DeepSeek Harness 首页同款背景：WebGL 流体光效、点线网格与数字点云鲸鱼，深色/亮色两套配色。",
+          "repo": "https://github.com/yushi-xxh/dsh-homepage-skin",
+          "package": "dsh-homepage-skin",
+          "rowId": "homepage-skin",
+          "category": "theme",
+          "tags": [
+            "wallpaper",
+            "glass",
+            "motion",
+            "token-theme",
+            "light-dark"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:yushi-xxh/dsh-homepage-skin#44933213da11f82caefd609ad1bdfe84ac95b3e0",
+            "version": "0.1.12",
+            "commit": "44933213da11f82caefd609ad1bdfe84ac95b3e0"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/yushi-xxh/dsh-homepage-skin/44933213da11f82caefd609ad1bdfe84ac95b3e0/docs/compare-dark.png",
+            "https://raw.githubusercontent.com/yushi-xxh/dsh-homepage-skin/44933213da11f82caefd609ad1bdfe84ac95b3e0/docs/compare-light.png"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 15,
+          "starsSnapshot": 0,
+          "updatedAt": "2026-08-16T12:34:09.222Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "yushi-xxh.dsh-homepage-skin",
+        "name": {
+          "zh": "dsh-homepage-skin",
+          "en": "dsh-homepage-skin"
+        },
+        "author": "yushi-xxh",
+        "description": "给 dsh web 铺上 DeepSeek Harness 首页同款背景：WebGL 流体光效、点线网格与数字点云鲸鱼，深色/亮色两套配色。",
+        "repo": "https://github.com/yushi-xxh/dsh-homepage-skin",
+        "package": "dsh-homepage-skin",
+        "rowId": "homepage-skin",
+        "category": "theme",
+        "tags": [
+          "wallpaper",
+          "glass",
+          "motion",
+          "token-theme",
+          "light-dark"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:yushi-xxh/dsh-homepage-skin#44933213da11f82caefd609ad1bdfe84ac95b3e0",
+          "version": "0.1.12",
+          "commit": "44933213da11f82caefd609ad1bdfe84ac95b3e0"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/yushi-xxh/dsh-homepage-skin/44933213da11f82caefd609ad1bdfe84ac95b3e0/docs/compare-dark.png",
+          "https://raw.githubusercontent.com/yushi-xxh/dsh-homepage-skin/44933213da11f82caefd609ad1bdfe84ac95b3e0/docs/compare-light.png"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 15,
+        "starsSnapshot": 0,
+        "releaseUpdatedAt": "2026-08-16T12:34:09.222Z",
+        "metadataUpdatedAt": "2026-08-16T13:28:06.231Z",
+        "starsUpdatedAt": "2026-08-16T12:34:09.222Z",
+        "updatedAt": "2026-08-16T13:28:06.231Z"
+      }
+    },
+    {
+      "plugin": {
+        "name": "dsh-Fonts",
+        "owner": "zhijun-dai",
+        "url": "https://github.com/zhijun-dai/dsh-Fonts",
+        "page": "https://awesome-dsh-plugin.com/p/zhijun-dai/dsh-Fonts/",
+        "category": "theme",
+        "description": {
+          "en": "Font system plugin: OFL webfont presets served offline from the plugin, user-imported custom woff2 fonts, and a ctx.fonts registry other plugins can extend.",
+          "zh": "字体系统插件：随插件离线分发的 OFL 开源字体预设、自定义 woff2 字体导入，以及供其他插件扩展的 ctx.fonts 注册表。"
+        },
+        "npm": null,
+        "stars": 0,
+        "install": "dsh plugin --profile web add github:zhijun-dai/dsh-Fonts",
+        "added": "2026-08-15"
+      },
+      "target": {
+        "owner": "zhijun-dai",
+        "repo": "dsh-Fonts",
+        "fullName": "zhijun-dai/dsh-Fonts",
+        "subpath": null,
+        "repository": "https://github.com/zhijun-dai/dsh-Fonts"
+      },
+      "sha": "46014ec5663435bdd39acee2e77c3979810b1967",
+      "prior": {
+        "file": "zhijun-dai__dsh-Fonts.yml",
+        "value": {
+          "id": "zhijun-dai.dsh-fonts",
+          "name": {
+            "zh": "dsh-Fonts",
+            "en": "dsh-Fonts"
+          },
+          "author": "zhijun-dai",
+          "description": "字体系统插件：随插件离线分发的 OFL 开源字体预设、自定义 woff2 字体导入，以及供其他插件扩展的 ctx.fonts 注册表。",
+          "repo": "https://github.com/zhijun-dai/dsh-Fonts",
+          "package": "dsh-fonts",
+          "rowId": "fonts",
+          "category": "theme",
+          "tags": [
+            "pastel"
+          ],
+          "modes": [
+            "light",
+            "dark"
+          ],
+          "install": {
+            "target": "github:zhijun-dai/dsh-Fonts#46014ec5663435bdd39acee2e77c3979810b1967",
+            "version": "0.1.0",
+            "commit": "46014ec5663435bdd39acee2e77c3979810b1967"
+          },
+          "compatibility": {
+            "dsh": "^0.1.0-rc.6",
+            "platform": [
+              "web"
+            ]
+          },
+          "screenshots": [
+            "https://raw.githubusercontent.com/zhijun-dai/dsh-Fonts/46014ec5663435bdd39acee2e77c3979810b1967/assets/fonts-settings.webp",
+            "https://raw.githubusercontent.com/zhijun-dai/dsh-Fonts/46014ec5663435bdd39acee2e77c3979810b1967/assets/fonts-jetbrains-inter.webp"
+          ],
+          "review": {
+            "compatibility": "verified",
+            "preview": "verified"
+          },
+          "license": {
+            "code": "MIT",
+            "commercialUse": false
+          },
+          "featuredRank": 16,
+          "starsSnapshot": 0,
+          "updatedAt": "2026-08-16T12:34:13.620Z"
+        }
+      },
+      "changed": true,
+      "starsVerified": true,
+      "status": "updated",
+      "entry": {
+        "id": "zhijun-dai.dsh-fonts",
+        "name": {
+          "zh": "dsh-Fonts",
+          "en": "dsh-Fonts"
+        },
+        "author": "zhijun-dai",
+        "description": "字体系统插件：随插件离线分发的 OFL 开源字体预设、自定义 woff2 字体导入，以及供其他插件扩展的 ctx.fonts 注册表。",
+        "repo": "https://github.com/zhijun-dai/dsh-Fonts",
+        "package": "dsh-fonts",
+        "rowId": "fonts",
+        "category": "theme",
+        "tags": [
+          "pastel"
+        ],
+        "modes": [
+          "light",
+          "dark"
+        ],
+        "install": {
+          "target": "github:zhijun-dai/dsh-Fonts#46014ec5663435bdd39acee2e77c3979810b1967",
+          "version": "0.1.0",
+          "commit": "46014ec5663435bdd39acee2e77c3979810b1967"
+        },
+        "compatibility": {
+          "dsh": "^0.1.0-rc.6",
+          "platform": [
+            "web"
+          ]
+        },
+        "screenshots": [
+          "https://raw.githubusercontent.com/zhijun-dai/dsh-Fonts/46014ec5663435bdd39acee2e77c3979810b1967/assets/fonts-settings.webp",
+          "https://raw.githubusercontent.com/zhijun-dai/dsh-Fonts/46014ec5663435bdd39acee2e77c3979810b1967/assets/fonts-jetbrains-inter.webp"
+        ],
+        "review": {
+          "compatibility": "verified",
+          "preview": "verified"
+        },
+        "license": {
+          "code": "MIT",
+          "commercialUse": true
+        },
+        "featuredRank": 16,
+        "starsSnapshot": 0,
+        "releaseUpdatedAt": "2026-08-16T12:34:13.620Z",
+        "metadataUpdatedAt": "2026-08-16T13:28:16.157Z",
+        "starsUpdatedAt": "2026-08-16T12:34:13.620Z",
+        "updatedAt": "2026-08-16T13:28:16.157Z"
+      }
+    }
+  ]
+}

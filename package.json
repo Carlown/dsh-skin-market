@@ -1,0 +1,83 @@
+{
+  "name": "dsh-skin-market",
+  "version": "0.1.9",
+  "description": "Native skin marketplace and lifecycle manager for DeepSeek Harness",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite --config vite.preview.config.ts",
+    "registry": "node scripts/build-registry.mjs",
+    "crawl:smoke": "node scripts/crawl-smoke.mjs",
+    "crawl:top-stars": "node scripts/crawl-top-stars.mjs",
+    "crawl:full-discovery": "node scripts/crawl-top-stars.mjs",
+    "crawl:full-ingest": "node scripts/full-ingest.mjs",
+    "smoke:submission": "vitest run tests/submission.spec.ts tests/client/client.spec.tsx",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client.json --noEmit",
+    "build:host": "tsc -p tsconfig.json",
+    "build:client": "tsdown",
+    "build": "npm run registry && npm run build:host && npm run build:client",
+    "test": "vitest run",
+    "check": "npm run registry && npm run typecheck && npm run test && npm run build && node scripts/preflight.mjs",
+    "prepack": "npm run check"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": "./client/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "client",
+    "data/catalog.json",
+    "registry",
+    "cordis.patch.yml",
+    "README.md",
+    "TESTING.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-client-ui-primitives": "^0.1.0-rc.6",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^22.15.0",
+    "@types/react": "~18.3.1",
+    "@types/react-dom": "~18.3.1",
+    "@vitejs/plugin-react": "latest",
+    "ajv": "^8.17.1",
+    "jsdom": "^26.1.0",
+    "lightningcss": "^1.33.0",
+    "react": "^18.3.1",
+    "react-dom": "~18.3.1",
+    "tsdown": "^0.22.14",
+    "typescript": "^7.0.0",
+    "vite": "^8.2.1",
+    "vitest": "^4.1.0",
+    "yaml": "^2.8.1"
+  },
+  "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
+    "@primer/octicons-react": "^19.33.0"
+  }
+}

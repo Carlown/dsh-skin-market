@@ -1,0 +1,37 @@
+id: tianyhjg-lab.dsh-font
+name:
+  zh: dsh-font
+  en: dsh-font
+author: tianyhjg-lab
+description: DSH Web GUI 字体切换器：99 个界面字体与 31 个代码字体，中西文自动搭配，即选即生效，localStorage 持久化。
+repo: https://github.com/tianyhjg-lab/dsh-font
+package: dsh-font
+rowId: font
+category: theme
+tags:
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:tianyhjg-lab/dsh-font#d299f56bde1e10e7fef152848e74cff2eecd7917
+  version: 1.1.0
+  commit: d299f56bde1e10e7fef152848e74cff2eecd7917
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/d299f56bde1e10e7fef152848e74cff2eecd7917/tianyhjg-lab/dsh-font
+review:
+  compatibility: verified
+  preview: repository-card
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 20
+starsSnapshot: 7
+releaseUpdatedAt: 2026-08-16T12:15:41.349Z
+metadataUpdatedAt: 2026-08-16T12:15:41.349Z
+starsUpdatedAt: 2026-08-16T12:15:41.349Z
+updatedAt: 2026-08-16T12:15:41.349Z

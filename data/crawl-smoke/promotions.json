@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "promotions": [
+    {
+      "repository": "https://github.com/zhijun-dai/Catppuccin-dsh-theme",
+      "source": "github-topic:dsh-plugin",
+      "candidateVerdict": "probable-skin",
+      "reviewVerdict": "confirmed-skin",
+      "registryId": "zhijun-dai.catppuccin",
+      "registryFile": "registry/skins/zhijun-dai__Catppuccin-dsh-theme.yml",
+      "version": "0.1.1",
+      "commit": "1d40a3b30499f9459f52ee23968cd2264e47b3b5",
+      "starsSnapshot": 7,
+      "promotedAt": "2026-08-16T11:42:44Z",
+      "mode": "smoke",
+      "checks": {
+        "packageManifest": true,
+        "dshBundle": true,
+        "dshClient": true,
+        "prebuiltHost": true,
+        "prebuiltClient": true,
+        "immutableCommit": true,
+        "screenshots": 5,
+        "license": "MIT",
+        "registrySchema": true,
+        "tests": true,
+        "build": true,
+        "packagePreflight": true
+      }
+    }
+  ]
+}

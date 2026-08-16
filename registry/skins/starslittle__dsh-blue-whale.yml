@@ -1,0 +1,40 @@
+id: starslittle.dsh-blue-whale
+name:
+  zh: dsh-blue-whale
+  en: dsh-blue-whale
+author: starslittle
+description: 复刻 DeepSeek Chat 蓝鲸配色的皮肤，亮色/深色跟随系统外观。
+repo: https://github.com/starslittle/dsh-blue-whale
+package: dsh-blue-whale
+rowId: blue-whale
+category: theme
+tags:
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:starslittle/dsh-blue-whale#1abc6eea453011c7449af8e1aef5c7754784738d
+  version: 0.1.0
+  commit: 1abc6eea453011c7449af8e1aef5c7754784738d
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/starslittle/dsh-blue-whale/1abc6eea453011c7449af8e1aef5c7754784738d/docs/compare-home.png
+  - https://raw.githubusercontent.com/starslittle/dsh-blue-whale/1abc6eea453011c7449af8e1aef5c7754784738d/docs/compare-brand.png
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 6
+starsSnapshot: 6
+releaseUpdatedAt: 2026-08-16T12:31:55.720Z
+metadataUpdatedAt: 2026-08-16T13:24:50.296Z
+starsUpdatedAt: 2026-08-16T12:31:55.720Z
+updatedAt: 2026-08-16T13:24:50.296Z

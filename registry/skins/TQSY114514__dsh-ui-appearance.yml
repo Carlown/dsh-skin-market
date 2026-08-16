@@ -1,0 +1,41 @@
+id: tqsy114514.dsh-ui-appearance
+name:
+  zh: dsh-ui-appearance
+  en: dsh-ui-appearance
+author: TQSY114514
+description: DeepSeek Harness 外观自定义:主题调色、壁纸与视频背景、半透明与毛玻璃。
+repo: https://github.com/TQSY114514/dsh-ui-appearance
+package: dsh-ui-appearance
+rowId: ui-appearance
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:TQSY114514/dsh-ui-appearance#ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5
+  version: 0.1.1
+  commit: ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5/docs/screenshot-settings.png
+  - https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5/docs/screenshot-wallpaper.png
+  - https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/ce72d352f22776eb5fd4091ec9f1f3fc1b9ae8b5/docs/demo.gif
+review:
+  compatibility: unverified
+  preview: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 36
+starsSnapshot: 5
+releaseUpdatedAt: 2026-08-16T13:25:07.230Z
+metadataUpdatedAt: 2026-08-16T13:25:07.230Z
+starsUpdatedAt: 2026-08-16T13:25:07.230Z
+updatedAt: 2026-08-16T13:25:07.230Z

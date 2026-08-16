@@ -1,0 +1,42 @@
+id: yunxiiqwq.maid-whale-webui
+name:
+  zh: maid-whale-webui
+  en: maid-whale-webui
+author: yunxiiQwQ
+description: DSH Web UI 鲸鱼女仆纸面主题：亮暗配色、海洋插画、手绘边框、装饰素材与常驻桌宠。
+repo: https://github.com/yunxiiQwQ/dsh-maid-whale-webUI
+subpath: maid-whale-webui
+package: "@dsh-external/dsh-client-ui-skin-maid-whale-webui"
+rowId: ui-skin-maid-whale-webui
+category: theme
+tags:
+  - wallpaper
+  - anime
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:yunxiiQwQ/dsh-maid-whale-webUI#f574f151bdfde7e8569797962eb8ff6aad4b3bf1&path:maid-whale-webui
+  version: 0.1.0
+  commit: f574f151bdfde7e8569797962eb8ff6aad4b3bf1
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/f574f151bdfde7e8569797962eb8ff6aad4b3bf1/maid-whale-webui/preview/light.webp
+  - https://raw.githubusercontent.com/yunxiiQwQ/dsh-maid-whale-webUI/f574f151bdfde7e8569797962eb8ff6aad4b3bf1/maid-whale-webui/preview/dark.webp
+review:
+  compatibility: unverified
+  preview: verified
+license:
+  code: BSD-3-Clause
+  commercialUse: true
+featuredRank: 22
+starsSnapshot: 8
+releaseUpdatedAt: 2026-08-16T12:48:35.081Z
+metadataUpdatedAt: 2026-08-16T13:24:37.803Z
+starsUpdatedAt: 2026-08-16T12:48:35.081Z
+updatedAt: 2026-08-16T13:24:37.803Z

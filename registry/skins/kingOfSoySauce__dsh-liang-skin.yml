@@ -1,0 +1,41 @@
+id: king-of-soy-sauce.liang-intensity
+name:
+  zh: 滑动变祖
+  en: Liang Intensity Skin
+author: kingOfSoySauce
+description: 滑动变祖：an opt-in adaptive reasoning slider skin for DeepSeek Harness
+repo: https://github.com/kingOfSoySauce/dsh-liang-skin
+package: dsh-client-liang-intensity-skin
+rowId: liang-intensity-skin
+category: interactive
+tags:
+  - black-gold
+  - reasoning-slider
+  - motion
+  - composer
+modes:
+  - dark
+install:
+  target: github:kingOfSoySauce/dsh-liang-skin#75692c83c3c8219736a607c1089dffafda310e7a
+  version: 0.1.4
+  commit: 75692c83c3c8219736a607c1089dffafda310e7a
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/preview.png
+  - https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/75692c83c3c8219736a607c1089dffafda310e7a/docs/demo.gif
+review:
+  compatibility: verified
+  preview: verified
+license:
+  code: NOASSERTION
+  commercialUse: false
+  notice: 仓库当前未声明许可证；安装和再分发前请向作者确认授权。
+featuredRank: 1
+starsSnapshot: 53
+releaseUpdatedAt: 2026-08-16T12:50:44.804Z
+metadataUpdatedAt: 2026-08-16T12:50:44.804Z
+starsUpdatedAt: 2026-08-16T13:24:00.865Z
+updatedAt: 2026-08-16T13:24:00.865Z
