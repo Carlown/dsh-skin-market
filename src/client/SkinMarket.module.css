@@ -185,14 +185,14 @@
 .listLoading svg { animation: spin 1s linear infinite; }
 .empty { padding: 24px 8px; text-align: center; }
 
-.submission { display: grid; width: min(640px, 70vw); gap: 10px; }
-.submission p,
+.submission { display: grid; width: 100%; min-width: 0; max-width: 100%; gap: 10px; }
 .submission small { margin: 0; font-size: 12px; line-height: 18px; }
-.submission p { color: var(--dsw-alias-state-error-primary); }
 .submission small { color: var(--dsw-alias-label-caption); }
 .submission textarea {
   box-sizing: border-box;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 300px;
   resize: vertical;
   padding: 12px;
@@ -224,7 +224,6 @@
   .aboutGrid { grid-template-columns: 1fr; }
   .aboutGrid > aside { border-top: 1px solid var(--dsw-alias-border-l2); border-left: 0; }
   .recommendations > div { grid-template-columns: 1fr; }
-  .submission { width: min(640px, 82vw); }
 }
 
 @media (prefers-reduced-motion: reduce) { .operation svg, .loading svg, .listLoading svg { animation: none; } }

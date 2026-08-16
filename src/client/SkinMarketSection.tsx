@@ -94,7 +94,6 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
   const [restarting, setRestarting] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
   const [showSubmission, setShowSubmission] = useState(false)
-  const [submissionRepository, setSubmissionRepository] = useState('')
   const [submissionCopied, setSubmissionCopied] = useState(false)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
 
@@ -152,6 +151,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
   const selected = skins.find(skin => skin.id === selectedId) ?? skins[0]
   const state = selected === undefined ? null : runtimeFor(states, selected.id)
   const compatibilityUnverified = selected?.review?.compatibility === 'unverified'
+  const manualOnly = selected?.review?.installation === 'manual-only'
   const filtered = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     if (!haystack.includes(query.trim().toLowerCase())) return false
@@ -238,9 +238,8 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
 
   const select = (id: string) => { setSelectedId(id); setShotIndex(0); setShowDetail(true); setError(null) }
   const recommendations = selected?.recommendations.map(id => skins.find(skin => skin.id === id)).filter((skin): skin is CatalogSkin => skin !== undefined) ?? []
-  const submissionPrompt = createSubmissionPrompt(submissionRepository)
+  const submissionPrompt = createSubmissionPrompt()
   const copySubmissionPrompt = async () => {
-    if (submissionPrompt === '') return
     await navigator.clipboard.writeText(submissionPrompt)
     setSubmissionCopied(true)
   }
@@ -278,7 +277,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
                 </span>
               </span>
-              <Pill className={mutationLabel !== null || itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.updateAvailable ? '可更新' : skin.review?.compatibility === 'unverified' && itemState.installation === 'missing' ? '待验证' : statusLabel(itemState))}</Pill>
+              <Pill className={mutationLabel !== null || itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && (skin.review?.compatibility === 'unverified' || skin.review?.installation === 'manual-only') ? skin.review?.compatibility === 'unverified' ? '待验证' : '手动安装' : statusLabel(itemState))}</Pill>
             </Button>
           })}
           {!loading && filtered.length === 0 && <p className={css.empty}>没有匹配的皮肤</p>}
@@ -299,8 +298,8 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
           </header>
 
           <div className={css.actionRow}>
-              {state.installation === 'missing' && (compatibilityUnverified
-                ? <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>待验证，手动安装</Button>
+              {state.installation === 'missing' && (compatibilityUnverified || manualOnly
+                ? <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>{compatibilityUnverified ? '待验证，手动安装' : '手动安装'}</Button>
                 : <><Button className={css.nativePrimary} variant="primary" size="sm" icon={<IconDownloadOutline16 />} disabled={busy !== null} onClick={() => void installAndActivate()}>安装并应用</Button><Button className={css.nativeOutline} variant="outline" size="sm" disabled={busy !== null} onClick={() => void run('install')}>安装</Button></>)}
               {state.installation === 'installed' && state.activation === 'inactive' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void run('activate')}>使用</Button>}
               {state.activation === 'restart-required' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => setConfirmRestart(true)}>重启以应用</Button>}
@@ -325,7 +324,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
           </div>}
 
           <div className={css.aboutGrid}>
-            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && <p className={css.notice}>维护者尚未声明 DSH 兼容范围，市场暂不提供一键安装；你可以前往 GitHub 查看手动安装方式。</p>}{selected.review?.preview === 'repository-card' && <p className={css.notice}>该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
+            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && <p className={css.notice}>维护者尚未声明 DSH 兼容范围，市场暂不提供一键安装；你可以前往 GitHub 查看手动安装方式。</p>}{manualOnly && !compatibilityUnverified && <p className={css.notice}>该仓库需要手动注册插件，市场暂不提供一键安装；请前往 GitHub 按维护者说明操作。</p>}{selected.review?.preview === 'repository-card' && <p className={css.notice}>该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
             <aside className={css.changelog}><h3>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
           </div>
 
@@ -340,13 +339,11 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
         onClose={() => setShowSubmission(false)}
         title="提交你的皮肤"
         closeLabel="关闭"
-        description="填写公开 GitHub 仓库地址，复制提示词交给你自己的 Agent。Agent 会检查皮肤并向市场目录准备 PR。"
-        footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowSubmission(false)}>关闭</Button><Button className={css.nativePrimary} variant="primary" size="sm" disabled={submissionPrompt === ''} onClick={() => void copySubmissionPrompt()}>{submissionCopied ? '已复制' : '复制提示词'}</Button></>}
+        description="复制下面的提示词交给你的 Agent，它会确认皮肤仓库、完成检查并准备市场 PR。"
+        footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowSubmission(false)}>关闭</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => void copySubmissionPrompt()}>{submissionCopied ? '已复制' : '复制提示词'}</Button></>}
       >
         <div className={css.submission}>
-          <Input aria-label="皮肤 GitHub 仓库" placeholder="https://github.com/作者/皮肤仓库" value={submissionRepository} onChange={event => { setSubmissionRepository(event.currentTarget.value); setSubmissionCopied(false) }} />
-          {submissionRepository !== '' && submissionPrompt === '' && <p role="alert">请输入公开 GitHub 仓库首页地址。</p>}
-          <textarea aria-label="Agent 投稿提示词" readOnly value={submissionPrompt} placeholder="输入有效仓库地址后生成提示词" rows={14} />
+          <textarea aria-label="Agent 投稿提示词" readOnly value={submissionPrompt} rows={16} />
           <small>提示词不会授权 Agent 安装皮肤到你的 DSH，也不会把 Topic 收录等同于安全审核。</small>
         </div>
       </Modal>

@@ -11,6 +11,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const registryDir = join(root, 'registry/skins')
 const outputDir = join(root, 'data/full-ingestion')
 const sourceUrl = 'https://awesome-dsh-plugin.com/plugins.json'
+const githubSearchTerms = ['skin', 'theme', 'wallpaper', 'background']
 const appearanceName = /(?:skin|theme|wallpaper|background|transparent|liquid-glass|deep-whale|deepcel)/i
 const ignoredName = /(?:studio|manager|switcher|plugin-market|awesome)/i
 const irrelevantName = /(?:^|#)(?:dsh-background-agents|dsh-models-dev-reasoning|pdf-background-gray-codex-skill|dsh-api-key-pool)$/i
@@ -77,6 +78,57 @@ async function repositoryStars(target) {
     })())
   }
   return starsByRepository.get(key)
+}
+
+async function discoverGithubPlugins() {
+  const discovered = new Map()
+  const headers = {
+    accept: 'application/vnd.github+json',
+    'user-agent': 'dsh-skin-market-full-ingest/0.1.0',
+    'x-github-api-version': '2022-11-28',
+  }
+  if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`
+  for (const term of githubSearchTerms) {
+    const query = encodeURIComponent(`topic:dsh-plugin ${term} in:name,description,readme archived:false`)
+    for (let page = 1; page <= 10; page += 1) {
+      try {
+        const response = await fetch(`https://api.github.com/search/repositories?q=${query}&sort=stars&order=desc&per_page=100&page=${page}`, { headers, signal: AbortSignal.timeout(20000) })
+        if (!response.ok) break
+        const body = await response.json()
+        const items = body.items ?? []
+        for (const repository of items) {
+          const appearanceText = `${repository.name ?? ''} ${repository.description ?? ''}`
+          if (!appearanceName.test(appearanceText) || ignoredName.test(repository.name ?? '') || irrelevantName.test(repository.name ?? '')) continue
+          discovered.set(repository.full_name.toLowerCase(), {
+            owner: repository.owner?.login ?? repository.full_name.split('/')[0],
+            name: repository.name,
+            url: repository.html_url,
+            category: 'theme',
+            description: { en: repository.description || repository.name },
+            stars: repository.stargazers_count,
+            githubTopicSource: true,
+          })
+        }
+        if (items.length < 100) break
+      } catch { break }
+    }
+  }
+  return [...discovered.values()]
+}
+
+async function cachedGithubPlugins() {
+  try {
+    const cached = JSON.parse(await readFile(join(root, 'data/crawl-top-stars/top-20.json'), 'utf8'))
+    return (cached.skins ?? []).map(repository => ({
+      owner: repository.fullName.split('/')[0],
+      name: repository.fullName.split('/')[1],
+      url: repository.repository,
+      category: 'theme',
+      description: { en: repository.description || repository.fullName.split('/')[1] },
+      stars: repository.stars,
+      githubTopicSource: true,
+    }))
+  } catch { return [] }
 }
 
 async function raw(target, sha, path) {
@@ -209,8 +261,8 @@ async function inspect(plugin, existing) {
     raw(target, sha, 'package.json'), raw(target, sha, 'cordis.patch.yml'), raw(target, sha, 'README.md'), raw(target, sha, 'README.zh.md'), raw(target, sha, 'LICENSE'), commonScreenshots(target, sha),
   ])
   const pkg = parsePackage(packageText)
-  const id = rowId(patchText)
   const combinedReadme = `${readme ?? ''}\n${readmeZh ?? ''}`
+  const id = rowId(patchText) ?? rowId(combinedReadme)
   const detectedDshVersion = pkg ? compatibility(pkg, combinedReadme) : null
   const dshVersion = detectedDshVersion ?? (prior?.value.review?.compatibility !== 'unverified' ? prior?.value.compatibility?.dsh : null)
   const detectedLicense = typeof pkg?.license === 'string' ? pkg.license : licenseText?.startsWith('MIT License') ? 'MIT' : null
@@ -225,7 +277,6 @@ async function inspect(plugin, existing) {
   const blockers = []
   if (!pkg?.name) blockers.push('package name missing')
   if (!pkg?.version) blockers.push('package version missing')
-  if (!pkg?.dsh?.bundle) blockers.push('dsh.bundle missing')
   if (!pkg?.dsh?.client) blockers.push('dsh.client missing')
   if (!id) blockers.push('loader row id missing')
   if (!license) blockers.push('license missing')
@@ -262,6 +313,7 @@ async function inspect(plugin, existing) {
     review: {
       compatibility: dshVersion ? 'verified' : 'unverified',
       preview: verifiedScreenshots.length > 0 ? 'verified' : 'repository-card',
+      installation: pkg.dsh.bundle && patchText !== null ? 'verified' : 'manual-only',
     },
     license: {
       code: license,
@@ -291,10 +343,11 @@ async function main() {
   if (sourceText === null) throw new Error('failed to download public Awesome DSH catalog')
   const source = JSON.parse(sourceText)
   const existing = await existingRegistry()
-  const discovered = source.plugins.filter(plugin => {
+  const githubDiscovered = [...await discoverGithubPlugins(), ...await cachedGithubPlugins()]
+  const discovered = [...source.plugins.filter(plugin => {
     if (ignoredName.test(plugin.name) || irrelevantName.test(plugin.name)) return false
     return plugin.category === 'theme' || appearanceName.test(plugin.name)
-  })
+  }), ...githubDiscovered]
   const selected = []
   const selectedKeys = new Set()
   for (const plugin of discovered) {
@@ -366,6 +419,8 @@ async function main() {
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
     source: sourceUrl,
+    sources: [sourceUrl, 'GitHub Search API: topic:dsh-plugin'],
+    githubDiscovered: githubDiscovered.length,
     sourceUpdated: source.updated,
     selected: selected.length,
     totalRegistry: existing.length + promoted.length,

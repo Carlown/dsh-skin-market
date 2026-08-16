@@ -20,4 +20,11 @@ describe('agent-assisted skin submission', () => {
     expect(normalizeGitHubRepository('https://github.com/owner/repo/issues')).toBeNull()
     expect(createSubmissionPrompt('not a url')).toBe('')
   })
+
+  it('generates a direct prompt that asks the agent to resolve the skin repository', () => {
+    const prompt = createSubmissionPrompt()
+    expect(prompt).toContain('如果当前工作区就是待提交的皮肤仓库')
+    expect(prompt).toContain('否则先向我索要公开 GitHub 仓库地址')
+    expect(prompt).toContain(`目标目录仓库：${REGISTRY_REPOSITORY}`)
+  })
 })

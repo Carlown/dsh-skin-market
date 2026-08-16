@@ -26,6 +26,7 @@ export interface SkinEntry {
     review?: {
         compatibility: 'verified' | 'unverified';
         preview: 'verified' | 'repository-card';
+        installation?: 'verified' | 'manual-only';
     };
     license: {
         code: string;

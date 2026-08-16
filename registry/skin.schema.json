@@ -47,7 +47,8 @@
       "required": ["compatibility", "preview"],
       "properties": {
         "compatibility": { "enum": ["verified", "unverified"] },
-        "preview": { "enum": ["verified", "repository-card"] }
+        "preview": { "enum": ["verified", "repository-card"] },
+        "installation": { "enum": ["verified", "manual-only"] }
       }
     },
     "license": {

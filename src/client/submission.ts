@@ -13,13 +13,16 @@ export function normalizeGitHubRepository(value: string): string | null {
   }
 }
 
-export function createSubmissionPrompt(repositoryInput: string): string {
-  const repository = normalizeGitHubRepository(repositoryInput)
-  if (repository === null) return ''
+export function createSubmissionPrompt(repositoryInput?: string): string {
+  const repository = repositoryInput === undefined ? null : normalizeGitHubRepository(repositoryInput)
+  if (repositoryInput !== undefined && repository === null) return ''
+  const repositoryLine = repository === null
+    ? '皮肤仓库：如果当前工作区就是待提交的皮肤仓库，请确认它的公开 GitHub remote；否则先向我索要公开 GitHub 仓库地址。'
+    : `皮肤仓库：${repository}`
 
   return `请把我的 DSH 皮肤提交到 DSH Skin Market。
 
-皮肤仓库：${repository}
+${repositoryLine}
 目标目录仓库：${REGISTRY_REPOSITORY}
 目录路径：${REGISTRY_PATH}
 

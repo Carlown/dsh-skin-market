@@ -10,7 +10,7 @@ export interface CatalogSkin {
   install: { version: string; commit: string }
   compatibility: { dsh: string; platform: string[] }
   screenshots: string[]
-  review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card' }
+  review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation?: 'verified' | 'manual-only' }
   license: { code: string; commercialUse: boolean; notice?: string }
   githubStars: number
   starsStale: boolean

@@ -236,7 +236,7 @@ describe('client market', () => {
   })
 
   it('sends unverified skins to GitHub instead of one-click installation', async () => {
-    const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
+    const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const, installation: 'manual-only' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
     const open = vi.fn()
     vi.stubGlobal('open', open)
     const fetchMock = vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [unverified] } : { skins: [] } }))
@@ -251,6 +251,20 @@ describe('client market', () => {
     expect(screen.getByText('该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。')).toBeTruthy()
   })
 
+  it('sends verified client-only skins to their manual installation guide', async () => {
+    const manual = { ...skin, review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'manual-only' as const } }
+    const open = vi.fn()
+    vi.stubGlobal('open', open)
+    const fetchMock = vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [manual] } : { skins: [] } }))
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByTitle('前往 GitHub 查看维护者提供的手动安装方式'))
+    expect(open).toHaveBeenCalledWith(manual.repo, '_blank', 'noopener,noreferrer')
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
+    expect(screen.getByText('该仓库需要手动注册插件，市场暂不提供一键安装；请前往 GitHub 按维护者说明操作。')).toBeTruthy()
+  })
+
   it('generates and copies an agent PR prompt without submitting to GitHub', async () => {
     const writeText = vi.fn(async () => undefined)
     Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
@@ -259,10 +273,11 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
     await waitFor(() => expect(screen.getByRole('button', { name: '提交皮肤' })).toBeTruthy())
     fireEvent.click(screen.getByRole('button', { name: '提交皮肤' }))
-    fireEvent.change(screen.getByRole('textbox', { name: '皮肤 GitHub 仓库' }), { target: { value: 'https://github.com/example/my-skin' } })
 
     const prompt = screen.getByRole('textbox', { name: 'Agent 投稿提示词' }) as HTMLTextAreaElement
-    expect(prompt.value).toContain('皮肤仓库：https://github.com/example/my-skin')
+    expect(screen.queryByRole('textbox', { name: '皮肤 GitHub 仓库' })).toBeNull()
+    expect(prompt.value).toContain('否则先向我索要公开 GitHub 仓库地址')
+    expect(prompt.value).toContain('目标目录仓库：https://github.com/kingOfSoySauce/dsh-skin-market')
     fireEvent.click(screen.getByRole('button', { name: '复制提示词' }))
     await waitFor(() => expect(writeText).toHaveBeenCalledWith(prompt.value))
     expect(screen.getByRole('button', { name: '已复制' })).toBeTruthy()

@@ -1,0 +1,79 @@
+name: Update DSH skin registry
+
+on:
+  schedule:
+    # 02:17 UTC = 10:17 Asia/Shanghai
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-dsh-skin-registry
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Discover and ingest skins
+        run: npm run crawl:full-ingest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate registry and build package
+        run: npm run check
+
+      - name: Add ingestion report to job summary
+        if: always()
+        run: |
+          if [ -f data/full-ingestion/report.md ]; then
+            sed -n '1,200p' data/full-ingestion/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload ingestion report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsh-skin-ingestion-${{ github.run_id }}
+          path: data/full-ingestion/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Create or update registry pull request
+        uses: peter-evans/create-pull-request@v8.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: automation/dsh-skin-registry
+          delete-branch: true
+          commit-message: 'chore(skins): update automated registry'
+          title: 'chore(skins): update automated registry'
+          body: |
+            Automated synchronization and full ingestion of public DSH appearance plugins.
+
+            - Existing entries are refreshed from their current repository state.
+            - New entries are pinned to immutable Git commits.
+            - Unverified compatibility remains visible but cannot be installed.
+            - Registry validation, tests, type checks, build, and package preflight passed before this PR was opened.
+
+            The detailed ingestion report is attached to the workflow run as an artifact.
+          add-paths: |
+            registry/skins/*.yml
+            data/catalog.json

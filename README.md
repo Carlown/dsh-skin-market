@@ -2,7 +2,9 @@
 
 一个嵌入 DSH 设置页的皮肤市场，可以浏览、安装、使用、停用、更新和卸载社区皮肤。
 
-把下面这句话复制给你的 Agent，就可以安装：
+[点击查看在线皮肤市场](https://kingofsoysauce.github.io/dsh-skin-market/)
+
+复制给你的DHS，安装皮肤市场插件到 DSH：
 
 ```text
 请帮我把这个插件安装到 DSH 的 web profile：https://github.com/kingOfSoySauce/dsh-skin-market。安装完成后告诉我如何重启 DSH Web，并确认可以从“设置 → 皮肤市场”打开它。不要替我安装任何皮肤。
@@ -89,7 +91,7 @@ npm run crawl:top-stars
 npm run crawl:full-ingest
 ```
 
-正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
+正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。全量任务会合并 Awesome DSH 与 GitHub `dsh-plugin` Topic 两个发现源；只有 `dsh.client` 的手动注册型皮肤也会展示，但只提供跳转 GitHub 的“手动安装”。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
 
 ## 安全说明
 
