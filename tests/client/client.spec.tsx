@@ -266,7 +266,7 @@ describe('client market', () => {
     fireEvent.click(manualInstall)
     expect(open).toHaveBeenCalledWith(unverified.repo, '_blank', 'noopener,noreferrer')
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
-    expect(screen.getByText('维护者尚未声明 DSH 兼容范围。市场可以自动安装并保持停用；使用前请自行确认与当前 DSH 版本兼容。')).toBeTruthy()
+    expect(screen.getByText('维护者尚未声明 DSH 兼容范围，市场暂不提供自动安装。可复制安装提示词交给 Agent 验证安装，或前往 GitHub 查看说明。')).toBeTruthy()
     expect(screen.getByText('该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。')).toBeTruthy()
   })
 
