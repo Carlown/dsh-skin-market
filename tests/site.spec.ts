@@ -11,4 +11,13 @@ describe('static catalog prompts', () => {
   it('generates the requested one-line skin prompt', () => {
     expect(skinPrompt('https://github.com/example/dsh-skin')).toBe('帮我安装这个皮肤：https://github.com/example/dsh-skin')
   })
+
+  it('adds a review-first guard to unverified skin prompts', () => {
+    const prompt = skinPrompt('https://github.com/example/dsh-skin', false)
+
+    expect(prompt).toContain('帮我安装这个皮肤：https://github.com/example/dsh-skin')
+    expect(prompt).toContain('先只读检查仓库')
+    expect(prompt).toContain('等待我确认后再安装')
+    expect(prompt).toContain('不要直接安装')
+  })
 })

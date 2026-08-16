@@ -18,18 +18,23 @@ interface RestartRuntime {
 const RELAUNCH_HELPER = String.raw`
 const { spawn } = require('node:child_process')
 const [parentPid, executable, cwd, argsJson] = process.argv.slice(1)
+const args = JSON.parse(argsJson)
 const waitForParent = () => {
   try {
     process.kill(Number(parentPid), 0)
     setTimeout(waitForParent, 100)
   } catch {
-    const child = spawn(executable, JSON.parse(argsJson), {
+    const child = spawn(executable, args, {
       cwd,
       env: process.env,
-      detached: true,
+      // The helper is already detached from the old DSH. Keep the relaunched
+      // process attached so this helper supervises it instead of abandoning a
+      // detached grandchild immediately.
+      detached: false,
       stdio: 'ignore',
     })
-    child.unref()
+    child.once('error', () => process.exit(1))
+    child.once('exit', (code) => process.exit(code == null ? 1 : code))
   }
 }
 waitForParent()

@@ -103,7 +103,7 @@ function App() {
         </header>
 
         <div className="detail-actions">
-          <button className="button primary" onClick={() => void copyPrompt(selected.id, skinPrompt(selected.repo))}>{copied === selected.id ? <Check size={17} /> : <Copy size={17} />}{copied === selected.id ? '已复制' : '复制安装提示词'}</button>
+          <button className="button primary" onClick={() => void copyPrompt(selected.id, skinPrompt(selected.repo, verified))}>{copied === selected.id ? <Check size={17} /> : <Copy size={17} />}{copied === selected.id ? '已复制' : '复制安装提示词'}</button>
           <a className="button outline repo-button" href={selected.repo} target="_blank" rel="noreferrer"><GithubLogo size={17} /><span>{selected.repo.replace('https://', '')}</span></a>
           <span className="detail-stars"><StarIcon size={16} /> {selected.starsSnapshot}</span>
         </div>

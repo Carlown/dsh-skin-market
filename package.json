@@ -1,10 +1,13 @@
 {
   "name": "dsh-skin-market",
-  "version": "0.1.13",
+  "version": "0.1.15",
   "description": "Native skin marketplace and lifecycle manager for DeepSeek Harness",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
+  "bin": {
+    "dsh-skin-market-reset": "./lib/reset-cli.js"
+  },
   "license": "MIT",
   "scripts": {
     "dev": "vite --config vite.preview.config.ts",
@@ -16,7 +19,7 @@
     "crawl:full-ingest": "node scripts/full-ingest.mjs",
     "smoke:submission": "vitest run tests/submission.spec.ts tests/client/client.spec.tsx",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client.json --noEmit && tsc -p tsconfig.site.json --noEmit",
-    "build:host": "tsc -p tsconfig.json",
+    "build:host": "tsc -p tsconfig.json && chmod +x lib/reset-cli.js",
     "build:client": "tsdown",
     "build:site": "vite build --config vite.site.config.ts",
     "build": "npm run registry && npm run build:host && npm run build:client",

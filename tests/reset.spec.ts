@@ -1,0 +1,47 @@
+import { mkdtempSync, readFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { describe, expect, it } from 'vitest'
+import { parse } from 'yaml'
+import { loadCatalog } from '../src/catalog.ts'
+import { atomicWriteJson, atomicWriteText, profilePatchFile, readMarketState, writeMarketState } from '../src/profile.ts'
+import { resetManagedSkins } from '../src/reset.ts'
+
+function fixture() { return mkdtempSync(join(tmpdir(), 'skin-reset-')) }
+
+describe('emergency skin reset', () => {
+  it('disables installed market skins without uninstalling their packages', () => {
+    const dir = fixture()
+    const skins = loadCatalog().skins.slice(0, 2)
+    atomicWriteJson(join(dir, 'package.json'), {
+      dependencies: Object.fromEntries(skins.map(skin => [skin.package, skin.install.target])),
+      dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', 'dsh-skin-market', ...skins.map(skin => skin.package)] } },
+    })
+    atomicWriteText(profilePatchFile(dir), '- insert:\n    - id: keep\n      name: unrelated-plugin\n')
+    writeMarketState(dir, { version: 1, activeSkinId: skins[0].id, disabledSkinIds: [] })
+
+    const result = resetManagedSkins(dir)
+
+    expect(result.disabledPackages).toEqual(skins.map(skin => skin.package))
+    const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; dsh: { profile: { bundles: string[] } } }
+    expect(Object.keys(manifest.dependencies)).toEqual(skins.map(skin => skin.package))
+    expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', 'dsh-skin-market'])
+    const patch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ insert?: Array<{ id: string; name: string; disabled?: boolean }> }>
+    const rows = patch.flatMap(operation => operation.insert ?? [])
+    expect(rows.filter(row => skins.some(skin => skin.rowId === row.id))).toEqual(skins.map(skin => ({ id: skin.rowId, name: skin.package, disabled: true })))
+    expect(readMarketState(dir).activeSkinId).toBeNull()
+  })
+
+  it('rolls every file back when a registration conflicts', () => {
+    const dir = fixture()
+    const skin = loadCatalog().skins[0]
+    const manifest = JSON.stringify({ dependencies: { [skin.package]: skin.install.target }, dsh: { profile: { bundles: [skin.package] } } }, null, 2) + '\n'
+    const patch = `- insert:\n    - id: ${skin.rowId}\n      name: conflicting-package\n`
+    atomicWriteText(join(dir, 'package.json'), manifest)
+    atomicWriteText(profilePatchFile(dir), patch)
+
+    expect(() => resetManagedSkins(dir)).toThrow('loader registration conflicts')
+    expect(readFileSync(join(dir, 'package.json'), 'utf8')).toBe(manifest)
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).toBe(patch)
+  })
+})

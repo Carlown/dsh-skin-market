@@ -120,6 +120,16 @@ npm run crawl:full-ingest
 - GitHub Stars 由定时收录任务写入带更新时间的目录快照，页面和 Host 都不在浏览时请求 GitHub API
 - 市场不会代替开发者登录 GitHub，也不会静默创建 PR
 
+## 页面异常时重置皮肤
+
+如果皮肤冲突导致 DSH 页面无法操作，先停止当前 DSH 进程，再执行：
+
+```bash
+~/.dsh/profiles/web/node_modules/.bin/dsh-skin-market-reset --profile web
+```
+
+该命令会关闭皮肤市场管理的所有皮肤并恢复默认外观，但保留已经安装的皮肤包和皮肤市场。随后重新启动 DSH 即可。命令使用原子写入；任何一步失败都会恢复执行前的 profile 文件。
+
 ## License
 
 [MIT](./LICENSE)

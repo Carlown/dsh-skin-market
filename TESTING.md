@@ -39,6 +39,14 @@ dsh plugin --profile web add "file:/Users/leon/Code/liang-intensity-calibrator/c
 
 ## 4. 回滚
 
+页面因皮肤冲突而无法操作时，可先停止 DSH，再运行离线急救命令：
+
+```bash
+~/.dsh/profiles/web/node_modules/.bin/dsh-skin-market-reset --profile web
+```
+
+确认 profile 的顶层 bundles 不再包含市场管理的皮肤、对应注册行均为 `disabled: true`，然后重新启动 DSH。
+
 ```bash
 dsh plugin --profile web remove dsh-skin-market
 ```
