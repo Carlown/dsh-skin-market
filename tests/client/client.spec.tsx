@@ -237,15 +237,15 @@ describe('client market', () => {
     }))
     render(<SkinMarketSection t={key => key} />)
 
-    const copyPrompt = await screen.findByRole('button', { name: '复制安装提示词' })
-    const automatic = screen.getByRole('button', { name: '自动安装' })
-    expect(copyPrompt.getAttribute('variant')).toBe('primary')
-    expect(automatic.getAttribute('variant')).toBe('outline')
+    const automatic = await screen.findByRole('button', { name: '自动安装' })
+    const copyPrompt = screen.getByRole('button', { name: '复制安装提示词' })
+    expect(automatic.getAttribute('variant')).toBe('primary')
+    expect(copyPrompt.getAttribute('variant')).toBe('outline')
     fireEvent.click(automatic)
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览.*安装中/ })).toBeTruthy()
   })
 
-  it('automatically installs an unverified skin without applying it', async () => {
+  it('highlights the Agent prompt instead of automatically installing an unverified skin', async () => {
     const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const, installation: 'verified' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
     const open = vi.fn()
     vi.stubGlobal('open', open)
@@ -258,10 +258,14 @@ describe('client market', () => {
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
-    const install = await screen.findByRole('button', { name: '自动安装（兼容性待验证）' })
-    fireEvent.click(install)
-    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
-    expect(open).not.toHaveBeenCalled()
+    const copyPrompt = await screen.findByRole('button', { name: '复制安装提示词' })
+    const manualInstall = screen.getByRole('button', { name: '待验证，手动安装' })
+    expect(copyPrompt.getAttribute('variant')).toBe('primary')
+    expect(manualInstall.getAttribute('variant')).toBe('outline')
+    expect(screen.queryByRole('button', { name: '自动安装' })).toBeNull()
+    fireEvent.click(manualInstall)
+    expect(open).toHaveBeenCalledWith(unverified.repo, '_blank', 'noopener,noreferrer')
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
     expect(screen.getByText('维护者尚未声明 DSH 兼容范围。市场可以自动安装并保持停用；使用前请自行确认与当前 DSH 版本兼容。')).toBeTruthy()
     expect(screen.getByText('该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。')).toBeTruthy()
   })

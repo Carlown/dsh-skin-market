@@ -175,6 +175,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
   const state = selected === undefined ? null : runtimeFor(states, selected.id)
   const compatibilityUnverified = selected?.review?.compatibility === 'unverified'
   const manualOnly = selected?.review?.installation === 'manual-only'
+  const autoInstallable = !compatibilityUnverified && !manualOnly
   const filtered = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     if (!haystack.includes(query.trim().toLowerCase())) return false
@@ -330,9 +331,9 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
 
           <div className={css.actionRow}>
               {state.installation === 'missing' && <>
-                <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void copyInstallPrompt()}>{installPromptCopied === selected.id ? '安装提示词已复制' : '复制安装提示词'}</Button>
-                {!manualOnly && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<IconDownloadOutline16 />} disabled={busy !== null} onClick={() => void run('install')}>{compatibilityUnverified ? '自动安装（兼容性待验证）' : '自动安装'}</Button>}
-                {manualOnly && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>查看安装说明</Button>}
+                {autoInstallable && <Button className={css.nativePrimary} variant="primary" size="sm" icon={<IconDownloadOutline16 />} disabled={busy !== null} onClick={() => void run('install')}>自动安装</Button>}
+                <Button className={autoInstallable ? css.nativeOutline : css.nativePrimary} variant={autoInstallable ? 'outline' : 'primary'} size="sm" disabled={busy !== null} onClick={() => void copyInstallPrompt()}>{installPromptCopied === selected.id ? '安装提示词已复制' : '复制安装提示词'}</Button>
+                {!autoInstallable && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>{compatibilityUnverified ? '待验证，手动安装' : '查看安装说明'}</Button>}
               </>}
               {state.installation === 'installed' && state.activation === 'inactive' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void run('activate')}>使用</Button>}
               {state.activation === 'restart-required' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void openRestartConfirm()}>重启以应用</Button>}
