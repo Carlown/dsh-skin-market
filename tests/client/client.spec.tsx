@@ -331,13 +331,30 @@ describe('client market', () => {
     }))
     render(<SkinMarketSection t={key => key} />)
 
-    const automatic = await screen.findByRole('button', { name: '自动安装' })
+    const automatic = await screen.findByRole('button', { name: '安装并使用' })
     const copyPrompt = screen.getByRole('button', { name: '复制安装提示词' })
     expect(automatic.getAttribute('variant')).toBe('primary')
     expect(copyPrompt.getAttribute('variant')).toBe('outline')
     expect(copyPrompt.querySelector('[aria-hidden="true"]')).toBeTruthy()
     fireEvent.click(automatic)
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览.*安装中/ })).toBeTruthy()
+  })
+
+  it('activates a verified skin after installation completes', async () => {
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-1' }) }
+      if (url.endsWith('/operations/install-1')) return { ok: true, json: async () => ({ id: 'install-1', phase: 'done' }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') return await new Promise(() => undefined)
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '安装并使用' }))
+
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/activate') && init?.method === 'POST')).toBe(true))
   })
 
   it('highlights the Agent prompt instead of automatically installing an unverified skin', async () => {
@@ -357,7 +374,7 @@ describe('client market', () => {
     const manualInstall = screen.getByRole('button', { name: '待验证，手动安装' })
     expect(copyPrompt.getAttribute('variant')).toBe('primary')
     expect(manualInstall.getAttribute('variant')).toBe('outline')
-    expect(screen.queryByRole('button', { name: '自动安装' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '安装并使用' })).toBeNull()
     fireEvent.click(manualInstall)
     expect(open).toHaveBeenCalledWith(unverified.repo, '_blank', 'noopener,noreferrer')
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)

@@ -9,6 +9,7 @@ import {
   profilePatchFile,
   readDependencies,
   readMarketState,
+  readProfileBundles,
   removeProfileBundles,
   removeSkinRegistration,
   restoreFile,
@@ -93,6 +94,13 @@ export class SkinLifecycle {
     const state = readMarketState(this.options.profileDir)
     const dependencies = readDependencies(this.options.profileDir)
     const installed = this.catalog.filter(skin => dependencies[skin.package] !== undefined)
+    const rootBundles = new Set(readProfileBundles(this.options.profileDir))
+    const manuallyActive = installed.filter(skin => rootBundles.has(skin.package)).at(-1)
+    if (manuallyActive !== undefined) {
+      state.activeSkinId = manuallyActive.id
+      state.disabledSkinIds = this.catalog.filter(skin => skin.id !== manuallyActive.id).map(skin => skin.id)
+      writeMarketState(this.options.profileDir, state)
+    }
     // `dsh plugin add` promotes bundles to the profile root. Market-managed
     // skins must instead live in our patch rows, otherwise every installed
     // bundle is composed and multiple skins load together on the next boot.
@@ -201,6 +209,8 @@ export class SkinLifecycle {
     const previous = readMarketState(this.options.profileDir)
     const next: PersistedMarketState = { version: 1, activeSkinId: skin.id, disabledSkinIds: this.catalog.filter(item => item.id !== skin.id).map(item => item.id) }
     try {
+      removeProfileBundles(this.options.profileDir, [skin.package])
+      ensureSkinRegistration(this.options.profileDir, skin, false)
       // Switching must be two distinct phases. Enabling the target while the
       // old skin is still disposing can leave both global style sets mounted.
       for (const item of this.catalog) await this.setEntryDisabled(item, true)
@@ -218,6 +228,8 @@ export class SkinLifecycle {
     const skin = this.skin(operation.skinId)
     this.update(operation, 'activating')
     const state = readMarketState(this.options.profileDir)
+    removeProfileBundles(this.options.profileDir, [skin.package])
+    ensureSkinRegistration(this.options.profileDir, skin, true)
     await this.setEntryDisabled(skin, true)
     if (state.activeSkinId === skin.id) state.activeSkinId = null
     if (!state.disabledSkinIds.includes(skin.id)) state.disabledSkinIds.push(skin.id)

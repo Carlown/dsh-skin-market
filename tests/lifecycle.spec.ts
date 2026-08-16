@@ -52,6 +52,39 @@ describe('skin lifecycle', () => {
     expect(lifecycle.states()[0].installation).toBe('installed')
   })
 
+  it('adopts a manually bundled skin as active and can deactivate it without uninstalling', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const skin = probe.catalog[0]
+    atomicWriteJson(join(dir, 'package.json'), {
+      dependencies: { [skin.package]: skin.install.target },
+      dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', skin.package, 'dsh-skin-market'] } },
+    })
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { client: {} } })
+    const entry: LoaderEntry = {
+      options: { id: skin.rowId, name: skin.package },
+      fiber: {},
+      update: async value => {
+        entry.options.disabled = value.disabled
+        entry.fiber = value.disabled ? undefined : {}
+      },
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [entry] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+
+    await lifecycle.replay()
+
+    expect(readMarketState(dir).activeSkinId).toBe(skin.id)
+    expect(lifecycle.states()[0]).toMatchObject({ installation: 'installed', activation: 'active' })
+    const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh: { profile: { bundles: string[] } } }
+    expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', 'dsh-skin-market'])
+
+    expect((await finished(lifecycle.begin('deactivate', skin.id))).phase).toBe('done')
+    expect(lifecycle.states()[0]).toMatchObject({ installation: 'installed', activation: 'inactive' })
+    expect(readDependencies(dir)[skin.package]).toBeDefined()
+  })
+
   it('installs inactive, activates exclusively, deactivates without removal, and uninstalls', async () => {
     const dir = fixture()
     let lifecycle!: SkinLifecycle

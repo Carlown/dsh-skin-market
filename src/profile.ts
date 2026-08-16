@@ -50,6 +50,11 @@ export function readDependencies(profileDir: string): Record<string, string> {
   return readJson<ProfileManifest>(manifestFile(profileDir), {}).dependencies ?? {}
 }
 
+export function readProfileBundles(profileDir: string): string[] {
+  const bundles = readJson<ProfileManifest>(manifestFile(profileDir), {}).dsh?.profile?.bundles
+  return Array.isArray(bundles) ? bundles : []
+}
+
 export function removeProfileBundles(profileDir: string, packageNames: Iterable<string>): void {
   const file = manifestFile(profileDir)
   const manifest = readJson<ProfileManifest>(file, {})

@@ -24,17 +24,21 @@ const waitForParent = () => {
     process.kill(Number(parentPid), 0)
     setTimeout(waitForParent, 100)
   } catch {
-    const child = spawn(executable, args, {
-      cwd,
-      env: process.env,
-      // The helper is already detached from the old DSH. Keep the relaunched
-      // process attached so this helper supervises it instead of abandoning a
-      // detached grandchild immediately.
-      detached: false,
-      stdio: 'ignore',
-    })
-    child.once('error', () => process.exit(1))
-    child.once('exit', (code) => process.exit(code == null ? 1 : code))
+    // Let the old Host release its listener and profile resources fully before
+    // starting the replacement process.
+    setTimeout(() => {
+      const child = spawn(executable, args, {
+        cwd,
+        env: process.env,
+        // The helper is already detached from the old DSH. Keep the relaunched
+        // process attached so this helper supervises it instead of abandoning a
+        // detached grandchild immediately.
+        detached: false,
+        stdio: 'ignore',
+      })
+      child.once('error', () => process.exit(1))
+      child.once('exit', (code) => process.exit(code == null ? 1 : code))
+    }, 750)
   }
 }
 waitForParent()
