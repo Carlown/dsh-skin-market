@@ -298,6 +298,10 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
     void run('activate')
   }, [run])
 
+  const installAndActivate = useCallback(async () => {
+    if (await run('install')) activateSelected()
+  }, [activateSelected, run])
+
   const restartNow = useCallback(async () => {
     if (selected === undefined) return
     setRestarting(true)
@@ -402,7 +406,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
 
           <div className={css.actionRow}>
               {state.installation === 'missing' && <>
-                {autoInstallable && <Button className={css.nativePrimary} variant="primary" size="sm" icon={<IconDownloadOutline16 />} disabled={busy !== null} onClick={() => void run('install')}>自动安装</Button>}
+                {autoInstallable && <Button className={css.nativePrimary} variant="primary" size="sm" icon={<IconDownloadOutline16 />} disabled={busy !== null} onClick={() => void installAndActivate()}>安装并使用</Button>}
                 <Button className={autoInstallable ? css.nativeOutline : css.nativePrimary} variant={autoInstallable ? 'outline' : 'primary'} size="sm" icon={<IconCopyOutline16 />} disabled={busy !== null} onClick={() => void copyInstallPrompt()}>{installPromptCopied === selected.id ? '安装提示词已复制' : '复制安装提示词'}</Button>
                 {!autoInstallable && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>{compatibilityUnverified ? '待验证，手动安装' : '查看安装说明'}</Button>}
               </>}
