@@ -44,7 +44,7 @@
     "review": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["compatibility", "preview"],
+      "required": ["compatibility", "preview", "installation"],
       "properties": {
         "compatibility": { "enum": ["verified", "unverified"] },
         "preview": { "enum": ["verified", "repository-card"] },

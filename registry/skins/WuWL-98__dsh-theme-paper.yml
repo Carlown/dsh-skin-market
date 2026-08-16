@@ -1,0 +1,42 @@
+id: wuwl-98.dsh-theme-paper
+name:
+  zh: dsh-theme-paper
+  en: dsh-theme-paper
+author: WuWL-98
+description: deepseek harness 开发者预览版纸质仿claude主题
+repo: https://github.com/WuWL-98/dsh-theme-paper
+package: dsh-theme-paper
+rowId: theme-paper
+category: theme
+tags:
+  - wallpaper
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:WuWL-98/dsh-theme-paper#a13f7a3383543f14e1a50a58ee25865ea1185ed6
+  version: 1.0.0
+  commit: a13f7a3383543f14e1a50a58ee25865ea1185ed6
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/WuWL-98/dsh-theme-paper/a13f7a3383543f14e1a50a58ee25865ea1185ed6/docs/main.png
+  - https://raw.githubusercontent.com/WuWL-98/dsh-theme-paper/a13f7a3383543f14e1a50a58ee25865ea1185ed6/docs/settings.png
+  - https://raw.githubusercontent.com/WuWL-98/dsh-theme-paper/a13f7a3383543f14e1a50a58ee25865ea1185ed6/docs/conversation.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 125
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:58:11.377Z
+metadataUpdatedAt: 2026-08-16T13:58:11.377Z
+starsUpdatedAt: 2026-08-16T13:58:11.377Z
+updatedAt: 2026-08-16T13:58:11.377Z

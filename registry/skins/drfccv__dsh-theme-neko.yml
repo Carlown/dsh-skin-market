@@ -1,0 +1,40 @@
+id: drfccv.dsh-theme-neko
+name:
+  zh: dsh-theme-neko
+  en: dsh-theme-neko
+author: drfccv
+description: A Nachoneko (甘城猫猫) themed skin for the DeepSeek Harness web GUI.
+repo: https://github.com/drfccv/dsh-theme-neko
+package: dsh-theme-neko
+rowId: ui-skin-neko
+category: theme
+tags:
+  - wallpaper
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:drfccv/dsh-theme-neko#6c7c9a58ff93cef7117cbfc3b48a295039cd7c45
+  version: 0.1.0
+  commit: 6c7c9a58ff93cef7117cbfc3b48a295039cd7c45
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/drfccv/dsh-theme-neko/6c7c9a58ff93cef7117cbfc3b48a295039cd7c45/sample/screenshot.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 46
+starsSnapshot: 4
+releaseUpdatedAt: 2026-08-16T13:48:19.998Z
+metadataUpdatedAt: 2026-08-16T13:48:19.998Z
+starsUpdatedAt: 2026-08-16T13:48:19.998Z
+updatedAt: 2026-08-16T13:48:19.998Z

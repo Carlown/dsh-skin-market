@@ -1,0 +1,42 @@
+id: dlpufan.dsh-theme-cyberpunk
+name:
+  zh: dsh-theme-cyberpunk
+  en: dsh-theme-cyberpunk
+author: dlpufan
+description: DeepSeek Harness 赛博朋克主题插件：RGB 流动霓虹、自定义背景图库、本地音乐播放器与一键启停。
+repo: https://github.com/dlpufan/dsh-theme-cyberpunk
+package: dsh-theme-cyberpunk
+rowId: theme-cyberpunk
+category: theme
+tags:
+  - wallpaper
+  - retro
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:dlpufan/dsh-theme-cyberpunk#0bddb1507514e758f1f63668df2b0c90d8d20102
+  version: 0.1.0
+  commit: 0bddb1507514e758f1f63668df2b0c90d8d20102
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/0bddb1507514e758f1f63668df2b0c90d8d20102/dlpufan/dsh-theme-cyberpunk
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 63
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16T13:50:20.382Z
+metadataUpdatedAt: 2026-08-16T13:50:20.382Z
+starsUpdatedAt: 2026-08-16T13:50:20.382Z
+updatedAt: 2026-08-16T13:50:20.382Z

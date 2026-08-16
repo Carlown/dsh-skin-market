@@ -1,0 +1,41 @@
+id: sakka6868.dsh-skin
+name:
+  zh: dsh-skin
+  en: dsh-skin
+author: sakka6868
+description: "DSH skin plugin: Alphacoders popular wallpapers as the DeepSeek Harness Web GUI background — gallery, search, local image upload, light/dark mask"
+repo: https://github.com/sakka6868/dsh-skin
+package: dsh-skin-alphacoders
+rowId: skin-alphacoders
+category: theme
+tags:
+  - wallpaper
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:sakka6868/dsh-skin#802461800cfd20c640198c82df4d23a2c996c1bc
+  version: 0.2.0
+  commit: 802461800cfd20c640198c82df4d23a2c996c1bc
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/sakka6868/dsh-skin/802461800cfd20c640198c82df4d23a2c996c1bc/docs/preview-main.png
+  - https://raw.githubusercontent.com/sakka6868/dsh-skin/802461800cfd20c640198c82df4d23a2c996c1bc/docs/preview-gallery.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 92
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:53:50.782Z
+metadataUpdatedAt: 2026-08-16T13:53:50.782Z
+starsUpdatedAt: 2026-08-16T13:53:50.782Z
+updatedAt: 2026-08-16T13:53:50.782Z

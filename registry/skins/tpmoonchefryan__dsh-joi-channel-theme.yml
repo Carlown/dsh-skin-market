@@ -1,0 +1,44 @@
+id: tpmoonchefryan.dsh-joi-channel-theme
+name:
+  zh: dsh-joi-channel-theme
+  en: dsh-joi-channel-theme
+author: tpmoonchefryan
+description: 轴伊 Joi 双衣装主题 for DeepSeek Harness — unofficial, non-commercial fan theme plugin 🍊
+repo: https://github.com/tpmoonchefryan/dsh-joi-channel-theme
+package: dsh-joi-channel-theme
+rowId: joi-channel-theme
+category: theme
+tags:
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:tpmoonchefryan/dsh-joi-channel-theme#5d971cfd2877f699668c0c7062e46a11c690c50e
+  version: 0.1.6
+  commit: 5d971cfd2877f699668c0c7062e46a11c690c50e
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/app-logo-flowers.png
+  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-flowers.png
+  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-library.png
+  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-flowers-dark.png
+  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-library-dark.png
+  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/app-logo-library.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 94
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:54:05.830Z
+metadataUpdatedAt: 2026-08-16T13:54:05.830Z
+starsUpdatedAt: 2026-08-16T13:54:05.830Z
+updatedAt: 2026-08-16T13:54:05.830Z

@@ -1,0 +1,41 @@
+id: youyli03.dsh-palenight-theme
+name:
+  zh: dsh-palenight-theme
+  en: dsh-palenight-theme
+author: youyli03
+description: A dynamic Cordis plugin that themes the dsh Harness Web UI — Palenight dark + warm-neutral light
+repo: https://github.com/youyli03/dsh-palenight-theme
+package: dsh-palenight-theme
+rowId: dsh-palenight-theme
+category: theme
+tags:
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:youyli03/dsh-palenight-theme#94d2f61a679c6760c58357f5a0f2bee7c9bca906
+  version: 1.0.0
+  commit: 94d2f61a679c6760c58357f5a0f2bee7c9bca906
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/youyli03/dsh-palenight-theme/94d2f61a679c6760c58357f5a0f2bee7c9bca906/screenshots/light.jpeg
+  - https://raw.githubusercontent.com/youyli03/dsh-palenight-theme/94d2f61a679c6760c58357f5a0f2bee7c9bca906/screenshots/dark.jpeg
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 127
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:58:24.026Z
+metadataUpdatedAt: 2026-08-16T13:58:24.026Z
+starsUpdatedAt: 2026-08-16T13:58:24.026Z
+updatedAt: 2026-08-16T13:58:24.026Z

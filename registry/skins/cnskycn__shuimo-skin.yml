@@ -1,0 +1,39 @@
+id: cnskycn.shuimo-skin
+name:
+  zh: shuimo-skin
+  en: shuimo-skin
+author: cnskycn
+description: "????????? for DeepSeek Harness Web: rice-paper palette + ink bamboo/mountains/plum/seal decorations + falling leaves"
+repo: https://github.com/cnskycn/shuimo-skin
+package: shuimo-skin
+rowId: shuimo-skin
+category: theme
+tags:
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:cnskycn/shuimo-skin#6f8470414dc42541f0cfa182b0f85659cc0efc9c
+  version: 0.1.0
+  commit: 6f8470414dc42541f0cfa182b0f85659cc0efc9c
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/6f8470414dc42541f0cfa182b0f85659cc0efc9c/cnskycn/shuimo-skin
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 101
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:55:01.116Z
+metadataUpdatedAt: 2026-08-16T13:55:01.116Z
+starsUpdatedAt: 2026-08-16T13:55:01.116Z
+updatedAt: 2026-08-16T13:55:01.116Z

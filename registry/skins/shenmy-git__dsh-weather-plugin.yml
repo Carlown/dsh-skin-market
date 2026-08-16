@@ -1,0 +1,39 @@
+id: shenmy-git.dsh-weather-plugin
+name:
+  zh: dsh-weather-plugin
+  en: dsh-weather-plugin
+author: shenmy-git
+description: "DSH plugin: weather tool + immersive weather theming + FishLogo whale pet (theme/ambient/sound/HUD)"
+repo: https://github.com/shenmy-git/dsh-weather-plugin
+package: dsh-weather-plugin
+rowId: weather
+category: theme
+tags:
+  - wallpaper
+  - motion
+  - token-theme
+modes:
+  - dark
+install:
+  target: github:shenmy-git/dsh-weather-plugin#3f94f1569a0f9193a7ff5bb7bb8000b8e6b05a36
+  version: 1.0.0
+  commit: 3f94f1569a0f9193a7ff5bb7bb8000b8e6b05a36
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/3f94f1569a0f9193a7ff5bb7bb8000b8e6b05a36/shenmy-git/dsh-weather-plugin
+review:
+  compatibility: verified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 120
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:57:34.783Z
+metadataUpdatedAt: 2026-08-16T13:57:34.783Z
+starsUpdatedAt: 2026-08-16T13:57:34.783Z
+updatedAt: 2026-08-16T13:57:34.783Z

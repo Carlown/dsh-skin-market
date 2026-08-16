@@ -1,0 +1,43 @@
+id: z21for99.silk-background
+name:
+  zh: silk-background
+  en: silk-background
+author: z21for99
+description: DSH Web GUI 客户端插件：WebGL Silk 丝绸动态背景 + 全站玻璃化皮肤（官方主题 token 覆盖，零依赖） | WebGL silk shader background & glassmorphism skin for the DeepSeek Harness Web GUI
+repo: https://github.com/z21for99/silk-background
+package: silk-background
+rowId: silk-background
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:z21for99/silk-background#f53a6ebb4b3dc1cb08b8d7a450d2a8a75cd1f2a1
+  version: 0.4.0
+  commit: f53a6ebb4b3dc1cb08b8d7a450d2a8a75cd1f2a1
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/z21for99/silk-background/f53a6ebb4b3dc1cb08b8d7a450d2a8a75cd1f2a1/screenshots/screenshot-1.png
+  - https://raw.githubusercontent.com/z21for99/silk-background/f53a6ebb4b3dc1cb08b8d7a450d2a8a75cd1f2a1/screenshots/screenshot-2.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 71
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16T13:51:27.838Z
+metadataUpdatedAt: 2026-08-16T13:51:27.838Z
+starsUpdatedAt: 2026-08-16T13:51:27.838Z
+updatedAt: 2026-08-16T13:51:27.838Z

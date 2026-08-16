@@ -1,0 +1,44 @@
+id: wyh66666666.dsh-transparent-ui-plugin
+name:
+  zh: DSH-Transparent-UI-Plugin
+  en: DSH-Transparent-UI-Plugin
+author: WYH66666666
+description: 是一层高自由度的玻璃质感主题，套在 DeepSeek Harness 网页端。顶栏、侧边栏、输入框、统计行、轨迹视图都成了磨砂玻璃片。玻璃模糊度、磨砂度、背景（流体或自定义壁纸，壁纸还能单独调模糊和磨砂）全都能在设置卡片里自由调节。关掉开关就回到原生界面，不改 DSH 任何一行源码。
+repo: https://github.com/WYH66666666/DSH-Transparent-UI-Plugin
+package: "@deepseek-ai/dsh-client-ui-aqua"
+rowId: ui-aqua
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:WYH66666666/DSH-Transparent-UI-Plugin#1407636ab7bc3ea4d4184f01b04ad197164404fa
+  version: 1.1.2
+  commit: 1407636ab7bc3ea4d4184f01b04ad197164404fa
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/WYH66666666/DSH-Transparent-UI-Plugin/1407636ab7bc3ea4d4184f01b04ad197164404fa/assets/1.png
+  - https://raw.githubusercontent.com/WYH66666666/DSH-Transparent-UI-Plugin/1407636ab7bc3ea4d4184f01b04ad197164404fa/assets/2.png
+  - https://raw.githubusercontent.com/WYH66666666/DSH-Transparent-UI-Plugin/1407636ab7bc3ea4d4184f01b04ad197164404fa/assets/3.png
+  - https://raw.githubusercontent.com/WYH66666666/DSH-Transparent-UI-Plugin/1407636ab7bc3ea4d4184f01b04ad197164404fa/assets/4.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 37
+starsSnapshot: 124
+releaseUpdatedAt: 2026-08-16T13:46:21.367Z
+metadataUpdatedAt: 2026-08-16T13:46:21.367Z
+starsUpdatedAt: 2026-08-16T13:46:21.367Z
+updatedAt: 2026-08-16T13:46:21.367Z

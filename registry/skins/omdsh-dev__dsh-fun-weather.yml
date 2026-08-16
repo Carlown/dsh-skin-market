@@ -1,0 +1,40 @@
+id: omdsh-dev.dsh-fun-weather
+name:
+  zh: dsh-fun-weather
+  en: dsh-fun-weather
+author: omdsh-dev
+description: DSH weather tab and weather-following themes powered by Open-Meteo
+repo: https://github.com/omdsh-dev/dsh-fun-weather
+package: "@deepseek-ai/dsh-fun-weather"
+rowId: fun-weather
+category: theme
+tags:
+  - wallpaper
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:omdsh-dev/dsh-fun-weather#efe1bec16889571f5e67bc7118163b0435768101
+  version: 0.1.0
+  commit: efe1bec16889571f5e67bc7118163b0435768101
+compatibility:
+  dsh: ">=0.0.1-rc.2 <0.0.2"
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/efe1bec16889571f5e67bc7118163b0435768101/omdsh-dev/dsh-fun-weather
+review:
+  compatibility: verified
+  preview: repository-card
+  installation: verified
+license:
+  code: BSD-3-Clause
+  commercialUse: true
+featuredRank: 54
+starsSnapshot: 3
+releaseUpdatedAt: 2026-08-16T13:49:17.801Z
+metadataUpdatedAt: 2026-08-16T13:49:17.801Z
+starsUpdatedAt: 2026-08-16T13:49:17.801Z
+updatedAt: 2026-08-16T13:49:17.801Z

@@ -1,0 +1,41 @@
+id: mldhao.dsh-blue-archive-shiroko
+name:
+  zh: dsh-blue-archive-shiroko
+  en: dsh-blue-archive-shiroko
+author: mldhao
+description: Blue Archive-inspired DSH theme with a Shiroko desktop companion, Codex-style reply bubbles, petting effects, and completion chime.
+repo: https://github.com/mldhao/dsh-blue-archive-shiroko
+package: dsh-blue-archive-shiroko
+rowId: blue-archive-shiroko
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:mldhao/dsh-blue-archive-shiroko#dffeebce96a606c22cf593be3affbf6620e91a9b
+  version: 0.5.1
+  commit: dffeebce96a606c22cf593be3affbf6620e91a9b
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/mldhao/dsh-blue-archive-shiroko/dffeebce96a606c22cf593be3affbf6620e91a9b/assets/screenshot.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 86
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:53:22.631Z
+metadataUpdatedAt: 2026-08-16T13:53:22.631Z
+starsUpdatedAt: 2026-08-16T13:53:22.631Z
+updatedAt: 2026-08-16T13:53:22.631Z

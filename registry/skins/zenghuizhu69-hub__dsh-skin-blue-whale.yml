@@ -1,0 +1,43 @@
+id: zenghuizhu69-hub.dsh-skin-blue-whale
+name:
+  zh: dsh-skin-blue-whale
+  en: dsh-skin-blue-whale
+author: zenghuizhu69-hub
+description: "dsh Web UI skin: DeepSeek blue-whale theme with official gradient and leaping whale art (dsh plugin)"
+repo: https://github.com/zenghuizhu69-hub/dsh-skin-blue-whale
+package: dsh-skin-blue-whale
+rowId: blue-whale-skin
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:zenghuizhu69-hub/dsh-skin-blue-whale#6cf1b2125b01ec9180a7e65b7d707b53f5119334
+  version: 1.0.0
+  commit: 6cf1b2125b01ec9180a7e65b7d707b53f5119334
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/zenghuizhu69-hub/dsh-skin-blue-whale/6cf1b2125b01ec9180a7e65b7d707b53f5119334/screenshots/hero.png
+  - https://raw.githubusercontent.com/zenghuizhu69-hub/dsh-skin-blue-whale/6cf1b2125b01ec9180a7e65b7d707b53f5119334/screenshots/work.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 56
+starsSnapshot: 3
+releaseUpdatedAt: 2026-08-16T13:49:28.860Z
+metadataUpdatedAt: 2026-08-16T13:49:28.860Z
+starsUpdatedAt: 2026-08-16T13:49:28.860Z
+updatedAt: 2026-08-16T13:49:28.860Z

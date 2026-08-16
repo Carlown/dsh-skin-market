@@ -1,0 +1,44 @@
+id: oceanxuikun.dsh-eva-theme-plugin
+name:
+  zh: dsh-eva-theme-plugin
+  en: dsh-eva-theme-plugin
+author: oceanxuikun
+description: Evangelion-inspired theme plugin for DSH WebUI, featuring Unit-00, Unit-01, and Unit-02 themes with immersive backgrounds and mecha-style UI effects.
+repo: https://github.com/oceanxuikun/dsh-eva-theme-plugin
+package: dsh-eva-theme-plugin
+rowId: dsh-eva-theme-plugin
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:oceanxuikun/dsh-eva-theme-plugin#dcdf404b83b0c49ccc16a9389222ec513ae3b81d
+  version: 0.1.0
+  commit: dcdf404b83b0c49ccc16a9389222ec513ae3b81d
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/oceanxuikun/dsh-eva-theme-plugin/dcdf404b83b0c49ccc16a9389222ec513ae3b81d/assets/screenshot01.png
+  - https://raw.githubusercontent.com/oceanxuikun/dsh-eva-theme-plugin/dcdf404b83b0c49ccc16a9389222ec513ae3b81d/assets/screenshot00.png
+  - https://raw.githubusercontent.com/oceanxuikun/dsh-eva-theme-plugin/dcdf404b83b0c49ccc16a9389222ec513ae3b81d/assets/screenshot02.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 89
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:53:35.278Z
+metadataUpdatedAt: 2026-08-16T13:53:35.278Z
+starsUpdatedAt: 2026-08-16T13:53:35.278Z
+updatedAt: 2026-08-16T13:53:35.278Z

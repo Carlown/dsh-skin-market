@@ -1,0 +1,48 @@
+id: xiake595.touhou-hakurei
+name:
+  zh: touhou-hakurei
+  en: touhou-hakurei
+author: xiake595
+description: 灵梦（Reimu）·博丽神社（东方Project）美化版皮肤：神社昼夜实景背景、灵梦立绘、画框侧边栏与输入框、纸白透明界面 — DeepSeek Harness Web GUI skin
+repo: https://github.com/xiake595/touhou-hakurei
+package: "@dsh-external/dsh-client-ui-skin-hakurei-shrine"
+rowId: ui-skin-hakurei
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - anime
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:xiake595/touhou-hakurei#dae71e3b063f2051c590abbabaa1462cf2cd54ea
+  version: 0.1.0
+  commit: dae71e3b063f2051c590abbabaa1462cf2cd54ea
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/xiake595/touhou-hakurei/dae71e3b063f2051c590abbabaa1462cf2cd54ea/preview/light.webp
+  - https://raw.githubusercontent.com/xiake595/touhou-hakurei/dae71e3b063f2051c590abbabaa1462cf2cd54ea/preview/dark.webp
+  - https://raw.githubusercontent.com/xiake595/touhou-hakurei/dae71e3b063f2051c590abbabaa1462cf2cd54ea/screenshots/shot-dark-1.webp
+  - https://raw.githubusercontent.com/xiake595/touhou-hakurei/dae71e3b063f2051c590abbabaa1462cf2cd54ea/screenshots/shot-dark-2.webp
+  - https://raw.githubusercontent.com/xiake595/touhou-hakurei/dae71e3b063f2051c590abbabaa1462cf2cd54ea/screenshots/shot-light-1.webp
+  - https://raw.githubusercontent.com/xiake595/touhou-hakurei/dae71e3b063f2051c590abbabaa1462cf2cd54ea/screenshots/shot-light-2.webp
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: CC-BY-NC-SA-4.0
+  commercialUse: false
+featuredRank: 39
+starsSnapshot: 12
+releaseUpdatedAt: 2026-08-16T13:47:01.836Z
+metadataUpdatedAt: 2026-08-16T13:47:01.836Z
+starsUpdatedAt: 2026-08-16T13:47:01.836Z
+updatedAt: 2026-08-16T13:47:01.836Z

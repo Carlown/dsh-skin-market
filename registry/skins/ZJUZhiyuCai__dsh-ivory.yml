@@ -1,0 +1,42 @@
+id: zjuzhiyucai.dsh-ivory
+name:
+  zh: dsh-ivory
+  en: dsh-ivory
+author: ZJUZhiyuCai
+description: Calm, auditable Claude-inspired theme for DeepSeek Harness — light/dark/mobile, safe Markdown preview, zero telemetry, zero runtime dependencies.
+repo: https://github.com/ZJUZhiyuCai/dsh-ivory
+package: dsh-ivory
+rowId: dsh-ivory
+category: theme
+tags:
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:ZJUZhiyuCai/dsh-ivory#435e5069cbdf9c89dd8e49f5244e26cd69333f06
+  version: 0.1.2
+  commit: 435e5069cbdf9c89dd8e49f5244e26cd69333f06
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/ZJUZhiyuCai/dsh-ivory/435e5069cbdf9c89dd8e49f5244e26cd69333f06/assets/hero-light.png
+  - https://raw.githubusercontent.com/ZJUZhiyuCai/dsh-ivory/435e5069cbdf9c89dd8e49f5244e26cd69333f06/assets/conversation-light.png
+  - https://raw.githubusercontent.com/ZJUZhiyuCai/dsh-ivory/435e5069cbdf9c89dd8e49f5244e26cd69333f06/assets/mobile-light.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 129
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:58:44.799Z
+metadataUpdatedAt: 2026-08-16T13:58:44.799Z
+starsUpdatedAt: 2026-08-16T13:58:44.799Z
+updatedAt: 2026-08-16T13:58:44.799Z

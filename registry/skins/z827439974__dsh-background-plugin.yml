@@ -1,0 +1,40 @@
+id: z827439974.dsh-background-plugin
+name:
+  zh: dsh-background-plugin
+  en: dsh-background-plugin
+author: z827439974
+description: Set the image as background for your dsh-webui
+repo: https://github.com/z827439974/dsh-background-plugin
+package: dsh-plugin-webui-bg
+rowId: webui-bg
+category: theme
+tags:
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:z827439974/dsh-background-plugin#8077481d61ac9f838f5fba870c523e81176c467c
+  version: 0.3.0
+  commit: 8077481d61ac9f838f5fba870c523e81176c467c
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/8077481d61ac9f838f5fba870c523e81176c467c/z827439974/dsh-background-plugin
+review:
+  compatibility: verified
+  preview: repository-card
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 72
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16T13:51:31.579Z
+metadataUpdatedAt: 2026-08-16T13:51:31.579Z
+starsUpdatedAt: 2026-08-16T13:51:31.579Z
+updatedAt: 2026-08-16T13:51:31.579Z

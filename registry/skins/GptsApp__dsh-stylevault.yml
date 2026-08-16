@@ -1,0 +1,46 @@
+id: gptsapp.dsh-stylevault
+name:
+  zh: dsh-stylevault
+  en: dsh-stylevault
+author: GptsApp
+description: StyleVault — classic themes + Style Settings for DeepSeek Harness (30 palettes, shareable configs)
+repo: https://github.com/GptsApp/dsh-stylevault
+package: dsh-stylevault
+rowId: stylevault
+category: theme
+tags:
+  - wallpaper
+  - retro
+  - pastel
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:GptsApp/dsh-stylevault#68ce16d91f9a12b34317f65ee41e0dc3784976d7
+  version: 0.3.0
+  commit: 68ce16d91f9a12b34317f65ee41e0dc3784976d7
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/GptsApp/dsh-stylevault/68ce16d91f9a12b34317f65ee41e0dc3784976d7/docs/screenshots/preview-dark-nord.png
+  - https://raw.githubusercontent.com/GptsApp/dsh-stylevault/68ce16d91f9a12b34317f65ee41e0dc3784976d7/docs/screenshots/preview-light-nord.png
+  - https://raw.githubusercontent.com/GptsApp/dsh-stylevault/68ce16d91f9a12b34317f65ee41e0dc3784976d7/docs/screenshots/settings-1.png
+  - https://raw.githubusercontent.com/GptsApp/dsh-stylevault/68ce16d91f9a12b34317f65ee41e0dc3784976d7/docs/screenshots/settings-2.png
+  - https://raw.githubusercontent.com/GptsApp/dsh-stylevault/68ce16d91f9a12b34317f65ee41e0dc3784976d7/docs/screenshots/settings-3.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 105
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:55:39.547Z
+metadataUpdatedAt: 2026-08-16T13:55:39.547Z
+starsUpdatedAt: 2026-08-16T13:55:39.547Z
+updatedAt: 2026-08-16T13:55:39.547Z

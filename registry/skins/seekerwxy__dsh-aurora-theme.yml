@@ -1,0 +1,40 @@
+id: seekerwxy.dsh-aurora-theme
+name:
+  zh: dsh-aurora-theme
+  en: dsh-aurora-theme
+author: seekerwxy
+description: DSH ????:??????? + ??/???? + ??/??????
+repo: https://github.com/seekerwxy/dsh-aurora-theme
+package: dsh-aurora-theme
+rowId: aurora-theme
+category: theme
+tags:
+  - wallpaper
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:seekerwxy/dsh-aurora-theme#3b220e179812a81e60f2d32259bde9262808cd09
+  version: 1.1.0
+  commit: 3b220e179812a81e60f2d32259bde9262808cd09
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/3b220e179812a81e60f2d32259bde9262808cd09/seekerwxy/dsh-aurora-theme
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 119
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:57:29.957Z
+metadataUpdatedAt: 2026-08-16T13:57:29.957Z
+starsUpdatedAt: 2026-08-16T13:57:29.957Z
+updatedAt: 2026-08-16T13:57:29.957Z

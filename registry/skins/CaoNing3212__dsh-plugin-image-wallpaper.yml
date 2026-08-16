@@ -1,0 +1,40 @@
+id: caoning3212.dsh-plugin-image-wallpaper
+name:
+  zh: dsh-plugin-image-wallpaper
+  en: dsh-plugin-image-wallpaper
+author: CaoNing3212
+description: 自定义Deepseek Harness webUI主题
+repo: https://github.com/CaoNing3212/dsh-plugin-image-wallpaper
+package: dsh-plugin-image-wallpaper
+rowId: image-wallpaper
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - token-theme
+  - light-dark
+modes:
+  - dark
+install:
+  target: github:CaoNing3212/dsh-plugin-image-wallpaper#61e47127275240f31d61c34e2af3c1715c4fe2bb
+  version: 1.0.1
+  commit: 61e47127275240f31d61c34e2af3c1715c4fe2bb
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/61e47127275240f31d61c34e2af3c1715c4fe2bb/CaoNing3212/dsh-plugin-image-wallpaper
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 59
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16T13:49:58.682Z
+metadataUpdatedAt: 2026-08-16T13:49:58.682Z
+starsUpdatedAt: 2026-08-16T13:49:58.682Z
+updatedAt: 2026-08-16T13:49:58.682Z

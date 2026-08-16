@@ -1,0 +1,41 @@
+id: youzhoujimrliu.dsh-ui-wallpaper
+name:
+  zh: dsh-ui-wallpaper
+  en: dsh-ui-wallpaper
+author: youzhoujiMrLiu
+description: "Wallpaper Engine–style wallpaper for the DeepSeek Harness web GUI: custom images, GIFs, and videos as your app background｜仿 Wallpaper Engine 的壁纸插件，支持图片 / GIF / 视频自定义背景"
+repo: https://github.com/youzhoujiMrLiu/dsh-ui-wallpaper
+package: dsh-ui-wallpaper
+rowId: ui-wallpaper
+category: theme
+tags:
+  - wallpaper
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:youzhoujiMrLiu/dsh-ui-wallpaper#ea0b93014579be080580b45e0ad9a5baee0574b9
+  version: 0.3.1
+  commit: ea0b93014579be080580b45e0ad9a5baee0574b9
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/youzhoujiMrLiu/dsh-ui-wallpaper/ea0b93014579be080580b45e0ad9a5baee0574b9/screenshots/settings.jpg
+  - https://raw.githubusercontent.com/youzhoujiMrLiu/dsh-ui-wallpaper/ea0b93014579be080580b45e0ad9a5baee0574b9/screenshots/wallpaper.jpg
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 97
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:54:40.449Z
+metadataUpdatedAt: 2026-08-16T13:54:40.449Z
+starsUpdatedAt: 2026-08-16T13:54:40.449Z
+updatedAt: 2026-08-16T13:54:40.449Z

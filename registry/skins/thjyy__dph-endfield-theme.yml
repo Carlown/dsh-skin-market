@@ -1,0 +1,45 @@
+id: thjyy.dph-endfield-theme
+name:
+  zh: dph-endfield-theme
+  en: dph-endfield-theme
+author: thjyy
+description: Unofficial Endfield-inspired theme and animated mascot for DeepSeek Harness Web
+repo: https://github.com/thjyy/dph-endfield-theme
+package: dph-endfield-theme
+rowId: dph-endfield-theme
+category: theme
+tags:
+  - glass
+  - retro
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:thjyy/dph-endfield-theme#223a27aefedd1ad221083d065754614401eade80
+  version: 1.1.0
+  commit: 223a27aefedd1ad221083d065754614401eade80
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/thjyy/dph-endfield-theme/223a27aefedd1ad221083d065754614401eade80/docs/images/preview-home.png
+  - https://raw.githubusercontent.com/thjyy/dph-endfield-theme/223a27aefedd1ad221083d065754614401eade80/docs/images/preview-conversation.png
+  - https://raw.githubusercontent.com/thjyy/dph-endfield-theme/223a27aefedd1ad221083d065754614401eade80/docs/images/state-idle.gif
+  - https://raw.githubusercontent.com/thjyy/dph-endfield-theme/223a27aefedd1ad221083d065754614401eade80/docs/images/state-typing.gif
+  - https://raw.githubusercontent.com/thjyy/dph-endfield-theme/223a27aefedd1ad221083d065754614401eade80/docs/images/state-thinking.gif
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: SEE LICENSE IN LICENSE
+  commercialUse: false
+featuredRank: 121
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:57:46.646Z
+metadataUpdatedAt: 2026-08-16T13:57:46.646Z
+starsUpdatedAt: 2026-08-16T13:57:46.646Z
+updatedAt: 2026-08-16T13:57:46.646Z

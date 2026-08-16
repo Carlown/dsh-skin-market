@@ -1,0 +1,39 @@
+id: anneheartrecord.dsh-desk-pet
+name:
+  zh: dsh-desk-pet
+  en: dsh-desk-pet
+author: anneheartrecord
+description: Always-on-top DeepSeek Harness desktop pet. Default whale, four skins, four silent states.
+repo: https://github.com/anneheartrecord/dsh-desk-pet
+package: dsh-desk-pet
+rowId: dsh-desk-pet
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - token-theme
+modes:
+  - light
+install:
+  target: github:anneheartrecord/dsh-desk-pet#93c0a90e8147c53cb5d3f3f4babb75e89ebe930b
+  version: 0.1.0
+  commit: 93c0a90e8147c53cb5d3f3f4babb75e89ebe930b
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/anneheartrecord/dsh-desk-pet
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 48
+starsSnapshot: 3
+releaseUpdatedAt: 2026-08-16T13:48:42.914Z
+metadataUpdatedAt: 2026-08-16T13:48:42.914Z
+starsUpdatedAt: 2026-08-16T13:48:42.914Z
+updatedAt: 2026-08-16T13:48:42.914Z

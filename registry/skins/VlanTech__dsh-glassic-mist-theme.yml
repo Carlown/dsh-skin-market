@@ -1,0 +1,41 @@
+id: vlantech.dsh-glassic-mist-theme
+name:
+  zh: dsh-glassic-mist-theme
+  en: dsh-glassic-mist-theme
+author: VlanTech
+description: "Glassic Mist 雾蓝主题 for DeepSeek Harness: mist-blue veil + drifting cloud animation + frosted-glass UI (dsh-mistblue plugin)"
+repo: https://github.com/VlanTech/dsh-glassic-mist-theme
+package: dsh-mistblue
+rowId: mistblue
+category: theme
+tags:
+  - glass
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:VlanTech/dsh-glassic-mist-theme#af4e9c3967df0fbeeead25b4f1426e30382d1a90
+  version: 1.0.0
+  commit: af4e9c3967df0fbeeead25b4f1426e30382d1a90
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/af4e9c3967df0fbeeead25b4f1426e30382d1a90/VlanTech/dsh-glassic-mist-theme
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 123
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:57:56.238Z
+metadataUpdatedAt: 2026-08-16T13:57:56.238Z
+starsUpdatedAt: 2026-08-16T13:57:56.238Z
+updatedAt: 2026-08-16T13:57:56.238Z

@@ -1,0 +1,44 @@
+id: adaning.dsh-pixel-skin
+name:
+  zh: dsh-pixel-skin
+  en: dsh-pixel-skin
+author: ADAning
+description: 8-bit / CRT skin plugin for the DeepSeek Harness web GUI
+repo: https://github.com/ADAning/dsh-pixel-skin
+package: dsh-pixel-skin
+rowId: dsh-pixel-skin
+category: theme
+tags:
+  - retro
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:ADAning/dsh-pixel-skin#7cfce7ae3b533418163c70e2f57c4dc44aab3d3a
+  version: 0.1.0
+  commit: 7cfce7ae3b533418163c70e2f57c4dc44aab3d3a
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/ADAning/dsh-pixel-skin/7cfce7ae3b533418163c70e2f57c4dc44aab3d3a/assets/screenshots/new-session.png
+  - https://raw.githubusercontent.com/ADAning/dsh-pixel-skin/7cfce7ae3b533418163c70e2f57c4dc44aab3d3a/assets/screenshots/working.png
+  - https://raw.githubusercontent.com/ADAning/dsh-pixel-skin/7cfce7ae3b533418163c70e2f57c4dc44aab3d3a/assets/screenshots/palettes-light.png
+  - https://raw.githubusercontent.com/ADAning/dsh-pixel-skin/7cfce7ae3b533418163c70e2f57c4dc44aab3d3a/assets/screenshots/palettes-dark.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 98
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:54:49.092Z
+metadataUpdatedAt: 2026-08-16T13:54:49.092Z
+starsUpdatedAt: 2026-08-16T13:54:49.092Z
+updatedAt: 2026-08-16T13:54:49.092Z

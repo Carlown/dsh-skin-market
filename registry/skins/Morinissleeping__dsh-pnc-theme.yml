@@ -1,0 +1,41 @@
+id: morinissleeping.dsh-pnc-theme
+name:
+  zh: dsh-pnc-theme
+  en: dsh-pnc-theme
+author: Morinissleeping
+description: dsh-pnc-theme
+repo: https://github.com/Morinissleeping/dsh-pnc-theme
+package: "@dsh-external/dsh-pnc-theme"
+rowId: dsh-pnc-theme
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:Morinissleeping/dsh-pnc-theme#07e2e0ebfd2fce33ca9737cdfe42acd6cb512377
+  version: 0.2.17
+  commit: 07e2e0ebfd2fce33ca9737cdfe42acd6cb512377
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://github.com/user-attachments/assets/0d5ca23b-e24e-4ee9-9265-95aedb4b1272
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 115
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:56:51.169Z
+metadataUpdatedAt: 2026-08-16T13:56:51.169Z
+starsUpdatedAt: 2026-08-16T13:56:51.169Z
+updatedAt: 2026-08-16T13:56:51.169Z

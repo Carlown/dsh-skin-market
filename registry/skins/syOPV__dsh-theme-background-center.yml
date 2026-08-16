@@ -1,0 +1,41 @@
+id: syopv.dsh-theme-background-center
+name:
+  zh: dsh-theme-background-center
+  en: dsh-theme-background-center
+author: syOPV
+description: DeepSeek Harness Web UI 主题背景中心插件：主题/渐变图片背景/毛玻璃/流动氛围灯
+repo: https://github.com/syOPV/dsh-theme-background-center
+package: dsh-theme-background-center
+rowId: theme-background-center
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:syOPV/dsh-theme-background-center#06ff231740697a3f3119be72f5f715677bbbee2c
+  version: 0.1.0
+  commit: 06ff231740697a3f3119be72f5f715677bbbee2c
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/syOPV/dsh-theme-background-center/06ff231740697a3f3119be72f5f715677bbbee2c/assets/screenshot.jpg
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 93
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:53:58.612Z
+metadataUpdatedAt: 2026-08-16T13:53:58.612Z
+starsUpdatedAt: 2026-08-16T13:53:58.612Z
+updatedAt: 2026-08-16T13:53:58.612Z

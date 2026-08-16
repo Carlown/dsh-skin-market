@@ -1,0 +1,42 @@
+id: mizuhara37.dsh-nene-theme
+name:
+  zh: dsh-nene-theme
+  en: dsh-nene-theme
+author: mizuhara37
+description: dsh-nene-theme
+repo: https://github.com/mizuhara37/dsh-nene-theme
+package: dsh-nene-theme
+rowId: nene-theme
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:mizuhara37/dsh-nene-theme#dcf7642211a84114186a7f12e1a6efbe5d7d36e1
+  version: 0.1.0
+  commit: dcf7642211a84114186a7f12e1a6efbe5d7d36e1
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/dcf7642211a84114186a7f12e1a6efbe5d7d36e1/mizuhara37/dsh-nene-theme
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 114
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:56:45.550Z
+metadataUpdatedAt: 2026-08-16T13:56:45.550Z
+starsUpdatedAt: 2026-08-16T13:56:45.550Z
+updatedAt: 2026-08-16T13:56:45.550Z

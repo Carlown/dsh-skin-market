@@ -3,7 +3,7 @@ name:
   zh: 滑动变祖
   en: Liang Intensity Skin
 author: kingOfSoySauce
-description: 滑动变祖：an opt-in adaptive reasoning slider skin for DeepSeek Harness
+description: DeepSeek Harness 滑动变阻器皮肤
 repo: https://github.com/kingOfSoySauce/dsh-liang-skin
 package: dsh-client-liang-intensity-skin
 rowId: liang-intensity-skin
@@ -29,13 +29,14 @@ screenshots:
 review:
   compatibility: verified
   preview: verified
+  installation: verified
 license:
   code: NOASSERTION
   commercialUse: false
   notice: 仓库当前未声明许可证；安装和再分发前请向作者确认授权。
 featuredRank: 1
-starsSnapshot: 53
+starsSnapshot: 54
 releaseUpdatedAt: 2026-08-16T12:50:44.804Z
-metadataUpdatedAt: 2026-08-16T12:50:44.804Z
-starsUpdatedAt: 2026-08-16T13:24:00.865Z
-updatedAt: 2026-08-16T13:24:00.865Z
+metadataUpdatedAt: 2026-08-16T13:46:32.518Z
+starsUpdatedAt: 2026-08-16T13:46:32.518Z
+updatedAt: 2026-08-16T13:46:32.518Z

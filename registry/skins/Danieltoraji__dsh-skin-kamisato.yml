@@ -1,0 +1,38 @@
+id: danieltoraji.dsh-skin-kamisato
+name:
+  zh: dsh-skin-kamisato
+  en: dsh-skin-kamisato
+author: Danieltoraji
+description: 以《原神》神里绫华为灵感制作的印象皮肤。
+repo: https://github.com/Danieltoraji/dsh-skin-kamisato
+package: dsh-skin-kamisato
+rowId: skin-kamisato
+category: theme
+tags:
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:Danieltoraji/dsh-skin-kamisato#bf9902e49b42d213180de1a4b8b0dd4574a5ca66
+  version: 1.0.0
+  commit: bf9902e49b42d213180de1a4b8b0dd4574a5ca66
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/bf9902e49b42d213180de1a4b8b0dd4574a5ca66/Danieltoraji/dsh-skin-kamisato
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 103
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:55:09.178Z
+metadataUpdatedAt: 2026-08-16T13:55:09.178Z
+starsUpdatedAt: 2026-08-16T13:55:09.178Z
+updatedAt: 2026-08-16T13:55:09.178Z

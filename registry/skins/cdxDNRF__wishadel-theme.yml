@@ -1,0 +1,41 @@
+id: cdxdnrf.wishadel-theme
+name:
+  zh: wishadel-theme
+  en: wishadel-theme
+author: cdxDNRF
+description: dsh主题维什戴尔风格
+repo: https://github.com/cdxDNRF/wishadel-theme
+package: "@cdxdnrf/dsh-client-ui-skin-wishadel"
+rowId: ui-skin-wishadel
+category: theme
+tags:
+  - wallpaper
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:cdxDNRF/wishadel-theme#b78f51e6fd702d839a333de603022d68ca0ed248
+  version: 0.6.0
+  commit: b78f51e6fd702d839a333de603022d68ca0ed248
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/cdxDNRF/wishadel-theme/b78f51e6fd702d839a333de603022d68ca0ed248/docs/screenshots/conversation.png
+  - https://raw.githubusercontent.com/cdxDNRF/wishadel-theme/b78f51e6fd702d839a333de603022d68ca0ed248/docs/screenshots/settings.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: CC-BY-NC-SA-4.0
+  commercialUse: false
+featuredRank: 99
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:54:53.805Z
+metadataUpdatedAt: 2026-08-16T13:54:53.805Z
+starsUpdatedAt: 2026-08-16T13:54:53.805Z
+updatedAt: 2026-08-16T13:54:53.805Z

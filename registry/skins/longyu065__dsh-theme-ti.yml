@@ -1,0 +1,42 @@
+id: longyu065.dsh-theme-ti
+name:
+  zh: dsh-theme-ti
+  en: dsh-theme-ti
+author: longyu065
+description: dsh-theme-ti
+repo: https://github.com/longyu065/dsh-theme-ti
+package: "@dsh-theme/ti"
+rowId: theme-ti
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:longyu065/dsh-theme-ti#ade662f5bd339d78597f4316bd58a2f141cf3397
+  version: 1.0.0
+  commit: ade662f5bd339d78597f4316bd58a2f141cf3397
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/ade662f5bd339d78597f4316bd58a2f141cf3397/longyu065/dsh-theme-ti
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 84
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:53:00.319Z
+metadataUpdatedAt: 2026-08-16T13:53:00.319Z
+starsUpdatedAt: 2026-08-16T13:53:00.319Z
+updatedAt: 2026-08-16T13:53:00.319Z

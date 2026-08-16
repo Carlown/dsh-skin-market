@@ -13,7 +13,7 @@ export interface SkinEntry {
   install: { target: string; version: string; commit: string }
   compatibility: { dsh: string; platform: string[] }
   screenshots: string[]
-  review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation?: 'verified' | 'manual-only' }
+  review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
   license: { code: string; commercialUse: boolean; notice?: string }
   featuredRank: number
   starsSnapshot: number

@@ -1,0 +1,41 @@
+id: suzike.freestyle-dsh-theme
+name:
+  zh: freestyle-dsh-theme
+  en: freestyle-dsh-theme
+author: suzike
+description: DeepSeek Harness 主题体验插件：OKLCH 主题提案 + 主题设计器（跨重启持久化）
+repo: https://github.com/suzike/freestyle-dsh-theme
+package: "@linxin666/freestyle-dsh-theme"
+rowId: theme
+category: theme
+tags:
+  - wallpaper
+  - pastel
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:suzike/freestyle-dsh-theme#cd9e9eb53ccbaded4cf6123919e24392daeda0d4
+  version: 0.1.0
+  commit: cd9e9eb53ccbaded4cf6123919e24392daeda0d4
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/suzike/freestyle-dsh-theme/cd9e9eb53ccbaded4cf6123919e24392daeda0d4/docs/images/screenshot-proposer.png
+  - https://raw.githubusercontent.com/suzike/freestyle-dsh-theme/cd9e9eb53ccbaded4cf6123919e24392daeda0d4/docs/images/screenshot-designer.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: BSD-3-Clause
+  commercialUse: true
+featuredRank: 41
+starsSnapshot: 11
+releaseUpdatedAt: 2026-08-16T13:47:08.953Z
+metadataUpdatedAt: 2026-08-16T13:47:08.953Z
+starsUpdatedAt: 2026-08-16T13:47:08.953Z
+updatedAt: 2026-08-16T13:47:08.953Z

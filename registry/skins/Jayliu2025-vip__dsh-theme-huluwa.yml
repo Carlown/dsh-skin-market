@@ -1,0 +1,39 @@
+id: jayliu2025-vip.dsh-theme-huluwa
+name:
+  zh: dsh-theme-huluwa
+  en: dsh-theme-huluwa
+author: Jayliu2025-vip
+description: 葫芦娃（Calabash Brothers）theme plugin for DeepSeek Harness Web UI — 七兄弟七彩配色、葫芦宝匣控制台、山中时钟、修炼中状态、蛇精/宝葫芦彩蛋 | Huluwa theme for DSH
+repo: https://github.com/Jayliu2025-vip/dsh-theme-huluwa
+package: dsh-theme-huluwa
+rowId: ui-theme-huluwa
+category: theme
+tags:
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:Jayliu2025-vip/dsh-theme-huluwa#0ab3d4227105ebb20f9e8a5ffd951c38969089df
+  version: 2.0.0
+  commit: 0ab3d4227105ebb20f9e8a5ffd951c38969089df
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/0ab3d4227105ebb20f9e8a5ffd951c38969089df/Jayliu2025-vip/dsh-theme-huluwa
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 109
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:56:03.838Z
+metadataUpdatedAt: 2026-08-16T13:56:03.838Z
+starsUpdatedAt: 2026-08-16T13:56:03.838Z
+updatedAt: 2026-08-16T13:56:03.838Z

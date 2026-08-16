@@ -1,0 +1,42 @@
+id: 0nt-one.dsh-neo-skin
+name:
+  zh: dsh-neo-skin
+  en: dsh-neo-skin
+author: 0nt-one
+description: Neo-brutalism skin for the DeepSeek Harness Web UI — hard borders, high contrast, two switchable schemes (Blue Command / Aged Newspaper), works in light and dark themes.
+repo: https://github.com/0nt-one/dsh-neo-skin
+package: dsh-neo-skin
+rowId: dsh-neo-skin
+category: theme
+tags:
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:0nt-one/dsh-neo-skin#fe5ef0e671fab5ab8c8700013f3966eb9642455f
+  version: 0.6.1
+  commit: fe5ef0e671fab5ab8c8700013f3966eb9642455f
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/0nt-one/dsh-neo-skin/fe5ef0e671fab5ab8c8700013f3966eb9642455f/screenshots/app-light.png
+  - https://raw.githubusercontent.com/0nt-one/dsh-neo-skin/fe5ef0e671fab5ab8c8700013f3966eb9642455f/screenshots/app-dark.png
+  - https://raw.githubusercontent.com/0nt-one/dsh-neo-skin/fe5ef0e671fab5ab8c8700013f3966eb9642455f/screenshots/newspaper.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 74
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:51:42.695Z
+metadataUpdatedAt: 2026-08-16T13:51:42.695Z
+starsUpdatedAt: 2026-08-16T13:51:42.695Z
+updatedAt: 2026-08-16T13:51:42.695Z

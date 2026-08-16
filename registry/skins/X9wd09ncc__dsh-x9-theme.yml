@@ -1,0 +1,44 @@
+id: x9wd09ncc.dsh-x9-theme
+name:
+  zh: dsh-x9-theme
+  en: dsh-x9-theme
+author: X9wd09ncc
+description: 一个dsh的主题修改插件
+repo: https://github.com/X9wd09ncc/dsh-x9-theme
+package: dsh-x9-theme
+rowId: ui-x9-theme
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - pastel
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:X9wd09ncc/dsh-x9-theme#0bff59b4f7a35f22db601946ba7c35815a306901
+  version: 9.2.0
+  commit: 0bff59b4f7a35f22db601946ba7c35815a306901
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/X9wd09ncc/dsh-x9-theme/0bff59b4f7a35f22db601946ba7c35815a306901//assets/screenshots/settings-theme.png
+  - https://raw.githubusercontent.com/X9wd09ncc/dsh-x9-theme/0bff59b4f7a35f22db601946ba7c35815a306901//assets/screenshots/background.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 96
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:54:32.014Z
+metadataUpdatedAt: 2026-08-16T13:54:32.014Z
+starsUpdatedAt: 2026-08-16T13:54:32.014Z
+updatedAt: 2026-08-16T13:54:32.014Z

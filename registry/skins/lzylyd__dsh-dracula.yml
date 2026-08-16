@@ -1,0 +1,39 @@
+id: lzylyd.dsh-dracula
+name:
+  zh: dsh-dracula
+  en: dsh-dracula
+author: lzylyd
+description: A third-party Dracula dark theme for the DeepSeek Harness web UI
+repo: https://github.com/lzylyd/dsh-dracula
+package: dsh-dracula
+rowId: dracula-theme
+category: theme
+tags:
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:lzylyd/dsh-dracula#d03495118b21019a9e45f63044985faf6962e5f6
+  version: 0.1.0
+  commit: d03495118b21019a9e45f63044985faf6962e5f6
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/d03495118b21019a9e45f63044985faf6962e5f6/lzylyd/dsh-dracula
+review:
+  compatibility: verified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 85
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:53:10.751Z
+metadataUpdatedAt: 2026-08-16T13:53:10.751Z
+starsUpdatedAt: 2026-08-16T13:53:10.751Z
+updatedAt: 2026-08-16T13:53:10.751Z

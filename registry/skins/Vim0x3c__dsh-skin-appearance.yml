@@ -1,0 +1,46 @@
+id: vim0x3c.dsh-skin-appearance
+name:
+  zh: dsh-skin-appearance
+  en: dsh-skin-appearance
+author: Vim0x3c
+description: DeepSeek Harness 外观定制插件：八套内置主题 + 自定义壁纸（透明度/模糊），Host 设置持久化 | Appearance plugin for dsh web
+repo: https://github.com/Vim0x3c/dsh-skin-appearance
+package: dsh-skin-appearance
+rowId: dsh-skin-appearance
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:Vim0x3c/dsh-skin-appearance#be7b05776c1dee9e3d387e122c42005edf400837
+  version: 0.1.0
+  commit: be7b05776c1dee9e3d387e122c42005edf400837
+compatibility:
+  dsh: ^0.1.0-rc.5
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/Vim0x3c/dsh-skin-appearance/be7b05776c1dee9e3d387e122c42005edf400837/assets/screenshots/deepseek-chan.jpg
+  - https://raw.githubusercontent.com/Vim0x3c/dsh-skin-appearance/be7b05776c1dee9e3d387e122c42005edf400837/assets/screenshots/qq2008-crystal.jpg
+  - https://raw.githubusercontent.com/Vim0x3c/dsh-skin-appearance/be7b05776c1dee9e3d387e122c42005edf400837/assets/screenshots/cloud-lab.jpg
+  - https://raw.githubusercontent.com/Vim0x3c/dsh-skin-appearance/be7b05776c1dee9e3d387e122c42005edf400837/assets/screenshots/ink-algorithm.jpg
+  - https://raw.githubusercontent.com/Vim0x3c/dsh-skin-appearance/be7b05776c1dee9e3d387e122c42005edf400837/assets/screenshots/abyss-starport.jpg
+  - https://raw.githubusercontent.com/Vim0x3c/dsh-skin-appearance/be7b05776c1dee9e3d387e122c42005edf400837/assets/screenshots/deepsea-whale.jpg
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 45
+starsSnapshot: 5
+releaseUpdatedAt: 2026-08-16T13:48:16.554Z
+metadataUpdatedAt: 2026-08-16T13:48:16.554Z
+starsUpdatedAt: 2026-08-16T13:48:16.554Z
+updatedAt: 2026-08-16T13:48:16.554Z

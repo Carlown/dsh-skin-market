@@ -1,0 +1,40 @@
+id: reluckylucy.dsh-rhine-lab-themo
+name:
+  zh: dsh_Rhine_Lab_themo
+  en: dsh_Rhine_Lab_themo
+author: ReLuckyLucy
+description: Arknights Rhine Lab (莱茵生命) skin for the DeepSeek Harness Web GUI
+repo: https://github.com/ReLuckyLucy/dsh_Rhine_Lab_themo
+package: dsh-theme-rhine-lab
+rowId: ui-theme-rhine-lab
+category: theme
+tags:
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:ReLuckyLucy/dsh_Rhine_Lab_themo#affbdb04792d130af7beaf983f0237a1e8f3650f
+  version: 0.1.0
+  commit: affbdb04792d130af7beaf983f0237a1e8f3650f
+compatibility:
+  dsh: ">=0.0.1-rc.1 <1"
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/affbdb04792d130af7beaf983f0237a1e8f3650f/ReLuckyLucy/dsh_Rhine_Lab_themo
+review:
+  compatibility: verified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 118
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:57:12.755Z
+metadataUpdatedAt: 2026-08-16T13:57:12.755Z
+starsUpdatedAt: 2026-08-16T13:57:12.755Z
+updatedAt: 2026-08-16T13:57:12.755Z

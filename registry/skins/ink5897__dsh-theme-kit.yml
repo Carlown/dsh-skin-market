@@ -1,0 +1,47 @@
+id: ink5897.dsh-theme-kit
+name:
+  zh: dsh-theme-kit
+  en: dsh-theme-kit
+author: ink5897
+description: "A DeepSeek Harness Web GUI appearance kit: 32 preset themes, animated/static wallpapers, paper textures, per-zone text depth, and a keyboard desktop pet."
+repo: https://github.com/ink5897/dsh-theme-kit
+package: dsh-theme-kit
+rowId: theme-kit
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - anime
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:ink5897/dsh-theme-kit#0b2101b431491c24143f939daea8fd773ca2c641
+  version: 0.1.2
+  commit: 0b2101b431491c24143f939daea8fd773ca2c641
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/ink5897/dsh-theme-kit/0b2101b431491c24143f939daea8fd773ca2c641/docs/cover.jpg
+  - https://raw.githubusercontent.com/ink5897/dsh-theme-kit/0b2101b431491c24143f939daea8fd773ca2c641/docs/theme-morandi.png
+  - https://raw.githubusercontent.com/ink5897/dsh-theme-kit/0b2101b431491c24143f939daea8fd773ca2c641/docs/theme-macaron.png
+  - https://raw.githubusercontent.com/ink5897/dsh-theme-kit/0b2101b431491c24143f939daea8fd773ca2c641/docs/theme-chinese.png
+  - https://raw.githubusercontent.com/ink5897/dsh-theme-kit/0b2101b431491c24143f939daea8fd773ca2c641/docs/settings-preset.png
+  - https://raw.githubusercontent.com/ink5897/dsh-theme-kit/0b2101b431491c24143f939daea8fd773ca2c641/docs/settings-background.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 80
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:52:31.430Z
+metadataUpdatedAt: 2026-08-16T13:52:31.430Z
+starsUpdatedAt: 2026-08-16T13:52:31.430Z
+updatedAt: 2026-08-16T13:52:31.430Z

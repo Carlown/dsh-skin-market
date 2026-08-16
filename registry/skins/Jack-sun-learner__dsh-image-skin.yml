@@ -1,0 +1,40 @@
+id: jack-sun-learner.dsh-image-skin
+name:
+  zh: dsh-image-skin
+  en: dsh-image-skin
+author: Jack-sun-learner
+description: DSH 图片皮肤插件：导入 PNG/JPG/WebP 自动生成主题配色，可选 Q 版宠物（程序化/AI 生图）
+repo: https://github.com/Jack-sun-learner/dsh-image-skin
+package: dsh-image-skin
+rowId: dsh-image-skin
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - token-theme
+modes:
+  - dark
+install:
+  target: github:Jack-sun-learner/dsh-image-skin#8f6b3f663e71fb9133af29098e4f3ce48dc4f310
+  version: 0.1.0
+  commit: 8f6b3f663e71fb9133af29098e4f3ce48dc4f310
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/Jack-sun-learner/dsh-image-skin/8f6b3f663e71fb9133af29098e4f3ce48dc4f310/assets/shot-1.png
+  - https://raw.githubusercontent.com/Jack-sun-learner/dsh-image-skin/8f6b3f663e71fb9133af29098e4f3ce48dc4f310/assets/shot-2.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 81
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:52:36.792Z
+metadataUpdatedAt: 2026-08-16T13:52:36.792Z
+starsUpdatedAt: 2026-08-16T13:52:36.792Z
+updatedAt: 2026-08-16T13:52:36.792Z

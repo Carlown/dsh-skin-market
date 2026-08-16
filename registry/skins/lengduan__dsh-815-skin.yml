@@ -1,0 +1,40 @@
+id: lengduan.dsh-815-skin
+name:
+  zh: dsh-815-skin
+  en: dsh-815-skin
+author: lengduan
+description: 1945-08-15 世界名画 dsh皮肤
+repo: https://github.com/lengduan/dsh-815-skin
+package: "@lengduan/dsh-client-ui-skin-815"
+rowId: ui-skin-815
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - token-theme
+modes:
+  - light
+install:
+  target: github:lengduan/dsh-815-skin#5598f781c15680268a9aefb6722936aded96e2ea
+  version: 0.1.5
+  commit: 5598f781c15680268a9aefb6722936aded96e2ea
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/lengduan/dsh-815-skin/5598f781c15680268a9aefb6722936aded96e2ea/assets/nanjing-surrender-chen-jian.jpg
+  - https://raw.githubusercontent.com/lengduan/dsh-815-skin/5598f781c15680268a9aefb6722936aded96e2ea/docs/preview.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 111
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:56:26.825Z
+metadataUpdatedAt: 2026-08-16T13:56:26.825Z
+starsUpdatedAt: 2026-08-16T13:56:26.825Z
+updatedAt: 2026-08-16T13:56:26.825Z

@@ -1,0 +1,42 @@
+id: makuralymi.dsh-webui-glass-theme
+name:
+  zh: dsh-webUI-Glass-Theme
+  en: dsh-webUI-Glass-Theme
+author: makuralymi
+description: dsh-webUI-Glass-Theme
+repo: https://github.com/makuralymi/dsh-webUI-Glass-Theme
+package: dsh-client-ui-frosted-glass
+rowId: ui-frosted-glass
+category: theme
+tags:
+  - glass
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:makuralymi/dsh-webUI-Glass-Theme#1d8dac59ca9ad6dde6cfbaee14126d06fbe5b5c1
+  version: 0.2.0
+  commit: 1d8dac59ca9ad6dde6cfbaee14126d06fbe5b5c1
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/makuralymi/dsh-webUI-Glass-Theme/1d8dac59ca9ad6dde6cfbaee14126d06fbe5b5c1/assets/sc.png
+  - https://raw.githubusercontent.com/makuralymi/dsh-webUI-Glass-Theme/1d8dac59ca9ad6dde6cfbaee14126d06fbe5b5c1/assets/sc2.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 53
+starsSnapshot: 3
+releaseUpdatedAt: 2026-08-16T13:49:10.001Z
+metadataUpdatedAt: 2026-08-16T13:49:10.001Z
+starsUpdatedAt: 2026-08-16T13:49:10.001Z
+updatedAt: 2026-08-16T13:49:10.001Z

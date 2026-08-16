@@ -35,12 +35,13 @@ screenshots:
 review:
   compatibility: verified
   preview: verified
+  installation: verified
 license:
   code: MIT
   commercialUse: true
 featuredRank: 14
-starsSnapshot: 1
+starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T12:33:52.774Z
-metadataUpdatedAt: 2026-08-16T13:27:35.466Z
-starsUpdatedAt: 2026-08-16T13:27:35.466Z
-updatedAt: 2026-08-16T13:27:35.466Z
+metadataUpdatedAt: 2026-08-16T13:56:18.385Z
+starsUpdatedAt: 2026-08-16T13:56:18.385Z
+updatedAt: 2026-08-16T13:56:18.385Z

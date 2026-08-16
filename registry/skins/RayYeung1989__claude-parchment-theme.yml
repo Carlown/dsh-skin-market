@@ -1,0 +1,40 @@
+id: rayyeung1989.claude-parchment-theme
+name:
+  zh: claude-parchment-theme
+  en: claude-parchment-theme
+author: RayYeung1989
+description: 一款 Claude 风格的 dsh插件：为 DSH WebUI 打造，暖羊皮纸 Parchment 色板、Terracotta 品牌色与衬线字体
+repo: https://github.com/RayYeung1989/claude-parchment-theme
+package: "@dsh-local/claude-parchment-theme"
+rowId: ui-claude-theme
+category: theme
+tags:
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:RayYeung1989/claude-parchment-theme#824cef053f1cabcfaca93ae6b63261f66279f238
+  version: 1.0.0
+  commit: 824cef053f1cabcfaca93ae6b63261f66279f238
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/824cef053f1cabcfaca93ae6b63261f66279f238/RayYeung1989/claude-parchment-theme
+review:
+  compatibility: unverified
+  preview: repository-card
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 91
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:53:45.052Z
+metadataUpdatedAt: 2026-08-16T13:53:45.052Z
+starsUpdatedAt: 2026-08-16T13:53:45.052Z
+updatedAt: 2026-08-16T13:53:45.052Z

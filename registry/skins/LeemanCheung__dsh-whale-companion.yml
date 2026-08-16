@@ -1,0 +1,40 @@
+id: leemancheung.dsh-whale-companion
+name:
+  zh: dsh-whale-companion
+  en: dsh-whale-companion
+author: LeemanCheung
+description: A native DSH desktop whale with growth, achievements, skins, and privacy-safe progress tracking
+repo: https://github.com/LeemanCheung/dsh-whale-companion
+package: dsh-whale-companion
+rowId: whale-companion
+category: theme
+tags:
+  - retro
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:LeemanCheung/dsh-whale-companion#6b755b4ae906b22480d56162a535a7d9b88ce976
+  version: 1.0.0
+  commit: 6b755b4ae906b22480d56162a535a7d9b88ce976
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/LeemanCheung/dsh-whale-companion/6b755b4ae906b22480d56162a535a7d9b88ce976/assets/screenshots/overview.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 110
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:56:21.797Z
+metadataUpdatedAt: 2026-08-16T13:56:21.797Z
+starsUpdatedAt: 2026-08-16T13:56:21.797Z
+updatedAt: 2026-08-16T13:56:21.797Z

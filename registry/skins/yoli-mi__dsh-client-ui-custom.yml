@@ -1,0 +1,46 @@
+id: yoli-mi.dsh-client-ui-custom
+name:
+  zh: dsh-client-ui-custom
+  en: dsh-client-ui-custom
+author: yoli-mi
+description: "Configurable DSH web-surface plugin: wallpaper & frosted-glass themes, accent colors, custom keyboard shortcuts, app-usage panel, history strip, message Markdown — zero shell edits."
+repo: https://github.com/yoli-mi/dsh-client-ui-custom
+package: "@deepseek-ai/dsh-client-ui-custom"
+rowId: ui-custom
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - pastel
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:yoli-mi/dsh-client-ui-custom#f3660eb0198a4cf3acc3631c330caefdf1a49c90
+  version: 0.1.0-rc.5
+  commit: f3660eb0198a4cf3acc3631c330caefdf1a49c90
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://cdn.jsdelivr.net/gh/yoli-mi/dsh-client-ui-custom@main/assets/preview-mini.png
+  - https://cdn.jsdelivr.net/gh/yoli-mi/dsh-client-ui-custom@main/assets/preview-fullscreen.png
+  - https://cdn.jsdelivr.net/gh/yoli-mi/dsh-client-ui-custom@main/assets/shortcuts.png
+  - https://cdn.jsdelivr.net/gh/yoli-mi/dsh-client-ui-custom@main/assets/general-settings.png
+  - https://cdn.jsdelivr.net/gh/yoli-mi/dsh-client-ui-custom@main/assets/marketplace.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: manual-only
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 70
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16T13:51:23.052Z
+metadataUpdatedAt: 2026-08-16T13:51:23.052Z
+starsUpdatedAt: 2026-08-16T13:51:23.052Z
+updatedAt: 2026-08-16T13:51:23.052Z

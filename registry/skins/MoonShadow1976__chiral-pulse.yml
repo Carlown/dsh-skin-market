@@ -1,0 +1,39 @@
+id: moonshadow1976.chiral-pulse
+name:
+  zh: chiral-pulse
+  en: chiral-pulse
+author: MoonShadow1976
+description: Death Stranding skin for DeepSeek Harness UI + live heartbeat feed that pulses on agent thinking/tool execution. Whale keeps brand blue.
+repo: https://github.com/MoonShadow1976/chiral-pulse
+package: chiral-pulse
+rowId: ui-chiral-pulse
+category: theme
+tags:
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:MoonShadow1976/chiral-pulse#4e5ba581468370871ff79e159c1c1b9dd31433b1
+  version: 1.2.7
+  commit: 4e5ba581468370871ff79e159c1c1b9dd31433b1
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/MoonShadow1976/chiral-pulse/4e5ba581468370871ff79e159c1c1b9dd31433b1/assets/chiral-pulse-hero.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 65
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16T13:50:42.859Z
+metadataUpdatedAt: 2026-08-16T13:50:42.859Z
+starsUpdatedAt: 2026-08-16T13:50:42.859Z
+updatedAt: 2026-08-16T13:50:42.859Z

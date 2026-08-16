@@ -1,0 +1,40 @@
+id: realhacker.dsh-theme-colorizer
+name:
+  zh: dsh-theme-colorizer
+  en: dsh-theme-colorizer
+author: RealHacker
+description: A Deepseek Harness plugin that gives its UI color themes
+repo: https://github.com/RealHacker/dsh-theme-colorizer
+package: dsh-theme-colorizer
+rowId: theme-colorizer
+category: theme
+tags:
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:RealHacker/dsh-theme-colorizer#987fd9dfced2a5dd0f3031ab8b6d03619816c91b
+  version: 1.0.0
+  commit: 987fd9dfced2a5dd0f3031ab8b6d03619816c91b
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/RealHacker/dsh-theme-colorizer/987fd9dfced2a5dd0f3031ab8b6d03619816c91b/asset/dsh-color-theme.jpeg
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 117
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T13:57:07.914Z
+metadataUpdatedAt: 2026-08-16T13:57:07.914Z
+starsUpdatedAt: 2026-08-16T13:57:07.914Z
+updatedAt: 2026-08-16T13:57:07.914Z

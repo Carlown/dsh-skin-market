@@ -1,0 +1,42 @@
+id: wanzhiwei5.dsh-skin-amis
+name:
+  zh: dsh-skin-amis
+  en: dsh-skin-amis
+author: wanzhiwei5
+description: "鸣潮爱弥斯主题皮肤: 粉白配色+赛博霓虹装饰的 DeepSeek Harness Web GUI 皮肤 / Amis-inspired pink-white skin for DSH Web UI"
+repo: https://github.com/wanzhiwei5/dsh-skin-amis
+package: dsh-skin-amis
+rowId: ui-skin-amis
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:wanzhiwei5/dsh-skin-amis#74d91e4b994d9fb8513ee3df97c43d3280390e58
+  version: 0.1.0
+  commit: 74d91e4b994d9fb8513ee3df97c43d3280390e58
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/wanzhiwei5/dsh-skin-amis/74d91e4b994d9fb8513ee3df97c43d3280390e58/preview/light.png
+  - https://raw.githubusercontent.com/wanzhiwei5/dsh-skin-amis/74d91e4b994d9fb8513ee3df97c43d3280390e58/preview/dark.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 69
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16T13:51:14.660Z
+metadataUpdatedAt: 2026-08-16T13:51:14.660Z
+starsUpdatedAt: 2026-08-16T13:51:14.660Z
+updatedAt: 2026-08-16T13:51:14.660Z

@@ -1,0 +1,40 @@
+id: kongxiangyiren.dhs-theme-plugin
+name:
+  zh: dhs-theme-plugin
+  en: dhs-theme-plugin
+author: kongxiangyiren
+description: dsh 主题管理插件,可以自定义主题
+repo: https://github.com/kongxiangyiren/dhs-theme-plugin
+package: "@kongxiangyiren/dhs-theme-plugin"
+rowId: dhs-theme-plugin
+category: theme
+tags:
+  - retro
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:kongxiangyiren/dhs-theme-plugin#9e451e3a9eda86f62c8624d606a911e68a943b16
+  version: 0.0.3
+  commit: 9e451e3a9eda86f62c8624d606a911e68a943b16
+compatibility:
+  dsh: ^0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/9e451e3a9eda86f62c8624d606a911e68a943b16/kongxiangyiren/dhs-theme-plugin
+review:
+  compatibility: verified
+  preview: repository-card
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 82
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-16T13:52:44.893Z
+metadataUpdatedAt: 2026-08-16T13:52:44.893Z
+starsUpdatedAt: 2026-08-16T13:52:44.893Z
+updatedAt: 2026-08-16T13:52:44.893Z

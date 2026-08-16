@@ -1,0 +1,41 @@
+id: ai7603.dsh-cyberpunk-theme
+name:
+  zh: dsh-cyberpunk-theme
+  en: dsh-cyberpunk-theme
+author: ai7603
+description: dsh-cyberpunk-theme
+repo: https://github.com/ai7603/dsh-cyberpunk-theme
+package: dsh-cyberpunk-theme
+rowId: cyberpunk-2077
+category: theme
+tags:
+  - motion
+  - token-theme
+  - light-dark
+modes:
+  - light
+  - dark
+install:
+  target: github:ai7603/dsh-cyberpunk-theme#445693a248a03ebae53f155e8af0401410463d70
+  version: 1.0.0
+  commit: 445693a248a03ebae53f155e8af0401410463d70
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/ai7603/dsh-cyberpunk-theme/445693a248a03ebae53f155e8af0401410463d70/docs/screenshots/session-dark.png
+  - https://raw.githubusercontent.com/ai7603/dsh-cyberpunk-theme/445693a248a03ebae53f155e8af0401410463d70/docs/screenshots/session-light.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 47
+starsSnapshot: 3
+releaseUpdatedAt: 2026-08-16T13:48:35.219Z
+metadataUpdatedAt: 2026-08-16T13:48:35.219Z
+starsUpdatedAt: 2026-08-16T13:48:35.219Z
+updatedAt: 2026-08-16T13:48:35.219Z
