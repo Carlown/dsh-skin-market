@@ -39,3 +39,11 @@ ${repositoryLine}
 
 收录不等于安全认证。不要声称该皮肤已被 DSH 官方、安全团队或市场背书。`
 }
+
+export function createSkinInstallPrompt(skin: CatalogSkin): string {
+  const buildApproval = skin.install.allowBuild === undefined
+    ? ''
+    : `\n- 这个固定版本包含 prepare 构建脚本。只允许精确构件键 \`${skin.install.allowBuild}\`：在 profile 的 pnpm-workspace.yaml 里合并 \`allowBuilds:\n    '${skin.install.allowBuild}': true\`，不得开启 dangerouslyAllowAllBuilds。`
+  return `请帮我把下面这个已固定版本的 DSH Web 皮肤安装到 web profile，并完成验证。\n\n- 仓库：${skin.repo}\n- 安装目标：${skin.install.target}\n- package：${skin.package}\n- loader rowId：${skin.rowId ?? skin.package}\n- 版本：${skin.install.version}\n- commit：${skin.install.commit}${buildApproval}\n\n要求：\n1. 不要改成 main、HEAD 或最新版本，必须使用上面的完整 commit。\n2. 运行 DSH 的 profile 插件安装命令；如果是只有 dsh.client 的皮肤，幂等地把上面的 package 和 rowId 注册到 web profile 的 cordis.patch.yml。\n3. 不要读取 .env、凭据或聊天记录；不要放宽其他包的构建权限。\n4. 安装后确认 profile package.json 中存在该依赖、node_modules 中的 package.json 声明了 dsh.client，并确认 loader 注册项存在。\n5. 告诉我是否需要重启 DSH Web；不要替我安装其他皮肤。`
+}
+import type { CatalogSkin } from './types.ts'

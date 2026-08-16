@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
-import { atomicWriteJson, atomicWriteText, ensureSkinRegistration, profilePatchFile, readMarketState, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
+import { atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, installedClientPlugins, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 function fixture() { return mkdtempSync(join(tmpdir(), 'skin-profile-')) }
@@ -47,5 +47,27 @@ describe('profile state', () => {
     removeSkinRegistration(dir, skin)
     const removed = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ insert?: Array<{ id: string }> }>
     expect(removed.flatMap(operation => operation.insert ?? []).map(row => row.id)).toEqual(['keep-me'])
+  })
+
+  it('merges an exact immutable build approval without allowing other packages', () => {
+    const dir = fixture()
+    atomicWriteText(pnpmWorkspaceFile(dir), 'packages:\n  - .\nallowBuilds:\n  esbuild: false\n')
+    const key = 'dskin@https://codeload.github.com/dancingmemory/dskin/tar.gz/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed'
+    ensureBuildAllowed(dir, key)
+    const workspace = parse(readFileSync(pnpmWorkspaceFile(dir), 'utf8')) as { allowBuilds: Record<string, boolean> }
+    expect(workspace.allowBuilds).toEqual({ esbuild: false, [key]: true })
+  })
+
+  it('discovers installed client plugins that are not in the market catalog', () => {
+    const dir = fixture()
+    const packageName = 'my-private-theme'
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [packageName]: 'file:/plugins/my-private-theme' } })
+    const packageDir = join(dir, 'node_modules', packageName)
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(packageDir, 'package.json'), { name: packageName, version: '2.0.0', dsh: { client: { platform: 'web' } } })
+    atomicWriteText(profilePatchFile(dir), `- insert:\n    - id: private-theme\n      name: ${packageName}\n`)
+    expect(installedClientPlugins(dir, loadCatalog().skins)).toEqual([{
+      package: packageName, version: '2.0.0', spec: 'file:/plugins/my-private-theme', rowIds: ['private-theme'], registered: true,
+    }])
   })
 })

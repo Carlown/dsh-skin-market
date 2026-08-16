@@ -3,7 +3,9 @@ import type { PluginRunner } from './commands.ts'
 import { commandError } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
 import {
+  ensureBuildAllowed,
   ensureSkinRegistration,
+  pnpmWorkspaceFile,
   profilePatchFile,
   readDependencies,
   readMarketState,
@@ -145,9 +147,11 @@ export class SkinLifecycle {
     }
     const snapshot = snapshotManifest(this.options.profileDir)
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
+    const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
+      if (skin.install.allowBuild !== undefined) ensureBuildAllowed(this.options.profileDir, skin.install.allowBuild)
       await this.run(['add', skin.install.target])
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
@@ -161,6 +165,7 @@ export class SkinLifecycle {
     } catch (error) {
       restoreManifest(this.options.profileDir, snapshot)
       restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
+      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
       try { await this.run(['install']) } catch { /* retain the original failure */ }
       throw error
     }
@@ -200,9 +205,11 @@ export class SkinLifecycle {
     const wasActive = readMarketState(this.options.profileDir).activeSkinId === skin.id
     const snapshot = snapshotManifest(this.options.profileDir)
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
+    const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
+      if (skin.install.allowBuild !== undefined) ensureBuildAllowed(this.options.profileDir, skin.install.allowBuild)
       await this.run(['add', skin.install.target])
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
@@ -214,6 +221,7 @@ export class SkinLifecycle {
     } catch (error) {
       restoreManifest(this.options.profileDir, snapshot)
       restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
+      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
       try { await this.run(['install']) } catch { /* retain original failure */ }
       throw error
     }

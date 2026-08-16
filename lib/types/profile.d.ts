@@ -1,7 +1,8 @@
-import type { PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts';
+import type { InstalledClientPlugin, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts';
 export declare function resolveProfileDir(profile: string, explicit?: string): string;
 export declare function manifestFile(profileDir: string): string;
 export declare function profilePatchFile(profileDir: string): string;
+export declare function pnpmWorkspaceFile(profileDir: string): string;
 export declare function marketStateFile(profileDir: string): string;
 export declare function readJson<T>(file: string, fallback: T): T;
 export declare function atomicWriteJson(file: string, value: unknown): void;
@@ -15,8 +16,10 @@ export declare function validateInstalledSkin(profileDir: string, skin: SkinEntr
     reason?: string;
     version?: string;
 };
+export declare function ensureBuildAllowed(profileDir: string, key: string): void;
 export declare function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled?: boolean): void;
 export declare function removeSkinRegistration(profileDir: string, skin: SkinEntry): void;
+export declare function installedClientPlugins(profileDir: string, catalog: SkinEntry[]): InstalledClientPlugin[];
 export interface FileSnapshot {
     existed: boolean;
     contents: string;

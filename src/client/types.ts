@@ -5,9 +5,10 @@ export interface CatalogSkin {
   description: string
   repo: string
   package: string
+  rowId: string
   tags: string[]
   modes: string[]
-  install: { version: string; commit: string }
+  install: { target: string; version: string; commit: string; allowBuild?: string }
   compatibility: { dsh: string; platform: string[] }
   screenshots: string[]
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
@@ -28,6 +29,14 @@ export interface RuntimeSkin {
   installedVersion: string | null
   updateAvailable: boolean
   error?: string
+}
+
+export interface InstalledClientPlugin {
+  package: string
+  version: string | null
+  spec: string
+  rowIds: string[]
+  registered: boolean
 }
 
 export interface Operation {

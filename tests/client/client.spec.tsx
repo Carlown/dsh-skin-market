@@ -153,15 +153,25 @@ describe('client market', () => {
   })
 
   it('replaces Use with a restart confirmation when activation needs restart', async () => {
-    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { runningAgentCount: 0, skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
     render(<SkinMarketSection t={key => key} />)
 
     const restart = await screen.findByRole('button', { name: '重启以应用' })
     expect(screen.queryByRole('button', { name: '使用' })).toBeNull()
     fireEvent.click(restart)
     expect(screen.getByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })).toBeTruthy()
-    expect(screen.getByText('重新启动会中断当前正在运行的 Agent。')).toBeTruthy()
+    expect(await screen.findByText('Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。')).toBeTruthy()
+    expect(screen.getByRole('button', { name: '确认无任务，立即重启' })).toBeTruthy()
     expect(screen.getByRole('button', { name: '稍后' })).toBeTruthy()
+  })
+
+  it('disables restart when the Host reports a running Agent', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { runningAgentCount: 2, skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '重启以应用' }))
+    expect(await screen.findByText('检测到 2 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。')).toBeTruthy()
+    expect(screen.getByRole('button', { name: '有任务运行中' }).hasAttribute('disabled')).toBe(true)
   })
 
   it('asks for restart immediately after Use when the client entry is absent', async () => {
@@ -227,11 +237,11 @@ describe('client market', () => {
     }))
     render(<SkinMarketSection t={key => key} />)
 
-    const installAndApply = await screen.findByRole('button', { name: '安装并应用' })
-    const installOnly = screen.getByRole('button', { name: '安装' })
-    expect(installAndApply.getAttribute('variant')).toBe('primary')
-    expect(installOnly.getAttribute('variant')).toBe('outline')
-    fireEvent.click(installOnly)
+    const copyPrompt = await screen.findByRole('button', { name: '复制安装提示词' })
+    const automatic = screen.getByRole('button', { name: '自动安装' })
+    expect(copyPrompt.getAttribute('variant')).toBe('primary')
+    expect(automatic.getAttribute('variant')).toBe('outline')
+    fireEvent.click(automatic)
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览.*安装中/ })).toBeTruthy()
   })
 
@@ -248,7 +258,7 @@ describe('client market', () => {
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
-    const install = await screen.findByRole('button', { name: '安装（兼容性待验证）' })
+    const install = await screen.findByRole('button', { name: '自动安装（兼容性待验证）' })
     fireEvent.click(install)
     await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
     expect(open).not.toHaveBeenCalled()

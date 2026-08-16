@@ -18,6 +18,7 @@ install:
   target: github:dancingmemory/dskin#f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed
   version: 1.0.13
   commit: f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed
+  allowBuild: dskin@https://codeload.github.com/dancingmemory/dskin/tar.gz/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed
 compatibility:
   dsh: unverified
   platform:

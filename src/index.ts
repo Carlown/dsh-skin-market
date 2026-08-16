@@ -18,7 +18,7 @@ function argvProfile(): string | undefined {
 }
 
 export function apply(ctx: Context, config?: Config): void {
-  ctx.inject(['webServer', 'loader'], hostContext => {
+  ctx.inject(['webServer', 'loader', 'agents'], hostContext => {
     const host = hostContext as unknown as EffectHost
     const desktopProfiles = ctx.get('desktopProfiles') as DesktopProfilesLike | undefined
     if (desktopProfiles === undefined) {

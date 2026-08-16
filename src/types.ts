@@ -10,7 +10,7 @@ export interface SkinEntry {
   category: string
   tags: string[]
   modes: Array<'light' | 'dark'>
-  install: { target: string; version: string; commit: string }
+  install: { target: string; version: string; commit: string; allowBuild?: string }
   compatibility: { dsh: string; platform: string[] }
   screenshots: string[]
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
@@ -47,6 +47,14 @@ export interface SkinRuntimeState {
   installedSpec: string | null
   updateAvailable: boolean
   error?: string
+}
+
+export interface InstalledClientPlugin {
+  package: string
+  version: string | null
+  spec: string
+  rowIds: string[]
+  registered: boolean
 }
 
 export type OperationKind = 'install' | 'activate' | 'deactivate' | 'update' | 'uninstall'

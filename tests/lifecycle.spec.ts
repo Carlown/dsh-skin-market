@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -108,20 +108,23 @@ describe('skin lifecycle', () => {
     expect(readFileSync(join(dir, 'cordis.patch.yml'), 'utf8')).not.toContain(`id: ${skin.rowId}`)
   })
 
-  it('restores the manifest after a failed install', async () => {
+  it('pre-approves an exact build artifact and restores the workspace after a failed install', async () => {
     const dir = fixture()
     let calls = 0
     const runner: PluginRunner = async () => {
       calls += 1
       if (calls === 1) {
+        expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain('dskin@https://codeload.github.com/dancingmemory/dskin/tar.gz/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed')
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { ghost: 'broken' } })
         return { ...success(), exitCode: 1, stderr: 'network failed' }
       }
       return success()
     }
     const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner })
-    const operation = await finished(lifecycle.begin('install', lifecycle.catalog[0].id))
+    const skin = lifecycle.catalog.find(item => item.id === 'dancingmemory.dskin')!
+    const operation = await finished(lifecycle.begin('install', skin.id))
     expect(operation.phase).toBe('failed')
     expect(readDependencies(dir)).toEqual({})
+    expect(existsSync(join(dir, 'pnpm-workspace.yaml'))).toBe(false)
   })
 })

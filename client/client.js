@@ -249,7 +249,7 @@ window.__ModuleLoader__.load({
 		StarIcon.displayName = "StarIcon";
 		//#endregion
 		//#region \0dsh-skin-market-css:/Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/src/client/SkinMarket.module.css.mjs
-		const css = ".VqXecW_root{box-sizing:border-box;width:100%;height:100%;min-height:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);grid-template-columns:330px minmax(0,1fr);display:grid;overflow:hidden}.VqXecW_settingsNavIcon{flex:none;justify-content:center;align-items:center;width:16px;height:16px;display:inline-flex}.VqXecW_settingsNavIcon svg{width:16px;height:16px;display:block}svg[data-dsh-skin-market-default-icon=hidden]{display:none}.VqXecW_catalog{border-right:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-2);flex-direction:column;min-width:0;display:flex}.VqXecW_catalogHeader{border-bottom:1px solid var(--dsw-alias-border-l2);flex-direction:column;gap:14px;padding:24px 22px 10px;display:flex}.VqXecW_catalogHeader h2,.VqXecW_detail h2,.VqXecW_detail h3,.VqXecW_catalogHeader p,.VqXecW_detail p{margin:0}.VqXecW_catalogHeader h2{margin-bottom:2px;font-size:20px;font-weight:600;line-height:28px}.VqXecW_catalogHeader p{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:12px;line-height:18px}.VqXecW_catalogTitle{justify-content:space-between;align-items:center;gap:12px;display:flex}.VqXecW_catalogHeader>span{height:48px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l2);background:0 0;border-radius:10px;align-items:center;gap:8px;padding:0 14px;display:flex}.VqXecW_catalogHeader>span:focus-within{border-color:var(--dsw-alias-border-l1)}.VqXecW_catalogHeader>span input{min-width:0;color:var(--dsw-alias-label-primary);background:0 0;border:0;outline:0;flex:1}.VqXecW_catalogHeader>span input::placeholder{color:var(--dsw-alias-label-caption)}.VqXecW_filterBar{justify-content:space-between;align-items:center;gap:8px;display:flex}.VqXecW_filters{flex-wrap:wrap;gap:4px;display:flex}.VqXecW_root .VqXecW_filters .VqXecW_filterPill{border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 11px;font-size:12px;line-height:18px;display:inline-flex;color:var(--dsw-alias-label-secondary)!important;background:0 0!important;border:1px solid #0000!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill:hover{background:var(--dsw-alias-interactive-bg-hover)!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill[data-active=true]{color:var(--dsw-alias-label-primary)!important;border-color:var(--dsw-alias-button-ghost-active-border,var(--dsw-alias-border-l1))!important;background:var(--dsw-alias-button-ghost-active-fill,var(--dsw-alias-interactive-bg-hover))!important}.VqXecW_staticPill{height:24px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:none;border-radius:12px;align-items:center;gap:4px;padding:0 8px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton{cursor:pointer;white-space:nowrap;height:28px;color:var(--dsw-alias-label-secondary);background:0 0;border:0;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_skinList{overscroll-behavior:contain;scrollbar-gutter:stable;touch-action:pan-y;-webkit-overflow-scrolling:touch;flex-direction:column;flex:1 1 0;gap:4px;height:0;min-height:0;margin:0;padding:8px 12px 16px;display:flex;overflow:hidden auto}.VqXecW_skinCard{box-sizing:border-box;cursor:pointer;text-align:left;width:100%;min-height:72px;color:inherit;font:inherit;background:0 0;border:0;border-radius:8px;align-items:center;gap:12px;padding:8px;display:flex}.VqXecW_skinCard:hover{background:var(--dsw-specific-sidebar-nav-item-hover,var(--dsw-alias-interactive-bg-hover))}.VqXecW_skinCard[data-selected=true]{background:var(--dsw-specific-sidebar-nav-item-active,var(--dsw-alias-button-ghost-active-fill));box-shadow:inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border)}.VqXecW_skinCard>img{object-fit:cover;background:var(--dsw-alias-bg-layer-3);border-radius:7px;flex:none;width:56px;height:56px;display:block}.VqXecW_skinCardBody{flex-direction:column;flex:1;min-width:0;display:flex}.VqXecW_cardTitle{white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:400;line-height:22px;overflow:hidden}.VqXecW_cardMetaLine{min-width:0;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));align-items:center;gap:8px;font-size:12px;line-height:18px;display:flex}.VqXecW_cardMeta{white-space:nowrap;text-overflow:ellipsis;min-width:0;overflow:hidden}.VqXecW_cardStars{white-space:nowrap;flex:none;align-items:center;gap:3px;display:inline-flex}.VqXecW_cardStatus{height:20px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:5px;flex:none;align-items:center;padding:0 7px;font-size:10px;line-height:16px;display:inline-flex}.VqXecW_cardStatusUpdate{color:var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary));background:color-mix(in srgb, var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)) 10%, transparent)}.VqXecW_detail{flex-direction:column;gap:14px;min-width:0;min-height:0;padding:32px 28px 28px;display:flex;overflow-y:auto}.VqXecW_detail>*{flex:none}.VqXecW_mobileBack.VqXecW_nativeOutline{order:0;align-self:flex-start;display:none}.VqXecW_hero{aspect-ratio:16/8;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;order:4;width:100%;position:relative;overflow:hidden}.VqXecW_hero img{object-fit:cover;width:100%;height:100%;display:block}.VqXecW_thumbnails{order:5;gap:8px;display:flex;overflow-x:auto}.VqXecW_thumbnails button{cursor:pointer;border:1px solid var(--dsw-alias-border-l2);opacity:.62;background:0 0;border-radius:8px;flex:none;width:112px;padding:0;overflow:hidden}.VqXecW_thumbnails button[data-selected=true]{border-color:var(--dsw-alias-brand-primary);opacity:1}.VqXecW_thumbnails img{aspect-ratio:16/9;object-fit:cover;width:100%;display:block}.VqXecW_detailHeader{border-bottom:1px solid var(--dsw-alias-border-l2);order:1;grid-template-columns:138px minmax(0,1fr);align-items:start;gap:22px;padding:0 4px 16px;display:grid}.VqXecW_skinAvatar{object-fit:cover;background:var(--dsw-alias-bg-layer-1);border-radius:9px;width:138px;height:138px;display:block}.VqXecW_titleBlock{min-width:0;padding-top:10px}.VqXecW_titleBlock h2{letter-spacing:-.01em;font-size:23px;font-weight:620;line-height:31px}.VqXecW_titleBlock .VqXecW_author{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:13px;line-height:20px}.VqXecW_titleBlock .VqXecW_description{max-width:520px;color:var(--dsw-alias-label-secondary);margin-top:10px;font-size:13px;line-height:21px}.VqXecW_titleBlock .VqXecW_version{min-width:0;color:var(--dsw-alias-label-caption);align-items:center;gap:7px;margin-top:8px;font-size:12px;line-height:22px;display:flex}.VqXecW_status{height:20px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:10px;align-items:center;padding:0 7px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_statusActive{color:var(--dsw-alias-state-success-primary);background:color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent)}.VqXecW_actionRow{border-bottom:1px solid var(--dsw-alias-border-l2);flex-wrap:wrap;order:2;align-items:center;gap:9px;min-height:42px;padding:0 4px 12px;display:flex}.VqXecW_stars{color:var(--dsw-alias-label-secondary);white-space:nowrap;flex:none;align-items:center;gap:5px;font-size:12px;line-height:20px;display:inline-flex}.VqXecW_actionDivider{background:var(--dsw-alias-border-l2);width:1px;height:22px;margin:0 3px}.VqXecW_repoMeta{flex:220px;align-items:center;gap:10px;min-width:0;display:flex}.VqXecW_repoLink{min-width:0;color:var(--dsw-alias-link-primary,var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)));align-items:center;gap:5px;font-size:12px;line-height:20px;text-decoration:none;display:inline-flex}.VqXecW_repoLink>svg{flex:none}.VqXecW_repoLink>span{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.VqXecW_repoLink:hover{text-decoration:underline}.VqXecW_nativePrimary,.VqXecW_nativeOutline{cursor:pointer;height:28px;font:inherit;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_nativePrimary{color:var(--dsw-alias-label-primary-foreground,var(--dsw-alias-label-primary-inverted,#fff));background:var(--dsw-alias-button-primary-fill,var(--dsw-alias-brand-primary));border:0}.VqXecW_nativePrimary:hover{background:var(--dsw-alias-button-primary-hover,var(--dsw-alias-brand-primary))}.VqXecW_nativeOutline{color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:0 0}.VqXecW_nativeOutline:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_iconOnlyButton{width:28px;padding:0}.VqXecW_compactActionIcon svg{width:14px;height:14px}.VqXecW_operation,.VqXecW_error{border-radius:10px;order:3;align-items:center;gap:7px;padding:9px 12px;font-size:12px;line-height:18px;display:flex}.VqXecW_operation{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_operation svg{animation:1s linear infinite VqXecW_spin}.VqXecW_error{color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-state-error-tertiary)}.VqXecW_aboutGrid{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;order:6;grid-template-columns:minmax(0,1fr) minmax(260px,1fr);display:grid}.VqXecW_aboutGrid>*{padding:16px 18px}.VqXecW_aboutGrid>aside{border-left:1px solid var(--dsw-alias-border-l2)}.VqXecW_aboutGrid h3,.VqXecW_recommendations h3{margin-bottom:10px;font-size:14px;font-weight:600;line-height:22px}.VqXecW_aboutGrid article>p{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:21px}.VqXecW_tags{flex-wrap:wrap;gap:6px;margin-top:12px;display:flex}.VqXecW_aboutGrid dl{margin:12px 0 0}.VqXecW_aboutGrid dl div{border-bottom:1px solid var(--dsw-alias-border-l3);justify-content:space-between;gap:12px;padding:7px 0;font-size:12px;line-height:18px;display:flex}.VqXecW_aboutGrid dt{color:var(--dsw-alias-label-caption)}.VqXecW_aboutGrid dd{text-align:right;color:var(--dsw-alias-label-secondary);margin:0}.VqXecW_notice{color:var(--dsw-alias-state-warning-primary);font-size:11px;line-height:17px;margin-top:10px!important}.VqXecW_changelog ol{gap:8px;margin:0 0 12px;padding:0;list-style:none;display:grid}.VqXecW_changelog li{color:var(--dsw-alias-label-secondary);grid-template-columns:64px minmax(0,1fr);gap:10px;font-size:12px;line-height:18px;display:grid}.VqXecW_changelog strong{color:var(--dsw-alias-label-caption);font-weight:500}.VqXecW_changelog a{color:var(--dsw-alias-label-primary);font-size:12px;text-decoration:none}.VqXecW_changelog a:hover{text-decoration:underline}.VqXecW_recommendations{border-top:1px solid var(--dsw-alias-border-l2);order:7;padding-top:18px}.VqXecW_recommendations>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;display:grid}.VqXecW_recommendations button{cursor:pointer;text-align:left;width:100%;min-width:0;height:auto;min-height:0;color:inherit;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);font:inherit;border-radius:10px;flex-direction:column;align-self:start;padding:0;display:flex;overflow:hidden}.VqXecW_recommendations button:hover{border-color:var(--dsw-alias-border-l1);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_recommendations img{aspect-ratio:16/9;object-fit:contain;background:var(--dsw-alias-bg-layer-2);width:100%;display:block}.VqXecW_recommendations button>span{box-sizing:border-box;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:11px 12px 12px;display:flex}.VqXecW_recommendations strong{white-space:normal;overflow-wrap:anywhere;min-width:0;font-size:13px;line-height:19px}.VqXecW_recommendations small{color:var(--dsw-alias-label-caption);flex:none;align-items:center;gap:3px;padding-top:1px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_loading,.VqXecW_listLoading,.VqXecW_empty{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:20px}.VqXecW_loading{align-items:center;gap:7px;margin:auto;display:flex}.VqXecW_listLoading{justify-content:center;align-items:center;gap:7px;padding:24px 8px;display:flex}.VqXecW_loading svg,.VqXecW_listLoading svg{animation:1s linear infinite VqXecW_spin}.VqXecW_empty{text-align:center;padding:24px 8px}.VqXecW_submission{gap:10px;width:100%;min-width:0;max-width:100%;display:grid}.VqXecW_submission small{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.VqXecW_submission textarea{box-sizing:border-box;resize:vertical;width:100%;min-width:0;max-width:100%;min-height:300px;color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;outline:none;padding:12px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}.VqXecW_submission textarea:focus{border-color:var(--dsw-alias-brand-primary)}@keyframes VqXecW_spin{to{transform:rotate(360deg)}}@media (width<=959px){.VqXecW_root{height:100%;min-height:0;max-height:100%;display:block;overflow:hidden}.VqXecW_catalog{border-right:0;height:100%;min-height:0;overflow:hidden}.VqXecW_detail{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;height:100%;min-height:0;display:none;overflow-y:auto}.VqXecW_root[data-detail=open] .VqXecW_catalog{display:none}.VqXecW_root[data-detail=open] .VqXecW_detail{display:flex}.VqXecW_mobileBack.VqXecW_nativeOutline{display:inline-flex}.VqXecW_detailHeader{grid-template-columns:76px minmax(0,1fr);align-items:start;gap:14px;display:grid}.VqXecW_skinAvatar{width:76px;height:76px}.VqXecW_titleBlock{padding-top:0}.VqXecW_titleBlock h2{font-size:20px;line-height:27px}.VqXecW_titleBlock .VqXecW_description{margin-top:7px}.VqXecW_titleBlock .VqXecW_version{flex-wrap:wrap;row-gap:2px;margin-top:6px}.VqXecW_actionRow{justify-content:flex-start}.VqXecW_aboutGrid{grid-template-columns:1fr}.VqXecW_aboutGrid>aside{border-top:1px solid var(--dsw-alias-border-l2);border-left:0}.VqXecW_recommendations>div{grid-template-columns:1fr}}@media (prefers-reduced-motion:reduce){.VqXecW_operation svg,.VqXecW_loading svg,.VqXecW_listLoading svg{animation:none}}";
+		const css = ".VqXecW_root{box-sizing:border-box;width:100%;height:100%;min-height:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);grid-template-columns:330px minmax(0,1fr);display:grid;overflow:hidden}.VqXecW_settingsNavIcon{flex:none;justify-content:center;align-items:center;width:16px;height:16px;display:inline-flex}.VqXecW_settingsNavIcon svg{width:16px;height:16px;display:block}svg[data-dsh-skin-market-default-icon=hidden]{display:none}.VqXecW_catalog{border-right:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-2);flex-direction:column;min-width:0;display:flex}.VqXecW_catalogHeader{border-bottom:1px solid var(--dsw-alias-border-l2);flex-direction:column;gap:14px;padding:24px 22px 10px;display:flex}.VqXecW_catalogHeader h2,.VqXecW_detail h2,.VqXecW_detail h3,.VqXecW_catalogHeader p,.VqXecW_detail p{margin:0}.VqXecW_catalogHeader h2{margin-bottom:2px;font-size:20px;font-weight:600;line-height:28px}.VqXecW_catalogHeader p{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:12px;line-height:18px}.VqXecW_catalogTitle{justify-content:space-between;align-items:center;gap:12px;display:flex}.VqXecW_catalogHeader>span{height:48px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l2);background:0 0;border-radius:10px;align-items:center;gap:8px;padding:0 14px;display:flex}.VqXecW_catalogHeader>span:focus-within{border-color:var(--dsw-alias-border-l1)}.VqXecW_catalogHeader>span input{min-width:0;color:var(--dsw-alias-label-primary);background:0 0;border:0;outline:0;flex:1}.VqXecW_catalogHeader>span input::placeholder{color:var(--dsw-alias-label-caption)}.VqXecW_filterBar{justify-content:space-between;align-items:center;gap:8px;display:flex}.VqXecW_filters{flex-wrap:wrap;gap:4px;display:flex}.VqXecW_root .VqXecW_filters .VqXecW_filterPill{border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 11px;font-size:12px;line-height:18px;display:inline-flex;color:var(--dsw-alias-label-secondary)!important;background:0 0!important;border:1px solid #0000!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill:hover{background:var(--dsw-alias-interactive-bg-hover)!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill[data-active=true]{color:var(--dsw-alias-label-primary)!important;border-color:var(--dsw-alias-button-ghost-active-border,var(--dsw-alias-border-l1))!important;background:var(--dsw-alias-button-ghost-active-fill,var(--dsw-alias-interactive-bg-hover))!important}.VqXecW_staticPill{height:24px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:none;border-radius:12px;align-items:center;gap:4px;padding:0 8px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton{cursor:pointer;white-space:nowrap;height:28px;color:var(--dsw-alias-label-secondary);background:0 0;border:0;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_skinList{overscroll-behavior:contain;scrollbar-gutter:stable;touch-action:pan-y;-webkit-overflow-scrolling:touch;flex-direction:column;flex:1 1 0;gap:4px;height:0;min-height:0;margin:0;padding:8px 12px 16px;display:flex;overflow:hidden auto}.VqXecW_skinCard{box-sizing:border-box;cursor:pointer;text-align:left;width:100%;min-height:72px;color:inherit;font:inherit;background:0 0;border:0;border-radius:8px;align-items:center;gap:12px;padding:8px;display:flex}.VqXecW_skinCard:hover{background:var(--dsw-specific-sidebar-nav-item-hover,var(--dsw-alias-interactive-bg-hover))}.VqXecW_externalPlugin{cursor:default;border:1px dashed var(--dsw-alias-border-l2);min-height:58px}.VqXecW_skinCard[data-selected=true]{background:var(--dsw-specific-sidebar-nav-item-active,var(--dsw-alias-button-ghost-active-fill));box-shadow:inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border)}.VqXecW_skinCard>img{object-fit:cover;background:var(--dsw-alias-bg-layer-3);border-radius:7px;flex:none;width:56px;height:56px;display:block}.VqXecW_skinCardBody{flex-direction:column;flex:1;min-width:0;display:flex}.VqXecW_cardTitle{white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:400;line-height:22px;overflow:hidden}.VqXecW_cardMetaLine{min-width:0;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));align-items:center;gap:8px;font-size:12px;line-height:18px;display:flex}.VqXecW_cardMeta{white-space:nowrap;text-overflow:ellipsis;min-width:0;overflow:hidden}.VqXecW_cardStars{white-space:nowrap;flex:none;align-items:center;gap:3px;display:inline-flex}.VqXecW_cardStatus{height:20px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:5px;flex:none;align-items:center;padding:0 7px;font-size:10px;line-height:16px;display:inline-flex}.VqXecW_cardStatusUpdate{color:var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary));background:color-mix(in srgb, var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)) 10%, transparent)}.VqXecW_detail{flex-direction:column;gap:14px;min-width:0;min-height:0;padding:32px 28px 28px;display:flex;overflow-y:auto}.VqXecW_detail>*{flex:none}.VqXecW_mobileBack.VqXecW_nativeOutline{order:0;align-self:flex-start;display:none}.VqXecW_hero{aspect-ratio:16/8;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;order:4;width:100%;position:relative;overflow:hidden}.VqXecW_hero img{object-fit:cover;width:100%;height:100%;display:block}.VqXecW_thumbnails{order:5;gap:8px;display:flex;overflow-x:auto}.VqXecW_thumbnails button{cursor:pointer;border:1px solid var(--dsw-alias-border-l2);opacity:.62;background:0 0;border-radius:8px;flex:none;width:112px;padding:0;overflow:hidden}.VqXecW_thumbnails button[data-selected=true]{border-color:var(--dsw-alias-brand-primary);opacity:1}.VqXecW_thumbnails img{aspect-ratio:16/9;object-fit:cover;width:100%;display:block}.VqXecW_detailHeader{border-bottom:1px solid var(--dsw-alias-border-l2);order:1;grid-template-columns:138px minmax(0,1fr);align-items:start;gap:22px;padding:0 4px 16px;display:grid}.VqXecW_skinAvatar{object-fit:cover;background:var(--dsw-alias-bg-layer-1);border-radius:9px;width:138px;height:138px;display:block}.VqXecW_titleBlock{min-width:0;padding-top:10px}.VqXecW_titleBlock h2{letter-spacing:-.01em;font-size:23px;font-weight:620;line-height:31px}.VqXecW_titleBlock .VqXecW_author{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:13px;line-height:20px}.VqXecW_titleBlock .VqXecW_description{max-width:520px;color:var(--dsw-alias-label-secondary);margin-top:10px;font-size:13px;line-height:21px}.VqXecW_titleBlock .VqXecW_version{min-width:0;color:var(--dsw-alias-label-caption);align-items:center;gap:7px;margin-top:8px;font-size:12px;line-height:22px;display:flex}.VqXecW_status{height:20px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:10px;align-items:center;padding:0 7px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_statusActive{color:var(--dsw-alias-state-success-primary);background:color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent)}.VqXecW_actionRow{border-bottom:1px solid var(--dsw-alias-border-l2);flex-wrap:wrap;order:2;align-items:center;gap:9px;min-height:42px;padding:0 4px 12px;display:flex}.VqXecW_stars{color:var(--dsw-alias-label-secondary);white-space:nowrap;flex:none;align-items:center;gap:5px;font-size:12px;line-height:20px;display:inline-flex}.VqXecW_actionDivider{background:var(--dsw-alias-border-l2);width:1px;height:22px;margin:0 3px}.VqXecW_repoMeta{flex:220px;align-items:center;gap:10px;min-width:0;display:flex}.VqXecW_repoLink{min-width:0;color:var(--dsw-alias-link-primary,var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)));align-items:center;gap:5px;font-size:12px;line-height:20px;text-decoration:none;display:inline-flex}.VqXecW_repoLink>svg{flex:none}.VqXecW_repoLink>span{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.VqXecW_repoLink:hover{text-decoration:underline}.VqXecW_nativePrimary,.VqXecW_nativeOutline{cursor:pointer;height:28px;font:inherit;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_nativePrimary{color:var(--dsw-alias-label-primary-foreground,var(--dsw-alias-label-primary-inverted,#fff));background:var(--dsw-alias-button-primary-fill,var(--dsw-alias-brand-primary));border:0}.VqXecW_nativePrimary:hover{background:var(--dsw-alias-button-primary-hover,var(--dsw-alias-brand-primary))}.VqXecW_nativeOutline{color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:0 0}.VqXecW_nativeOutline:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_iconOnlyButton{width:28px;padding:0}.VqXecW_compactActionIcon svg{width:14px;height:14px}.VqXecW_operation,.VqXecW_error{border-radius:10px;order:3;align-items:center;gap:7px;padding:9px 12px;font-size:12px;line-height:18px;display:flex}.VqXecW_operation{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_operation svg{animation:1s linear infinite VqXecW_spin}.VqXecW_error{color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-state-error-tertiary)}.VqXecW_aboutGrid{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;order:6;grid-template-columns:minmax(0,1fr) minmax(260px,1fr);display:grid}.VqXecW_aboutGrid>*{padding:16px 18px}.VqXecW_aboutGrid>aside{border-left:1px solid var(--dsw-alias-border-l2)}.VqXecW_aboutGrid h3,.VqXecW_recommendations h3{margin-bottom:10px;font-size:14px;font-weight:600;line-height:22px}.VqXecW_aboutGrid article>p{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:21px}.VqXecW_tags{flex-wrap:wrap;gap:6px;margin-top:12px;display:flex}.VqXecW_aboutGrid dl{margin:12px 0 0}.VqXecW_aboutGrid dl div{border-bottom:1px solid var(--dsw-alias-border-l3);justify-content:space-between;gap:12px;padding:7px 0;font-size:12px;line-height:18px;display:flex}.VqXecW_aboutGrid dt{color:var(--dsw-alias-label-caption)}.VqXecW_aboutGrid dd{text-align:right;color:var(--dsw-alias-label-secondary);margin:0}.VqXecW_notice{color:var(--dsw-alias-state-warning-primary);font-size:11px;line-height:17px;margin-top:10px!important}.VqXecW_changelog ol{gap:8px;margin:0 0 12px;padding:0;list-style:none;display:grid}.VqXecW_changelog li{color:var(--dsw-alias-label-secondary);grid-template-columns:64px minmax(0,1fr);gap:10px;font-size:12px;line-height:18px;display:grid}.VqXecW_changelog strong{color:var(--dsw-alias-label-caption);font-weight:500}.VqXecW_changelog a{color:var(--dsw-alias-label-primary);font-size:12px;text-decoration:none}.VqXecW_changelog a:hover{text-decoration:underline}.VqXecW_recommendations{border-top:1px solid var(--dsw-alias-border-l2);order:7;padding-top:18px}.VqXecW_recommendations>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;display:grid}.VqXecW_recommendations button{cursor:pointer;text-align:left;width:100%;min-width:0;height:auto;min-height:0;color:inherit;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);font:inherit;border-radius:10px;flex-direction:column;align-self:start;padding:0;display:flex;overflow:hidden}.VqXecW_recommendations button:hover{border-color:var(--dsw-alias-border-l1);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_recommendations img{aspect-ratio:16/9;object-fit:contain;background:var(--dsw-alias-bg-layer-2);width:100%;display:block}.VqXecW_recommendations button>span{box-sizing:border-box;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:11px 12px 12px;display:flex}.VqXecW_recommendations strong{white-space:normal;overflow-wrap:anywhere;min-width:0;font-size:13px;line-height:19px}.VqXecW_recommendations small{color:var(--dsw-alias-label-caption);flex:none;align-items:center;gap:3px;padding-top:1px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_loading,.VqXecW_listLoading,.VqXecW_empty{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:20px}.VqXecW_loading{align-items:center;gap:7px;margin:auto;display:flex}.VqXecW_listLoading{justify-content:center;align-items:center;gap:7px;padding:24px 8px;display:flex}.VqXecW_loading svg,.VqXecW_listLoading svg{animation:1s linear infinite VqXecW_spin}.VqXecW_empty{text-align:center;padding:24px 8px}.VqXecW_submission{gap:10px;width:100%;min-width:0;max-width:100%;display:grid}.VqXecW_submission small{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.VqXecW_submission textarea{box-sizing:border-box;resize:vertical;width:100%;min-width:0;max-width:100%;min-height:300px;color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;outline:none;padding:12px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}.VqXecW_submission textarea:focus{border-color:var(--dsw-alias-brand-primary)}@keyframes VqXecW_spin{to{transform:rotate(360deg)}}@media (width<=959px){.VqXecW_root{height:100%;min-height:0;max-height:100%;display:block;overflow:hidden}.VqXecW_catalog{border-right:0;height:100%;min-height:0;overflow:hidden}.VqXecW_detail{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;height:100%;min-height:0;display:none;overflow-y:auto}.VqXecW_root[data-detail=open] .VqXecW_catalog{display:none}.VqXecW_root[data-detail=open] .VqXecW_detail{display:flex}.VqXecW_mobileBack.VqXecW_nativeOutline{display:inline-flex}.VqXecW_detailHeader{grid-template-columns:76px minmax(0,1fr);align-items:start;gap:14px;display:grid}.VqXecW_skinAvatar{width:76px;height:76px}.VqXecW_titleBlock{padding-top:0}.VqXecW_titleBlock h2{font-size:20px;line-height:27px}.VqXecW_titleBlock .VqXecW_description{margin-top:7px}.VqXecW_titleBlock .VqXecW_version{flex-wrap:wrap;row-gap:2px;margin-top:6px}.VqXecW_actionRow{justify-content:flex-start}.VqXecW_aboutGrid{grid-template-columns:1fr}.VqXecW_aboutGrid>aside{border-top:1px solid var(--dsw-alias-border-l2);border-left:0}.VqXecW_recommendations>div{grid-template-columns:1fr}}@media (prefers-reduced-motion:reduce){.VqXecW_operation svg,.VqXecW_loading svg,.VqXecW_listLoading svg{animation:none}}";
 		const tagId = "dsh-skin-market/SkinMarket.module.css";
 		if (typeof document !== "undefined" && !document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]")) {
 			const tag = document.createElement("style");
@@ -259,58 +259,59 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var SkinMarket_module_css_default = {
-			"notice": "VqXecW_notice",
-			"sortButton": "VqXecW_sortButton",
-			"detailHeader": "VqXecW_detailHeader",
-			"skinCard": "VqXecW_skinCard",
-			"skinCardBody": "VqXecW_skinCardBody",
-			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
-			"status": "VqXecW_status",
-			"iconOnlyButton": "VqXecW_iconOnlyButton",
-			"nativeOutline": "VqXecW_nativeOutline",
-			"detail": "VqXecW_detail",
-			"skinAvatar": "VqXecW_skinAvatar",
-			"author": "VqXecW_author",
-			"root": "VqXecW_root",
-			"mobileBack": "VqXecW_mobileBack",
-			"cardTitle": "VqXecW_cardTitle",
-			"titleBlock": "VqXecW_titleBlock",
-			"operation": "VqXecW_operation",
-			"skinList": "VqXecW_skinList",
-			"error": "VqXecW_error",
-			"stars": "VqXecW_stars",
 			"aboutGrid": "VqXecW_aboutGrid",
-			"cardStatus": "VqXecW_cardStatus",
-			"cardMeta": "VqXecW_cardMeta",
-			"actionRow": "VqXecW_actionRow",
-			"repoLink": "VqXecW_repoLink",
-			"recommendations": "VqXecW_recommendations",
-			"submission": "VqXecW_submission",
-			"filters": "VqXecW_filters",
-			"filterBar": "VqXecW_filterBar",
-			"settingsNavIcon": "VqXecW_settingsNavIcon",
-			"repoMeta": "VqXecW_repoMeta",
-			"catalogTitle": "VqXecW_catalogTitle",
-			"description": "VqXecW_description",
-			"statusActive": "VqXecW_statusActive",
-			"compactActionIcon": "VqXecW_compactActionIcon",
 			"filterPill": "VqXecW_filterPill",
-			"cardStars": "VqXecW_cardStars",
-			"actionDivider": "VqXecW_actionDivider",
-			"hero": "VqXecW_hero",
-			"loading": "VqXecW_loading",
-			"nativePrimary": "VqXecW_nativePrimary",
-			"catalog": "VqXecW_catalog",
+			"author": "VqXecW_author",
 			"spin": "VqXecW_spin",
-			"thumbnails": "VqXecW_thumbnails",
-			"version": "VqXecW_version",
-			"changelog": "VqXecW_changelog",
-			"staticPill": "VqXecW_staticPill",
-			"catalogHeader": "VqXecW_catalogHeader",
-			"cardMetaLine": "VqXecW_cardMetaLine",
-			"listLoading": "VqXecW_listLoading",
+			"cardStars": "VqXecW_cardStars",
+			"hero": "VqXecW_hero",
+			"error": "VqXecW_error",
+			"detailHeader": "VqXecW_detailHeader",
+			"filters": "VqXecW_filters",
+			"notice": "VqXecW_notice",
 			"empty": "VqXecW_empty",
-			"tags": "VqXecW_tags"
+			"submission": "VqXecW_submission",
+			"catalog": "VqXecW_catalog",
+			"root": "VqXecW_root",
+			"catalogTitle": "VqXecW_catalogTitle",
+			"skinCardBody": "VqXecW_skinCardBody",
+			"externalPlugin": "VqXecW_externalPlugin",
+			"version": "VqXecW_version",
+			"staticPill": "VqXecW_staticPill",
+			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
+			"cardTitle": "VqXecW_cardTitle",
+			"skinAvatar": "VqXecW_skinAvatar",
+			"stars": "VqXecW_stars",
+			"actionDivider": "VqXecW_actionDivider",
+			"status": "VqXecW_status",
+			"skinList": "VqXecW_skinList",
+			"recommendations": "VqXecW_recommendations",
+			"catalogHeader": "VqXecW_catalogHeader",
+			"mobileBack": "VqXecW_mobileBack",
+			"thumbnails": "VqXecW_thumbnails",
+			"repoLink": "VqXecW_repoLink",
+			"description": "VqXecW_description",
+			"listLoading": "VqXecW_listLoading",
+			"tags": "VqXecW_tags",
+			"cardStatus": "VqXecW_cardStatus",
+			"iconOnlyButton": "VqXecW_iconOnlyButton",
+			"loading": "VqXecW_loading",
+			"nativeOutline": "VqXecW_nativeOutline",
+			"cardMeta": "VqXecW_cardMeta",
+			"nativePrimary": "VqXecW_nativePrimary",
+			"cardMetaLine": "VqXecW_cardMetaLine",
+			"changelog": "VqXecW_changelog",
+			"settingsNavIcon": "VqXecW_settingsNavIcon",
+			"titleBlock": "VqXecW_titleBlock",
+			"filterBar": "VqXecW_filterBar",
+			"repoMeta": "VqXecW_repoMeta",
+			"detail": "VqXecW_detail",
+			"skinCard": "VqXecW_skinCard",
+			"statusActive": "VqXecW_statusActive",
+			"operation": "VqXecW_operation",
+			"actionRow": "VqXecW_actionRow",
+			"compactActionIcon": "VqXecW_compactActionIcon",
+			"sortButton": "VqXecW_sortButton"
 		};
 		//#endregion
 		//#region src/client/submission.ts
@@ -348,6 +349,10 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 9. 创建 PR 后返回 PR 链接；如果没有 GitHub 权限或需要登录，只准备好分支、commit 和可复制的 PR 内容，明确告诉我下一步。
 
 收录不等于安全认证。不要声称该皮肤已被 DSH 官方、安全团队或市场背书。`;
+		}
+		function createSkinInstallPrompt(skin) {
+			const buildApproval = skin.install.allowBuild === void 0 ? "" : `\n- 这个固定版本包含 prepare 构建脚本。只允许精确构件键 \`${skin.install.allowBuild}\`：在 profile 的 pnpm-workspace.yaml 里合并 \`allowBuilds:\n    '${skin.install.allowBuild}': true\`，不得开启 dangerouslyAllowAllBuilds。`;
+			return `请帮我把下面这个已固定版本的 DSH Web 皮肤安装到 web profile，并完成验证。\n\n- 仓库：${skin.repo}\n- 安装目标：${skin.install.target}\n- package：${skin.package}\n- loader rowId：${skin.rowId ?? skin.package}\n- 版本：${skin.install.version}\n- commit：${skin.install.commit}${buildApproval}\n\n要求：\n1. 不要改成 main、HEAD 或最新版本，必须使用上面的完整 commit。\n2. 运行 DSH 的 profile 插件安装命令；如果是只有 dsh.client 的皮肤，幂等地把上面的 package 和 rowId 注册到 web profile 的 cordis.patch.yml。\n3. 不要读取 .env、凭据或聊天记录；不要放宽其他包的构建权限。\n4. 安装后确认 profile package.json 中存在该依赖、node_modules 中的 package.json 声明了 dsh.client，并确认 loader 注册项存在。\n5. 告诉我是否需要重启 DSH Web；不要替我安装其他皮肤。`;
 		}
 		//#endregion
 		//#region src/client/SkinMarketSection.tsx
@@ -405,6 +410,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 		function SkinMarketSection({ t, clientRuntime }) {
 			const [skins, setSkins] = (0, react.useState)([]);
 			const [states, setStates] = (0, react.useState)([]);
+			const [installedClientPlugins, setInstalledClientPlugins] = (0, react.useState)([]);
 			const [loading, setLoading] = (0, react.useState)(true);
 			const [selectedId, setSelectedId] = (0, react.useState)("");
 			const [query, setQuery] = (0, react.useState)("");
@@ -417,9 +423,11 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			const [confirmUninstall, setConfirmUninstall] = (0, react.useState)(false);
 			const [confirmRestart, setConfirmRestart] = (0, react.useState)(false);
 			const [restarting, setRestarting] = (0, react.useState)(false);
+			const [runningAgents, setRunningAgents] = (0, react.useState)(null);
 			const [showDetail, setShowDetail] = (0, react.useState)(false);
 			const [showSubmission, setShowSubmission] = (0, react.useState)(false);
 			const [submissionCopied, setSubmissionCopied] = (0, react.useState)(false);
+			const [installPromptCopied, setInstallPromptCopied] = (0, react.useState)(null);
 			const [settingsNavIconHost, setSettingsNavIconHost] = (0, react.useState)(null);
 			const refresh = (0, react.useCallback)(async (showLoading = false) => {
 				if (showLoading) setLoading(true);
@@ -427,6 +435,8 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					const [catalog, state] = await Promise.all([json("/dsh-skin-market/catalog"), json("/dsh-skin-market/state")]);
 					setSkins(catalog.skins);
 					setStates(state.skins);
+					setInstalledClientPlugins(state.installedClientPlugins ?? []);
+					setRunningAgents(Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null);
 					setSelectedId((value) => {
 						if (value !== "" && catalog.skins.some((skin) => skin.id === value)) return value;
 						const active = state.skins.find((item) => item.activation === "active");
@@ -435,6 +445,17 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					});
 				} finally {
 					if (showLoading) setLoading(false);
+				}
+			}, []);
+			const openRestartConfirm = (0, react.useCallback)(async () => {
+				setError(null);
+				setRunningAgents(null);
+				setConfirmRestart(true);
+				try {
+					const state = await json("/dsh-skin-market/state", { cache: "no-store" });
+					setRunningAgents(Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null);
+				} catch (reason) {
+					setError(reason instanceof Error ? reason.message : String(reason));
 				}
 			}, []);
 			(0, react.useEffect)(() => {
@@ -514,7 +535,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 									...item,
 									activation: "restart-required"
 								} : item));
-								setConfirmRestart(true);
+								await openRestartConfirm();
 							}
 							return true;
 						}
@@ -531,13 +552,11 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				}
 			}, [
 				clientRuntime,
+				openRestartConfirm,
 				refresh,
 				selected,
 				skins
 			]);
-			const installAndActivate = (0, react.useCallback)(async () => {
-				if (await run("install")) await run("activate");
-			}, [run]);
 			const restartNow = (0, react.useCallback)(async () => {
 				if (selected === void 0) return;
 				setRestarting(true);
@@ -572,12 +591,18 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				setShotIndex(0);
 				setShowDetail(true);
 				setError(null);
+				setInstallPromptCopied(null);
 			};
 			const recommendations = selected?.recommendations.map((id) => skins.find((skin) => skin.id === id)).filter((skin) => skin !== void 0) ?? [];
 			const submissionPrompt = createSubmissionPrompt();
 			const copySubmissionPrompt = async () => {
 				await navigator.clipboard.writeText(submissionPrompt);
 				setSubmissionCopied(true);
+			};
+			const copyInstallPrompt = async () => {
+				if (selected === void 0) return;
+				await navigator.clipboard.writeText(createSkinInstallPrompt(selected));
+				setInstallPromptCopied(selected.id);
 			};
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
 				className: SkinMarket_module_css_default.root,
@@ -647,59 +672,83 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							]
 						}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 							className: SkinMarket_module_css_default.skinList,
-							children: [loading ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: SkinMarket_module_css_default.listLoading,
-								role: "status",
-								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconLoadingOutline16, { size: 16 }), "正在加载皮肤列表…"]
-							}) : filtered.map((skin) => {
-								const itemState = runtimeFor(states, skin.id);
-								const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null;
-								return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-									variant: "ghost",
-									className: SkinMarket_module_css_default.skinCard,
-									"data-selected": skin.id === selected?.id,
-									"aria-current": skin.id === selected?.id ? "true" : void 0,
-									onClick: () => select(skin.id),
-									children: [
-										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("img", {
-											src: skin.screenshots[0],
-											alt: `${skin.name.zh} 界面预览`,
-											loading: "lazy"
-										}),
-										/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-											className: SkinMarket_module_css_default.skinCardBody,
-											children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-												className: SkinMarket_module_css_default.cardTitle,
-												children: skin.name.zh
-											}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-												className: SkinMarket_module_css_default.cardMetaLine,
+							children: [
+								loading ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+									className: SkinMarket_module_css_default.listLoading,
+									role: "status",
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconLoadingOutline16, { size: 16 }), "正在加载皮肤列表…"]
+								}) : filtered.map((skin) => {
+									const itemState = runtimeFor(states, skin.id);
+									const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null;
+									return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+										variant: "ghost",
+										className: SkinMarket_module_css_default.skinCard,
+										"data-selected": skin.id === selected?.id,
+										"aria-current": skin.id === selected?.id ? "true" : void 0,
+										onClick: () => select(skin.id),
+										children: [
+											/* @__PURE__ */ (0, react_jsx_runtime.jsx)("img", {
+												src: skin.screenshots[0],
+												alt: `${skin.name.zh} 界面预览`,
+												loading: "lazy"
+											}),
+											/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+												className: SkinMarket_module_css_default.skinCardBody,
 												children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-													className: SkinMarket_module_css_default.cardMeta,
-													children: skin.author
+													className: SkinMarket_module_css_default.cardTitle,
+													children: skin.name.zh
 												}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-													className: SkinMarket_module_css_default.cardStars,
-													title: `GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`,
-													children: [
-														/* @__PURE__ */ (0, react_jsx_runtime.jsx)(StarIcon, {
-															size: 12,
-															"aria-hidden": "true"
-														}),
-														" ",
-														skin.githubStars
-													]
+													className: SkinMarket_module_css_default.cardMetaLine,
+													children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+														className: SkinMarket_module_css_default.cardMeta,
+														children: skin.author
+													}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+														className: SkinMarket_module_css_default.cardStars,
+														title: `GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`,
+														children: [
+															/* @__PURE__ */ (0, react_jsx_runtime.jsx)(StarIcon, {
+																size: 12,
+																"aria-hidden": "true"
+															}),
+															" ",
+															skin.githubStars
+														]
+													})]
 												})]
-											})]
-										}),
-										/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Pill, {
-											className: mutationLabel !== null || itemState.updateAvailable ? `${SkinMarket_module_css_default.cardStatus} ${SkinMarket_module_css_default.cardStatusUpdate}` : SkinMarket_module_css_default.cardStatus,
-											children: mutationLabel ?? (itemState.updateAvailable ? "可更新" : itemState.installation === "missing" && skin.review?.installation === "manual-only" ? "手动安装" : itemState.installation === "missing" && skin.review?.compatibility === "unverified" ? "待验证" : statusLabel(itemState))
-										})
-									]
-								}, skin.id);
-							}), !loading && filtered.length === 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-								className: SkinMarket_module_css_default.empty,
-								children: "没有匹配的皮肤"
-							})]
+											}),
+											/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Pill, {
+												className: mutationLabel !== null || itemState.updateAvailable ? `${SkinMarket_module_css_default.cardStatus} ${SkinMarket_module_css_default.cardStatusUpdate}` : SkinMarket_module_css_default.cardStatus,
+												children: mutationLabel ?? (itemState.updateAvailable ? "可更新" : itemState.installation === "missing" && skin.review?.installation === "manual-only" ? "手动安装" : itemState.installation === "missing" && skin.review?.compatibility === "unverified" ? "待验证" : statusLabel(itemState))
+											})
+										]
+									}, skin.id);
+								}),
+								!loading && filtered.length === 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+									className: SkinMarket_module_css_default.empty,
+									children: "没有匹配的皮肤"
+								}),
+								!loading && filter === "installed" && installedClientPlugins.map((plugin) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+									className: `${SkinMarket_module_css_default.skinCard} ${SkinMarket_module_css_default.externalPlugin}`,
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+										className: SkinMarket_module_css_default.skinCardBody,
+										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+											className: SkinMarket_module_css_default.cardTitle,
+											children: plugin.package
+										}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+											className: SkinMarket_module_css_default.cardMetaLine,
+											children: [
+												"市场外客户端插件 · ",
+												plugin.version ?? "版本未知",
+												" · ",
+												plugin.registered ? `已注册 ${plugin.rowIds.join(", ")}` : "尚未发现 loader 注册项"
+											]
+										})]
+									}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Pill, {
+										className: SkinMarket_module_css_default.cardStatus,
+										children: "市场外"
+									})]
+								}, plugin.package))
+							]
 						})]
 					}),
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("main", {
@@ -757,39 +806,35 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 								className: SkinMarket_module_css_default.actionRow,
 								children: [
-									state.installation === "missing" && (manualOnly ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-										className: SkinMarket_module_css_default.nativeOutline,
-										variant: "outline",
-										size: "sm",
-										icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(MarkGithubIcon, { size: 16 }),
-										disabled: busy !== null,
-										title: "前往 GitHub 查看维护者提供的手动安装方式",
-										onClick: () => window.open(selected.repo, "_blank", "noopener,noreferrer"),
-										children: "手动安装"
-									}) : compatibilityUnverified ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-										className: SkinMarket_module_css_default.nativeOutline,
-										variant: "outline",
-										size: "sm",
-										icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconDownloadOutline16, {}),
-										disabled: busy !== null,
-										onClick: () => void run("install"),
-										children: "安装（兼容性待验证）"
-									}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-										className: SkinMarket_module_css_default.nativePrimary,
-										variant: "primary",
-										size: "sm",
-										icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconDownloadOutline16, {}),
-										disabled: busy !== null,
-										onClick: () => void installAndActivate(),
-										children: "安装并应用"
-									}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-										className: SkinMarket_module_css_default.nativeOutline,
-										variant: "outline",
-										size: "sm",
-										disabled: busy !== null,
-										onClick: () => void run("install"),
-										children: "安装"
-									})] })),
+									state.installation === "missing" && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+											className: SkinMarket_module_css_default.nativePrimary,
+											variant: "primary",
+											size: "sm",
+											disabled: busy !== null,
+											onClick: () => void copyInstallPrompt(),
+											children: installPromptCopied === selected.id ? "安装提示词已复制" : "复制安装提示词"
+										}),
+										!manualOnly && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+											className: SkinMarket_module_css_default.nativeOutline,
+											variant: "outline",
+											size: "sm",
+											icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconDownloadOutline16, {}),
+											disabled: busy !== null,
+											onClick: () => void run("install"),
+											children: compatibilityUnverified ? "自动安装（兼容性待验证）" : "自动安装"
+										}),
+										manualOnly && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+											className: SkinMarket_module_css_default.nativeOutline,
+											variant: "outline",
+											size: "sm",
+											icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(MarkGithubIcon, { size: 16 }),
+											disabled: busy !== null,
+											title: "前往 GitHub 查看维护者提供的手动安装方式",
+											onClick: () => window.open(selected.repo, "_blank", "noopener,noreferrer"),
+											children: "查看安装说明"
+										})
+									] }),
 									state.installation === "installed" && state.activation === "inactive" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
 										className: SkinMarket_module_css_default.nativePrimary,
 										variant: "primary",
@@ -803,7 +848,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 										variant: "primary",
 										size: "sm",
 										disabled: busy !== null,
-										onClick: () => setConfirmRestart(true),
+										onClick: () => void openRestartConfirm(),
 										children: "重启以应用"
 									}),
 									state.activation === "active" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
@@ -1009,7 +1054,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 						},
 						title: "需要重启 DSH 应用此皮肤",
 						closeLabel: "关闭",
-						description: restarting ? "正在重新启动 DSH，请稍候…" : "重新启动会中断当前正在运行的 Agent。",
+						description: restarting ? "正在重新启动 DSH，请稍候…" : runningAgents === null ? "正在检查是否有 Agent 运行。状态确认前不能重启。" : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : "Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。",
 						footer: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
 							className: SkinMarket_module_css_default.nativeOutline,
 							variant: "outline",
@@ -1021,9 +1066,9 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							className: SkinMarket_module_css_default.nativePrimary,
 							variant: "primary",
 							size: "sm",
-							disabled: restarting,
+							disabled: restarting || runningAgents !== 0,
 							onClick: () => void restartNow(),
-							children: restarting ? "正在重启…" : "立即重启"
+							children: restarting ? "正在重启…" : runningAgents === null ? "正在检查…" : runningAgents > 0 ? "有任务运行中" : "确认无任务，立即重启"
 						})] })
 					}),
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Modal, {

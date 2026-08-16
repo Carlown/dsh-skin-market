@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { catalogWithStars, loadCatalog } from './catalog.ts'
 import { readSkinId, sameOrigin, sendJson } from './http.ts'
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts'
+import { installedClientPlugins } from './profile.ts'
 import type { PluginRunner } from './commands.ts'
 import type { OperationKind } from './types.ts'
 import type { RestartScheduler } from './restart.ts'
@@ -16,13 +17,39 @@ export interface WebServerService {
   }): () => void
 }
 
-export interface SkinMarketHost extends LifecycleHost { webServer: WebServerService }
+export interface AgentLike {
+  status: 'idle' | 'running'
+  whenIdle(): Promise<void>
+}
+
+export interface AgentRegistryLike { list(): AgentLike[] }
+
+export interface SkinMarketHost extends LifecycleHost {
+  webServer: WebServerService
+  agents: AgentRegistryLike
+}
 
 export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; restart?: RestartScheduler }
 
 export function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean {
   return state?.installation === 'installed'
     && (state.activation === 'active' || state.activation === 'restart-required')
+}
+
+export function runningAgentCount(host: Pick<SkinMarketHost, 'agents'>): number {
+  return host.agents.list().filter(agent => agent.status === 'running').length
+}
+
+export async function waitForRestartSafety(host: Pick<SkinMarketHost, 'agents'>): Promise<void> {
+  const agents = host.agents.list()
+  const running = agents.filter(agent => agent.status === 'running').length
+  if (running > 0) throw new Error(`检测到 ${running} 个 Agent 正在运行，请等待任务完全结束后再重启`)
+
+  // An Agent can still be finishing maintenance while its public status is
+  // idle. whenIdle() includes that maintenance and the turn checkpoint.
+  await Promise.all(agents.map(agent => agent.whenIdle()))
+  const startedDuringCheck = runningAgentCount(host)
+  if (startedDuringCheck > 0) throw new Error(`检测到 ${startedDuringCheck} 个 Agent 刚刚开始运行，请稍后再重启`)
 }
 
 function method(request: IncomingMessage, response: ServerResponse, expected: string): boolean {
@@ -58,7 +85,14 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
     } }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/state', handler: (request, response) => {
       if (!method(request, response, 'GET')) return
-      sendJson(response, 200, { skins: lifecycle.states(), operation: lifecycle.currentOperation(), instanceId, restartAvailable: options.restart?.available === true })
+      sendJson(response, 200, {
+        skins: lifecycle.states(),
+        installedClientPlugins: installedClientPlugins(options.profileDir, lifecycle.catalog),
+        operation: lifecycle.currentOperation(),
+        instanceId,
+        restartAvailable: options.restart?.available === true,
+        runningAgentCount: runningAgentCount(host),
+      })
     } }),
     // Prefix routes must not end in `/`: DSH matches descendants by appending
     // its own slash (`pathname.startsWith(`${prefix}/`)`). A trailing slash
@@ -87,6 +121,7 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
         // require a restart while the Host half is already live, so accept
         // either active representation for the selected installed skin.
         if (!canRestartSkin(skinState)) return sendJson(response, 409, { error: '请先选择并使用此皮肤，再重新启动 DeepSeek Harness' })
+        await waitForRestartSafety(host)
         sendJson(response, 202, { restarting: true, instanceId })
         options.restart.schedule()
       } catch (error) {

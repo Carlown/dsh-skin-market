@@ -9,8 +9,16 @@ export interface WebServerService {
         handler(request: IncomingMessage, response: ServerResponse): void | Promise<void>;
     }): () => void;
 }
+export interface AgentLike {
+    status: 'idle' | 'running';
+    whenIdle(): Promise<void>;
+}
+export interface AgentRegistryLike {
+    list(): AgentLike[];
+}
 export interface SkinMarketHost extends LifecycleHost {
     webServer: WebServerService;
+    agents: AgentRegistryLike;
 }
 export interface RouteOptions {
     profile: string;
@@ -19,4 +27,6 @@ export interface RouteOptions {
     restart?: RestartScheduler;
 }
 export declare function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean;
+export declare function runningAgentCount(host: Pick<SkinMarketHost, 'agents'>): number;
+export declare function waitForRestartSafety(host: Pick<SkinMarketHost, 'agents'>): Promise<void>;
 export declare function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => void;

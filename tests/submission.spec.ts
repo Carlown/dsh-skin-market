@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { createSubmissionPrompt, normalizeGitHubRepository, REGISTRY_REPOSITORY } from '../src/client/submission.ts'
+import { createSkinInstallPrompt, createSubmissionPrompt, normalizeGitHubRepository, REGISTRY_REPOSITORY } from '../src/client/submission.ts'
+import type { CatalogSkin } from '../src/client/types.ts'
 
 describe('agent-assisted skin submission', () => {
   it('normalizes a public GitHub repository and generates an actionable PR prompt', () => {
@@ -26,5 +27,20 @@ describe('agent-assisted skin submission', () => {
     expect(prompt).toContain('如果当前工作区就是待提交的皮肤仓库')
     expect(prompt).toContain('否则先向我索要公开 GitHub 仓库地址')
     expect(prompt).toContain(`目标目录仓库：${REGISTRY_REPOSITORY}`)
+  })
+
+  it('generates a pinned installation fallback prompt with an exact build approval', () => {
+    const skin = {
+      id: 'dancingmemory.dskin', repo: 'https://github.com/dancingmemory/dskin', package: 'dskin', rowId: 'ui-skin-dskin',
+      install: {
+        target: 'github:dancingmemory/dskin#f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed', version: '1.0.13', commit: 'f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed',
+        allowBuild: 'dskin@https://codeload.github.com/dancingmemory/dskin/tar.gz/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed',
+      },
+    } as CatalogSkin
+    const prompt = createSkinInstallPrompt(skin)
+    expect(prompt).toContain(skin.install.target)
+    expect(prompt).toContain(skin.install.allowBuild!)
+    expect(prompt).toContain('不得开启 dangerouslyAllowAllBuilds')
+    expect(prompt).toContain('cordis.patch.yml')
   })
 })

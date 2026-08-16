@@ -17,6 +17,7 @@ export interface SkinEntry {
         target: string;
         version: string;
         commit: string;
+        allowBuild?: string;
     };
     compatibility: {
         dsh: string;
@@ -61,6 +62,13 @@ export interface SkinRuntimeState {
     installedSpec: string | null;
     updateAvailable: boolean;
     error?: string;
+}
+export interface InstalledClientPlugin {
+    package: string;
+    version: string | null;
+    spec: string;
+    rowIds: string[];
+    registered: boolean;
 }
 export type OperationKind = 'install' | 'activate' | 'deactivate' | 'update' | 'uninstall';
 export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'validating' | 'activating' | 'done' | 'failed';

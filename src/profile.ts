@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, unlinkSync, writeFileS
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { parse, stringify } from 'yaml'
-import type { PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
+import type { InstalledClientPlugin, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export function resolveProfileDir(profile: string, explicit?: string): string {
   if (explicit !== undefined) return explicit
@@ -12,6 +12,7 @@ export function resolveProfileDir(profile: string, explicit?: string): string {
 
 export function manifestFile(profileDir: string): string { return join(profileDir, 'package.json') }
 export function profilePatchFile(profileDir: string): string { return join(profileDir, 'cordis.patch.yml') }
+export function pnpmWorkspaceFile(profileDir: string): string { return join(profileDir, 'pnpm-workspace.yaml') }
 export function marketStateFile(profileDir: string): string { return join(profileDir, '.dsh-skin-market', 'state.json') }
 
 export function readJson<T>(file: string, fallback: T): T {
@@ -76,6 +77,19 @@ function writePatchOperations(profileDir: string, operations: PatchOperation[]):
   atomicWriteText(profilePatchFile(profileDir), stringify(operations, { lineWidth: 0 }))
 }
 
+export function ensureBuildAllowed(profileDir: string, key: string): void {
+  const file = pnpmWorkspaceFile(profileDir)
+  const parsed = existsSync(file) ? parse(readFileSync(file, 'utf8')) as unknown : {}
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) throw new Error('profile pnpm-workspace.yaml must contain a YAML mapping')
+  const workspace = parsed as Record<string, unknown>
+  const allowBuilds = typeof workspace.allowBuilds === 'object' && workspace.allowBuilds !== null && !Array.isArray(workspace.allowBuilds)
+    ? workspace.allowBuilds as Record<string, unknown>
+    : {}
+  allowBuilds[key] = true
+  workspace.allowBuilds = allowBuilds
+  atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
+}
+
 export function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled = true): void {
   const operations = patchOperations(profileDir)
   let insert = operations.find(operation => Array.isArray(operation?.insert))?.insert
@@ -107,6 +121,27 @@ export function removeSkinRegistration(profileDir: string, skin: SkinEntry): voi
     })
   }
   writePatchOperations(profileDir, operations)
+}
+
+export function installedClientPlugins(profileDir: string, catalog: SkinEntry[]): InstalledClientPlugin[] {
+  const catalogPackages = new Set(catalog.map(skin => skin.package))
+  const rows = patchOperations(profileDir)
+    .flatMap(operation => operation.insert ?? [])
+    .filter((value): value is PatchRow => typeof value === 'object' && value !== null)
+  return Object.entries(readDependencies(profileDir)).flatMap(([packageName, spec]) => {
+    if (catalogPackages.has(packageName) || packageName === 'dsh-skin-market') return []
+    const manifest = packageManifest(profileDir, packageName)
+    const dsh = manifest?.dsh as { client?: unknown } | undefined
+    if (dsh?.client === undefined) return []
+    const matchingRows = rows.filter(row => row.name === packageName)
+    return [{
+      package: packageName,
+      version: typeof manifest?.version === 'string' ? manifest.version : null,
+      spec,
+      rowIds: matchingRows.flatMap(row => typeof row.id === 'string' ? [row.id] : []),
+      registered: matchingRows.length > 0,
+    }]
+  }).sort((a, b) => a.package.localeCompare(b.package))
 }
 
 export interface FileSnapshot { existed: boolean; contents: string }

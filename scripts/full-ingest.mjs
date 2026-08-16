@@ -307,6 +307,7 @@ async function inspect(plugin, existing) {
       target: `github:${target.fullName}#${sha}${target.subpath ? `&path:${target.subpath}` : ''}`,
       version: pkg.version,
       commit: sha,
+      ...(pkg.scripts?.prepare ? { allowBuild: `${pkg.name}@https://codeload.github.com/${target.fullName}/tar.gz/${sha}` } : {}),
     },
     compatibility: { dsh: dshVersion ?? 'unverified', platform: ['web'] },
     screenshots,
