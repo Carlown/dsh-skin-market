@@ -56,6 +56,12 @@ interface MarketStateResponse {
   runningAgentCount?: number
 }
 
+interface MarketUpdateStatus {
+  currentVersion: string
+  latestVersion: string
+  updateAvailable: boolean
+}
+
 const phases: Record<Operation['phase'], string> = {
   queued: '正在排队…', resolving: '正在解析版本…', downloading: '正在安装…', validating: '正在验证…', activating: '正在切换…', done: '完成', failed: '操作失败',
 }
@@ -142,6 +148,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [showSubmission, setShowSubmission] = useState(false)
   const [submissionCopied, setSubmissionCopied] = useState(false)
   const [installPromptCopied, setInstallPromptCopied] = useState<string | null>(null)
+  const [marketUpdate, setMarketUpdate] = useState<MarketUpdateStatus | null>(null)
+  const [marketUpdating, setMarketUpdating] = useState(false)
+  const [showMarketUpdated, setShowMarketUpdated] = useState(false)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
   const skinListRef = useRef<HTMLDivElement | null>(null)
   const pendingScrollAnchor = useRef<ListScrollAnchor | null>(null)
@@ -200,6 +209,29 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     }
   }, [acceptCatalog, catalogCache])
 
+  const checkMarketUpdate = useCallback(async () => {
+    try {
+      const status = await json<MarketUpdateStatus>('/dsh-skin-market/market-update')
+      if (typeof status.updateAvailable === 'boolean' && typeof status.currentVersion === 'string' && typeof status.latestVersion === 'string') {
+        setMarketUpdate(status)
+      }
+    } catch { /* update availability must never disturb catalog browsing */ }
+  }, [])
+
+  const updateMarket = useCallback(async () => {
+    setError(null)
+    setMarketUpdating(true)
+    try {
+      const status = await json<MarketUpdateStatus>('/dsh-skin-market/market-update', { method: 'POST' })
+      setMarketUpdate(status)
+      setShowMarketUpdated(true)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason))
+    } finally {
+      setMarketUpdating(false)
+    }
+  }, [])
+
   const openRestartConfirm = useCallback(async () => {
     setError(null)
     setRunningAgents(null)
@@ -228,15 +260,22 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     })()
     return () => { disposed = true }
   }, [acceptCatalog, catalogCache, refresh])
+  useEffect(() => { void checkMarketUpdate() }, [checkMarketUpdate])
   useEffect(() => {
-    const timer = window.setInterval(() => { refresh(false).catch(() => undefined) }, 5 * 60 * 1000)
-    const refreshOnFocus = () => { refresh(false).catch(() => undefined) }
+    const timer = window.setInterval(() => {
+      refresh(false).catch(() => undefined)
+      void checkMarketUpdate()
+    }, 5 * 60 * 1000)
+    const refreshOnFocus = () => {
+      refresh(false).catch(() => undefined)
+      void checkMarketUpdate()
+    }
     window.addEventListener('focus', refreshOnFocus)
     return () => {
       window.clearInterval(timer)
       window.removeEventListener('focus', refreshOnFocus)
     }
-  }, [refresh])
+  }, [checkMarketUpdate, refresh])
   useLayoutEffect(() => {
     restoreListScroll(skinListRef.current, pendingScrollAnchor.current)
     pendingScrollAnchor.current = null
@@ -392,7 +431,20 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       <aside className={css.catalog} aria-label={t('catalog')}>
         <div className={css.catalogHeader}>
           <div className={css.catalogTitle}>
-            <h2>{t('title')}</h2>
+            <div className={css.catalogTitleMain}>
+              <h2>{t('title')}</h2>
+              {marketUpdate?.updateAvailable === true && <Button
+                className={`${css.nativeOutline} ${css.marketUpdateButton}`}
+                variant="outline"
+                size="sm"
+                icon={marketUpdating ? <IconLoadingOutline16 /> : <IconDownloadOutline16 />}
+                aria-label={`更新皮肤市场到 ${marketUpdate.latestVersion}`}
+                title={`发现新版本 ${marketUpdate.latestVersion}`}
+                disabled={marketUpdating}
+                data-updating={marketUpdating ? 'true' : undefined}
+                onClick={() => { void updateMarket() }}
+              ><span className={css.marketUpdateLabel}>{marketUpdating ? '更新中' : '更新'}</span></Button>}
+            </div>
             <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
           </div>
           <Input value={query} onChange={event => setQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
@@ -494,6 +546,14 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />
       <Modal open={confirmRestart} onClose={() => { if (!restarting) setConfirmRestart(false) }} title="需要重启 DSH 应用此皮肤" closeLabel="关闭" description={restarting ? '正在重新启动 DSH，请稍候…' : runningAgents === null && !restartCheckFinished ? '正在检查是否有 Agent 运行。状态确认前不能重启。' : runningAgents === null ? '当前 Host 尚未加载安全检查。请确认没有 Agent 正在运行、重要内容已保存；你可以继续完成这一次升级重启。新版本加载后会自动检测 Agent 状态。' : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : 'Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" disabled={restarting} onClick={() => setConfirmRestart(false)}>稍后</Button><Button className={css.nativePrimary} variant="primary" size="sm" disabled={restarting || (runningAgents === null && !restartCheckFinished) || (runningAgents ?? 0) > 0} onClick={() => void restartNow()}>{restarting ? '正在重启…' : runningAgents === null && !restartCheckFinished ? '正在检查…' : runningAgents === null ? '我已确认无任务，仍然重启' : runningAgents > 0 ? '有任务运行中' : '确认无任务，立即重启'}</Button></>} />
+      <Modal
+        open={showMarketUpdated}
+        onClose={() => setShowMarketUpdated(false)}
+        title="皮肤市场已更新"
+        closeLabel="关闭"
+        description={`新版本 ${marketUpdate?.latestVersion ?? ''} 已安装。重启 DSH Web 后生效，当前选择和已安装皮肤不会改变。`}
+        footer={<Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => setShowMarketUpdated(false)}>知道了</Button>}
+      />
       <Modal
         open={showSubmission}
         onClose={() => setShowSubmission(false)}

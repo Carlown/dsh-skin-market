@@ -8,6 +8,7 @@ import { installedClientPlugins } from './profile.ts'
 import type { PluginRunner } from './commands.ts'
 import type { OperationKind } from './types.ts'
 import type { RestartScheduler } from './restart.ts'
+import { createMarketUpdater, type MarketUpdater } from './self-update.ts'
 
 export interface WebServerService {
   register(route: {
@@ -29,7 +30,7 @@ export interface SkinMarketHost extends LifecycleHost {
   agents: AgentRegistryLike
 }
 
-export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; restart?: RestartScheduler; catalogStore?: CatalogStore }
+export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; restart?: RestartScheduler; catalogStore?: CatalogStore; marketUpdater?: MarketUpdater }
 
 export function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean {
   return state?.installation === 'installed'
@@ -66,6 +67,7 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
   lifecycle.start()
   let lifecycleCatalogGeneratedAt = initialCatalog.generatedAt
   const instanceId = randomUUID()
+  const marketUpdater = options.marketUpdater ?? createMarketUpdater(options.profile, options.runner)
 
   const catalogPayload = async (force: boolean) => {
     const snapshot = await catalogStore.refresh(force)
@@ -114,6 +116,19 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
         restartAvailable: options.restart?.available === true,
         runningAgentCount: runningAgentCount(host),
       })
+    } }),
+    host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/market-update', handler: async (request, response) => {
+      if (request.method !== 'GET' && request.method !== 'POST') {
+        response.writeHead(405, { allow: 'GET, POST' })
+        response.end()
+        return
+      }
+      if (request.method === 'POST' && !sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
+      try {
+        sendJson(response, 200, request.method === 'POST' ? await marketUpdater.update() : await marketUpdater.status())
+      } catch (error) {
+        sendJson(response, 502, { error: error instanceof Error ? error.message : String(error) })
+      }
     } }),
     // Prefix routes must not end in `/`: DSH matches descendants by appending
     // its own slash (`pathname.startsWith(`${prefix}/`)`). A trailing slash

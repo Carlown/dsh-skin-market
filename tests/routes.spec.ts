@@ -46,6 +46,7 @@ describe('market routes', () => {
     expect(routes).toContainEqual({ kind: 'prefix', path: '/dsh-skin-market/operations' })
     expect(routes).not.toContainEqual({ kind: 'prefix', path: '/dsh-skin-market/operations/' })
     expect(routes).not.toContainEqual({ kind: 'exact', path: '/dsh-skin-market/catalog/refresh' })
+    expect(routes).toContainEqual({ kind: 'exact', path: '/dsh-skin-market/market-update' })
     dispose()
   })
 })

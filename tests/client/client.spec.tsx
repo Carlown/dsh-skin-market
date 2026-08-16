@@ -81,6 +81,26 @@ describe('client market', () => {
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/catalog/refresh'))).toBe(false)
   })
 
+  it('shows a compact self-update action only when GitHub has a newer market version', async () => {
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/market-update') && init?.method === 'POST') return { ok: true, json: async () => ({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false }) }
+      if (url.endsWith('/market-update')) return { ok: true, json: async () => ({ currentVersion: '0.1.15', latestVersion: '0.1.16', updateAvailable: true }) }
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+
+    const update = await screen.findByRole('button', { name: '更新皮肤市场到 0.1.16' })
+    expect(update.textContent).toBe('更新')
+    fireEvent.click(update)
+
+    expect(await screen.findByRole('dialog', { name: '皮肤市场已更新' })).toBeTruthy()
+    expect(screen.getByText(/新版本 0.1.16 已安装。重启 DSH Web 后生效/)).toBeTruthy()
+    await waitFor(() => expect(screen.queryByRole('button', { name: '更新皮肤市场到 0.1.16' })).toBeNull())
+  })
+
   it('turns an empty successful response into a useful Host update error', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected end of JSON input') } })))
     render(<SkinMarketSection t={key => key} />)

@@ -40,6 +40,30 @@
 .catalogHeader h2 { margin-bottom: 2px; font-size: 20px; line-height: 28px; font-weight: 600; }
 .catalogHeader p { margin-top: 2px; color: var(--dsw-alias-label-secondary); font-size: 12px; line-height: 18px; }
 .catalogTitle { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.catalogTitleMain { display: flex; min-width: 0; align-items: center; gap: 7px; }
+.root .marketUpdateButton {
+  display: inline-flex;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: width 140ms ease;
+}
+.marketUpdateLabel { display: none; white-space: nowrap; }
+.root .marketUpdateButton:hover,
+.root .marketUpdateButton:focus-visible,
+.root .marketUpdateButton[data-updating="true"] { width: 50px; }
+.root .marketUpdateButton:hover svg,
+.root .marketUpdateButton:focus-visible svg,
+.root .marketUpdateButton[data-updating="true"] svg { display: none; }
+.root .marketUpdateButton:hover .marketUpdateLabel,
+.root .marketUpdateButton:focus-visible .marketUpdateLabel,
+.root .marketUpdateButton[data-updating="true"] .marketUpdateLabel { display: inline; }
 .catalogHeader > span { display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; color: var(--dsw-alias-label-secondary); border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; background: transparent; }
 .catalogHeader > span:focus-within { border-color: var(--dsw-alias-border-l1); }
 .catalogHeader > span input { min-width: 0; flex: 1; color: var(--dsw-alias-label-primary); border: 0; outline: 0; background: transparent; }
@@ -238,6 +262,7 @@
 @keyframes skeletonShimmer { to { background-position: -200% 0; } }
 
 @media (prefers-reduced-motion: reduce) {
+  .root .marketUpdateButton { transition: none; }
   .skeletonCard span:first-child,
   .skeletonCard i,
   .detailSkeleton span,

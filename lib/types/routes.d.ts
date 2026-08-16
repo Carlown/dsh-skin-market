@@ -3,6 +3,7 @@ import { CatalogStore } from './catalog.ts';
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts';
 import type { PluginRunner } from './commands.ts';
 import type { RestartScheduler } from './restart.ts';
+import { type MarketUpdater } from './self-update.ts';
 export interface WebServerService {
     register(route: {
         kind: 'exact' | 'prefix';
@@ -27,6 +28,7 @@ export interface RouteOptions {
     runner: PluginRunner;
     restart?: RestartScheduler;
     catalogStore?: CatalogStore;
+    marketUpdater?: MarketUpdater;
 }
 export declare function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean;
 export declare function runningAgentCount(host: Pick<SkinMarketHost, 'agents'>): number;
