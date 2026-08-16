@@ -3,7 +3,7 @@ name:
   zh: dsh-ivory
   en: dsh-ivory
 author: ZJUZhiyuCai
-description: Calm, auditable Claude-inspired theme for DeepSeek Harness — light/dark/mobile, safe Markdown preview, zero telemetry, zero runtime dependencies.
+description: An unofficial Claude-inspired light/dark theme for DeepSeek Harness with responsive layout, safe Markdown preview, and zero telemetry.
 repo: https://github.com/ZJUZhiyuCai/dsh-ivory
 package: dsh-ivory
 rowId: dsh-ivory
@@ -37,6 +37,6 @@ license:
 featuredRank: 129
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:58:44.799Z
-metadataUpdatedAt: 2026-08-16T13:58:44.799Z
+metadataUpdatedAt: 2026-08-16T14:28:00.038Z
 starsUpdatedAt: 2026-08-16T13:58:44.799Z
-updatedAt: 2026-08-16T13:58:44.799Z
+updatedAt: 2026-08-16T14:28:00.038Z

@@ -3,7 +3,7 @@ name:
   zh: dsh-file-explorer-preview-code
   en: dsh-file-explorer-preview-code
 author: wolfsonliu
-description: "DSH Web file-explorer preview plugin: code preview & editor for DSH Web — per-language syntax highlighting, in-place editing with autosave, and dark/light themes. Overrides dsh-file-explorer's plain-text preview. | DSH Web 文件浏览器插件: 代码预览与编辑插件——按语言语法高亮、就地编辑自动保存、深色/浅色主题，覆盖 dsh-file-explorer 的纯文本预览。"
+description: CodeMirror 6 code preview and editor for DSH Web, overriding dsh-file-explorer's plain-text preview with per-language syntax highlighting
 repo: https://github.com/wolfsonliu/dsh-file-explorer-preview-code
 package: "@dsh-external/dsh-file-explorer-preview-code"
 rowId: file-explorer-preview-code
@@ -36,6 +36,6 @@ license:
 featuredRank: 124
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:58:05.239Z
-metadataUpdatedAt: 2026-08-16T13:58:05.239Z
+metadataUpdatedAt: 2026-08-16T14:27:16.553Z
 starsUpdatedAt: 2026-08-16T13:58:05.239Z
-updatedAt: 2026-08-16T13:58:05.239Z
+updatedAt: 2026-08-16T14:27:16.553Z

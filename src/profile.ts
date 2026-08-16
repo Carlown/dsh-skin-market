@@ -1,6 +1,7 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
+import { parse, stringify } from 'yaml'
 import type { PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export function resolveProfileDir(profile: string, explicit?: string): string {
@@ -10,6 +11,7 @@ export function resolveProfileDir(profile: string, explicit?: string): string {
 }
 
 export function manifestFile(profileDir: string): string { return join(profileDir, 'package.json') }
+export function profilePatchFile(profileDir: string): string { return join(profileDir, 'cordis.patch.yml') }
 export function marketStateFile(profileDir: string): string { return join(profileDir, '.dsh-skin-market', 'state.json') }
 
 export function readJson<T>(file: string, fallback: T): T {
@@ -17,9 +19,13 @@ export function readJson<T>(file: string, fallback: T): T {
 }
 
 export function atomicWriteJson(file: string, value: unknown): void {
+  atomicWriteText(file, `${JSON.stringify(value, null, 2)}\n`)
+}
+
+export function atomicWriteText(file: string, value: string): void {
   mkdirSync(dirname(file), { recursive: true })
   const temporary = `${file}.${process.pid}.tmp`
-  writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`)
+  writeFileSync(temporary, value)
   renameSync(temporary, file)
 }
 
@@ -49,24 +55,73 @@ export function packageManifest(profileDir: string, packageName: string): Record
 export function validateInstalledSkin(profileDir: string, skin: SkinEntry): { ok: boolean; reason?: string; version?: string } {
   const manifest = packageManifest(profileDir, skin.package)
   if (manifest === null) return { ok: false, reason: 'package manifest missing' }
-  const dsh = manifest.dsh as { bundle?: { patch?: unknown }; client?: unknown } | undefined
-  if (typeof dsh?.bundle?.patch !== 'string' || dsh.client === undefined) return { ok: false, reason: 'dsh bundle/client manifest missing' }
+  const dsh = manifest.dsh as { client?: unknown } | undefined
+  if (dsh?.client === undefined) return { ok: false, reason: 'dsh client manifest missing' }
   const version = typeof manifest.version === 'string' ? manifest.version : undefined
   return { ok: true, version }
 }
 
-export interface ManifestSnapshot { existed: boolean; contents: string }
+interface PatchOperation { insert?: unknown[]; [key: string]: unknown }
+interface PatchRow { id?: unknown; name?: unknown; disabled?: unknown; [key: string]: unknown }
 
-export function snapshotManifest(profileDir: string): ManifestSnapshot {
-  const file = manifestFile(profileDir)
+function patchOperations(profileDir: string): PatchOperation[] {
+  const file = profilePatchFile(profileDir)
+  if (!existsSync(file)) return []
+  const value = parse(readFileSync(file, 'utf8')) as unknown
+  if (!Array.isArray(value)) throw new Error('profile cordis.patch.yml must contain a YAML sequence')
+  return value as PatchOperation[]
+}
+
+function writePatchOperations(profileDir: string, operations: PatchOperation[]): void {
+  atomicWriteText(profilePatchFile(profileDir), stringify(operations, { lineWidth: 0 }))
+}
+
+export function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled = true): void {
+  const operations = patchOperations(profileDir)
+  let insert = operations.find(operation => Array.isArray(operation?.insert))?.insert
+  if (insert === undefined) {
+    insert = []
+    operations.push({ insert })
+  }
+  const rows = insert.filter((value): value is PatchRow => typeof value === 'object' && value !== null)
+  const row = rows.find(value => value.id === skin.rowId || value.name === skin.package)
+  if (row !== undefined && (row.id !== skin.rowId || row.name !== skin.package)) {
+    throw new Error(`loader registration conflicts with ${String(row.id ?? row.name)}`)
+  }
+  if (row === undefined) insert.push({ id: skin.rowId, name: skin.package, ...(disabled ? { disabled: true } : {}) })
+  else if (disabled) row.disabled = true
+  else delete row.disabled
+  writePatchOperations(profileDir, operations)
+}
+
+export function removeSkinRegistration(profileDir: string, skin: SkinEntry): void {
+  const file = profilePatchFile(profileDir)
+  if (!existsSync(file)) return
+  const operations = patchOperations(profileDir)
+  for (const operation of operations) {
+    if (!Array.isArray(operation.insert)) continue
+    operation.insert = operation.insert.filter(value => {
+      if (typeof value !== 'object' || value === null) return true
+      const row = value as PatchRow
+      return row.id !== skin.rowId || row.name !== skin.package
+    })
+  }
+  writePatchOperations(profileDir, operations)
+}
+
+export interface FileSnapshot { existed: boolean; contents: string }
+
+export function snapshotFile(file: string): FileSnapshot {
   return existsSync(file) ? { existed: true, contents: readFileSync(file, 'utf8') } : { existed: false, contents: '' }
 }
 
-export function restoreManifest(profileDir: string, snapshot: ManifestSnapshot): void {
-  const file = manifestFile(profileDir)
-  if (!snapshot.existed) return
-  writeFileSync(file, snapshot.contents)
+export function restoreFile(file: string, snapshot: FileSnapshot): void {
+  if (snapshot.existed) writeFileSync(file, snapshot.contents)
+  else if (existsSync(file)) unlinkSync(file)
 }
+
+export function snapshotManifest(profileDir: string): FileSnapshot { return snapshotFile(manifestFile(profileDir)) }
+export function restoreManifest(profileDir: string, snapshot: FileSnapshot): void { restoreFile(manifestFile(profileDir), snapshot) }
 
 export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean): SkinRuntimeState {
   const dependencies = readDependencies(profileDir)

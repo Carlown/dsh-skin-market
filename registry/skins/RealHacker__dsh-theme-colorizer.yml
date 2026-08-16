@@ -3,7 +3,7 @@ name:
   zh: dsh-theme-colorizer
   en: dsh-theme-colorizer
 author: RealHacker
-description: A Deepseek Harness plugin that gives its UI color themes
+description: "DSH plugin: adds customizable color themes to the DeepSeek Web UI, selectable in the Settings page"
 repo: https://github.com/RealHacker/dsh-theme-colorizer
 package: dsh-theme-colorizer
 rowId: theme-colorizer
@@ -35,6 +35,6 @@ license:
 featuredRank: 117
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:57:07.914Z
-metadataUpdatedAt: 2026-08-16T13:57:07.914Z
+metadataUpdatedAt: 2026-08-16T14:26:10.313Z
 starsUpdatedAt: 2026-08-16T13:57:07.914Z
-updatedAt: 2026-08-16T13:57:07.914Z
+updatedAt: 2026-08-16T14:26:10.313Z

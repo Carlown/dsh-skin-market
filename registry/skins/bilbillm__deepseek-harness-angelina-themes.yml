@@ -3,7 +3,7 @@ name:
   zh: deepseek-harness-angelina-themes
   en: deepseek-harness-angelina-themes
 author: bilbillm
-description: Angelina light and dark glass themes with parallax for DeepSeek Harness
+description: Angelina light and dark glass themes with restrained parallax for DeepSeek Harness
 repo: https://github.com/bilbillm/deepseek-harness-angelina-themes
 package: dsh-angelina-themes
 rowId: dsh-angelina-themes
@@ -37,6 +37,6 @@ license:
 featuredRank: 58
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16T13:49:51.564Z
-metadataUpdatedAt: 2026-08-16T13:49:51.564Z
+metadataUpdatedAt: 2026-08-16T14:19:32.574Z
 starsUpdatedAt: 2026-08-16T13:49:51.564Z
-updatedAt: 2026-08-16T13:49:51.564Z
+updatedAt: 2026-08-16T14:19:32.574Z

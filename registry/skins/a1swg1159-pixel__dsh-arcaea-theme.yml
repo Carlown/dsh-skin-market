@@ -3,7 +3,7 @@ name:
   zh: dsh-arcaea-theme
   en: dsh-arcaea-theme
 author: a1swg1159-pixel
-description: An original Arcaea-inspired high-key prismatic UI theme plugin for DeepSeek Harness.
+description: An original high-key prismatic memory theme for the DeepSeek Harness web UI.
 repo: https://github.com/a1swg1159-pixel/dsh-arcaea-theme
 package: dsh-arcaea-theme
 rowId: arcaea-theme
@@ -35,6 +35,6 @@ license:
 featuredRank: 75
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:51:53.473Z
-metadataUpdatedAt: 2026-08-16T13:51:53.473Z
+metadataUpdatedAt: 2026-08-16T14:21:25.754Z
 starsUpdatedAt: 2026-08-16T13:51:53.473Z
-updatedAt: 2026-08-16T13:51:53.473Z
+updatedAt: 2026-08-16T14:21:25.754Z

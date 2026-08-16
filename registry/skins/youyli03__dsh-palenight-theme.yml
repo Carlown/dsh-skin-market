@@ -3,7 +3,7 @@ name:
   zh: dsh-palenight-theme
   en: dsh-palenight-theme
 author: youyli03
-description: A dynamic Cordis plugin that themes the dsh Harness Web UI — Palenight dark + warm-neutral light
+description: Persistent DeepSeek Palenight Theme for dsh — a dsh client bundle (survives restarts, unlike the dynamic-plugin form).
 repo: https://github.com/youyli03/dsh-palenight-theme
 package: dsh-palenight-theme
 rowId: dsh-palenight-theme
@@ -36,6 +36,6 @@ license:
 featuredRank: 127
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:58:24.026Z
-metadataUpdatedAt: 2026-08-16T13:58:24.026Z
+metadataUpdatedAt: 2026-08-16T14:27:35.126Z
 starsUpdatedAt: 2026-08-16T13:58:24.026Z
-updatedAt: 2026-08-16T13:58:24.026Z
+updatedAt: 2026-08-16T14:27:35.126Z

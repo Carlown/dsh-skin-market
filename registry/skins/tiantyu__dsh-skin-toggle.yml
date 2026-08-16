@@ -3,7 +3,7 @@ name:
   zh: dsh-skin-toggle
   en: dsh-skin-toggle
 author: tiantyu
-description: Instant on/off 🐋 toggle button for the maid-atelier skin in the DeepSeek Harness (DSH) web GUI. Pure client-side plugin.
+description: Instant on/off toggle button for the maid-atelier skin (深海女仆工坊) in the DeepSeek Harness (DSH) web GUI. Pure client-side presentation utility.
 repo: https://github.com/tiantyu/dsh-skin-toggle
 package: dsh-skin-toggle
 rowId: ui-skin-toggle
@@ -35,6 +35,6 @@ license:
 featuredRank: 122
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:57:51.456Z
-metadataUpdatedAt: 2026-08-16T13:57:51.456Z
+metadataUpdatedAt: 2026-08-16T14:27:00.843Z
 starsUpdatedAt: 2026-08-16T13:57:51.456Z
-updatedAt: 2026-08-16T13:57:51.456Z
+updatedAt: 2026-08-16T14:27:00.843Z

@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -75,6 +75,37 @@ describe('skin lifecycle', () => {
     expect(readMarketState(dir).activeSkinId).toBeNull()
     expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
     expect(readDependencies(dir)[skin.package]).toBeUndefined()
+  })
+
+  it('installs and registers a client-only skin without an upstream bundle patch', async () => {
+    const dir = fixture()
+    let lifecycle!: SkinLifecycle
+    const runner: PluginRunner = async (_profile, args) => {
+      const skin = lifecycle.catalog.find(item => args.includes(item.install.target) || args.includes(item.package))
+      if (skin === undefined) return success()
+      if (args[0] === 'add') {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { ...readDependencies(dir), [skin.package]: skin.install.target } })
+        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+        mkdirSync(packageDir, { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { client: { platform: 'web' } } })
+      }
+      if (args[0] === 'remove') {
+        const next = { ...readDependencies(dir) }
+        delete next[skin.package]
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: next })
+      }
+      return success()
+    }
+    lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner })
+    const skin = lifecycle.catalog.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
+
+    expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
+    expect(readFileSync(join(dir, 'cordis.patch.yml'), 'utf8')).toContain(`id: ${skin.rowId}`)
+    expect(lifecycle.states().find(item => item.skinId === skin.id)?.installation).toBe('installed')
+    expect((await finished(lifecycle.begin('activate', skin.id))).phase).toBe('done')
+    expect(lifecycle.states().find(item => item.skinId === skin.id)?.activation).toBe('restart-required')
+    expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
+    expect(readFileSync(join(dir, 'cordis.patch.yml'), 'utf8')).not.toContain(`id: ${skin.rowId}`)
   })
 
   it('restores the manifest after a failed install', async () => {

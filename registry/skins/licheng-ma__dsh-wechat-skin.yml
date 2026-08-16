@@ -3,7 +3,7 @@ name:
   zh: dsh-wechat-skin
   en: dsh-wechat-skin
 author: licheng-ma
-description: 微信风格皮肤 for DeepSeek Harness — WeChat-style light theme for DeepSeek Harness
+description: "微信风格皮肤 for DeepSeek Harness — WeChat-style light theme for DeepSeek Harness: green bubbles, WeChat green accents, conversation-list sidebar, a far-left function rail, message avatars, and a resizable composer. Light mode only; dark mode falls back to the official look."
 repo: https://github.com/licheng-ma/dsh-wechat-skin
 package: dsh-wechat-skin
 rowId: wechat-skin
@@ -34,6 +34,6 @@ license:
 featuredRank: 112
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:56:36.780Z
-metadataUpdatedAt: 2026-08-16T13:56:36.780Z
+metadataUpdatedAt: 2026-08-16T14:25:47.579Z
 starsUpdatedAt: 2026-08-16T13:56:36.780Z
-updatedAt: 2026-08-16T13:56:36.780Z
+updatedAt: 2026-08-16T14:25:47.579Z

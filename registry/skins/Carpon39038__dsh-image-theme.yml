@@ -3,7 +3,7 @@ name:
   zh: dsh-image-theme
   en: dsh-image-theme
 author: Carpon39038
-description: "Warp-inspired image-to-theme plugin for DeepSeek Harness: upload a background, extract a palette, and apply a glass UI."
+description: Warp-inspired image-to-theme plugin for the DeepSeek Harness web client.
 repo: https://github.com/Carpon39038/dsh-image-theme
 package: "@cabeta/dsh-image-theme"
 rowId: image-theme
@@ -36,6 +36,6 @@ license:
 featuredRank: 60
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16T13:50:02.941Z
-metadataUpdatedAt: 2026-08-16T13:50:02.941Z
+metadataUpdatedAt: 2026-08-16T14:19:41.215Z
 starsUpdatedAt: 2026-08-16T13:50:02.941Z
-updatedAt: 2026-08-16T13:50:02.941Z
+updatedAt: 2026-08-16T14:19:41.215Z

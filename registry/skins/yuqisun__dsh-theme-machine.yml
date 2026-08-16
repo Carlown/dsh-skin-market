@@ -3,7 +3,7 @@ name:
   zh: dsh-theme-machine
   en: dsh-theme-machine
 author: yuqisun
-description: A Person-of-Interest surveillance-terminal theme for deepseek-harness — the machine is watching.
+description: "Person-of-Interest skin for DeepSeek Harness: THE MACHINE surveillance-HUD theme (dark, cyan-on-black). Token override layer + HUD chrome + live telemetry panel for the dsh web UI."
 repo: https://github.com/yuqisun/dsh-theme-machine
 package: dsh-theme-machine
 rowId: theme-machine
@@ -35,6 +35,6 @@ license:
 featuredRank: 128
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:58:28.052Z
-metadataUpdatedAt: 2026-08-16T13:58:28.052Z
+metadataUpdatedAt: 2026-08-16T14:27:46.287Z
 starsUpdatedAt: 2026-08-16T13:58:28.052Z
-updatedAt: 2026-08-16T13:58:28.052Z
+updatedAt: 2026-08-16T14:27:46.287Z

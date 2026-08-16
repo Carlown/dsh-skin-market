@@ -3,7 +3,7 @@ name:
   zh: dsh-weather-plugin
   en: dsh-weather-plugin
 author: shenmy-git
-description: "DSH plugin: weather tool + immersive weather theming + FishLogo whale pet (theme/ambient/sound/HUD)"
+description: 天气查询工具 + 根据天气自动切换应用主题的 UI 增强插件（DSH plugin marketplace）
 repo: https://github.com/shenmy-git/dsh-weather-plugin
 package: dsh-weather-plugin
 rowId: weather
@@ -34,6 +34,6 @@ license:
 featuredRank: 120
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:57:34.783Z
-metadataUpdatedAt: 2026-08-16T13:57:34.783Z
+metadataUpdatedAt: 2026-08-16T14:26:41.152Z
 starsUpdatedAt: 2026-08-16T13:57:34.783Z
-updatedAt: 2026-08-16T13:57:34.783Z
+updatedAt: 2026-08-16T14:26:41.152Z

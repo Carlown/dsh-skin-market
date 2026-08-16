@@ -3,7 +3,7 @@ name:
   zh: dsh-naiwa-theme
   en: dsh-naiwa-theme
 author: DevourerM
-description: 为deepseek harness构建的奶蛙主题，可是我觉得很神圣呀。（素材来自互联网）
+description: 克制的奶蛙 Harness 主题：半头背景、抱腹大笑标题标记、发送与完成音效。
 repo: https://github.com/DevourerM/dsh-naiwa-theme
 package: dsh-naiwa-theme
 rowId: naiwa-theme
@@ -35,6 +35,6 @@ license:
 featuredRank: 62
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16T13:50:16.726Z
-metadataUpdatedAt: 2026-08-16T13:50:16.726Z
+metadataUpdatedAt: 2026-08-16T14:20:00.931Z
 starsUpdatedAt: 2026-08-16T13:50:16.726Z
-updatedAt: 2026-08-16T13:50:16.726Z
+updatedAt: 2026-08-16T14:20:00.931Z

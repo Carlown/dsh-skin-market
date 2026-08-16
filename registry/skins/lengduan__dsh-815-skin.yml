@@ -3,7 +3,7 @@ name:
   zh: dsh-815-skin
   en: dsh-815-skin
 author: lengduan
-description: 1945-08-15 世界名画 dsh皮肤
+description: 1945 终战皮肤：陈坚《公元一九四五年九月九日九时》作为 DeepSeek Harness Web 背景
 repo: https://github.com/lengduan/dsh-815-skin
 package: "@lengduan/dsh-client-ui-skin-815"
 rowId: ui-skin-815
@@ -35,6 +35,6 @@ license:
 featuredRank: 111
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:56:26.825Z
-metadataUpdatedAt: 2026-08-16T13:56:26.825Z
+metadataUpdatedAt: 2026-08-16T14:25:43.466Z
 starsUpdatedAt: 2026-08-16T13:56:26.825Z
-updatedAt: 2026-08-16T13:56:26.825Z
+updatedAt: 2026-08-16T14:25:43.466Z

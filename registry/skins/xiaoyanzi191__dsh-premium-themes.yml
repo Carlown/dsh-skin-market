@@ -3,7 +3,7 @@ name:
   zh: dsh-premium-themes
   en: dsh-premium-themes
 author: xiaoyanzi191
-description: Premium color palettes for DeepSeek Harness — 8 built-in + custom import (热插拔主题插件)
+description: "Standalone premium-palette plugin for dsh Web: eight curated color schemes plus custom palette import (name + scheme + seed colors -> derived full token map), a Palette row in General settings, durable per-plugin persistence, and hot-plug install via dsh plugin"
 repo: https://github.com/xiaoyanzi191/dsh-premium-themes
 package: "@deepseek-ai/dsh-client-ui-premium-themes"
 rowId: premium-themes
@@ -41,6 +41,6 @@ license:
 featuredRank: 126
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:58:16.091Z
-metadataUpdatedAt: 2026-08-16T13:58:16.091Z
+metadataUpdatedAt: 2026-08-16T14:27:26.274Z
 starsUpdatedAt: 2026-08-16T13:58:16.091Z
-updatedAt: 2026-08-16T13:58:16.091Z
+updatedAt: 2026-08-16T14:27:26.274Z

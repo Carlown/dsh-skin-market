@@ -3,7 +3,7 @@ name:
   zh: dsh-theme-ti
   en: dsh-theme-ti
 author: longyu065
-description: dsh-theme-ti
+description: "Dota 2 The International (TI) skin for the DeepSeek Harness web UI: a deep-navy + teal/gold token theme with vector wings artwork, registered into the client ThemeRuntime."
 repo: https://github.com/longyu065/dsh-theme-ti
 package: "@dsh-theme/ti"
 rowId: theme-ti
@@ -30,13 +30,13 @@ screenshots:
 review:
   compatibility: unverified
   preview: repository-card
-  installation: manual-only
+  installation: verified
 license:
   code: MIT
   commercialUse: true
 featuredRank: 84
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:53:00.319Z
-metadataUpdatedAt: 2026-08-16T13:53:00.319Z
+metadataUpdatedAt: 2026-08-16T14:22:22.865Z
 starsUpdatedAt: 2026-08-16T13:53:00.319Z
-updatedAt: 2026-08-16T13:53:00.319Z
+updatedAt: 2026-08-16T14:22:22.865Z

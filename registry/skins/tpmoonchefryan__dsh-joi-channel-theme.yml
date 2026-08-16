@@ -3,7 +3,7 @@ name:
   zh: dsh-joi-channel-theme
   en: dsh-joi-channel-theme
 author: tpmoonchefryan
-description: 轴伊 Joi 双衣装主题 for DeepSeek Harness — unofficial, non-commercial fan theme plugin 🍊
+description: 轴伊 Joi 双衣装主题（Joi-Flowers / Joi-Library）for DeepSeek Harness — unofficial, non-commercial fan theme plugin
 repo: https://github.com/tpmoonchefryan/dsh-joi-channel-theme
 package: dsh-joi-channel-theme
 rowId: joi-channel-theme
@@ -39,6 +39,6 @@ license:
 featuredRank: 94
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:54:05.830Z
-metadataUpdatedAt: 2026-08-16T13:54:05.830Z
+metadataUpdatedAt: 2026-08-16T14:23:18.001Z
 starsUpdatedAt: 2026-08-16T13:54:05.830Z
-updatedAt: 2026-08-16T13:54:05.830Z
+updatedAt: 2026-08-16T14:23:18.001Z

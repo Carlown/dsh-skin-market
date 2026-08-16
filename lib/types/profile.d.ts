@@ -1,9 +1,11 @@
 import type { PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts';
 export declare function resolveProfileDir(profile: string, explicit?: string): string;
 export declare function manifestFile(profileDir: string): string;
+export declare function profilePatchFile(profileDir: string): string;
 export declare function marketStateFile(profileDir: string): string;
 export declare function readJson<T>(file: string, fallback: T): T;
 export declare function atomicWriteJson(file: string, value: unknown): void;
+export declare function atomicWriteText(file: string, value: string): void;
 export declare function readMarketState(profileDir: string): PersistedMarketState;
 export declare function writeMarketState(profileDir: string, state: PersistedMarketState): void;
 export declare function readDependencies(profileDir: string): Record<string, string>;
@@ -13,10 +15,14 @@ export declare function validateInstalledSkin(profileDir: string, skin: SkinEntr
     reason?: string;
     version?: string;
 };
-export interface ManifestSnapshot {
+export declare function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled?: boolean): void;
+export declare function removeSkinRegistration(profileDir: string, skin: SkinEntry): void;
+export interface FileSnapshot {
     existed: boolean;
     contents: string;
 }
-export declare function snapshotManifest(profileDir: string): ManifestSnapshot;
-export declare function restoreManifest(profileDir: string, snapshot: ManifestSnapshot): void;
+export declare function snapshotFile(file: string): FileSnapshot;
+export declare function restoreFile(file: string, snapshot: FileSnapshot): void;
+export declare function snapshotManifest(profileDir: string): FileSnapshot;
+export declare function restoreManifest(profileDir: string, snapshot: FileSnapshot): void;
 export declare function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean): SkinRuntimeState;

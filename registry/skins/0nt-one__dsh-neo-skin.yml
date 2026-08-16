@@ -3,7 +3,7 @@ name:
   zh: dsh-neo-skin
   en: dsh-neo-skin
 author: 0nt-one
-description: Neo-brutalism skin for the DeepSeek Harness Web UI — hard borders, high contrast, two switchable schemes (Blue Command / Aged Newspaper), works in light and dark themes.
+description: Neo-brutalism skin for DeepSeek Harness Web UI — stacks hard-border / high-contrast --dsw-alias-* token overrides (DS-native blue + black-white + green + orange) on top of the built-in light/dark palettes.
 repo: https://github.com/0nt-one/dsh-neo-skin
 package: dsh-neo-skin
 rowId: dsh-neo-skin
@@ -37,6 +37,6 @@ license:
 featuredRank: 74
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:51:42.695Z
-metadataUpdatedAt: 2026-08-16T13:51:42.695Z
+metadataUpdatedAt: 2026-08-16T14:21:20.609Z
 starsUpdatedAt: 2026-08-16T13:51:42.695Z
-updatedAt: 2026-08-16T13:51:42.695Z
+updatedAt: 2026-08-16T14:21:20.609Z

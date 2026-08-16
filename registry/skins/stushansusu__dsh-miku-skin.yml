@@ -3,7 +3,7 @@ name:
   zh: dsh-miku-skin
   en: dsh-miku-skin
 author: stushansusu
-description: 初音未来主题皮肤，用于 DeepSeek Harness (DSH) Web GUI —— 蓝紫洋红渐变、毛玻璃面板、可自定义背景图、亮暗双主题
+description: 初音未来（Hatsune Miku）主题皮肤：蓝紫洋红渐变标题栏与按钮、半透明毛玻璃面板与输入框、可自定义背景图，用于 DeepSeek Harness (DSH) Web GUI
 repo: https://github.com/stushansusu/dsh-miku-skin
 package: "@deepseek-ai/dsh-client-ui-skin-miku"
 rowId: ui-skin-miku
@@ -38,6 +38,6 @@ license:
 featuredRank: 66
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16T13:51:00.375Z
-metadataUpdatedAt: 2026-08-16T13:51:00.375Z
+metadataUpdatedAt: 2026-08-16T14:20:35.164Z
 starsUpdatedAt: 2026-08-16T13:51:00.375Z
-updatedAt: 2026-08-16T13:51:00.375Z
+updatedAt: 2026-08-16T14:20:35.164Z

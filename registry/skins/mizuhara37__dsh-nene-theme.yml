@@ -3,7 +3,7 @@ name:
   zh: dsh-nene-theme
   en: dsh-nene-theme
 author: mizuhara37
-description: dsh-nene-theme
+description: 草薙宁宁同人主题（DeepSeek Harness 客户端插件）：日夜背景 + 可拖动立绘 + 状态台词
 repo: https://github.com/mizuhara37/dsh-nene-theme
 package: dsh-nene-theme
 rowId: nene-theme
@@ -37,6 +37,6 @@ license:
 featuredRank: 114
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:56:45.550Z
-metadataUpdatedAt: 2026-08-16T13:56:45.550Z
+metadataUpdatedAt: 2026-08-16T14:25:55.049Z
 starsUpdatedAt: 2026-08-16T13:56:45.550Z
-updatedAt: 2026-08-16T13:56:45.550Z
+updatedAt: 2026-08-16T14:25:55.049Z

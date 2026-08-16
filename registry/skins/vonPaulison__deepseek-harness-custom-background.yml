@@ -3,7 +3,7 @@ name:
   zh: deepseek-harness-custom-background
   en: deepseek-harness-custom-background
 author: vonPaulison
-description: DeepSeek Harness Web 界面自定义背景插件：主界面/边栏/顶栏三区域独立背景、拖拽定位、不透明度控制、主题色、圆角、缩放
+description: DeepSeek Harness Web 界面自定义背景插件：主界面/边栏/顶栏三区域独立背景、拖拽定位、不透明度 0-100、主题色、圆角、缩放，附健壮定位与内置诊断
 repo: https://github.com/vonPaulison/deepseek-harness-custom-background
 package: dsh-ui-customizer
 rowId: ui-customizer
@@ -30,13 +30,13 @@ screenshots:
 review:
   compatibility: unverified
   preview: repository-card
-  installation: manual-only
+  installation: verified
 license:
   code: MIT
   commercialUse: true
 featuredRank: 67
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16T13:51:04.723Z
-metadataUpdatedAt: 2026-08-16T13:51:04.723Z
+metadataUpdatedAt: 2026-08-16T14:20:39.366Z
 starsUpdatedAt: 2026-08-16T13:51:04.723Z
-updatedAt: 2026-08-16T13:51:04.723Z
+updatedAt: 2026-08-16T14:20:39.366Z

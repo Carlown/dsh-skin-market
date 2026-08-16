@@ -18,18 +18,18 @@ modes:
   - light
   - dark
 install:
-  target: github:NoNameLeGo/dsh-catppuccin#cbc79977e36c15b8a529ae5657676b58e6c4a14b
+  target: github:NoNameLeGo/dsh-catppuccin#8bb3d0df49e0e85589880e59238743aa4d21dc2a
   version: 0.2.1
-  commit: cbc79977e36c15b8a529ae5657676b58e6c4a14b
+  commit: 8bb3d0df49e0e85589880e59238743aa4d21dc2a
 compatibility:
   dsh: ^0.1.0-rc.6
   platform:
     - web
 screenshots:
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/latte.png
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/frappe.png
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/macchiato.png
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/cbc79977e36c15b8a529ae5657676b58e6c4a14b/assets/previews/mocha.png
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/8bb3d0df49e0e85589880e59238743aa4d21dc2a/assets/previews/latte.png
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/8bb3d0df49e0e85589880e59238743aa4d21dc2a/assets/previews/frappe.png
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/8bb3d0df49e0e85589880e59238743aa4d21dc2a/assets/previews/macchiato.png
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/8bb3d0df49e0e85589880e59238743aa4d21dc2a/assets/previews/mocha.png
   - https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/logos/exports/1544x1544_circle.png
   - https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/misc/transparent.png
 review:
@@ -41,7 +41,7 @@ license:
   commercialUse: true
 featuredRank: 5
 starsSnapshot: 7
-releaseUpdatedAt: 2026-08-16T12:31:33.507Z
-metadataUpdatedAt: 2026-08-16T13:47:22.153Z
+releaseUpdatedAt: 2026-08-16T14:16:53.255Z
+metadataUpdatedAt: 2026-08-16T14:16:53.255Z
 starsUpdatedAt: 2026-08-16T12:31:33.507Z
-updatedAt: 2026-08-16T13:47:22.153Z
+updatedAt: 2026-08-16T14:16:53.255Z

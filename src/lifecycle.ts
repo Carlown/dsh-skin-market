@@ -3,10 +3,15 @@ import type { PluginRunner } from './commands.ts'
 import { commandError } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
 import {
+  ensureSkinRegistration,
+  profilePatchFile,
   readDependencies,
   readMarketState,
+  removeSkinRegistration,
+  restoreFile,
   restoreManifest,
   runtimeState,
+  snapshotFile,
   snapshotManifest,
   validateInstalledSkin,
   writeMarketState,
@@ -131,6 +136,7 @@ export class SkinLifecycle {
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
       const state = readMarketState(this.options.profileDir)
+      ensureSkinRegistration(this.options.profileDir, skin, state.activeSkinId !== skin.id)
       if (state.activeSkinId === skin.id) state.disabledSkinIds = state.disabledSkinIds.filter(id => id !== skin.id)
       else if (!state.disabledSkinIds.includes(skin.id)) state.disabledSkinIds.push(skin.id)
       writeMarketState(this.options.profileDir, state)
@@ -138,6 +144,7 @@ export class SkinLifecycle {
       return
     }
     const snapshot = snapshotManifest(this.options.profileDir)
+    const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
@@ -145,6 +152,7 @@ export class SkinLifecycle {
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
+      ensureSkinRegistration(this.options.profileDir, skin)
       const state = readMarketState(this.options.profileDir)
       state.activeSkinId = state.activeSkinId === skin.id ? null : state.activeSkinId
       if (!state.disabledSkinIds.includes(skin.id)) state.disabledSkinIds.push(skin.id)
@@ -152,6 +160,7 @@ export class SkinLifecycle {
       operation.message = 'installed; choose Use to activate'
     } catch (error) {
       restoreManifest(this.options.profileDir, snapshot)
+      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
       try { await this.run(['install']) } catch { /* retain the original failure */ }
       throw error
     }
@@ -190,6 +199,7 @@ export class SkinLifecycle {
     const skin = this.skin(operation.skinId)
     const wasActive = readMarketState(this.options.profileDir).activeSkinId === skin.id
     const snapshot = snapshotManifest(this.options.profileDir)
+    const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
@@ -197,11 +207,13 @@ export class SkinLifecycle {
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok || validation.version !== skin.install.version) throw new Error(validation.reason ?? 'installed version did not change to the reviewed version')
+      ensureSkinRegistration(this.options.profileDir, skin)
       if (wasActive) await this.activate(operation)
       else await this.deactivate(operation)
       operation.message = wasActive ? 'updated and kept active' : 'updated and kept inactive'
     } catch (error) {
       restoreManifest(this.options.profileDir, snapshot)
+      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
       try { await this.run(['install']) } catch { /* retain original failure */ }
       throw error
     }
@@ -214,6 +226,7 @@ export class SkinLifecycle {
     if (state.activeSkinId === skin.id) await this.deactivate(operation)
     this.update(operation, 'downloading')
     await this.run(['remove', skin.package])
+    removeSkinRegistration(this.options.profileDir, skin)
     const next = readMarketState(this.options.profileDir)
     next.disabledSkinIds = next.disabledSkinIds.filter(id => id !== skin.id)
     if (next.activeSkinId === skin.id) next.activeSkinId = null

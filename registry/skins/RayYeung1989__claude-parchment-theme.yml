@@ -3,7 +3,7 @@ name:
   zh: claude-parchment-theme
   en: claude-parchment-theme
 author: RayYeung1989
-description: 一款 Claude 风格的 dsh插件：为 DSH WebUI 打造，暖羊皮纸 Parchment 色板、Terracotta 品牌色与衬线字体
+description: 一款 Claude 风格的 dsh插件：为 DeepSeek Harness WebUI 打造的 Anthropic Claude 风格主题 —— 暖羊皮纸色板、Terracotta 品牌色、衬线标题、暖调中性灰，覆盖 DSW 全部主题 token
 repo: https://github.com/RayYeung1989/claude-parchment-theme
 package: "@dsh-local/claude-parchment-theme"
 rowId: ui-claude-theme
@@ -28,13 +28,13 @@ screenshots:
 review:
   compatibility: unverified
   preview: repository-card
-  installation: manual-only
+  installation: verified
 license:
   code: MIT
   commercialUse: true
 featuredRank: 91
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:53:45.052Z
-metadataUpdatedAt: 2026-08-16T13:53:45.052Z
+metadataUpdatedAt: 2026-08-16T14:22:57.646Z
 starsUpdatedAt: 2026-08-16T13:53:45.052Z
-updatedAt: 2026-08-16T13:53:45.052Z
+updatedAt: 2026-08-16T14:22:57.646Z

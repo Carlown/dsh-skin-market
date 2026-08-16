@@ -3,7 +3,7 @@ name:
   zh: dsh-skin-claude-code
   en: dsh-skin-claude-code
 author: le-soleil-se-couche
-description: 完美复刻 Claude Code 皮肤，纪念我的 Vibe Coding 白月光。
+description: "Hot-pluggable Claude Code terminal skin for the dsh web GUI: charcoal terminal surfaces, amber accent, monospace type, terminal-window title bar."
 repo: https://github.com/le-soleil-se-couche/dsh-skin-claude-code
 package: "@deepseek-ai/dsh-client-ui-skin-claude-code"
 rowId: ui-skin-claude-code
@@ -34,6 +34,6 @@ license:
 featuredRank: 50
 starsSnapshot: 3
 releaseUpdatedAt: 2026-08-16T13:49:00.442Z
-metadataUpdatedAt: 2026-08-16T13:49:00.442Z
+metadataUpdatedAt: 2026-08-16T14:18:38.965Z
 starsUpdatedAt: 2026-08-16T13:49:00.442Z
-updatedAt: 2026-08-16T13:49:00.442Z
+updatedAt: 2026-08-16T14:18:38.965Z

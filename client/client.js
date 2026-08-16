@@ -259,58 +259,58 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var SkinMarket_module_css_default = {
-			"cardMetaLine": "VqXecW_cardMetaLine",
-			"cardStars": "VqXecW_cardStars",
-			"loading": "VqXecW_loading",
-			"submission": "VqXecW_submission",
-			"filterBar": "VqXecW_filterBar",
-			"repoMeta": "VqXecW_repoMeta",
-			"filterPill": "VqXecW_filterPill",
-			"compactActionIcon": "VqXecW_compactActionIcon",
-			"skinAvatar": "VqXecW_skinAvatar",
-			"description": "VqXecW_description",
-			"filters": "VqXecW_filters",
-			"actionDivider": "VqXecW_actionDivider",
-			"skinCardBody": "VqXecW_skinCardBody",
-			"cardTitle": "VqXecW_cardTitle",
-			"skinCard": "VqXecW_skinCard",
-			"error": "VqXecW_error",
-			"detailHeader": "VqXecW_detailHeader",
-			"repoLink": "VqXecW_repoLink",
-			"nativePrimary": "VqXecW_nativePrimary",
-			"iconOnlyButton": "VqXecW_iconOnlyButton",
-			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
-			"detail": "VqXecW_detail",
-			"catalog": "VqXecW_catalog",
-			"version": "VqXecW_version",
-			"statusActive": "VqXecW_statusActive",
-			"operation": "VqXecW_operation",
-			"aboutGrid": "VqXecW_aboutGrid",
-			"sortButton": "VqXecW_sortButton",
-			"settingsNavIcon": "VqXecW_settingsNavIcon",
-			"catalogHeader": "VqXecW_catalogHeader",
-			"catalogTitle": "VqXecW_catalogTitle",
-			"staticPill": "VqXecW_staticPill",
-			"cardMeta": "VqXecW_cardMeta",
-			"mobileBack": "VqXecW_mobileBack",
-			"root": "VqXecW_root",
-			"nativeOutline": "VqXecW_nativeOutline",
-			"hero": "VqXecW_hero",
-			"thumbnails": "VqXecW_thumbnails",
-			"author": "VqXecW_author",
-			"status": "VqXecW_status",
-			"stars": "VqXecW_stars",
-			"spin": "VqXecW_spin",
-			"actionRow": "VqXecW_actionRow",
-			"empty": "VqXecW_empty",
-			"skinList": "VqXecW_skinList",
-			"cardStatus": "VqXecW_cardStatus",
-			"titleBlock": "VqXecW_titleBlock",
-			"tags": "VqXecW_tags",
-			"recommendations": "VqXecW_recommendations",
 			"notice": "VqXecW_notice",
+			"sortButton": "VqXecW_sortButton",
+			"detailHeader": "VqXecW_detailHeader",
+			"skinCard": "VqXecW_skinCard",
+			"skinCardBody": "VqXecW_skinCardBody",
+			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
+			"status": "VqXecW_status",
+			"iconOnlyButton": "VqXecW_iconOnlyButton",
+			"nativeOutline": "VqXecW_nativeOutline",
+			"detail": "VqXecW_detail",
+			"skinAvatar": "VqXecW_skinAvatar",
+			"author": "VqXecW_author",
+			"root": "VqXecW_root",
+			"mobileBack": "VqXecW_mobileBack",
+			"cardTitle": "VqXecW_cardTitle",
+			"titleBlock": "VqXecW_titleBlock",
+			"operation": "VqXecW_operation",
+			"skinList": "VqXecW_skinList",
+			"error": "VqXecW_error",
+			"stars": "VqXecW_stars",
+			"aboutGrid": "VqXecW_aboutGrid",
+			"cardStatus": "VqXecW_cardStatus",
+			"cardMeta": "VqXecW_cardMeta",
+			"actionRow": "VqXecW_actionRow",
+			"repoLink": "VqXecW_repoLink",
+			"recommendations": "VqXecW_recommendations",
+			"submission": "VqXecW_submission",
+			"filters": "VqXecW_filters",
+			"filterBar": "VqXecW_filterBar",
+			"settingsNavIcon": "VqXecW_settingsNavIcon",
+			"repoMeta": "VqXecW_repoMeta",
+			"catalogTitle": "VqXecW_catalogTitle",
+			"description": "VqXecW_description",
+			"statusActive": "VqXecW_statusActive",
+			"compactActionIcon": "VqXecW_compactActionIcon",
+			"filterPill": "VqXecW_filterPill",
+			"cardStars": "VqXecW_cardStars",
+			"actionDivider": "VqXecW_actionDivider",
+			"hero": "VqXecW_hero",
+			"loading": "VqXecW_loading",
+			"nativePrimary": "VqXecW_nativePrimary",
+			"catalog": "VqXecW_catalog",
+			"spin": "VqXecW_spin",
+			"thumbnails": "VqXecW_thumbnails",
+			"version": "VqXecW_version",
+			"changelog": "VqXecW_changelog",
+			"staticPill": "VqXecW_staticPill",
+			"catalogHeader": "VqXecW_catalogHeader",
+			"cardMetaLine": "VqXecW_cardMetaLine",
 			"listLoading": "VqXecW_listLoading",
-			"changelog": "VqXecW_changelog"
+			"empty": "VqXecW_empty",
+			"tags": "VqXecW_tags"
 		};
 		//#endregion
 		//#region src/client/submission.ts
@@ -692,7 +692,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 										}),
 										/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Pill, {
 											className: mutationLabel !== null || itemState.updateAvailable ? `${SkinMarket_module_css_default.cardStatus} ${SkinMarket_module_css_default.cardStatusUpdate}` : SkinMarket_module_css_default.cardStatus,
-											children: mutationLabel ?? (itemState.updateAvailable ? "可更新" : itemState.installation === "missing" && (skin.review?.compatibility === "unverified" || skin.review?.installation === "manual-only") ? skin.review?.compatibility === "unverified" ? "待验证" : "手动安装" : statusLabel(itemState))
+											children: mutationLabel ?? (itemState.updateAvailable ? "可更新" : itemState.installation === "missing" && skin.review?.installation === "manual-only" ? "手动安装" : itemState.installation === "missing" && skin.review?.compatibility === "unverified" ? "待验证" : statusLabel(itemState))
 										})
 									]
 								}, skin.id);
@@ -757,7 +757,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 								className: SkinMarket_module_css_default.actionRow,
 								children: [
-									state.installation === "missing" && (compatibilityUnverified || manualOnly ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+									state.installation === "missing" && (manualOnly ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
 										className: SkinMarket_module_css_default.nativeOutline,
 										variant: "outline",
 										size: "sm",
@@ -765,7 +765,15 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 										disabled: busy !== null,
 										title: "前往 GitHub 查看维护者提供的手动安装方式",
 										onClick: () => window.open(selected.repo, "_blank", "noopener,noreferrer"),
-										children: compatibilityUnverified ? "待验证，手动安装" : "手动安装"
+										children: "手动安装"
+									}) : compatibilityUnverified ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+										className: SkinMarket_module_css_default.nativeOutline,
+										variant: "outline",
+										size: "sm",
+										icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconDownloadOutline16, {}),
+										disabled: busy !== null,
+										onClick: () => void run("install"),
+										children: "安装（兼容性待验证）"
 									}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
 										className: SkinMarket_module_css_default.nativePrimary,
 										variant: "primary",
@@ -910,13 +918,13 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 											/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("dt", { children: "模式" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("dd", { children: selected.modes.join(" / ") })] })
 										]
 									}),
-									compatibilityUnverified && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+									compatibilityUnverified && !manualOnly && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 										className: SkinMarket_module_css_default.notice,
-										children: "维护者尚未声明 DSH 兼容范围，市场暂不提供一键安装；你可以前往 GitHub 查看手动安装方式。"
+										children: "维护者尚未声明 DSH 兼容范围。市场可以自动安装并保持停用；使用前请自行确认与当前 DSH 版本兼容。"
 									}),
-									manualOnly && !compatibilityUnverified && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+									manualOnly && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 										className: SkinMarket_module_css_default.notice,
-										children: "该仓库需要手动注册插件，市场暂不提供一键安装；请前往 GitHub 按维护者说明操作。"
+										children: "该仓库缺少市场自动注册所需的信息；请前往 GitHub 按维护者说明手动安装。"
 									}),
 									selected.review?.preview === "repository-card" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 										className: SkinMarket_module_css_default.notice,

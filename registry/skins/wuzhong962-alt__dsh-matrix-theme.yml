@@ -3,7 +3,7 @@ name:
   zh: dsh-matrix-theme
   en: dsh-matrix-theme
 author: wuzhong962-alt
-description: dsh-matrix-theme
+description: Matrix / cyberpunk skin for the DeepSeek Harness (DSH) web GUI — a client plugin that overrides the design tokens with a green-on-black palette plus Matrix rain, CRT scanlines, a galaxy starfield, a solar system, and a perspective fighter jet.
 repo: https://github.com/wuzhong962-alt/dsh-matrix-theme
 package: dsh-matrix-theme
 rowId: matrix-theme
@@ -28,13 +28,13 @@ screenshots:
 review:
   compatibility: unverified
   preview: repository-card
-  installation: manual-only
+  installation: verified
 license:
   code: MIT
   commercialUse: true
 featuredRank: 95
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:54:27.004Z
-metadataUpdatedAt: 2026-08-16T13:54:27.004Z
+metadataUpdatedAt: 2026-08-16T14:23:34.113Z
 starsUpdatedAt: 2026-08-16T13:54:27.004Z
-updatedAt: 2026-08-16T13:54:27.004Z
+updatedAt: 2026-08-16T14:23:34.113Z

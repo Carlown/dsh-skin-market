@@ -1,0 +1,42 @@
+id: yrn-playmaker.dsh-wallpaper-share
+name:
+  zh: dsh-wallpaper_share
+  en: dsh-wallpaper_share
+author: YRN-playmaker
+description: A "wallpaper engine" synchronization plugin mounted on the deepseek harness can synchronize static wallpapers
+repo: https://github.com/YRN-playmaker/dsh-wallpaper_share
+package: we-sync-dsh
+rowId: we-sync
+category: theme
+tags:
+  - wallpaper
+  - glass
+  - retro
+  - motion
+  - token-theme
+modes:
+  - light
+  - dark
+install:
+  target: github:YRN-playmaker/dsh-wallpaper_share#7b3d2f1d26fe0b7a8d9c145520439ad44e7c8686
+  version: 0.1.0
+  commit: 7b3d2f1d26fe0b7a8d9c145520439ad44e7c8686
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://github.com/user-attachments/assets/59734301-8ebc-4f9b-8d7a-340b96873733
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 132
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-16T14:27:39.357Z
+metadataUpdatedAt: 2026-08-16T14:27:39.357Z
+starsUpdatedAt: 2026-08-16T14:27:39.357Z
+updatedAt: 2026-08-16T14:27:39.357Z

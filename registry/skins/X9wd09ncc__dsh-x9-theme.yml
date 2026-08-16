@@ -3,7 +3,7 @@ name:
   zh: dsh-x9-theme
   en: dsh-x9-theme
 author: X9wd09ncc
-description: 一个dsh的主题修改插件
+description: DeepSeek Harness WebUI 主题插件：6 种预设风格、背景图片（本地上传/路径/URL）、分区独立样式（毛玻璃/浮雕/霓虹等）、四区透明度、分区自定义 CSS（免 F12 显示当前样式）、字体/阴影/动效等全套外观定制
 repo: https://github.com/X9wd09ncc/dsh-x9-theme
 package: dsh-x9-theme
 rowId: ui-x9-theme
@@ -39,6 +39,6 @@ license:
 featuredRank: 96
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:54:32.014Z
-metadataUpdatedAt: 2026-08-16T13:54:32.014Z
+metadataUpdatedAt: 2026-08-16T14:23:40.465Z
 starsUpdatedAt: 2026-08-16T13:54:32.014Z
-updatedAt: 2026-08-16T13:54:32.014Z
+updatedAt: 2026-08-16T14:23:40.465Z

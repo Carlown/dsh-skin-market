@@ -3,7 +3,7 @@ name:
   zh: dsh-skin-kamisato
   en: dsh-skin-kamisato
 author: Danieltoraji
-description: 以《原神》神里绫华为灵感制作的印象皮肤。
+description: 「神里印象」DeepSeek Harness 皮肤插件：神里纹章/绫华取色的青蓝·蓝紫金主题 + 汉仪文黑标题字体（浅色/深色双配色）。
 repo: https://github.com/Danieltoraji/dsh-skin-kamisato
 package: dsh-skin-kamisato
 rowId: skin-kamisato
@@ -33,6 +33,6 @@ license:
 featuredRank: 103
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:55:09.178Z
-metadataUpdatedAt: 2026-08-16T13:55:09.178Z
+metadataUpdatedAt: 2026-08-16T14:24:18.855Z
 starsUpdatedAt: 2026-08-16T13:55:09.178Z
-updatedAt: 2026-08-16T13:55:09.178Z
+updatedAt: 2026-08-16T14:24:18.855Z

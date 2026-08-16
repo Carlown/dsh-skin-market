@@ -3,7 +3,7 @@ name:
   zh: dsh-desk-pet
   en: dsh-desk-pet
 author: anneheartrecord
-description: Always-on-top DeepSeek Harness desktop pet. Default whale, four skins, four silent states.
+description: Always-on-top DeepSeek Harness desktop pet. Default whale, four skins, four silent states. Not an in-page widget.
 repo: https://github.com/anneheartrecord/dsh-desk-pet
 package: dsh-desk-pet
 rowId: dsh-desk-pet
@@ -34,6 +34,6 @@ license:
 featuredRank: 48
 starsSnapshot: 3
 releaseUpdatedAt: 2026-08-16T13:48:42.914Z
-metadataUpdatedAt: 2026-08-16T13:48:42.914Z
+metadataUpdatedAt: 2026-08-16T14:18:29.509Z
 starsUpdatedAt: 2026-08-16T13:48:42.914Z
-updatedAt: 2026-08-16T13:48:42.914Z
+updatedAt: 2026-08-16T14:18:29.509Z

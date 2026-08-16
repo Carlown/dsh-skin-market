@@ -3,7 +3,7 @@ name:
   zh: dsh-pixel-skin
   en: dsh-pixel-skin
 author: ADAning
-description: 8-bit / CRT skin plugin for the DeepSeek Harness web GUI
+description: "8-bit pixel skin for the DeepSeek Harness web GUI: Fusion Pixel type, chunky CRT palette, hard-edged controls and scanlines."
 repo: https://github.com/ADAning/dsh-pixel-skin
 package: dsh-pixel-skin
 rowId: dsh-pixel-skin
@@ -32,13 +32,13 @@ screenshots:
 review:
   compatibility: unverified
   preview: verified
-  installation: manual-only
+  installation: verified
 license:
   code: MIT
   commercialUse: true
 featuredRank: 98
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:54:49.092Z
-metadataUpdatedAt: 2026-08-16T13:54:49.092Z
+metadataUpdatedAt: 2026-08-16T14:23:56.361Z
 starsUpdatedAt: 2026-08-16T13:54:49.092Z
-updatedAt: 2026-08-16T13:54:49.092Z
+updatedAt: 2026-08-16T14:23:56.361Z

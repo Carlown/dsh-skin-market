@@ -3,7 +3,7 @@ name:
   zh: dsh-image-skin
   en: dsh-image-skin
 author: Jack-sun-learner
-description: DSH 图片皮肤插件：导入 PNG/JPG/WebP 自动生成主题配色，可选 Q 版宠物（程序化/AI 生图）
+description: 图片皮肤插件：导入 PNG/JPG/WebP 自动生成主题配色（背景/强调色/高亮跟随图片主色调），并可选生成 Q 版宠物（程序化或 AI 生图）
 repo: https://github.com/Jack-sun-learner/dsh-image-skin
 package: dsh-image-skin
 rowId: dsh-image-skin
@@ -35,6 +35,6 @@ license:
 featuredRank: 81
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:52:36.792Z
-metadataUpdatedAt: 2026-08-16T13:52:36.792Z
+metadataUpdatedAt: 2026-08-16T14:22:02.612Z
 starsUpdatedAt: 2026-08-16T13:52:36.792Z
-updatedAt: 2026-08-16T13:52:36.792Z
+updatedAt: 2026-08-16T14:22:02.612Z

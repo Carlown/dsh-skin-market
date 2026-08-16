@@ -235,19 +235,24 @@ describe('client market', () => {
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览.*安装中/ })).toBeTruthy()
   })
 
-  it('sends unverified skins to GitHub instead of one-click installation', async () => {
-    const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const, installation: 'manual-only' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
+  it('automatically installs an unverified skin without applying it', async () => {
+    const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const, installation: 'verified' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
     const open = vi.fn()
     vi.stubGlobal('open', open)
-    const fetchMock = vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [unverified] } : { skins: [] } }))
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [unverified] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (init?.method === 'POST') return await new Promise(() => undefined)
+      throw new Error(`Unexpected request: ${url}`)
+    })
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
-    const install = await screen.findByRole('button', { name: '待验证，手动安装' })
+    const install = await screen.findByRole('button', { name: '安装（兼容性待验证）' })
     fireEvent.click(install)
-    expect(open).toHaveBeenCalledWith(unverified.repo, '_blank', 'noopener,noreferrer')
-    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
-    expect(screen.getByText('维护者尚未声明 DSH 兼容范围，市场暂不提供一键安装；你可以前往 GitHub 查看手动安装方式。')).toBeTruthy()
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
+    expect(open).not.toHaveBeenCalled()
+    expect(screen.getByText('维护者尚未声明 DSH 兼容范围。市场可以自动安装并保持停用；使用前请自行确认与当前 DSH 版本兼容。')).toBeTruthy()
     expect(screen.getByText('该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。')).toBeTruthy()
   })
 
@@ -262,7 +267,7 @@ describe('client market', () => {
     fireEvent.click(await screen.findByTitle('前往 GitHub 查看维护者提供的手动安装方式'))
     expect(open).toHaveBeenCalledWith(manual.repo, '_blank', 'noopener,noreferrer')
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
-    expect(screen.getByText('该仓库需要手动注册插件，市场暂不提供一键安装；请前往 GitHub 按维护者说明操作。')).toBeTruthy()
+    expect(screen.getByText('该仓库缺少市场自动注册所需的信息；请前往 GitHub 按维护者说明手动安装。')).toBeTruthy()
   })
 
   it('generates and copies an agent PR prompt without submitting to GitHub', async () => {

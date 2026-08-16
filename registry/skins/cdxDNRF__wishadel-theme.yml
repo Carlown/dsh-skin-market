@@ -3,7 +3,7 @@ name:
   zh: wishadel-theme
   en: wishadel-theme
 author: cdxDNRF
-description: dsh主题维什戴尔风格
+description: Wishadel demolition-terminal skin + task board, git graph, project panel and settings center for DeepSeek Harness Web GUI
 repo: https://github.com/cdxDNRF/wishadel-theme
 package: "@cdxdnrf/dsh-client-ui-skin-wishadel"
 rowId: ui-skin-wishadel
@@ -36,6 +36,6 @@ license:
 featuredRank: 99
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-16T13:54:53.805Z
-metadataUpdatedAt: 2026-08-16T13:54:53.805Z
+metadataUpdatedAt: 2026-08-16T14:24:00.652Z
 starsUpdatedAt: 2026-08-16T13:54:53.805Z
-updatedAt: 2026-08-16T13:54:53.805Z
+updatedAt: 2026-08-16T14:24:00.652Z

@@ -3,7 +3,7 @@ name:
   zh: silk-background
   en: silk-background
 author: z21for99
-description: DSH Web GUI 客户端插件：WebGL Silk 丝绸动态背景 + 全站玻璃化皮肤（官方主题 token 覆盖，零依赖） | WebGL silk shader background & glassmorphism skin for the DeepSeek Harness Web GUI
+description: "dsh web-profile client plugin: WebGL silk shader background for the Web GUI. v4: the glass effect rides the official theme service (overrideTokens token layers with light/dark pairs); the node half is a no-op. @deepseek-ai/dsh-client-modules discovers dsh.client, serves /plugins/silk-background/client.js and injects it into the boot manifest; the dsh.bundle.patch declaration lets `dsh plugin --profile web add` wire the entry automatically."
 repo: https://github.com/z21for99/silk-background
 package: silk-background
 rowId: silk-background
@@ -38,6 +38,6 @@ license:
 featuredRank: 71
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16T13:51:27.838Z
-metadataUpdatedAt: 2026-08-16T13:51:27.838Z
+metadataUpdatedAt: 2026-08-16T14:21:01.294Z
 starsUpdatedAt: 2026-08-16T13:51:27.838Z
-updatedAt: 2026-08-16T13:51:27.838Z
+updatedAt: 2026-08-16T14:21:01.294Z

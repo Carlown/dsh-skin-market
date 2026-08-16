@@ -175,9 +175,9 @@ function readmeScreenshots(readme, target, sha) {
 }
 
 function compatibility(pkg, readme) {
-  const all = { ...(pkg.peerDependencies ?? {}), ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) }
-  const candidates = Object.entries(all).filter(([name]) => name.startsWith('@deepseek-ai/dsh-'))
-  const dependency = candidates.map(([, version]) => String(version)).find(version => /\d/.test(version))
+  const groups = [pkg.peerDependencies ?? {}, pkg.dependencies ?? {}, pkg.devDependencies ?? {}]
+  const candidates = groups.flatMap(group => Object.entries(group).filter(([name]) => name.startsWith('@deepseek-ai/dsh-')))
+  const dependency = candidates.map(([, version]) => String(version)).find(version => /\d/.test(version) && !version.startsWith('workspace:'))
   if (dependency) return dependency
   const stated = /(?:DSH|DeepSeek Harness|兼容|支持)[^\n]{0,100}?((?:>=|\^|~)?\s*0\.1\.0-rc\.\d+)/i.exec(readme ?? '')?.[1]
   return stated?.replace(/\s+/g, '') ?? null
@@ -313,7 +313,7 @@ async function inspect(plugin, existing) {
     review: {
       compatibility: dshVersion ? 'verified' : 'unverified',
       preview: verifiedScreenshots.length > 0 ? 'verified' : 'repository-card',
-      installation: pkg.dsh.bundle && patchText !== null ? 'verified' : 'manual-only',
+      installation: pkg.dsh.client && id ? 'verified' : 'manual-only',
     },
     license: {
       code: license,
@@ -435,7 +435,7 @@ async function main() {
   }
   await writeFile(join(outputDir, 'results.json'), `${JSON.stringify(summary, null, 2)}\n`)
   const blockedRows = results.filter(item => item.status === 'blocked').map(item => `| [${item.plugin.owner}/${item.plugin.name}](${item.plugin.url}) | ${item.plugin.stars ?? 0} | ${(item.blockers ?? []).join('; ')} |`)
-  await writeFile(join(outputDir, 'report.md'), `# Full skin ingestion report\n\n- Candidates and registered repositories checked: ${selected.length}\n- Repositories with Stars verified directly from GitHub: ${summary.starsVerified}\n- Existing entries updated: ${summary.updated}\n- Existing entries unchanged: ${summary.unchanged}\n- Newly promoted: ${summary.promoted}\n- Total registry entries: ${summary.totalRegistry}\n- Blocked: ${summary.blocked}\n\nEntries without a declared DSH compatibility range remain visible for discovery, but use a GitHub manual-install link instead of one-click installation. Repositories without a real screenshot use a clearly labelled repository-card fallback.\n\n## Updated\n\n${updated.map(item => `- ${item.stars} stars — [${item.id}](${item.repository}) → ${item.version} at \`${item.commit.slice(0, 12)}\``).join('\n') || '- None'}\n\n## Promoted\n\n${promoted.map(item => `- ${item.stars} stars — [${item.id}](${item.repository}) → \`${item.file}\``).join('\n') || '- None'}\n\n## Blocked\n\n| Candidate | Stars | Reason |\n|---|---:|---|\n${blockedRows.join('\n')}\n`)
+  await writeFile(join(outputDir, 'report.md'), `# Full skin ingestion report\n\n- Candidates and registered repositories checked: ${selected.length}\n- Repositories with Stars verified directly from GitHub: ${summary.starsVerified}\n- Existing entries updated: ${summary.updated}\n- Existing entries unchanged: ${summary.unchanged}\n- Newly promoted: ${summary.promoted}\n- Total registry entries: ${summary.totalRegistry}\n- Blocked: ${summary.blocked}\n\nClient-only plugins with a verified package, DSH client manifest, and loader row ID can be registered automatically by the market. Entries without a declared DSH compatibility range remain visible for discovery, but still use a GitHub manual-install link. Repositories without a real screenshot use a clearly labelled repository-card fallback.\n\n## Updated\n\n${updated.map(item => `- ${item.stars} stars — [${item.id}](${item.repository}) → ${item.version} at \`${item.commit.slice(0, 12)}\``).join('\n') || '- None'}\n\n## Promoted\n\n${promoted.map(item => `- ${item.stars} stars — [${item.id}](${item.repository}) → \`${item.file}\``).join('\n') || '- None'}\n\n## Blocked\n\n| Candidate | Stars | Reason |\n|---|---:|---|\n${blockedRows.join('\n')}\n`)
   console.log(`checked ${selected.length}: ${summary.starsVerified} Stars verified, ${summary.updated} updated, ${summary.unchanged} unchanged, ${summary.promoted} promoted, ${summary.blocked} blocked`)
 }
 

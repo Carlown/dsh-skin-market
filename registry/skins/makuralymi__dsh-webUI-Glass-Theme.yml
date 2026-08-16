@@ -3,7 +3,7 @@ name:
   zh: dsh-webUI-Glass-Theme
   en: dsh-webUI-Glass-Theme
 author: makuralymi
-description: dsh-webUI-Glass-Theme
+description: Global frosted-glass (backdrop blur) theme plugin for the dsh web UI with animated light/dark switching and a scheduled theme timer
 repo: https://github.com/makuralymi/dsh-webUI-Glass-Theme
 package: dsh-client-ui-frosted-glass
 rowId: ui-frosted-glass
@@ -37,6 +37,6 @@ license:
 featuredRank: 53
 starsSnapshot: 3
 releaseUpdatedAt: 2026-08-16T13:49:10.001Z
-metadataUpdatedAt: 2026-08-16T13:49:10.001Z
+metadataUpdatedAt: 2026-08-16T14:18:52.122Z
 starsUpdatedAt: 2026-08-16T13:49:10.001Z
-updatedAt: 2026-08-16T13:49:10.001Z
+updatedAt: 2026-08-16T14:18:52.122Z
