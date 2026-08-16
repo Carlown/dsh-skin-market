@@ -10,7 +10,7 @@ vi.mock('@deepseek-ai/dsh-client-ui-primitives', () => {
     Input: ({ icon: leading, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { icon?: React.ReactNode }) => React.createElement('label', null, leading, React.createElement('input', props)),
     Pill: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => React.createElement('button', props, children),
     Modal: ({ open, title, description, footer, children }: { open: boolean; title: string; description?: string; footer?: React.ReactNode; children?: React.ReactNode }) => open ? React.createElement('div', { role: 'dialog', 'aria-label': title }, description, children, footer) : null,
-    IconChevronLeftOutline14: icon, IconChevronDownOutline14: icon, IconDownloadOutline16: icon, IconLinkOutline16: icon, IconLoadingOutline16: icon,
+    IconChevronLeftOutline14: icon, IconChevronDownOutline14: icon, IconCopyOutline16: icon, IconDownloadOutline16: icon, IconLinkOutline16: icon, IconLoadingOutline16: icon,
     IconRefreshOutline16: icon, IconSearchOutline16: icon, IconTrashOutline16: icon,
   }
 })
@@ -241,6 +241,7 @@ describe('client market', () => {
     const copyPrompt = screen.getByRole('button', { name: '复制安装提示词' })
     expect(automatic.getAttribute('variant')).toBe('primary')
     expect(copyPrompt.getAttribute('variant')).toBe('outline')
+    expect(copyPrompt.querySelector('[aria-hidden="true"]')).toBeTruthy()
     fireEvent.click(automatic)
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览.*安装中/ })).toBeTruthy()
   })
