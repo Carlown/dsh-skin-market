@@ -90,7 +90,9 @@
 .skinCard:hover { background: var(--dsw-specific-sidebar-nav-item-hover, var(--dsw-alias-interactive-bg-hover)); }
 .externalPlugin { min-height: 58px; cursor: default; border: 1px dashed var(--dsw-alias-border-l2); }
 .skinCard[data-selected="true"] { background: var(--dsw-specific-sidebar-nav-item-active, var(--dsw-alias-button-ghost-active-fill)); box-shadow: inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border); }
-.skinCard > img { display: block; width: 56px; height: 56px; flex: none; object-fit: cover; border-radius: 7px; background: var(--dsw-alias-bg-layer-3); }
+.skinCard > img { display: block; width: 56px; height: 56px; flex: none; object-fit: cover; border-radius: 7px; opacity: .35; background: var(--dsw-alias-bg-layer-3); transition: opacity 180ms ease-out; }
+.skinCard > img[data-loaded="true"] { opacity: 1; }
+.skinCard > img[data-failed="true"] { opacity: 0; }
 .skinCardBody { display: flex; min-width: 0; flex: 1; flex-direction: column; }
 .cardTitle { font-size: 14px; font-weight: 400; line-height: 22px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .cardMetaLine { display: flex; min-width: 0; align-items: center; gap: 8px; color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary)); font-size: 12px; line-height: 18px; }
@@ -98,6 +100,31 @@
 .cardStars { display: inline-flex; flex: none; align-items: center; gap: 3px; white-space: nowrap; }
 .cardStatus { display: inline-flex; flex: none; align-items: center; height: 20px; padding: 0 7px; color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary)); border: 0; border-radius: 5px; background: var(--dsw-alias-bg-layer-1); font-size: 10px; line-height: 16px; white-space: nowrap; }
 .cardStatusUpdate { color: var(--dsw-alias-state-business-primary, var(--dsw-alias-brand-primary)); background: color-mix(in srgb, var(--dsw-alias-state-business-primary, var(--dsw-alias-brand-primary)) 10%, transparent); }
+
+.listSkeleton { display: grid; gap: 4px; }
+.skeletonCard { display: flex; min-height: 72px; align-items: center; gap: 12px; padding: 8px; }
+.skeletonCard > span:first-child { width: 56px; height: 56px; flex: none; border-radius: 7px; }
+.skeletonCard > span:nth-child(2) { display: grid; min-width: 0; flex: 1; gap: 8px; }
+.skeletonCard > span:nth-child(2) i:first-child { width: 62%; height: 14px; }
+.skeletonCard > span:nth-child(2) i:last-child { width: 42%; height: 10px; }
+.skeletonCard > i { width: 42px; height: 18px; border-radius: 5px; }
+.skeletonCard span:first-child,
+.skeletonCard i,
+.detailSkeleton span,
+.detailSkeleton i,
+.loadMoreHint span { display: block; border-radius: 6px; background: linear-gradient(90deg, var(--dsw-alias-bg-layer-1) 25%, var(--dsw-alias-interactive-bg-hover) 50%, var(--dsw-alias-bg-layer-1) 75%); background-size: 200% 100%; animation: skeletonShimmer 1.4s ease-in-out infinite; }
+.loadMoreHint { display: grid; gap: 6px; padding: 10px 8px 2px; }
+.loadMoreHint span { height: 4px; }
+.loadMoreHint span:first-child { width: 72%; }
+.loadMoreHint span:last-child { width: 46%; }
+
+.detailSkeleton { display: grid; gap: 16px; }
+.detailSkeleton > div { display: flex; gap: 20px; }
+.detailSkeleton > div span { width: 138px; height: 138px; flex: none; border-radius: 9px; }
+.detailSkeleton > div i { width: min(420px, 58%); height: 72px; margin-top: 12px; }
+.detailSkeleton > span { width: 100%; height: 42px; }
+.detailSkeleton > span:nth-child(3) { height: min(340px, 34vh); }
+.detailSkeleton > span:last-child { width: 76%; height: 110px; }
 
 .detail {
   display: flex;
@@ -207,6 +234,16 @@
 .submission textarea:focus { border-color: var(--dsw-alias-brand-primary); }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes skeletonShimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonCard span:first-child,
+  .skeletonCard i,
+  .detailSkeleton span,
+  .detailSkeleton i,
+  .loadMoreHint span { animation: none; }
+  .skinCard > img { transition: none; }
+}
 
 @media (max-width: 959px) {
   .root { display: block; height: 100%; max-height: 100%; min-height: 0; overflow: hidden; }

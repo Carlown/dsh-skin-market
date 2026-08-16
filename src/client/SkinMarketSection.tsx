@@ -17,6 +17,7 @@ import {
   Pill,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import css from './SkinMarket.module.css'
+import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import type { CatalogSkin, InstalledClientPlugin, Operation, RuntimeSkin } from './types.ts'
@@ -24,6 +25,7 @@ import type { CatalogSkin, InstalledClientPlugin, Operation, RuntimeSkin } from 
 export interface SkinMarketSectionProps {
   t: (key: string) => string
   clientRuntime?: ClientSkinRuntime
+  catalogCache?: CatalogCache
 }
 
 type MutationKind = 'install' | 'activate' | 'deactivate' | 'update' | 'uninstall'
@@ -64,6 +66,7 @@ const mutationLabels: Record<MutationKind, string> = {
 
 const RELOAD_PARAM = 'dsh-skin-reload'
 const ACTIVATION_WARNING_KEY = 'dsh-skin-market:activation-warning-accepted'
+export const CATALOG_BATCH_SIZE = 20
 
 export function restartReloadUrl(href: string, instanceId: string): string {
   const url = new URL(href)
@@ -112,7 +115,7 @@ function displayDate(value: string): string {
   return Number.isNaN(date.getTime()) ? '未知' : new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium' }).format(date)
 }
 
-export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) {
+export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCatalogCache }: SkinMarketSectionProps) {
   const [skins, setSkins] = useState<CatalogSkin[]>([])
   const [states, setStates] = useState<RuntimeSkin[]>([])
   const [installedClientPlugins, setInstalledClientPlugins] = useState<InstalledClientPlugin[]>([])
@@ -121,6 +124,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<'all' | 'installed'>('all')
   const [sortBy, setSortBy] = useState<'stars' | 'latest'>('stars')
+  const [visibleCount, setVisibleCount] = useState(CATALOG_BATCH_SIZE)
   const [shotIndex, setShotIndex] = useState(0)
   const [busy, setBusy] = useState<Operation | null>(null)
   const [mutation, setMutation] = useState<{ skinId: string; kind: MutationKind } | null>(null)
@@ -142,6 +146,30 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
   const pendingScrollAnchor = useRef<ListScrollAnchor | null>(null)
   const skinsRef = useRef<CatalogSkin[]>([])
   const selectedIdRef = useRef('')
+  const userSelectedRef = useRef(false)
+
+  const acceptCatalog = useCallback((incoming: CatalogSkin[], runtimeStates: RuntimeSkin[] = []) => {
+    pendingScrollAnchor.current = captureListScroll(skinListRef.current)
+    const nextSkins = [...incoming]
+    const selectedBeforeRefresh = selectedIdRef.current
+    if (selectedBeforeRefresh !== '' && !nextSkins.some(skin => skin.id === selectedBeforeRefresh)) {
+      const selectedSkin = skinsRef.current.find(skin => skin.id === selectedBeforeRefresh)
+      if (selectedSkin !== undefined) nextSkins.push(selectedSkin)
+    }
+    skinsRef.current = nextSkins
+    setSkins(nextSkins)
+    setSelectedId(value => {
+      const active = runtimeStates.find(item => item.activation === 'active')
+      const activeId = active !== undefined && nextSkins.some(skin => skin.id === active.skinId) ? active.skinId : null
+      const next = !userSelectedRef.current && activeId !== null
+        ? activeId
+        : value !== '' && nextSkins.some(skin => skin.id === value)
+          ? value
+          : nextSkins[0]?.id ?? ''
+      selectedIdRef.current = next
+      return next
+    })
+  }, [])
 
   const refresh = useCallback(async (showLoading = false) => {
     if (showLoading) setLoading(true)
@@ -150,32 +178,15 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
         json<CatalogResponse>('/dsh-skin-market/catalog'),
         json<MarketStateResponse>('/dsh-skin-market/state'),
       ])
-      pendingScrollAnchor.current = captureListScroll(skinListRef.current)
-      const nextSkins = [...catalog.skins]
-      const selectedBeforeRefresh = selectedIdRef.current
-      if (selectedBeforeRefresh !== '' && !nextSkins.some(skin => skin.id === selectedBeforeRefresh)) {
-        const selectedSkin = skinsRef.current.find(skin => skin.id === selectedBeforeRefresh)
-        if (selectedSkin !== undefined) nextSkins.push(selectedSkin)
-      }
-      skinsRef.current = nextSkins
-      setSkins(nextSkins)
+      acceptCatalog(catalog.skins, state.skins)
+      void catalogCache.write(catalog.skins)
       setStates(state.skins)
       setInstalledClientPlugins(state.installedClientPlugins ?? [])
       setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
-      setSelectedId(value => {
-        if (value !== '' && nextSkins.some(skin => skin.id === value)) {
-          selectedIdRef.current = value
-          return value
-        }
-        const active = state.skins.find(item => item.activation === 'active')
-        const next = active !== undefined && nextSkins.some(skin => skin.id === active.skinId) ? active.skinId : nextSkins[0]?.id ?? ''
-        selectedIdRef.current = next
-        return next
-      })
     } finally {
       if (showLoading) setLoading(false)
     }
-  }, [])
+  }, [acceptCatalog, catalogCache])
 
   const openRestartConfirm = useCallback(async () => {
     setError(null)
@@ -192,7 +203,16 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
     }
   }, [])
 
-  useEffect(() => { refresh(true).catch(reason => setError(reason instanceof Error ? reason.message : String(reason))) }, [refresh])
+  useEffect(() => {
+    let disposed = false
+    void (async () => {
+      const cached = await catalogCache.read()
+      if (disposed) return
+      if (cached !== null && cached.length > 0) acceptCatalog(cached)
+      await refresh(true).catch(reason => setError(reason instanceof Error ? reason.message : String(reason)))
+    })()
+    return () => { disposed = true }
+  }, [acceptCatalog, catalogCache, refresh])
   useEffect(() => {
     const timer = window.setInterval(() => { refresh(false).catch(() => undefined) }, 5 * 60 * 1000)
     const refreshOnFocus = () => { refresh(false).catch(() => undefined) }
@@ -247,6 +267,13 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
     if (filter === 'installed') return runtimeFor(states, skin.id).installation !== 'missing'
     return true
   }).sort((a, b) => sortBy === 'latest' ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt) : b.githubStars - a.githubStars), [skins, states, filter, query, sortBy])
+  const visibleSkins = filtered.slice(0, visibleCount)
+
+  useEffect(() => { setVisibleCount(CATALOG_BATCH_SIZE) }, [filter, query, sortBy])
+  useEffect(() => {
+    const selectedIndex = filtered.findIndex(skin => skin.id === selectedId)
+    if (selectedIndex >= visibleCount) setVisibleCount(Math.ceil((selectedIndex + 1) / CATALOG_BATCH_SIZE) * CATALOG_BATCH_SIZE)
+  }, [filtered, selectedId, visibleCount])
 
   const run = useCallback(async (kind: MutationKind) => {
     if (selected === undefined) return false
@@ -310,7 +337,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
       const accepted = await json<{ instanceId: string }>('/dsh-skin-market/restart', {
         method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ skinId: selected.id }),
       })
-      const deadline = Date.now() + 45_000
+      const deadline = Date.now() + 90_000
       while (Date.now() < deadline) {
         await new Promise(resolve => setTimeout(resolve, 500))
         try {
@@ -330,7 +357,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
     }
   }, [selected])
 
-  const select = (id: string) => { selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setShowDetail(true); setError(null); setInstallPromptCopied(null) }
+  const select = (id: string) => { userSelectedRef.current = true; selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setShowDetail(true); setError(null); setInstallPromptCopied(null) }
   const recommendations = selected?.recommendations.map(id => skins.find(skin => skin.id === id)).filter((skin): skin is CatalogSkin => skin !== undefined) ?? []
   const submissionPrompt = createSubmissionPrompt()
   const copySubmissionPrompt = async () => {
@@ -363,12 +390,17 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
             </Button>
           </div>
         </div>
-        <div className={css.skinList} ref={skinListRef}>
-          {loading ? <div className={css.listLoading} role="status"><IconLoadingOutline16 size={16} />正在加载皮肤列表…</div> : filtered.map(skin => {
+        <div className={css.skinList} ref={skinListRef} onScroll={event => {
+          const list = event.currentTarget
+          if (filtered.length > visibleCount && list.scrollHeight - list.scrollTop - list.clientHeight < 320) {
+            setVisibleCount(value => Math.min(filtered.length, value + CATALOG_BATCH_SIZE))
+          }
+        }}>
+          {loading && skins.length === 0 ? <div className={css.listSkeleton} role="status" aria-label="正在加载皮肤列表">{Array.from({ length: 8 }, (_, index) => <div className={css.skeletonCard} key={index} aria-hidden="true"><span /><span><i /><i /></span><i /></div>)}</div> : visibleSkins.map(skin => {
             const itemState = runtimeFor(states, skin.id)
             const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
-              <img src={skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} loading="lazy" />
+              <img src={skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} loading="lazy" decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={event => { event.currentTarget.dataset.failed = 'true' }} />
               <span className={css.skinCardBody}>
                 <span className={css.cardTitle}>{skin.name.zh}</span>
                 <span className={css.cardMetaLine}>
@@ -379,6 +411,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
               <Pill className={mutationLabel !== null || itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : itemState.installation === 'missing' && skin.review?.compatibility === 'unverified' ? '待验证' : statusLabel(itemState))}</Pill>
             </Button>
           })}
+          {!loading && visibleCount < filtered.length && <div className={css.loadMoreHint} aria-hidden="true"><span /><span /></div>}
           {!loading && filtered.length === 0 && <p className={css.empty}>没有匹配的皮肤</p>}
           {!loading && filter === 'installed' && installedClientPlugins.map(plugin => <div className={`${css.skinCard} ${css.externalPlugin}`} key={plugin.package}>
             <span className={css.skinCardBody}>
@@ -392,7 +425,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
       </aside>
 
       <main className={css.detail}>
-        {loading ? <div className={css.loading} role="status"><IconLoadingOutline16 size={16} />正在加载皮肤详情…</div> : selected !== undefined && state !== null ? <>
+        {loading ? <div className={css.detailSkeleton} role="status" aria-label="正在加载皮肤详情"><div><span /><i /></div><span /><span /><span /></div> : selected !== undefined && state !== null ? <>
           <Button className={`${css.mobileBack} ${css.nativeOutline}`} variant="outline" size="sm" icon={<IconChevronLeftOutline14 />} onClick={() => setShowDetail(false)}>返回列表</Button>
           <header className={css.detailHeader}>
             <img className={css.skinAvatar} src={selected.screenshots[0]} alt="" />

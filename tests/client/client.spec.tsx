@@ -141,10 +141,11 @@ describe('client market', () => {
     })))
 
     render(<SkinMarketSection t={key => key} />)
-    expect(screen.getByText('正在加载皮肤列表…')).toBeTruthy()
-    expect(screen.getByText('正在加载皮肤详情…')).toBeTruthy()
+    expect(screen.getByRole('status', { name: '正在加载皮肤列表' })).toBeTruthy()
+    expect(screen.getByRole('status', { name: '正在加载皮肤详情' })).toBeTruthy()
     expect(screen.queryByText('没有匹配的皮肤')).toBeNull()
 
+    await waitFor(() => expect(typeof resolveCatalog).toBe('function'))
     resolveCatalog({ ok: true, json: async () => ({ skins: [skin, activeSkin] }) })
     resolveState({ ok: true, json: async () => ({ skins: [
       { skinId: skin.id, installation: 'installed', activation: 'inactive', installedVersion: '1.0.0', updateAvailable: false },

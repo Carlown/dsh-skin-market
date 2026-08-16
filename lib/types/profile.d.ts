@@ -10,6 +10,7 @@ export declare function atomicWriteText(file: string, value: string): void;
 export declare function readMarketState(profileDir: string): PersistedMarketState;
 export declare function writeMarketState(profileDir: string, state: PersistedMarketState): void;
 export declare function readDependencies(profileDir: string): Record<string, string>;
+export declare function readProfileBundles(profileDir: string): string[];
 export declare function removeProfileBundles(profileDir: string, packageNames: Iterable<string>): void;
 export declare function packageManifest(profileDir: string, packageName: string): Record<string, unknown> | null;
 export declare function validateInstalledSkin(profileDir: string, skin: SkinEntry): {
