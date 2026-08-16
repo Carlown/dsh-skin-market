@@ -249,7 +249,7 @@ window.__ModuleLoader__.load({
 		StarIcon.displayName = "StarIcon";
 		//#endregion
 		//#region \0dsh-skin-market-css:/Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/src/client/SkinMarket.module.css.mjs
-		const css = ".VqXecW_root{box-sizing:border-box;width:100%;height:100%;min-height:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);grid-template-columns:330px minmax(0,1fr);display:grid;overflow:hidden}.VqXecW_settingsNavIcon{flex:none;justify-content:center;align-items:center;width:16px;height:16px;display:inline-flex}.VqXecW_settingsNavIcon svg{width:16px;height:16px;display:block}svg[data-dsh-skin-market-default-icon=hidden]{display:none}.VqXecW_catalog{border-right:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-2);flex-direction:column;min-width:0;display:flex}.VqXecW_catalogHeader{border-bottom:1px solid var(--dsw-alias-border-l2);flex-direction:column;gap:14px;padding:24px 22px 10px;display:flex}.VqXecW_catalogHeader h2,.VqXecW_detail h2,.VqXecW_detail h3,.VqXecW_catalogHeader p,.VqXecW_detail p{margin:0}.VqXecW_catalogHeader h2{margin-bottom:2px;font-size:20px;font-weight:600;line-height:28px}.VqXecW_catalogHeader p{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:12px;line-height:18px}.VqXecW_catalogTitle{justify-content:space-between;align-items:center;gap:12px;display:flex}.VqXecW_catalogTitle>div:first-child{min-width:0}.VqXecW_catalogTitleActions{flex:none;align-items:center;gap:6px;display:flex}.VqXecW_catalogRefresh[data-refreshing=true] svg{animation:1s linear infinite VqXecW_spin}.VqXecW_catalogHeader>span{height:48px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l2);background:0 0;border-radius:10px;align-items:center;gap:8px;padding:0 14px;display:flex}.VqXecW_catalogHeader>span:focus-within{border-color:var(--dsw-alias-border-l1)}.VqXecW_catalogHeader>span input{min-width:0;color:var(--dsw-alias-label-primary);background:0 0;border:0;outline:0;flex:1}.VqXecW_catalogHeader>span input::placeholder{color:var(--dsw-alias-label-caption)}.VqXecW_filterBar{justify-content:space-between;align-items:center;gap:8px;display:flex}.VqXecW_filters{flex-wrap:wrap;gap:4px;display:flex}.VqXecW_root .VqXecW_filters .VqXecW_filterPill{border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 11px;font-size:12px;line-height:18px;display:inline-flex;color:var(--dsw-alias-label-secondary)!important;background:0 0!important;border:1px solid #0000!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill:hover{background:var(--dsw-alias-interactive-bg-hover)!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill[data-active=true]{color:var(--dsw-alias-label-primary)!important;border-color:var(--dsw-alias-button-ghost-active-border,var(--dsw-alias-border-l1))!important;background:var(--dsw-alias-button-ghost-active-fill,var(--dsw-alias-interactive-bg-hover))!important}.VqXecW_staticPill{height:24px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:none;border-radius:12px;align-items:center;gap:4px;padding:0 8px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton{cursor:pointer;white-space:nowrap;height:28px;color:var(--dsw-alias-label-secondary);background:0 0;border:0;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_skinList{overscroll-behavior:contain;scrollbar-gutter:stable;touch-action:pan-y;-webkit-overflow-scrolling:touch;flex-direction:column;flex:1 1 0;gap:4px;height:0;min-height:0;margin:0;padding:8px 12px 16px;display:flex;overflow:hidden auto}.VqXecW_skinCard{box-sizing:border-box;cursor:pointer;text-align:left;width:100%;min-height:72px;color:inherit;font:inherit;background:0 0;border:0;border-radius:8px;align-items:center;gap:12px;padding:8px;display:flex}.VqXecW_skinCard:hover{background:var(--dsw-specific-sidebar-nav-item-hover,var(--dsw-alias-interactive-bg-hover))}.VqXecW_externalPlugin{cursor:default;border:1px dashed var(--dsw-alias-border-l2);min-height:58px}.VqXecW_skinCard[data-selected=true]{background:var(--dsw-specific-sidebar-nav-item-active,var(--dsw-alias-button-ghost-active-fill));box-shadow:inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border)}.VqXecW_skinCard>img{object-fit:cover;background:var(--dsw-alias-bg-layer-3);border-radius:7px;flex:none;width:56px;height:56px;display:block}.VqXecW_skinCardBody{flex-direction:column;flex:1;min-width:0;display:flex}.VqXecW_cardTitle{white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:400;line-height:22px;overflow:hidden}.VqXecW_cardMetaLine{min-width:0;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));align-items:center;gap:8px;font-size:12px;line-height:18px;display:flex}.VqXecW_cardMeta{white-space:nowrap;text-overflow:ellipsis;min-width:0;overflow:hidden}.VqXecW_cardStars{white-space:nowrap;flex:none;align-items:center;gap:3px;display:inline-flex}.VqXecW_cardStatus{height:20px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:5px;flex:none;align-items:center;padding:0 7px;font-size:10px;line-height:16px;display:inline-flex}.VqXecW_cardStatusUpdate{color:var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary));background:color-mix(in srgb, var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)) 10%, transparent)}.VqXecW_detail{flex-direction:column;gap:14px;min-width:0;min-height:0;padding:32px 28px 28px;display:flex;overflow-y:auto}.VqXecW_detail>*{flex:none}.VqXecW_mobileBack.VqXecW_nativeOutline{order:0;align-self:flex-start;display:none}.VqXecW_hero{aspect-ratio:16/8;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;order:4;width:100%;position:relative;overflow:hidden}.VqXecW_hero img{object-fit:cover;width:100%;height:100%;display:block}.VqXecW_thumbnails{order:5;gap:8px;display:flex;overflow-x:auto}.VqXecW_thumbnails button{cursor:pointer;border:1px solid var(--dsw-alias-border-l2);opacity:.62;background:0 0;border-radius:8px;flex:none;width:112px;padding:0;overflow:hidden}.VqXecW_thumbnails button[data-selected=true]{border-color:var(--dsw-alias-brand-primary);opacity:1}.VqXecW_thumbnails img{aspect-ratio:16/9;object-fit:cover;width:100%;display:block}.VqXecW_detailHeader{border-bottom:1px solid var(--dsw-alias-border-l2);order:1;grid-template-columns:138px minmax(0,1fr);align-items:start;gap:22px;padding:0 4px 16px;display:grid}.VqXecW_skinAvatar{object-fit:cover;background:var(--dsw-alias-bg-layer-1);border-radius:9px;width:138px;height:138px;display:block}.VqXecW_titleBlock{min-width:0;padding-top:10px}.VqXecW_titleBlock h2{letter-spacing:-.01em;font-size:23px;font-weight:620;line-height:31px}.VqXecW_titleBlock .VqXecW_author{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:13px;line-height:20px}.VqXecW_titleBlock .VqXecW_description{max-width:520px;color:var(--dsw-alias-label-secondary);margin-top:10px;font-size:13px;line-height:21px}.VqXecW_titleBlock .VqXecW_version{min-width:0;color:var(--dsw-alias-label-caption);align-items:center;gap:7px;margin-top:8px;font-size:12px;line-height:22px;display:flex}.VqXecW_status{height:20px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:10px;align-items:center;padding:0 7px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_statusActive{color:var(--dsw-alias-state-success-primary);background:color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent)}.VqXecW_actionRow{border-bottom:1px solid var(--dsw-alias-border-l2);flex-wrap:wrap;order:2;align-items:center;gap:9px;min-height:42px;padding:0 4px 12px;display:flex}.VqXecW_stars{color:var(--dsw-alias-label-secondary);white-space:nowrap;flex:none;align-items:center;gap:5px;font-size:12px;line-height:20px;display:inline-flex}.VqXecW_actionDivider{background:var(--dsw-alias-border-l2);width:1px;height:22px;margin:0 3px}.VqXecW_repoMeta{flex:220px;align-items:center;gap:10px;min-width:0;display:flex}.VqXecW_repoLink{min-width:0;color:var(--dsw-alias-link-primary,var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)));align-items:center;gap:5px;font-size:12px;line-height:20px;text-decoration:none;display:inline-flex}.VqXecW_repoLink>svg{flex:none}.VqXecW_repoLink>span{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.VqXecW_repoLink:hover{text-decoration:underline}.VqXecW_nativePrimary,.VqXecW_nativeOutline{cursor:pointer;height:28px;font:inherit;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_nativePrimary{color:var(--dsw-alias-label-primary-foreground,var(--dsw-alias-label-primary-inverted,#fff));background:var(--dsw-alias-button-primary-fill,var(--dsw-alias-brand-primary));border:0}.VqXecW_nativePrimary:hover{background:var(--dsw-alias-button-primary-hover,var(--dsw-alias-brand-primary))}.VqXecW_nativeOutline{color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:0 0}.VqXecW_nativeOutline:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_iconOnlyButton{width:28px;padding:0}.VqXecW_compactActionIcon svg{width:14px;height:14px}.VqXecW_operation,.VqXecW_error{border-radius:10px;order:3;align-items:center;gap:7px;padding:9px 12px;font-size:12px;line-height:18px;display:flex}.VqXecW_operation{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_operation svg{animation:1s linear infinite VqXecW_spin}.VqXecW_error{color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-state-error-tertiary)}.VqXecW_aboutGrid{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;order:6;grid-template-columns:minmax(0,1fr) minmax(260px,1fr);display:grid}.VqXecW_aboutGrid>*{padding:16px 18px}.VqXecW_aboutGrid>aside{border-left:1px solid var(--dsw-alias-border-l2)}.VqXecW_aboutGrid h3,.VqXecW_recommendations h3{margin-bottom:10px;font-size:14px;font-weight:600;line-height:22px}.VqXecW_aboutGrid article>p{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:21px}.VqXecW_tags{flex-wrap:wrap;gap:6px;margin-top:12px;display:flex}.VqXecW_aboutGrid dl{margin:12px 0 0}.VqXecW_aboutGrid dl div{border-bottom:1px solid var(--dsw-alias-border-l3);justify-content:space-between;gap:12px;padding:7px 0;font-size:12px;line-height:18px;display:flex}.VqXecW_aboutGrid dt{color:var(--dsw-alias-label-caption)}.VqXecW_aboutGrid dd{text-align:right;color:var(--dsw-alias-label-secondary);margin:0}.VqXecW_notice{color:var(--dsw-alias-state-warning-primary);font-size:11px;line-height:17px;margin-top:10px!important}.VqXecW_changelog ol{gap:8px;margin:0 0 12px;padding:0;list-style:none;display:grid}.VqXecW_changelog li{color:var(--dsw-alias-label-secondary);grid-template-columns:64px minmax(0,1fr);gap:10px;font-size:12px;line-height:18px;display:grid}.VqXecW_changelog strong{color:var(--dsw-alias-label-caption);font-weight:500}.VqXecW_changelog a{color:var(--dsw-alias-label-primary);font-size:12px;text-decoration:none}.VqXecW_changelog a:hover{text-decoration:underline}.VqXecW_recommendations{border-top:1px solid var(--dsw-alias-border-l2);order:7;padding-top:18px}.VqXecW_recommendations>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;display:grid}.VqXecW_recommendations button{cursor:pointer;text-align:left;width:100%;min-width:0;height:auto;min-height:0;color:inherit;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);font:inherit;border-radius:10px;flex-direction:column;align-self:start;padding:0;display:flex;overflow:hidden}.VqXecW_recommendations button:hover{border-color:var(--dsw-alias-border-l1);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_recommendations img{aspect-ratio:16/9;object-fit:contain;background:var(--dsw-alias-bg-layer-2);width:100%;display:block}.VqXecW_recommendations button>span{box-sizing:border-box;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:11px 12px 12px;display:flex}.VqXecW_recommendations strong{white-space:normal;overflow-wrap:anywhere;min-width:0;font-size:13px;line-height:19px}.VqXecW_recommendations small{color:var(--dsw-alias-label-caption);flex:none;align-items:center;gap:3px;padding-top:1px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_loading,.VqXecW_listLoading,.VqXecW_empty{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:20px}.VqXecW_loading{align-items:center;gap:7px;margin:auto;display:flex}.VqXecW_listLoading{justify-content:center;align-items:center;gap:7px;padding:24px 8px;display:flex}.VqXecW_loading svg,.VqXecW_listLoading svg{animation:1s linear infinite VqXecW_spin}.VqXecW_empty{text-align:center;padding:24px 8px}.VqXecW_submission{gap:10px;width:100%;min-width:0;max-width:100%;display:grid}.VqXecW_submission small{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.VqXecW_submission textarea{box-sizing:border-box;resize:vertical;width:100%;min-width:0;max-width:100%;min-height:300px;color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;outline:none;padding:12px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}.VqXecW_submission textarea:focus{border-color:var(--dsw-alias-brand-primary)}@keyframes VqXecW_spin{to{transform:rotate(360deg)}}@media (width<=959px){.VqXecW_root{height:100%;min-height:0;max-height:100%;display:block;overflow:hidden}.VqXecW_catalog{border-right:0;height:100%;min-height:0;overflow:hidden}.VqXecW_detail{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;height:100%;min-height:0;display:none;overflow-y:auto}.VqXecW_root[data-detail=open] .VqXecW_catalog{display:none}.VqXecW_root[data-detail=open] .VqXecW_detail{display:flex}.VqXecW_mobileBack.VqXecW_nativeOutline{display:inline-flex}.VqXecW_detailHeader{grid-template-columns:76px minmax(0,1fr);align-items:start;gap:14px;display:grid}.VqXecW_skinAvatar{width:76px;height:76px}.VqXecW_titleBlock{padding-top:0}.VqXecW_titleBlock h2{font-size:20px;line-height:27px}.VqXecW_titleBlock .VqXecW_description{margin-top:7px}.VqXecW_titleBlock .VqXecW_version{flex-wrap:wrap;row-gap:2px;margin-top:6px}.VqXecW_actionRow{justify-content:flex-start}.VqXecW_aboutGrid{grid-template-columns:1fr}.VqXecW_aboutGrid>aside{border-top:1px solid var(--dsw-alias-border-l2);border-left:0}.VqXecW_recommendations>div{grid-template-columns:1fr}}@media (prefers-reduced-motion:reduce){.VqXecW_operation svg,.VqXecW_loading svg,.VqXecW_listLoading svg{animation:none}}";
+		const css = ".VqXecW_root{box-sizing:border-box;width:100%;height:100%;min-height:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);grid-template-columns:330px minmax(0,1fr);display:grid;overflow:hidden}.VqXecW_settingsNavIcon{flex:none;justify-content:center;align-items:center;width:16px;height:16px;display:inline-flex}.VqXecW_settingsNavIcon svg{width:16px;height:16px;display:block}svg[data-dsh-skin-market-default-icon=hidden]{display:none}.VqXecW_catalog{border-right:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-2);flex-direction:column;min-width:0;display:flex}.VqXecW_catalogHeader{border-bottom:1px solid var(--dsw-alias-border-l2);flex-direction:column;gap:14px;padding:24px 22px 10px;display:flex}.VqXecW_catalogHeader h2,.VqXecW_detail h2,.VqXecW_detail h3,.VqXecW_catalogHeader p,.VqXecW_detail p{margin:0}.VqXecW_catalogHeader h2{margin-bottom:2px;font-size:20px;font-weight:600;line-height:28px}.VqXecW_catalogHeader p{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:12px;line-height:18px}.VqXecW_catalogTitle{justify-content:space-between;align-items:center;gap:12px;display:flex}.VqXecW_catalogHeader>span{height:48px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l2);background:0 0;border-radius:10px;align-items:center;gap:8px;padding:0 14px;display:flex}.VqXecW_catalogHeader>span:focus-within{border-color:var(--dsw-alias-border-l1)}.VqXecW_catalogHeader>span input{min-width:0;color:var(--dsw-alias-label-primary);background:0 0;border:0;outline:0;flex:1}.VqXecW_catalogHeader>span input::placeholder{color:var(--dsw-alias-label-caption)}.VqXecW_filterBar{justify-content:space-between;align-items:center;gap:8px;display:flex}.VqXecW_filters{flex-wrap:wrap;gap:4px;display:flex}.VqXecW_root .VqXecW_filters .VqXecW_filterPill{border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 11px;font-size:12px;line-height:18px;display:inline-flex;color:var(--dsw-alias-label-secondary)!important;background:0 0!important;border:1px solid #0000!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill:hover{background:var(--dsw-alias-interactive-bg-hover)!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill[data-active=true]{color:var(--dsw-alias-label-primary)!important;border-color:var(--dsw-alias-button-ghost-active-border,var(--dsw-alias-border-l1))!important;background:var(--dsw-alias-button-ghost-active-fill,var(--dsw-alias-interactive-bg-hover))!important}.VqXecW_staticPill{height:24px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:none;border-radius:12px;align-items:center;gap:4px;padding:0 8px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton{cursor:pointer;white-space:nowrap;height:28px;color:var(--dsw-alias-label-secondary);background:0 0;border:0;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_skinList{overscroll-behavior:contain;scrollbar-gutter:stable;touch-action:pan-y;-webkit-overflow-scrolling:touch;flex-direction:column;flex:1 1 0;gap:4px;height:0;min-height:0;margin:0;padding:8px 12px 16px;display:flex;overflow:hidden auto}.VqXecW_skinCard{box-sizing:border-box;cursor:pointer;text-align:left;width:100%;min-height:72px;color:inherit;font:inherit;background:0 0;border:0;border-radius:8px;align-items:center;gap:12px;padding:8px;display:flex}.VqXecW_skinCard:hover{background:var(--dsw-specific-sidebar-nav-item-hover,var(--dsw-alias-interactive-bg-hover))}.VqXecW_externalPlugin{cursor:default;border:1px dashed var(--dsw-alias-border-l2);min-height:58px}.VqXecW_skinCard[data-selected=true]{background:var(--dsw-specific-sidebar-nav-item-active,var(--dsw-alias-button-ghost-active-fill));box-shadow:inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border)}.VqXecW_skinCard>img{object-fit:cover;background:var(--dsw-alias-bg-layer-3);border-radius:7px;flex:none;width:56px;height:56px;display:block}.VqXecW_skinCardBody{flex-direction:column;flex:1;min-width:0;display:flex}.VqXecW_cardTitle{white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:400;line-height:22px;overflow:hidden}.VqXecW_cardMetaLine{min-width:0;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));align-items:center;gap:8px;font-size:12px;line-height:18px;display:flex}.VqXecW_cardMeta{white-space:nowrap;text-overflow:ellipsis;min-width:0;overflow:hidden}.VqXecW_cardStars{white-space:nowrap;flex:none;align-items:center;gap:3px;display:inline-flex}.VqXecW_cardStatus{height:20px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:5px;flex:none;align-items:center;padding:0 7px;font-size:10px;line-height:16px;display:inline-flex}.VqXecW_cardStatusUpdate{color:var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary));background:color-mix(in srgb, var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)) 10%, transparent)}.VqXecW_detail{flex-direction:column;gap:14px;min-width:0;min-height:0;padding:32px 28px 28px;display:flex;overflow-y:auto}.VqXecW_detail>*{flex:none}.VqXecW_mobileBack.VqXecW_nativeOutline{order:0;align-self:flex-start;display:none}.VqXecW_hero{aspect-ratio:16/8;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;order:4;width:100%;position:relative;overflow:hidden}.VqXecW_hero img{object-fit:cover;width:100%;height:100%;display:block}.VqXecW_thumbnails{order:5;gap:8px;display:flex;overflow-x:auto}.VqXecW_thumbnails button{cursor:pointer;border:1px solid var(--dsw-alias-border-l2);opacity:.62;background:0 0;border-radius:8px;flex:none;width:112px;padding:0;overflow:hidden}.VqXecW_thumbnails button[data-selected=true]{border-color:var(--dsw-alias-brand-primary);opacity:1}.VqXecW_thumbnails img{aspect-ratio:16/9;object-fit:cover;width:100%;display:block}.VqXecW_detailHeader{border-bottom:1px solid var(--dsw-alias-border-l2);order:1;grid-template-columns:138px minmax(0,1fr);align-items:start;gap:22px;padding:0 4px 16px;display:grid}.VqXecW_skinAvatar{object-fit:cover;background:var(--dsw-alias-bg-layer-1);border-radius:9px;width:138px;height:138px;display:block}.VqXecW_titleBlock{min-width:0;padding-top:10px}.VqXecW_titleBlock h2{letter-spacing:-.01em;font-size:23px;font-weight:620;line-height:31px}.VqXecW_titleBlock .VqXecW_author{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:13px;line-height:20px}.VqXecW_titleBlock .VqXecW_description{max-width:520px;color:var(--dsw-alias-label-secondary);margin-top:10px;font-size:13px;line-height:21px}.VqXecW_titleBlock .VqXecW_version{min-width:0;color:var(--dsw-alias-label-caption);align-items:center;gap:7px;margin-top:8px;font-size:12px;line-height:22px;display:flex}.VqXecW_status{height:20px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:10px;align-items:center;padding:0 7px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_statusActive{color:var(--dsw-alias-state-success-primary);background:color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent)}.VqXecW_actionRow{border-bottom:1px solid var(--dsw-alias-border-l2);flex-wrap:wrap;order:2;align-items:center;gap:9px;min-height:42px;padding:0 4px 12px;display:flex}.VqXecW_stars{color:var(--dsw-alias-label-secondary);white-space:nowrap;flex:none;align-items:center;gap:5px;font-size:12px;line-height:20px;display:inline-flex}.VqXecW_actionDivider{background:var(--dsw-alias-border-l2);width:1px;height:22px;margin:0 3px}.VqXecW_repoMeta{flex:220px;align-items:center;gap:10px;min-width:0;display:flex}.VqXecW_repoLink{min-width:0;color:var(--dsw-alias-link-primary,var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)));align-items:center;gap:5px;font-size:12px;line-height:20px;text-decoration:none;display:inline-flex}.VqXecW_repoLink>svg{flex:none}.VqXecW_repoLink>span{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.VqXecW_repoLink:hover{text-decoration:underline}.VqXecW_nativePrimary,.VqXecW_nativeOutline{cursor:pointer;height:28px;font:inherit;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_nativePrimary{color:var(--dsw-alias-label-primary-foreground,var(--dsw-alias-label-primary-inverted,#fff));background:var(--dsw-alias-button-primary-fill,var(--dsw-alias-brand-primary));border:0}.VqXecW_nativePrimary:hover{background:var(--dsw-alias-button-primary-hover,var(--dsw-alias-brand-primary))}.VqXecW_nativeOutline{color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:0 0}.VqXecW_nativeOutline:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_iconOnlyButton{width:28px;padding:0}.VqXecW_compactActionIcon svg{width:14px;height:14px}.VqXecW_operation,.VqXecW_error{border-radius:10px;order:3;align-items:center;gap:7px;padding:9px 12px;font-size:12px;line-height:18px;display:flex}.VqXecW_operation{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_operation svg{animation:1s linear infinite VqXecW_spin}.VqXecW_error{color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-state-error-tertiary)}.VqXecW_aboutGrid{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;order:6;grid-template-columns:minmax(0,1fr) minmax(260px,1fr);display:grid}.VqXecW_aboutGrid>*{padding:16px 18px}.VqXecW_aboutGrid>aside{border-left:1px solid var(--dsw-alias-border-l2)}.VqXecW_aboutGrid h3,.VqXecW_recommendations h3{margin-bottom:10px;font-size:14px;font-weight:600;line-height:22px}.VqXecW_aboutGrid article>p{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:21px}.VqXecW_tags{flex-wrap:wrap;gap:6px;margin-top:12px;display:flex}.VqXecW_aboutGrid dl{margin:12px 0 0}.VqXecW_aboutGrid dl div{border-bottom:1px solid var(--dsw-alias-border-l3);justify-content:space-between;gap:12px;padding:7px 0;font-size:12px;line-height:18px;display:flex}.VqXecW_aboutGrid dt{color:var(--dsw-alias-label-caption)}.VqXecW_aboutGrid dd{text-align:right;color:var(--dsw-alias-label-secondary);margin:0}.VqXecW_notice{color:var(--dsw-alias-state-warning-primary);font-size:11px;line-height:17px;margin-top:10px!important}.VqXecW_changelog ol{gap:8px;margin:0 0 12px;padding:0;list-style:none;display:grid}.VqXecW_changelog li{color:var(--dsw-alias-label-secondary);grid-template-columns:64px minmax(0,1fr);gap:10px;font-size:12px;line-height:18px;display:grid}.VqXecW_changelog strong{color:var(--dsw-alias-label-caption);font-weight:500}.VqXecW_changelog a{color:var(--dsw-alias-label-primary);font-size:12px;text-decoration:none}.VqXecW_changelog a:hover{text-decoration:underline}.VqXecW_recommendations{border-top:1px solid var(--dsw-alias-border-l2);order:7;padding-top:18px}.VqXecW_recommendations>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;display:grid}.VqXecW_recommendations button{cursor:pointer;text-align:left;width:100%;min-width:0;height:auto;min-height:0;color:inherit;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);font:inherit;border-radius:10px;flex-direction:column;align-self:start;padding:0;display:flex;overflow:hidden}.VqXecW_recommendations button:hover{border-color:var(--dsw-alias-border-l1);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_recommendations img{aspect-ratio:16/9;object-fit:contain;background:var(--dsw-alias-bg-layer-2);width:100%;display:block}.VqXecW_recommendations button>span{box-sizing:border-box;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:11px 12px 12px;display:flex}.VqXecW_recommendations strong{white-space:normal;overflow-wrap:anywhere;min-width:0;font-size:13px;line-height:19px}.VqXecW_recommendations small{color:var(--dsw-alias-label-caption);flex:none;align-items:center;gap:3px;padding-top:1px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_loading,.VqXecW_listLoading,.VqXecW_empty{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:20px}.VqXecW_loading{align-items:center;gap:7px;margin:auto;display:flex}.VqXecW_listLoading{justify-content:center;align-items:center;gap:7px;padding:24px 8px;display:flex}.VqXecW_loading svg,.VqXecW_listLoading svg{animation:1s linear infinite VqXecW_spin}.VqXecW_empty{text-align:center;padding:24px 8px}.VqXecW_submission{gap:10px;width:100%;min-width:0;max-width:100%;display:grid}.VqXecW_submission small{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.VqXecW_submission textarea{box-sizing:border-box;resize:vertical;width:100%;min-width:0;max-width:100%;min-height:300px;color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;outline:none;padding:12px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}.VqXecW_submission textarea:focus{border-color:var(--dsw-alias-brand-primary)}@keyframes VqXecW_spin{to{transform:rotate(360deg)}}@media (width<=959px){.VqXecW_root{height:100%;min-height:0;max-height:100%;display:block;overflow:hidden}.VqXecW_catalog{border-right:0;height:100%;min-height:0;overflow:hidden}.VqXecW_detail{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;height:100%;min-height:0;display:none;overflow-y:auto}.VqXecW_root[data-detail=open] .VqXecW_catalog{display:none}.VqXecW_root[data-detail=open] .VqXecW_detail{display:flex}.VqXecW_mobileBack.VqXecW_nativeOutline{display:inline-flex}.VqXecW_detailHeader{grid-template-columns:76px minmax(0,1fr);align-items:start;gap:14px;display:grid}.VqXecW_skinAvatar{width:76px;height:76px}.VqXecW_titleBlock{padding-top:0}.VqXecW_titleBlock h2{font-size:20px;line-height:27px}.VqXecW_titleBlock .VqXecW_description{margin-top:7px}.VqXecW_titleBlock .VqXecW_version{flex-wrap:wrap;row-gap:2px;margin-top:6px}.VqXecW_actionRow{justify-content:flex-start}.VqXecW_aboutGrid{grid-template-columns:1fr}.VqXecW_aboutGrid>aside{border-top:1px solid var(--dsw-alias-border-l2);border-left:0}.VqXecW_recommendations>div{grid-template-columns:1fr}}@media (prefers-reduced-motion:reduce){.VqXecW_operation svg,.VqXecW_loading svg,.VqXecW_listLoading svg{animation:none}}";
 		const tagId = "dsh-skin-market/SkinMarket.module.css";
 		if (typeof document !== "undefined" && !document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]")) {
 			const tag = document.createElement("style");
@@ -259,61 +259,59 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var SkinMarket_module_css_default = {
-			"sortButton": "VqXecW_sortButton",
-			"status": "VqXecW_status",
-			"nativePrimary": "VqXecW_nativePrimary",
-			"listLoading": "VqXecW_listLoading",
-			"spin": "VqXecW_spin",
-			"skinAvatar": "VqXecW_skinAvatar",
-			"stars": "VqXecW_stars",
-			"operation": "VqXecW_operation",
-			"catalogHeader": "VqXecW_catalogHeader",
-			"root": "VqXecW_root",
-			"mobileBack": "VqXecW_mobileBack",
-			"detail": "VqXecW_detail",
-			"catalogRefresh": "VqXecW_catalogRefresh",
-			"skinCard": "VqXecW_skinCard",
-			"externalPlugin": "VqXecW_externalPlugin",
-			"cardTitle": "VqXecW_cardTitle",
-			"settingsNavIcon": "VqXecW_settingsNavIcon",
-			"description": "VqXecW_description",
-			"loading": "VqXecW_loading",
-			"catalogTitleActions": "VqXecW_catalogTitleActions",
-			"changelog": "VqXecW_changelog",
-			"cardMeta": "VqXecW_cardMeta",
-			"version": "VqXecW_version",
-			"notice": "VqXecW_notice",
-			"actionRow": "VqXecW_actionRow",
-			"skinList": "VqXecW_skinList",
+			"hero": "VqXecW_hero",
+			"titleBlock": "VqXecW_titleBlock",
+			"repoLink": "VqXecW_repoLink",
+			"catalogTitle": "VqXecW_catalogTitle",
 			"author": "VqXecW_author",
+			"nativePrimary": "VqXecW_nativePrimary",
+			"notice": "VqXecW_notice",
+			"filterBar": "VqXecW_filterBar",
+			"status": "VqXecW_status",
+			"iconOnlyButton": "VqXecW_iconOnlyButton",
+			"recommendations": "VqXecW_recommendations",
+			"skinList": "VqXecW_skinList",
+			"staticPill": "VqXecW_staticPill",
+			"cardTitle": "VqXecW_cardTitle",
+			"detailHeader": "VqXecW_detailHeader",
+			"actionRow": "VqXecW_actionRow",
+			"cardMeta": "VqXecW_cardMeta",
+			"skinCard": "VqXecW_skinCard",
+			"thumbnails": "VqXecW_thumbnails",
+			"statusActive": "VqXecW_statusActive",
+			"stars": "VqXecW_stars",
+			"skinAvatar": "VqXecW_skinAvatar",
+			"version": "VqXecW_version",
+			"root": "VqXecW_root",
+			"catalog": "VqXecW_catalog",
+			"sortButton": "VqXecW_sortButton",
+			"compactActionIcon": "VqXecW_compactActionIcon",
+			"nativeOutline": "VqXecW_nativeOutline",
+			"tags": "VqXecW_tags",
+			"empty": "VqXecW_empty",
+			"operation": "VqXecW_operation",
 			"cardStatus": "VqXecW_cardStatus",
 			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
-			"repoLink": "VqXecW_repoLink",
-			"filterPill": "VqXecW_filterPill",
-			"staticPill": "VqXecW_staticPill",
-			"submission": "VqXecW_submission",
-			"thumbnails": "VqXecW_thumbnails",
-			"repoMeta": "VqXecW_repoMeta",
-			"cardStars": "VqXecW_cardStars",
-			"hero": "VqXecW_hero",
-			"detailHeader": "VqXecW_detailHeader",
-			"tags": "VqXecW_tags",
-			"filterBar": "VqXecW_filterBar",
-			"catalog": "VqXecW_catalog",
-			"statusActive": "VqXecW_statusActive",
-			"iconOnlyButton": "VqXecW_iconOnlyButton",
-			"nativeOutline": "VqXecW_nativeOutline",
-			"aboutGrid": "VqXecW_aboutGrid",
-			"recommendations": "VqXecW_recommendations",
-			"filters": "VqXecW_filters",
-			"catalogTitle": "VqXecW_catalogTitle",
-			"cardMetaLine": "VqXecW_cardMetaLine",
-			"actionDivider": "VqXecW_actionDivider",
+			"spin": "VqXecW_spin",
+			"changelog": "VqXecW_changelog",
 			"skinCardBody": "VqXecW_skinCardBody",
-			"titleBlock": "VqXecW_titleBlock",
-			"compactActionIcon": "VqXecW_compactActionIcon",
+			"filters": "VqXecW_filters",
+			"filterPill": "VqXecW_filterPill",
+			"externalPlugin": "VqXecW_externalPlugin",
+			"mobileBack": "VqXecW_mobileBack",
+			"description": "VqXecW_description",
 			"error": "VqXecW_error",
-			"empty": "VqXecW_empty"
+			"cardMetaLine": "VqXecW_cardMetaLine",
+			"aboutGrid": "VqXecW_aboutGrid",
+			"settingsNavIcon": "VqXecW_settingsNavIcon",
+			"repoMeta": "VqXecW_repoMeta",
+			"loading": "VqXecW_loading",
+			"catalogHeader": "VqXecW_catalogHeader",
+			"actionDivider": "VqXecW_actionDivider",
+			"listLoading": "VqXecW_listLoading",
+			"submission": "VqXecW_submission",
+			"detail": "VqXecW_detail",
+			"cardStars": "VqXecW_cardStars"
 		};
 		//#endregion
 		//#region src/client/submission.ts
@@ -402,7 +400,12 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 		}
 		async function json(url, init) {
 			const response = await fetch(url, init);
-			const body = await response.json();
+			let body;
+			try {
+				body = await response.json();
+			} catch {
+				throw new Error(response.ok ? "皮肤市场服务未返回有效数据，请确认 Host 插件已经更新" : `皮肤市场请求失败（HTTP ${response.status}）`);
+			}
 			if (!response.ok) throw new Error(body.error ?? `HTTP ${response.status}`);
 			return body;
 		}
@@ -440,7 +443,6 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			const [mutation, setMutation] = (0, react.useState)(null);
 			const [error, setError] = (0, react.useState)(null);
 			const [confirmUninstall, setConfirmUninstall] = (0, react.useState)(false);
-			const [confirmActivate, setConfirmActivate] = (0, react.useState)(false);
 			const [activationWarningAccepted, setActivationWarningAccepted] = (0, react.useState)(() => {
 				try {
 					return window.localStorage.getItem(ACTIVATION_WARNING_KEY) === "true";
@@ -457,17 +459,14 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			const [submissionCopied, setSubmissionCopied] = (0, react.useState)(false);
 			const [installPromptCopied, setInstallPromptCopied] = (0, react.useState)(null);
 			const [settingsNavIconHost, setSettingsNavIconHost] = (0, react.useState)(null);
-			const [catalogMeta, setCatalogMeta] = (0, react.useState)({});
-			const [catalogRefreshing, setCatalogRefreshing] = (0, react.useState)(false);
 			const skinListRef = (0, react.useRef)(null);
 			const pendingScrollAnchor = (0, react.useRef)(null);
 			const skinsRef = (0, react.useRef)([]);
 			const selectedIdRef = (0, react.useRef)("");
-			const refresh = (0, react.useCallback)(async (showLoading = false, forceCatalog = false) => {
+			const refresh = (0, react.useCallback)(async (showLoading = false) => {
 				if (showLoading) setLoading(true);
-				if (forceCatalog) setCatalogRefreshing(true);
 				try {
-					const [catalog, state] = await Promise.all([json(forceCatalog ? "/dsh-skin-market/catalog/refresh" : "/dsh-skin-market/catalog", forceCatalog ? { method: "POST" } : void 0), json("/dsh-skin-market/state")]);
+					const [catalog, state] = await Promise.all([json("/dsh-skin-market/catalog"), json("/dsh-skin-market/state")]);
 					pendingScrollAnchor.current = captureListScroll(skinListRef.current);
 					const nextSkins = [...catalog.skins];
 					const selectedBeforeRefresh = selectedIdRef.current;
@@ -477,11 +476,6 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					}
 					skinsRef.current = nextSkins;
 					setSkins(nextSkins);
-					setCatalogMeta({
-						generatedAt: catalog.generatedAt,
-						source: catalog.catalogSource,
-						error: catalog.catalogError
-					});
 					setStates(state.skins);
 					setInstalledClientPlugins(state.installedClientPlugins ?? []);
 					setRunningAgents(typeof state.runningAgentCount === "number" && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null);
@@ -497,7 +491,6 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					});
 				} finally {
 					if (showLoading) setLoading(false);
-					if (forceCatalog) setCatalogRefreshing(false);
 				}
 			}, []);
 			const openRestartConfirm = (0, react.useCallback)(async () => {
@@ -521,7 +514,14 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				const timer = window.setInterval(() => {
 					refresh(false).catch(() => void 0);
 				}, 3e5);
-				return () => window.clearInterval(timer);
+				const refreshOnFocus = () => {
+					refresh(false).catch(() => void 0);
+				};
+				window.addEventListener("focus", refreshOnFocus);
+				return () => {
+					window.clearInterval(timer);
+					window.removeEventListener("focus", refreshOnFocus);
+				};
 			}, [refresh]);
 			(0, react.useLayoutEffect)(() => {
 				restoreListScroll(skinListRef.current, pendingScrollAnchor.current);
@@ -623,6 +623,13 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				selected,
 				skins
 			]);
+			const activateSelected = (0, react.useCallback)(() => {
+				try {
+					window.localStorage.setItem(ACTIVATION_WARNING_KEY, "true");
+				} catch {}
+				setActivationWarningAccepted(true);
+				run("activate");
+			}, [run]);
 			const restartNow = (0, react.useCallback)(async () => {
 				if (selected === void 0) return;
 				setRestarting(true);
@@ -662,7 +669,6 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			};
 			const recommendations = selected?.recommendations.map((id) => skins.find((skin) => skin.id === id)).filter((skin) => skin !== void 0) ?? [];
 			const submissionPrompt = createSubmissionPrompt();
-			const catalogSourceLabel = catalogMeta.source === "remote" ? "在线目录" : catalogMeta.source === "cache" ? "缓存目录" : "内置目录";
 			const copySubmissionPrompt = async () => {
 				await navigator.clipboard.writeText(submissionPrompt);
 				setSubmissionCopied(true);
@@ -690,37 +696,15 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							children: [
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: SkinMarket_module_css_default.catalogTitle,
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: t("title") }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
-										title: catalogMeta.error,
-										children: [
-											catalogSourceLabel,
-											catalogMeta.generatedAt ? ` · 更新于 ${displayDate(catalogMeta.generatedAt)}` : "",
-											catalogMeta.error ? " · 同步失败，已回退" : ""
-										]
-									})] }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-										className: SkinMarket_module_css_default.catalogTitleActions,
-										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-											className: `${SkinMarket_module_css_default.nativeOutline} ${SkinMarket_module_css_default.iconOnlyButton} ${SkinMarket_module_css_default.catalogRefresh}`,
-											variant: "outline",
-											size: "sm",
-											icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconRefreshOutline16, {}),
-											"aria-label": "刷新在线目录",
-											title: "立即检查最新皮肤目录",
-											disabled: catalogRefreshing,
-											"data-refreshing": catalogRefreshing ? "true" : void 0,
-											onClick: () => {
-												refresh(false, true).catch((reason) => setError(reason instanceof Error ? reason.message : String(reason)));
-											}
-										}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-											className: SkinMarket_module_css_default.nativeOutline,
-											variant: "outline",
-											size: "sm",
-											onClick: () => {
-												setShowSubmission(true);
-												setSubmissionCopied(false);
-											},
-											children: "提交皮肤"
-										})]
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: t("title") }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+										className: SkinMarket_module_css_default.nativeOutline,
+										variant: "outline",
+										size: "sm",
+										onClick: () => {
+											setShowSubmission(true);
+											setSubmissionCopied(false);
+										},
+										children: "提交皮肤"
 									})]
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Input, {
@@ -839,7 +823,12 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 										className: SkinMarket_module_css_default.cardStatus,
 										children: "市场外"
 									})]
-								}, plugin.package))
+								}, plugin.package)),
+								!loading && selected === void 0 && error !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+									className: SkinMarket_module_css_default.error,
+									role: "alert",
+									children: error
+								})
 							]
 						})]
 					}),
@@ -933,10 +922,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 										variant: "primary",
 										size: "sm",
 										disabled: busy !== null,
-										onClick: () => {
-											if (activationWarningAccepted) run("activate");
-											else setConfirmActivate(true);
-										},
+										onClick: activateSelected,
 										children: "使用"
 									}),
 									state.activation === "restart-required" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
@@ -1004,6 +990,11 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 										})]
 									})
 								]
+							}),
+							state.installation === "installed" && state.activation === "inactive" && !activationWarningAccepted && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+								className: SkinMarket_module_css_default.notice,
+								role: "note",
+								children: "首次启用提示：请先在设置 → 插件中停用其他皮肤、主题和外观插件，避免全局样式冲突。点击“使用”即表示已确认。"
 							}),
 							busy !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 								className: SkinMarket_module_css_default.operation,
@@ -1144,40 +1135,13 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 						})] })
 					}),
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Modal, {
-						open: confirmActivate,
-						onClose: () => setConfirmActivate(false),
-						title: "启用皮肤前请先关闭其他皮肤",
-						closeLabel: "关闭",
-						description: "多个皮肤或主题插件可能同时修改全局样式，造成界面错乱。请先在设置 → 插件中停用其他皮肤、主题和外观插件，再继续使用当前皮肤。此提醒只在首次使用时显示。",
-						footer: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-							className: SkinMarket_module_css_default.nativeOutline,
-							variant: "outline",
-							size: "sm",
-							onClick: () => setConfirmActivate(false),
-							children: "取消"
-						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-							className: SkinMarket_module_css_default.nativePrimary,
-							variant: "primary",
-							size: "sm",
-							onClick: () => {
-								try {
-									window.localStorage.setItem(ACTIVATION_WARNING_KEY, "true");
-								} catch {}
-								setActivationWarningAccepted(true);
-								setConfirmActivate(false);
-								run("activate");
-							},
-							children: "已关闭其他皮肤，继续"
-						})] })
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Modal, {
 						open: confirmRestart,
 						onClose: () => {
 							if (!restarting) setConfirmRestart(false);
 						},
 						title: "需要重启 DSH 应用此皮肤",
 						closeLabel: "关闭",
-						description: restarting ? "正在重新启动 DSH，请稍候…" : runningAgents === null && !restartCheckFinished ? "正在检查是否有 Agent 运行。状态确认前不能重启。" : runningAgents === null ? "当前 DSH Host 版本无法返回 Agent 状态。请先退出此面板，并在确认没有任务运行后手动重启一次 DSH；安全检查会在新版本加载后生效。" : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : "Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。",
+						description: restarting ? "正在重新启动 DSH，请稍候…" : runningAgents === null && !restartCheckFinished ? "正在检查是否有 Agent 运行。状态确认前不能重启。" : runningAgents === null ? "当前 Host 尚未加载安全检查。请确认没有 Agent 正在运行、重要内容已保存；你可以继续完成这一次升级重启。新版本加载后会自动检测 Agent 状态。" : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : "Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。",
 						footer: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
 							className: SkinMarket_module_css_default.nativeOutline,
 							variant: "outline",
@@ -1189,9 +1153,9 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							className: SkinMarket_module_css_default.nativePrimary,
 							variant: "primary",
 							size: "sm",
-							disabled: restarting || runningAgents !== 0,
+							disabled: restarting || runningAgents === null && !restartCheckFinished || (runningAgents ?? 0) > 0,
 							onClick: () => void restartNow(),
-							children: restarting ? "正在重启…" : runningAgents === null && !restartCheckFinished ? "正在检查…" : runningAgents === null ? "状态不可用" : runningAgents > 0 ? "有任务运行中" : "确认无任务，立即重启"
+							children: restarting ? "正在重启…" : runningAgents === null && !restartCheckFinished ? "正在检查…" : runningAgents === null ? "我已确认无任务，仍然重启" : runningAgents > 0 ? "有任务运行中" : "确认无任务，立即重启"
 						})] })
 					}),
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Modal, {

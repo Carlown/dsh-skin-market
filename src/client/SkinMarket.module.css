@@ -39,9 +39,6 @@
 .catalogHeader h2 { margin-bottom: 2px; font-size: 20px; line-height: 28px; font-weight: 600; }
 .catalogHeader p { margin-top: 2px; color: var(--dsw-alias-label-secondary); font-size: 12px; line-height: 18px; }
 .catalogTitle { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.catalogTitle > div:first-child { min-width: 0; }
-.catalogTitleActions { display: flex; flex: none; align-items: center; gap: 6px; }
-.catalogRefresh[data-refreshing="true"] svg { animation: spin 1s linear infinite; }
 .catalogHeader > span { display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; color: var(--dsw-alias-label-secondary); border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; background: transparent; }
 .catalogHeader > span:focus-within { border-color: var(--dsw-alias-border-l1); }
 .catalogHeader > span input { min-width: 0; flex: 1; color: var(--dsw-alias-label-primary); border: 0; outline: 0; background: transparent; }

@@ -98,12 +98,11 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
   const disposers = [
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/catalog', handler: async (request, response) => {
       if (!method(request, response, 'GET')) return
-      sendJson(response, 200, await catalogPayload(false))
-    } }),
-    host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/catalog/refresh', handler: async (request, response) => {
-      if (!method(request, response, 'POST')) return
-      if (!sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
-      sendJson(response, 200, await catalogPayload(true))
+      try {
+        sendJson(response, 200, await catalogPayload(false))
+      } catch (error) {
+        sendJson(response, 502, { error: error instanceof Error ? error.message : String(error) })
+      }
     } }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/state', handler: (request, response) => {
       if (!method(request, response, 'GET')) return

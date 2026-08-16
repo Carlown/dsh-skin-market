@@ -45,9 +45,12 @@ describe('client market', () => {
 
   it('keeps the selected detail and open modal during a catalog refresh', async () => {
     const second = { ...skin, id: 'test.second', name: { zh: '第二皮肤', en: 'Second Skin' }, package: 'second-skin', rowId: 'second-skin' }
+    let catalogRequests = 0
     const fetchMock = vi.fn(async (url: string) => {
-      if (url.endsWith('/catalog/refresh')) return { ok: true, json: async () => ({ skins: [skin], generatedAt: '2026-08-16T12:00:00Z', catalogSource: 'remote' }) }
-      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin, second], generatedAt: '2026-08-15T12:00:00Z', catalogSource: 'bundled' }) }
+      if (url.endsWith('/catalog')) {
+        catalogRequests += 1
+        return { ok: true, json: async () => ({ skins: catalogRequests === 1 ? [skin, second] : [skin] }) }
+      }
       return { ok: true, json: async () => ({ skins: [], installedClientPlugins: [], runningAgentCount: 0 }) }
     })
     vi.stubGlobal('fetch', fetchMock)
@@ -56,27 +59,33 @@ describe('client market', () => {
     fireEvent.click(await screen.findByRole('button', { name: /第二皮肤 界面预览/ }))
     fireEvent.click(screen.getByRole('button', { name: '提交皮肤' }))
     expect(screen.getByRole('dialog', { name: '提交你的皮肤' })).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', { name: '刷新在线目录' }))
+    window.dispatchEvent(new Event('focus'))
 
-    await waitFor(() => expect(screen.getByText(/在线目录/)).toBeTruthy())
+    await waitFor(() => expect(catalogRequests).toBe(2))
     expect(screen.getByRole('heading', { name: '第二皮肤' })).toBeTruthy()
     expect(screen.getByRole('dialog', { name: '提交你的皮肤' })).toBeTruthy()
   })
 
-  it('forces an online catalog refresh without updating the plugin', async () => {
+  it('hides catalog metadata and the manual refresh control', async () => {
     const fetchMock = vi.fn(async (url: string) => {
-      if (url.endsWith('/catalog/refresh')) return { ok: true, json: async () => ({ skins: [skin], generatedAt: '2026-08-16T12:00:00Z', catalogSource: 'remote' }) }
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin], generatedAt: '2026-08-15T12:00:00Z', catalogSource: 'bundled' }) }
       return { ok: true, json: async () => ({ skins: [], installedClientPlugins: [], runningAgentCount: 0 }) }
     })
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
-    expect(await screen.findByText(/内置目录/)).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', { name: '刷新在线目录' }))
+    expect(await screen.findByRole('button', { name: /测试皮肤 界面预览/ })).toBeTruthy()
+    expect(screen.queryByText(/内置目录|在线目录|更新于 2026年8月16日/)).toBeNull()
+    expect(screen.queryByRole('button', { name: '刷新在线目录' })).toBeNull()
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/catalog/refresh'))).toBe(false)
+  })
 
-    await waitFor(() => expect(screen.getByText(/在线目录/)).toBeTruthy())
-    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/catalog/refresh'))).toBe(true)
+  it('turns an empty successful response into a useful Host update error', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected end of JSON input') } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    expect(await screen.findByText('皮肤市场服务未返回有效数据，请确认 Host 插件已经更新')).toBeTruthy()
+    expect(screen.queryByText(/Unexpected end of JSON input/)).toBeNull()
   })
 
   it('cache-busts the full document exactly once after a DSH restart', () => {
@@ -204,14 +213,19 @@ describe('client market', () => {
     expect(uninstall.textContent).toBe('')
   })
 
-  it('warns users to disable other appearance plugins before first use', async () => {
-    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{ skinId: skin.id, installation: 'installed', activation: 'inactive', installedVersion: '1.0.0', updateAvailable: false }] } })))
+  it('shows a non-blocking first-use warning for other appearance plugins', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [{ skinId: skin.id, installation: 'installed', activation: 'inactive', installedVersion: '1.0.0', updateAvailable: false }] }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') return await new Promise(() => undefined)
+      throw new Error(`Unexpected request: ${url}`)
+    }))
     render(<SkinMarketSection t={key => key} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: '使用' }))
-    expect(screen.getByRole('dialog', { name: '启用皮肤前请先关闭其他皮肤' })).toBeTruthy()
-    expect(screen.getByText('多个皮肤或主题插件可能同时修改全局样式，造成界面错乱。请先在设置 → 插件中停用其他皮肤、主题和外观插件，再继续使用当前皮肤。此提醒只在首次使用时显示。')).toBeTruthy()
-    expect(screen.getByRole('button', { name: '已关闭其他皮肤，继续' })).toBeTruthy()
+    expect(await screen.findByText('首次启用提示：请先在设置 → 插件中停用其他皮肤、主题和外观插件，避免全局样式冲突。点击“使用”即表示已确认。')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: '使用' }))
+    expect(screen.queryByText(/首次启用提示/)).toBeNull()
+    expect(screen.queryByRole('dialog', { name: '启用皮肤前请先关闭其他皮肤' })).toBeNull()
   })
 
   it('uses the DSH outline capsule for the mobile back action', async () => {
@@ -244,6 +258,16 @@ describe('client market', () => {
     expect(screen.getByRole('button', { name: '有任务运行中' }).hasAttribute('disabled')).toBe(true)
   })
 
+  it('allows an explicit one-time restart when the old Host cannot report Agent state', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '重启以应用' }))
+    const override = await screen.findByRole('button', { name: '我已确认无任务，仍然重启' })
+    expect(override.hasAttribute('disabled')).toBe(false)
+    expect(screen.getByText('当前 Host 尚未加载安全检查。请确认没有 Agent 正在运行、重要内容已保存；你可以继续完成这一次升级重启。新版本加载后会自动检测 Agent 状态。')).toBeTruthy()
+  })
+
   it('asks for restart immediately after Use when the client entry is absent', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
@@ -256,7 +280,6 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} clientRuntime={clientRuntime} />)
 
     fireEvent.click(await screen.findByRole('button', { name: '使用' }))
-    fireEvent.click(screen.getByRole('button', { name: '已关闭其他皮肤，继续' }))
     expect(await screen.findByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })).toBeTruthy()
     expect(clientRuntime.setActive).toHaveBeenCalledWith(skin.package, true)
   })
