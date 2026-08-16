@@ -2,9 +2,17 @@
 
 一个嵌入 DSH 设置页的皮肤市场，可以浏览、安装、使用、停用、更新和卸载社区皮肤。
 
+## 在线预览
+
+无需安装即可浏览已收录的皮肤：
+
 [点击查看在线皮肤市场](https://kingofsoysauce.github.io/dsh-skin-market/)
 
-复制给你的DHS，安装皮肤市场插件到 DSH：
+在线页面仅用于浏览皮肤。需要安装、使用、更新或卸载皮肤时，请先安装下面的皮肤市场插件。
+
+## 安装皮肤市场
+
+复制下面的提示词给你的 DSH Agent：
 
 ```text
 请帮我把这个插件安装到 DSH 的 web profile：https://github.com/kingOfSoySauce/dsh-skin-market。安装完成后告诉我如何重启 DSH Web，并确认可以从“设置 → 皮肤市场”打开它。不要替我安装任何皮肤。
