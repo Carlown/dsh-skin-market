@@ -3,5 +3,6 @@ node_modules/
 *.tgz
 coverage/
 .preview/
+dist-site/
 design-qa-*.png
 design-qa.md

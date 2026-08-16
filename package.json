@@ -8,18 +8,20 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --config vite.preview.config.ts",
+    "dev:site": "vite --config vite.site.config.ts",
     "registry": "node scripts/build-registry.mjs",
     "crawl:smoke": "node scripts/crawl-smoke.mjs",
     "crawl:top-stars": "node scripts/crawl-top-stars.mjs",
     "crawl:full-discovery": "node scripts/crawl-top-stars.mjs",
     "crawl:full-ingest": "node scripts/full-ingest.mjs",
     "smoke:submission": "vitest run tests/submission.spec.ts tests/client/client.spec.tsx",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client.json --noEmit && tsc -p tsconfig.site.json --noEmit",
     "build:host": "tsc -p tsconfig.json",
     "build:client": "tsdown",
+    "build:site": "vite build --config vite.site.config.ts",
     "build": "npm run registry && npm run build:host && npm run build:client",
     "test": "vitest run",
-    "check": "npm run registry && npm run typecheck && npm run test && npm run build && node scripts/preflight.mjs",
+    "check": "npm run registry && npm run typecheck && npm run test && npm run build && npm run build:site && node scripts/preflight.mjs",
     "prepack": "npm run check"
   },
   "peerDependencies": {
