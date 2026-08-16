@@ -1,9 +1,149 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import Ajv from 'ajv/dist/2020.js'
+import { atomicWriteJson } from './profile.ts'
 import type { CatalogFile, CatalogSkin, SkinEntry } from './types.ts'
+
+export const REMOTE_CATALOG_URL = 'https://kingofsoysauce.github.io/dsh-skin-market/catalog.json'
+export const CATALOG_REFRESH_INTERVAL_MS = 5 * 60 * 1000
+
+const schema = JSON.parse(readFileSync(new URL('../registry/skin.schema.json', import.meta.url), 'utf8')) as object
+const validateSkin = new Ajv({ allErrors: true, strict: false, validateFormats: false }).compile(schema)
 
 export function loadCatalog(): CatalogFile {
   const file = new URL('../data/catalog.json', import.meta.url)
   return JSON.parse(readFileSync(file, 'utf8')) as CatalogFile
+}
+
+export function validateCatalog(value: unknown): CatalogFile {
+  if (typeof value !== 'object' || value === null) throw new Error('catalog must be an object')
+  const candidate = value as Partial<CatalogFile>
+  if (candidate.schemaVersion !== 1) throw new Error('unsupported catalog schema version')
+  if (typeof candidate.generatedAt !== 'string' || !Number.isFinite(Date.parse(candidate.generatedAt))) throw new Error('catalog generatedAt is invalid')
+  if (!Array.isArray(candidate.skins) || candidate.skins.length > 5000) throw new Error('catalog skins must be an array of at most 5000 entries')
+
+  const ids = new Set<string>()
+  const packages = new Set<string>()
+  const rows = new Set<string>()
+  for (const skin of candidate.skins) {
+    if (!validateSkin(skin)) {
+      const details = (validateSkin.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`).join('; ')
+      throw new Error(`invalid skin entry: ${details}`)
+    }
+    const entry = skin as SkinEntry
+    const repo = entry.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
+    const expected = `github:${repo}#${entry.install.commit}${entry.subpath ? `&path:${entry.subpath}` : ''}`
+    if (entry.install.target !== expected) throw new Error(`invalid pinned install target for ${entry.id}`)
+    for (const [label, key, set] of [
+      ['id', entry.id, ids],
+      ['package', entry.package, packages],
+      ['rowId', entry.rowId, rows],
+    ] as const) {
+      if (set.has(key)) throw new Error(`duplicate ${label}: ${key}`)
+      set.add(key)
+    }
+  }
+  return candidate as CatalogFile
+}
+
+export type CatalogSource = 'remote' | 'cache' | 'bundled'
+
+export interface CatalogSnapshot {
+  catalog: CatalogFile
+  source: CatalogSource
+  lastCheckedAt: string | null
+  error?: string
+}
+
+interface FetchResponse {
+  ok: boolean
+  status: number
+  json(): Promise<unknown>
+}
+
+export interface CatalogStoreOptions {
+  remoteUrl?: string
+  refreshIntervalMs?: number
+  fetcher?: (url: string, init: RequestInit) => Promise<FetchResponse>
+  now?: () => number
+}
+
+function cacheFile(profileDir: string): string { return join(profileDir, '.dsh-skin-market', 'catalog.json') }
+function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error) }
+
+export class CatalogStore {
+  private current: CatalogFile
+  private source: CatalogSource = 'bundled'
+  private checkedAt = 0
+  private error?: string
+  private refreshing?: Promise<CatalogSnapshot>
+  private readonly remoteUrl: string
+  private readonly refreshIntervalMs: number
+  private readonly fetcher: (url: string, init: RequestInit) => Promise<FetchResponse>
+  private readonly now: () => number
+
+  constructor(private readonly profileDir: string, options: CatalogStoreOptions = {}) {
+    const bundled = validateCatalog(loadCatalog())
+    this.current = bundled
+    this.remoteUrl = options.remoteUrl ?? REMOTE_CATALOG_URL
+    this.refreshIntervalMs = options.refreshIntervalMs ?? CATALOG_REFRESH_INTERVAL_MS
+    this.fetcher = options.fetcher ?? ((url, init) => fetch(url, init))
+    this.now = options.now ?? Date.now
+
+    const file = cacheFile(profileDir)
+    if (existsSync(file)) {
+      try {
+        const cached = validateCatalog(JSON.parse(readFileSync(file, 'utf8')))
+        if (Date.parse(cached.generatedAt) >= Date.parse(bundled.generatedAt)) {
+          this.current = cached
+          this.source = 'cache'
+        }
+      } catch (error) {
+        this.error = `cached catalog rejected: ${errorMessage(error)}`
+      }
+    }
+  }
+
+  snapshot(): CatalogSnapshot {
+    return {
+      catalog: this.current,
+      source: this.source,
+      lastCheckedAt: this.checkedAt === 0 ? null : new Date(this.checkedAt).toISOString(),
+      ...(this.error ? { error: this.error } : {}),
+    }
+  }
+
+  async refresh(force = false): Promise<CatalogSnapshot> {
+    if (!force && this.checkedAt !== 0 && this.now() - this.checkedAt < this.refreshIntervalMs) return this.snapshot()
+    if (this.refreshing !== undefined) return this.refreshing
+    this.refreshing = this.fetchRemote()
+    try { return await this.refreshing } finally { this.refreshing = undefined }
+  }
+
+  private async fetchRemote(): Promise<CatalogSnapshot> {
+    this.checkedAt = this.now()
+    try {
+      const response = await this.fetcher(this.remoteUrl, {
+        headers: { accept: 'application/json', 'user-agent': 'dsh-skin-market/remote-catalog' },
+        signal: AbortSignal.timeout(12_000),
+      })
+      if (!response.ok) throw new Error(`remote catalog returned HTTP ${response.status}`)
+      const remote = validateCatalog(await response.json())
+      const remoteTime = Date.parse(remote.generatedAt)
+      const currentTime = Date.parse(this.current.generatedAt)
+      if (remoteTime < currentTime) throw new Error('remote catalog is older than the accepted catalog')
+      if (remoteTime === currentTime && JSON.stringify(remote.skins) !== JSON.stringify(this.current.skins)) {
+        throw new Error('remote catalog changed without a new generatedAt timestamp')
+      }
+      this.current = remote
+      this.source = 'remote'
+      this.error = undefined
+      atomicWriteJson(cacheFile(this.profileDir), remote)
+    } catch (error) {
+      this.error = errorMessage(error)
+    }
+    return this.snapshot()
+  }
 }
 
 export function repositorySlug(repo: string): string {
@@ -22,8 +162,7 @@ export function recommend(current: SkinEntry, catalog: SkinEntry[], stars: Reado
   return catalog.filter(item => item.id !== current.id).sort((a, b) => score(b) - score(a)).slice(0, 4).map(item => item.id)
 }
 
-export async function catalogWithStars(_profileDir: string): Promise<CatalogSkin[]> {
-  const catalog = loadCatalog()
+export async function catalogWithStars(_profileDir: string, catalog = loadCatalog()): Promise<CatalogSkin[]> {
   const starMap = new Map(catalog.skins.map(skin => [skin.id, skin.starsSnapshot]))
   return catalog.skins.map(skin => ({
     ...skin,

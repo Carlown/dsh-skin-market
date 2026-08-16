@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-market",
-  "version": "0.1.9",
+  "version": "0.1.12",
   "description": "Native skin marketplace and lifecycle manager for DeepSeek Harness",
   "type": "module",
   "main": "lib/index.js",
@@ -67,7 +67,6 @@
     "@types/react": "~18.3.1",
     "@types/react-dom": "~18.3.1",
     "@vitejs/plugin-react": "latest",
-    "ajv": "^8.17.1",
     "jsdom": "^26.1.0",
     "lightningcss": "^1.33.0",
     "react": "^18.3.1",
@@ -80,6 +79,7 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@primer/octicons-react": "^19.33.0",
+    "ajv": "^8.17.1",
     "yaml": "^2.8.1"
   }
 }

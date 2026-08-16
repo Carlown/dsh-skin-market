@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { CatalogStore } from './catalog.ts';
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts';
 import type { PluginRunner } from './commands.ts';
 import type { RestartScheduler } from './restart.ts';
@@ -25,6 +26,7 @@ export interface RouteOptions {
     profileDir: string;
     runner: PluginRunner;
     restart?: RestartScheduler;
+    catalogStore?: CatalogStore;
 }
 export declare function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean;
 export declare function runningAgentCount(host: Pick<SkinMarketHost, 'agents'>): number;

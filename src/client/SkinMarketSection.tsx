@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { TShirtIcon } from '@phosphor-icons/react'
 import { MarkGithubIcon, StarIcon } from '@primer/octicons-react'
@@ -18,7 +18,7 @@ import {
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import css from './SkinMarket.module.css'
 import { createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
-import type { ClientSkinRuntime } from './index.ts'
+import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import type { CatalogSkin, InstalledClientPlugin, Operation, RuntimeSkin } from './types.ts'
 
 export interface SkinMarketSectionProps {
@@ -27,11 +27,36 @@ export interface SkinMarketSectionProps {
 }
 
 type MutationKind = 'install' | 'activate' | 'deactivate' | 'update' | 'uninstall'
+type CatalogSource = 'remote' | 'cache' | 'bundled'
+
+interface CatalogResponse {
+  skins: CatalogSkin[]
+  generatedAt?: string
+  catalogSource?: CatalogSource
+  catalogLastCheckedAt?: string | null
+  catalogError?: string
+}
+
+interface ListScrollAnchor { skinId: string | null; offset: number; scrollTop: number }
+
+export function captureListScroll(list: HTMLElement | null): ListScrollAnchor | null {
+  if (list === null) return null
+  const listTop = list.getBoundingClientRect().top
+  const card = [...list.querySelectorAll<HTMLElement>('[data-skin-id]')].find(item => item.getBoundingClientRect().bottom > listTop)
+  return { skinId: card?.dataset.skinId ?? null, offset: card === undefined ? 0 : card.getBoundingClientRect().top - listTop, scrollTop: list.scrollTop }
+}
+
+export function restoreListScroll(list: HTMLElement | null, anchor: ListScrollAnchor | null): void {
+  if (list === null || anchor === null) return
+  const card = anchor.skinId === null ? undefined : [...list.querySelectorAll<HTMLElement>('[data-skin-id]')].find(item => item.dataset.skinId === anchor.skinId)
+  if (card === undefined) list.scrollTop = anchor.scrollTop
+  else list.scrollTop += card.getBoundingClientRect().top - list.getBoundingClientRect().top - anchor.offset
+}
 
 interface MarketStateResponse {
   skins: RuntimeSkin[]
   installedClientPlugins?: InstalledClientPlugin[]
-  runningAgentCount: number
+  runningAgentCount?: number
 }
 
 const phases: Record<Operation['phase'], string> = {
@@ -43,6 +68,7 @@ const mutationLabels: Record<MutationKind, string> = {
 }
 
 const RELOAD_PARAM = 'dsh-skin-reload'
+const ACTIVATION_WARNING_KEY = 'dsh-skin-market:activation-warning-accepted'
 
 export function restartReloadUrl(href: string, instanceId: string): string {
   const url = new URL(href)
@@ -98,50 +124,87 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
   const [mutation, setMutation] = useState<{ skinId: string; kind: MutationKind } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [confirmUninstall, setConfirmUninstall] = useState(false)
+  const [confirmActivate, setConfirmActivate] = useState(false)
+  const [activationWarningAccepted, setActivationWarningAccepted] = useState(() => {
+    try { return window.localStorage.getItem(ACTIVATION_WARNING_KEY) === 'true' } catch { return false }
+  })
   const [confirmRestart, setConfirmRestart] = useState(false)
   const [restarting, setRestarting] = useState(false)
   const [runningAgents, setRunningAgents] = useState<number | null>(null)
+  const [restartCheckFinished, setRestartCheckFinished] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
   const [showSubmission, setShowSubmission] = useState(false)
   const [submissionCopied, setSubmissionCopied] = useState(false)
   const [installPromptCopied, setInstallPromptCopied] = useState<string | null>(null)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
+  const [catalogMeta, setCatalogMeta] = useState<{ generatedAt?: string; source?: CatalogSource; error?: string }>({})
+  const [catalogRefreshing, setCatalogRefreshing] = useState(false)
+  const skinListRef = useRef<HTMLDivElement | null>(null)
+  const pendingScrollAnchor = useRef<ListScrollAnchor | null>(null)
+  const skinsRef = useRef<CatalogSkin[]>([])
+  const selectedIdRef = useRef('')
 
-  const refresh = useCallback(async (showLoading = false) => {
+  const refresh = useCallback(async (showLoading = false, forceCatalog = false) => {
     if (showLoading) setLoading(true)
+    if (forceCatalog) setCatalogRefreshing(true)
     try {
       const [catalog, state] = await Promise.all([
-        json<{ skins: CatalogSkin[] }>('/dsh-skin-market/catalog'),
+        json<CatalogResponse>(forceCatalog ? '/dsh-skin-market/catalog/refresh' : '/dsh-skin-market/catalog', forceCatalog ? { method: 'POST' } : undefined),
         json<MarketStateResponse>('/dsh-skin-market/state'),
       ])
-      setSkins(catalog.skins)
+      pendingScrollAnchor.current = captureListScroll(skinListRef.current)
+      const nextSkins = [...catalog.skins]
+      const selectedBeforeRefresh = selectedIdRef.current
+      if (selectedBeforeRefresh !== '' && !nextSkins.some(skin => skin.id === selectedBeforeRefresh)) {
+        const selectedSkin = skinsRef.current.find(skin => skin.id === selectedBeforeRefresh)
+        if (selectedSkin !== undefined) nextSkins.push(selectedSkin)
+      }
+      skinsRef.current = nextSkins
+      setSkins(nextSkins)
+      setCatalogMeta({ generatedAt: catalog.generatedAt, source: catalog.catalogSource, error: catalog.catalogError })
       setStates(state.skins)
       setInstalledClientPlugins(state.installedClientPlugins ?? [])
-      setRunningAgents(Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
+      setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
       setSelectedId(value => {
-        if (value !== '' && catalog.skins.some(skin => skin.id === value)) return value
+        if (value !== '' && nextSkins.some(skin => skin.id === value)) {
+          selectedIdRef.current = value
+          return value
+        }
         const active = state.skins.find(item => item.activation === 'active')
-        if (active !== undefined && catalog.skins.some(skin => skin.id === active.skinId)) return active.skinId
-        return catalog.skins[0]?.id ?? ''
+        const next = active !== undefined && nextSkins.some(skin => skin.id === active.skinId) ? active.skinId : nextSkins[0]?.id ?? ''
+        selectedIdRef.current = next
+        return next
       })
     } finally {
       if (showLoading) setLoading(false)
+      if (forceCatalog) setCatalogRefreshing(false)
     }
   }, [])
 
   const openRestartConfirm = useCallback(async () => {
     setError(null)
     setRunningAgents(null)
+    setRestartCheckFinished(false)
     setConfirmRestart(true)
     try {
       const state = await json<MarketStateResponse>('/dsh-skin-market/state', { cache: 'no-store' })
-      setRunningAgents(Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
+      setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
+      setRestartCheckFinished(true)
     } catch (reason) {
+      setRestartCheckFinished(true)
       setError(reason instanceof Error ? reason.message : String(reason))
     }
   }, [])
 
   useEffect(() => { refresh(true).catch(reason => setError(reason instanceof Error ? reason.message : String(reason))) }, [refresh])
+  useEffect(() => {
+    const timer = window.setInterval(() => { refresh(false).catch(() => undefined) }, 5 * 60 * 1000)
+    return () => window.clearInterval(timer)
+  }, [refresh])
+  useLayoutEffect(() => {
+    restoreListScroll(skinListRef.current, pendingScrollAnchor.current)
+    pendingScrollAnchor.current = null
+  }, [skins])
   useEffect(() => {
     const url = new URL(window.location.href)
     if (!url.searchParams.has(RELOAD_PARAM)) return
@@ -201,10 +264,9 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
           if (kind === 'deactivate' || kind === 'uninstall') {
             await clientRuntime?.setActive(selected.package, false)
           } else if (kind === 'activate' && clientRuntime !== undefined) {
-            await Promise.all(skins
-              .filter(skin => skin.id !== selected.id)
-              .map(skin => clientRuntime.setActive(skin.package, false)))
-            needsRestart = !(await clientRuntime.setActive(selected.package, true))
+            // Match uninstall-then-use semantics: wait for every old skin to
+            // finish disposing before loading the selected skin.
+            needsRestart = !(await switchClientSkin(clientRuntime, skins.map(skin => skin.package), selected.package))
             restoreMarketStyleOrder()
           }
           await refresh()
@@ -257,9 +319,10 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
     }
   }, [selected])
 
-  const select = (id: string) => { setSelectedId(id); setShotIndex(0); setShowDetail(true); setError(null); setInstallPromptCopied(null) }
+  const select = (id: string) => { selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setShowDetail(true); setError(null); setInstallPromptCopied(null) }
   const recommendations = selected?.recommendations.map(id => skins.find(skin => skin.id === id)).filter((skin): skin is CatalogSkin => skin !== undefined) ?? []
   const submissionPrompt = createSubmissionPrompt()
+  const catalogSourceLabel = catalogMeta.source === 'remote' ? '在线目录' : catalogMeta.source === 'cache' ? '缓存目录' : '内置目录'
   const copySubmissionPrompt = async () => {
     await navigator.clipboard.writeText(submissionPrompt)
     setSubmissionCopied(true)
@@ -276,8 +339,8 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
       <aside className={css.catalog} aria-label={t('catalog')}>
         <div className={css.catalogHeader}>
           <div className={css.catalogTitle}>
-            <h2>{t('title')}</h2>
-            <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
+            <div><h2>{t('title')}</h2><p title={catalogMeta.error}>{catalogSourceLabel}{catalogMeta.generatedAt ? ` · 更新于 ${displayDate(catalogMeta.generatedAt)}` : ''}{catalogMeta.error ? ' · 同步失败，已回退' : ''}</p></div>
+            <div className={css.catalogTitleActions}><Button className={`${css.nativeOutline} ${css.iconOnlyButton} ${css.catalogRefresh}`} variant="outline" size="sm" icon={<IconRefreshOutline16 />} aria-label="刷新在线目录" title="立即检查最新皮肤目录" disabled={catalogRefreshing} data-refreshing={catalogRefreshing ? 'true' : undefined} onClick={() => { refresh(false, true).catch(reason => setError(reason instanceof Error ? reason.message : String(reason))) }} /><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button></div>
           </div>
           <Input value={query} onChange={event => setQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
           <div className={css.filterBar}>
@@ -290,11 +353,11 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
             </Button>
           </div>
         </div>
-        <div className={css.skinList}>
+        <div className={css.skinList} ref={skinListRef}>
           {loading ? <div className={css.listLoading} role="status"><IconLoadingOutline16 size={16} />正在加载皮肤列表…</div> : filtered.map(skin => {
             const itemState = runtimeFor(states, skin.id)
             const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null
-            return <Button key={skin.id} variant="ghost" className={css.skinCard} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
+            return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
               <img src={skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} loading="lazy" />
               <span className={css.skinCardBody}>
                 <span className={css.cardTitle}>{skin.name.zh}</span>
@@ -336,7 +399,7 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
                 <Button className={autoInstallable ? css.nativeOutline : css.nativePrimary} variant={autoInstallable ? 'outline' : 'primary'} size="sm" icon={<IconCopyOutline16 />} disabled={busy !== null} onClick={() => void copyInstallPrompt()}>{installPromptCopied === selected.id ? '安装提示词已复制' : '复制安装提示词'}</Button>
                 {!autoInstallable && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>{compatibilityUnverified ? '待验证，手动安装' : '查看安装说明'}</Button>}
               </>}
-              {state.installation === 'installed' && state.activation === 'inactive' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void run('activate')}>使用</Button>}
+              {state.installation === 'installed' && state.activation === 'inactive' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => { if (activationWarningAccepted) void run('activate'); else setConfirmActivate(true) }}>使用</Button>}
               {state.activation === 'restart-required' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void openRestartConfirm()}>重启以应用</Button>}
               {state.activation === 'active' && <Button className={css.nativeOutline} variant="outline" size="sm" disabled={busy !== null} onClick={() => void run('deactivate')}>停用</Button>}
               {state.updateAvailable && <Button className={`${state.activation === 'active' ? css.nativePrimary : css.nativeOutline} ${css.compactActionIcon}`} variant={state.activation === 'active' ? 'primary' : 'outline'} size="sm" icon={<IconRefreshOutline16 />} disabled={busy !== null} onClick={() => void run('update')}>更新</Button>}
@@ -368,7 +431,8 @@ export function SkinMarketSection({ t, clientRuntime }: SkinMarketSectionProps) 
       </main>
 
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />
-      <Modal open={confirmRestart} onClose={() => { if (!restarting) setConfirmRestart(false) }} title="需要重启 DSH 应用此皮肤" closeLabel="关闭" description={restarting ? '正在重新启动 DSH，请稍候…' : runningAgents === null ? '正在检查是否有 Agent 运行。状态确认前不能重启。' : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : 'Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" disabled={restarting} onClick={() => setConfirmRestart(false)}>稍后</Button><Button className={css.nativePrimary} variant="primary" size="sm" disabled={restarting || runningAgents !== 0} onClick={() => void restartNow()}>{restarting ? '正在重启…' : runningAgents === null ? '正在检查…' : runningAgents > 0 ? '有任务运行中' : '确认无任务，立即重启'}</Button></>} />
+      <Modal open={confirmActivate} onClose={() => setConfirmActivate(false)} title="启用皮肤前请先关闭其他皮肤" closeLabel="关闭" description="多个皮肤或主题插件可能同时修改全局样式，造成界面错乱。请先在设置 → 插件中停用其他皮肤、主题和外观插件，再继续使用当前皮肤。此提醒只在首次使用时显示。" footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmActivate(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { try { window.localStorage.setItem(ACTIVATION_WARNING_KEY, 'true') } catch { /* storage may be unavailable */ } setActivationWarningAccepted(true); setConfirmActivate(false); void run('activate') }}>已关闭其他皮肤，继续</Button></>} />
+      <Modal open={confirmRestart} onClose={() => { if (!restarting) setConfirmRestart(false) }} title="需要重启 DSH 应用此皮肤" closeLabel="关闭" description={restarting ? '正在重新启动 DSH，请稍候…' : runningAgents === null && !restartCheckFinished ? '正在检查是否有 Agent 运行。状态确认前不能重启。' : runningAgents === null ? '当前 DSH Host 版本无法返回 Agent 状态。请先退出此面板，并在确认没有任务运行后手动重启一次 DSH；安全检查会在新版本加载后生效。' : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : 'Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" disabled={restarting} onClick={() => setConfirmRestart(false)}>稍后</Button><Button className={css.nativePrimary} variant="primary" size="sm" disabled={restarting || runningAgents !== 0} onClick={() => void restartNow()}>{restarting ? '正在重启…' : runningAgents === null && !restartCheckFinished ? '正在检查…' : runningAgents === null ? '状态不可用' : runningAgents > 0 ? '有任务运行中' : '确认无任务，立即重启'}</Button></>} />
       <Modal
         open={showSubmission}
         onClose={() => setShowSubmission(false)}

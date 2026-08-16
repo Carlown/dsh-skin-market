@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
-import { atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, installedClientPlugins, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
+import { atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, installedClientPlugins, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 function fixture() { return mkdtempSync(join(tmpdir(), 'skin-profile-')) }
@@ -13,6 +13,20 @@ describe('profile state', () => {
     const dir = fixture()
     writeMarketState(dir, { version: 1, activeSkinId: 'a', disabledSkinIds: ['b'] })
     expect(readMarketState(dir)).toEqual({ version: 1, activeSkinId: 'a', disabledSkinIds: ['b'] })
+  })
+
+  it('removes market-managed skin bundles while preserving dependencies and core bundles', () => {
+    const dir = fixture()
+    atomicWriteJson(join(dir, 'package.json'), {
+      dependencies: { skin: 'github:owner/skin#commit' },
+      dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', 'skin', 'dsh-skin-market'] } },
+    })
+
+    removeProfileBundles(dir, ['skin'])
+
+    const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; dsh: { profile: { bundles: string[] } } }
+    expect(manifest.dependencies.skin).toBe('github:owner/skin#commit')
+    expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', 'dsh-skin-market'])
   })
 
   it('detects installed, active, and update states independently', () => {

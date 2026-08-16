@@ -21,12 +21,14 @@ export interface LifecycleOptions {
 export declare class SkinLifecycle {
     private readonly host;
     private readonly options;
-    readonly catalog: SkinEntry[];
     readonly operations: Map<string, Operation>;
     private activeOperation;
-    private readonly skinById;
+    private catalogEntries;
+    private skinById;
     private disposeEvent?;
-    constructor(host: LifecycleHost, options: LifecycleOptions);
+    constructor(host: LifecycleHost, options: LifecycleOptions, catalog?: SkinEntry[]);
+    get catalog(): SkinEntry[];
+    replaceCatalog(catalog: SkinEntry[]): Promise<void>;
     start(): void;
     dispose(): void;
     skin(id: string): SkinEntry;

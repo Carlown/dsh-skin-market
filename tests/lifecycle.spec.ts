@@ -24,6 +24,17 @@ async function finished(operation: Operation): Promise<Operation> {
 function success(): CommandResult { return { exitCode: 0, stdout: '', stderr: '', timedOut: false } }
 
 describe('skin lifecycle', () => {
+  it('can replace its installable catalog without restarting the market plugin', async () => {
+    const dir = fixture()
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const added = { ...lifecycle.catalog[0], id: 'remote.new-skin', package: 'remote-new-skin', rowId: 'remote-new-skin' }
+
+    await lifecycle.replaceCatalog([...lifecycle.catalog, added])
+
+    expect(lifecycle.skin(added.id)).toEqual(added)
+    expect(lifecycle.states().some(state => state.skinId === added.id)).toBe(true)
+  })
+
   it('reconciles an already installed package instead of failing the install action', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
@@ -45,6 +56,7 @@ describe('skin lifecycle', () => {
     const dir = fixture()
     let lifecycle!: SkinLifecycle
     const entries = new Map<string, LoaderEntry>()
+    const updates: string[] = []
     const runner: PluginRunner = async (_profile, args) => {
       const skin = lifecycle.catalog.find(item => args.includes(item.install.target) || args.includes(item.package))
       if (args[0] === 'add' && skin !== undefined) {
@@ -52,7 +64,7 @@ describe('skin lifecycle', () => {
         const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
         mkdirSync(packageDir, { recursive: true })
         atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
-        entries.set(skin.rowId, { options: { id: skin.rowId, name: skin.rowId, disabled: true }, update: async function (value) { this.options.disabled = value.disabled; this.fiber = value.disabled ? undefined : {} } })
+        entries.set(skin.rowId, { options: { id: skin.rowId, name: skin.rowId, disabled: true }, update: async function (value) { updates.push(`${skin.rowId}:${String(value.disabled)}`); this.options.disabled = value.disabled; this.fiber = value.disabled ? undefined : {} } })
       }
       if (args[0] === 'remove' && skin !== undefined) {
         const next = { ...readDependencies(dir) }
@@ -70,6 +82,17 @@ describe('skin lifecycle', () => {
     expect((await finished(lifecycle.begin('activate', skin.id))).phase).toBe('done')
     expect(readMarketState(dir).activeSkinId).toBe(skin.id)
     expect(lifecycle.states()[0].activation).toBe('active')
+
+    const second = lifecycle.catalog[1]
+    expect((await finished(lifecycle.begin('install', second.id))).phase).toBe('done')
+    updates.length = 0
+    expect((await finished(lifecycle.begin('activate', second.id))).phase).toBe('done')
+    expect(updates).toEqual([
+      `${skin.rowId}:true`,
+      `${second.rowId}:true`,
+      `${second.rowId}:null`,
+    ])
+    expect((await finished(lifecycle.begin('activate', skin.id))).phase).toBe('done')
     expect((await finished(lifecycle.begin('deactivate', skin.id))).phase).toBe('done')
     expect(readDependencies(dir)[skin.package]).toBeDefined()
     expect(readMarketState(dir).activeSkinId).toBeNull()

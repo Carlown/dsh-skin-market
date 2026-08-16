@@ -32,7 +32,7 @@ window.__ModuleLoader__.load({
 		_deepseek_ai_dsh_client_ui_primitives = __toESM(_deepseek_ai_dsh_client_ui_primitives, 1);
 		let react_dom = require("react-dom");
 		let react_jsx_runtime = require("react/jsx-runtime");
-		//#region ../../../Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/node_modules/@phosphor-icons/react/dist/defs/TShirt.es.js
+		//#region node_modules/@phosphor-icons/react/dist/defs/TShirt.es.js
 		const e = /* @__PURE__ */ new Map([
 			["bold", /* @__PURE__ */ react.createElement(react.Fragment, null, /* @__PURE__ */ react.createElement("path", { d: "M246.17,57.9,198.09,29.65h0A11.9,11.9,0,0,0,192,28H160a12,12,0,0,0-12,12,20,20,0,0,1-40,0A12,12,0,0,0,96,28H64a11.9,11.9,0,0,0-6.07,1.66h0L9.83,57.9A20.18,20.18,0,0,0,2,84l17.9,36.8A19.62,19.62,0,0,0,37.67,132H52v76a20,20,0,0,0,20,20H184a20,20,0,0,0,20-20V132h14.32a19.64,19.64,0,0,0,17.75-11.17L254,84A20.18,20.18,0,0,0,246.17,57.9ZM40.37,108,25.16,76.73,52,61v47ZM180,204H76V52h9.67a44,44,0,0,0,84.68,0H180Zm35.62-96H204V61l26.83,15.76Z" }))],
 			["duotone", /* @__PURE__ */ react.createElement(react.Fragment, null, /* @__PURE__ */ react.createElement("path", {
@@ -45,7 +45,7 @@ window.__ModuleLoader__.load({
 			["thin", /* @__PURE__ */ react.createElement(react.Fragment, null, /* @__PURE__ */ react.createElement("path", { d: "M245.68,64.73,193.91,36.49h0A4,4,0,0,0,192,36H160a4,4,0,0,0-4,4,28,28,0,0,1-56,0,4,4,0,0,0-4-4H64a4,4,0,0,0-1.9.5h0L10.32,64.73a11.79,11.79,0,0,0-5,15.89l19.28,36.81a12.37,12.37,0,0,0,11,6.57H60v84a12,12,0,0,0,12,12H184a12,12,0,0,0,12-12V124h24.33a12.37,12.37,0,0,0,11-6.57l19.28-36.81A11.79,11.79,0,0,0,245.68,64.73ZM35.67,116a4.46,4.46,0,0,1-4-2.28L12.44,76.91a3.79,3.79,0,0,1,1.71-5.15L60,46.74V116ZM188,208a4,4,0,0,1-4,4H72a4,4,0,0,1-4-4V44H92.22a36,36,0,0,0,71.56,0H188ZM243.56,76.91l-19.27,36.81a4.46,4.46,0,0,1-4,2.28H196V46.74l45.85,25A3.79,3.79,0,0,1,243.56,76.91Z" }))]
 		]);
 		//#endregion
-		//#region ../../../Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/node_modules/@phosphor-icons/react/dist/lib/context.es.js
+		//#region node_modules/@phosphor-icons/react/dist/lib/context.es.js
 		const o = (0, react.createContext)({
 			color: "currentColor",
 			size: "1em",
@@ -53,7 +53,7 @@ window.__ModuleLoader__.load({
 			mirrored: !1
 		});
 		//#endregion
-		//#region ../../../Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/node_modules/@phosphor-icons/react/dist/lib/IconBase.es.js
+		//#region node_modules/@phosphor-icons/react/dist/lib/IconBase.es.js
 		const p = react.forwardRef((s, a) => {
 			const { alt: n, color: r, size: t, weight: o$1, mirrored: c, children: i, weights: m, ...x } = s, { color: d = "currentColor", size: l, weight: f = "regular", mirrored: g = !1, ...w } = react.useContext(o);
 			return /* @__PURE__ */ react.createElement("svg", {
@@ -70,7 +70,7 @@ window.__ModuleLoader__.load({
 		});
 		p.displayName = "IconBase";
 		//#endregion
-		//#region ../../../Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/node_modules/@phosphor-icons/react/dist/csr/TShirt.es.js
+		//#region node_modules/@phosphor-icons/react/dist/csr/TShirt.es.js
 		const r = react.forwardRef((t, e$1) => /* @__PURE__ */ react.createElement(p, {
 			ref: e$1,
 			...t,
@@ -78,7 +78,7 @@ window.__ModuleLoader__.load({
 		}));
 		r.displayName = "TShirtIcon";
 		//#endregion
-		//#region ../../../Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/node_modules/@primer/octicons-react/dist/renderOcticon-DuMQdmQC.mjs
+		//#region node_modules/@primer/octicons-react/dist/renderOcticon-DuMQdmQC.mjs
 		function _typeof(o) {
 			"@babel/helpers - typeof";
 			return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
@@ -214,7 +214,7 @@ window.__ModuleLoader__.load({
 			}, naturalHeights[0]);
 		}
 		//#endregion
-		//#region ../../../Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/node_modules/@primer/octicons-react/dist/icons/MarkGithubIcon.mjs
+		//#region node_modules/@primer/octicons-react/dist/icons/MarkGithubIcon.mjs
 		var heights$1 = ["16", "24"];
 		var svgDataByHeight$1 = {
 			"16": {
@@ -231,7 +231,7 @@ window.__ModuleLoader__.load({
 		});
 		MarkGithubIcon.displayName = "MarkGithubIcon";
 		//#endregion
-		//#region ../../../Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/node_modules/@primer/octicons-react/dist/icons/StarIcon.mjs
+		//#region node_modules/@primer/octicons-react/dist/icons/StarIcon.mjs
 		var heights = ["16", "24"];
 		var svgDataByHeight = {
 			"16": {
@@ -248,8 +248,8 @@ window.__ModuleLoader__.load({
 		});
 		StarIcon.displayName = "StarIcon";
 		//#endregion
-		//#region \0dsh-skin-market-css:/private/tmp/dsh-skin-market-auto-install.wW1naw/src/client/SkinMarket.module.css.mjs
-		const css = ".sH4J3W_root{box-sizing:border-box;width:100%;height:100%;min-height:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);grid-template-columns:330px minmax(0,1fr);display:grid;overflow:hidden}.sH4J3W_settingsNavIcon{flex:none;justify-content:center;align-items:center;width:16px;height:16px;display:inline-flex}.sH4J3W_settingsNavIcon svg{width:16px;height:16px;display:block}svg[data-dsh-skin-market-default-icon=hidden]{display:none}.sH4J3W_catalog{border-right:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-2);flex-direction:column;min-width:0;display:flex}.sH4J3W_catalogHeader{border-bottom:1px solid var(--dsw-alias-border-l2);flex-direction:column;gap:14px;padding:24px 22px 10px;display:flex}.sH4J3W_catalogHeader h2,.sH4J3W_detail h2,.sH4J3W_detail h3,.sH4J3W_catalogHeader p,.sH4J3W_detail p{margin:0}.sH4J3W_catalogHeader h2{margin-bottom:2px;font-size:20px;font-weight:600;line-height:28px}.sH4J3W_catalogHeader p{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:12px;line-height:18px}.sH4J3W_catalogTitle{justify-content:space-between;align-items:center;gap:12px;display:flex}.sH4J3W_catalogHeader>span{height:48px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l2);background:0 0;border-radius:10px;align-items:center;gap:8px;padding:0 14px;display:flex}.sH4J3W_catalogHeader>span:focus-within{border-color:var(--dsw-alias-border-l1)}.sH4J3W_catalogHeader>span input{min-width:0;color:var(--dsw-alias-label-primary);background:0 0;border:0;outline:0;flex:1}.sH4J3W_catalogHeader>span input::placeholder{color:var(--dsw-alias-label-caption)}.sH4J3W_filterBar{justify-content:space-between;align-items:center;gap:8px;display:flex}.sH4J3W_filters{flex-wrap:wrap;gap:4px;display:flex}.sH4J3W_root .sH4J3W_filters .sH4J3W_filterPill{border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 11px;font-size:12px;line-height:18px;display:inline-flex;color:var(--dsw-alias-label-secondary)!important;background:0 0!important;border:1px solid #0000!important}.sH4J3W_root .sH4J3W_filters .sH4J3W_filterPill:hover{background:var(--dsw-alias-interactive-bg-hover)!important}.sH4J3W_root .sH4J3W_filters .sH4J3W_filterPill[data-active=true]{color:var(--dsw-alias-label-primary)!important;border-color:var(--dsw-alias-button-ghost-active-border,var(--dsw-alias-border-l1))!important;background:var(--dsw-alias-button-ghost-active-fill,var(--dsw-alias-interactive-bg-hover))!important}.sH4J3W_staticPill{height:24px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:none;border-radius:12px;align-items:center;gap:4px;padding:0 8px;font-size:12px;line-height:18px;display:inline-flex}.sH4J3W_sortButton{cursor:pointer;white-space:nowrap;height:28px;color:var(--dsw-alias-label-secondary);background:0 0;border:0;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.sH4J3W_sortButton:hover{background:var(--dsw-alias-interactive-bg-hover)}.sH4J3W_skinList{overscroll-behavior:contain;scrollbar-gutter:stable;touch-action:pan-y;-webkit-overflow-scrolling:touch;flex-direction:column;flex:1 1 0;gap:4px;height:0;min-height:0;margin:0;padding:8px 12px 16px;display:flex;overflow:hidden auto}.sH4J3W_skinCard{box-sizing:border-box;cursor:pointer;text-align:left;width:100%;min-height:72px;color:inherit;font:inherit;background:0 0;border:0;border-radius:8px;align-items:center;gap:12px;padding:8px;display:flex}.sH4J3W_skinCard:hover{background:var(--dsw-specific-sidebar-nav-item-hover,var(--dsw-alias-interactive-bg-hover))}.sH4J3W_externalPlugin{cursor:default;border:1px dashed var(--dsw-alias-border-l2);min-height:58px}.sH4J3W_skinCard[data-selected=true]{background:var(--dsw-specific-sidebar-nav-item-active,var(--dsw-alias-button-ghost-active-fill));box-shadow:inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border)}.sH4J3W_skinCard>img{object-fit:cover;background:var(--dsw-alias-bg-layer-3);border-radius:7px;flex:none;width:56px;height:56px;display:block}.sH4J3W_skinCardBody{flex-direction:column;flex:1;min-width:0;display:flex}.sH4J3W_cardTitle{white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:400;line-height:22px;overflow:hidden}.sH4J3W_cardMetaLine{min-width:0;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));align-items:center;gap:8px;font-size:12px;line-height:18px;display:flex}.sH4J3W_cardMeta{white-space:nowrap;text-overflow:ellipsis;min-width:0;overflow:hidden}.sH4J3W_cardStars{white-space:nowrap;flex:none;align-items:center;gap:3px;display:inline-flex}.sH4J3W_cardStatus{height:20px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:5px;flex:none;align-items:center;padding:0 7px;font-size:10px;line-height:16px;display:inline-flex}.sH4J3W_cardStatusUpdate{color:var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary));background:color-mix(in srgb, var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)) 10%, transparent)}.sH4J3W_detail{flex-direction:column;gap:14px;min-width:0;min-height:0;padding:32px 28px 28px;display:flex;overflow-y:auto}.sH4J3W_detail>*{flex:none}.sH4J3W_mobileBack.sH4J3W_nativeOutline{order:0;align-self:flex-start;display:none}.sH4J3W_hero{aspect-ratio:16/8;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;order:4;width:100%;position:relative;overflow:hidden}.sH4J3W_hero img{object-fit:cover;width:100%;height:100%;display:block}.sH4J3W_thumbnails{order:5;gap:8px;display:flex;overflow-x:auto}.sH4J3W_thumbnails button{cursor:pointer;border:1px solid var(--dsw-alias-border-l2);opacity:.62;background:0 0;border-radius:8px;flex:none;width:112px;padding:0;overflow:hidden}.sH4J3W_thumbnails button[data-selected=true]{border-color:var(--dsw-alias-brand-primary);opacity:1}.sH4J3W_thumbnails img{aspect-ratio:16/9;object-fit:cover;width:100%;display:block}.sH4J3W_detailHeader{border-bottom:1px solid var(--dsw-alias-border-l2);order:1;grid-template-columns:138px minmax(0,1fr);align-items:start;gap:22px;padding:0 4px 16px;display:grid}.sH4J3W_skinAvatar{object-fit:cover;background:var(--dsw-alias-bg-layer-1);border-radius:9px;width:138px;height:138px;display:block}.sH4J3W_titleBlock{min-width:0;padding-top:10px}.sH4J3W_titleBlock h2{letter-spacing:-.01em;font-size:23px;font-weight:620;line-height:31px}.sH4J3W_titleBlock .sH4J3W_author{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:13px;line-height:20px}.sH4J3W_titleBlock .sH4J3W_description{max-width:520px;color:var(--dsw-alias-label-secondary);margin-top:10px;font-size:13px;line-height:21px}.sH4J3W_titleBlock .sH4J3W_version{min-width:0;color:var(--dsw-alias-label-caption);align-items:center;gap:7px;margin-top:8px;font-size:12px;line-height:22px;display:flex}.sH4J3W_status{height:20px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:10px;align-items:center;padding:0 7px;font-size:11px;line-height:18px;display:inline-flex}.sH4J3W_statusActive{color:var(--dsw-alias-state-success-primary);background:color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent)}.sH4J3W_actionRow{border-bottom:1px solid var(--dsw-alias-border-l2);flex-wrap:wrap;order:2;align-items:center;gap:9px;min-height:42px;padding:0 4px 12px;display:flex}.sH4J3W_stars{color:var(--dsw-alias-label-secondary);white-space:nowrap;flex:none;align-items:center;gap:5px;font-size:12px;line-height:20px;display:inline-flex}.sH4J3W_actionDivider{background:var(--dsw-alias-border-l2);width:1px;height:22px;margin:0 3px}.sH4J3W_repoMeta{flex:220px;align-items:center;gap:10px;min-width:0;display:flex}.sH4J3W_repoLink{min-width:0;color:var(--dsw-alias-link-primary,var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)));align-items:center;gap:5px;font-size:12px;line-height:20px;text-decoration:none;display:inline-flex}.sH4J3W_repoLink>svg{flex:none}.sH4J3W_repoLink>span{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.sH4J3W_repoLink:hover{text-decoration:underline}.sH4J3W_nativePrimary,.sH4J3W_nativeOutline{cursor:pointer;height:28px;font:inherit;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.sH4J3W_nativePrimary{color:var(--dsw-alias-label-primary-foreground,var(--dsw-alias-label-primary-inverted,#fff));background:var(--dsw-alias-button-primary-fill,var(--dsw-alias-brand-primary));border:0}.sH4J3W_nativePrimary:hover{background:var(--dsw-alias-button-primary-hover,var(--dsw-alias-brand-primary))}.sH4J3W_nativeOutline{color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:0 0}.sH4J3W_nativeOutline:hover{background:var(--dsw-alias-interactive-bg-hover)}.sH4J3W_iconOnlyButton{width:28px;padding:0}.sH4J3W_compactActionIcon svg{width:14px;height:14px}.sH4J3W_operation,.sH4J3W_error{border-radius:10px;order:3;align-items:center;gap:7px;padding:9px 12px;font-size:12px;line-height:18px;display:flex}.sH4J3W_operation{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover)}.sH4J3W_operation svg{animation:1s linear infinite sH4J3W_spin}.sH4J3W_error{color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-state-error-tertiary)}.sH4J3W_aboutGrid{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;order:6;grid-template-columns:minmax(0,1fr) minmax(260px,1fr);display:grid}.sH4J3W_aboutGrid>*{padding:16px 18px}.sH4J3W_aboutGrid>aside{border-left:1px solid var(--dsw-alias-border-l2)}.sH4J3W_aboutGrid h3,.sH4J3W_recommendations h3{margin-bottom:10px;font-size:14px;font-weight:600;line-height:22px}.sH4J3W_aboutGrid article>p{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:21px}.sH4J3W_tags{flex-wrap:wrap;gap:6px;margin-top:12px;display:flex}.sH4J3W_aboutGrid dl{margin:12px 0 0}.sH4J3W_aboutGrid dl div{border-bottom:1px solid var(--dsw-alias-border-l3);justify-content:space-between;gap:12px;padding:7px 0;font-size:12px;line-height:18px;display:flex}.sH4J3W_aboutGrid dt{color:var(--dsw-alias-label-caption)}.sH4J3W_aboutGrid dd{text-align:right;color:var(--dsw-alias-label-secondary);margin:0}.sH4J3W_notice{color:var(--dsw-alias-state-warning-primary);font-size:11px;line-height:17px;margin-top:10px!important}.sH4J3W_changelog ol{gap:8px;margin:0 0 12px;padding:0;list-style:none;display:grid}.sH4J3W_changelog li{color:var(--dsw-alias-label-secondary);grid-template-columns:64px minmax(0,1fr);gap:10px;font-size:12px;line-height:18px;display:grid}.sH4J3W_changelog strong{color:var(--dsw-alias-label-caption);font-weight:500}.sH4J3W_changelog a{color:var(--dsw-alias-label-primary);font-size:12px;text-decoration:none}.sH4J3W_changelog a:hover{text-decoration:underline}.sH4J3W_recommendations{border-top:1px solid var(--dsw-alias-border-l2);order:7;padding-top:18px}.sH4J3W_recommendations>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;display:grid}.sH4J3W_recommendations button{cursor:pointer;text-align:left;width:100%;min-width:0;height:auto;min-height:0;color:inherit;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);font:inherit;border-radius:10px;flex-direction:column;align-self:start;padding:0;display:flex;overflow:hidden}.sH4J3W_recommendations button:hover{border-color:var(--dsw-alias-border-l1);background:var(--dsw-alias-interactive-bg-hover)}.sH4J3W_recommendations img{aspect-ratio:16/9;object-fit:contain;background:var(--dsw-alias-bg-layer-2);width:100%;display:block}.sH4J3W_recommendations button>span{box-sizing:border-box;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:11px 12px 12px;display:flex}.sH4J3W_recommendations strong{white-space:normal;overflow-wrap:anywhere;min-width:0;font-size:13px;line-height:19px}.sH4J3W_recommendations small{color:var(--dsw-alias-label-caption);flex:none;align-items:center;gap:3px;padding-top:1px;font-size:11px;line-height:18px;display:inline-flex}.sH4J3W_loading,.sH4J3W_listLoading,.sH4J3W_empty{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:20px}.sH4J3W_loading{align-items:center;gap:7px;margin:auto;display:flex}.sH4J3W_listLoading{justify-content:center;align-items:center;gap:7px;padding:24px 8px;display:flex}.sH4J3W_loading svg,.sH4J3W_listLoading svg{animation:1s linear infinite sH4J3W_spin}.sH4J3W_empty{text-align:center;padding:24px 8px}.sH4J3W_submission{gap:10px;width:100%;min-width:0;max-width:100%;display:grid}.sH4J3W_submission small{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.sH4J3W_submission textarea{box-sizing:border-box;resize:vertical;width:100%;min-width:0;max-width:100%;min-height:300px;color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;outline:none;padding:12px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}.sH4J3W_submission textarea:focus{border-color:var(--dsw-alias-brand-primary)}@keyframes sH4J3W_spin{to{transform:rotate(360deg)}}@media (width<=959px){.sH4J3W_root{height:100%;min-height:0;max-height:100%;display:block;overflow:hidden}.sH4J3W_catalog{border-right:0;height:100%;min-height:0;overflow:hidden}.sH4J3W_detail{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;height:100%;min-height:0;display:none;overflow-y:auto}.sH4J3W_root[data-detail=open] .sH4J3W_catalog{display:none}.sH4J3W_root[data-detail=open] .sH4J3W_detail{display:flex}.sH4J3W_mobileBack.sH4J3W_nativeOutline{display:inline-flex}.sH4J3W_detailHeader{grid-template-columns:76px minmax(0,1fr);align-items:start;gap:14px;display:grid}.sH4J3W_skinAvatar{width:76px;height:76px}.sH4J3W_titleBlock{padding-top:0}.sH4J3W_titleBlock h2{font-size:20px;line-height:27px}.sH4J3W_titleBlock .sH4J3W_description{margin-top:7px}.sH4J3W_titleBlock .sH4J3W_version{flex-wrap:wrap;row-gap:2px;margin-top:6px}.sH4J3W_actionRow{justify-content:flex-start}.sH4J3W_aboutGrid{grid-template-columns:1fr}.sH4J3W_aboutGrid>aside{border-top:1px solid var(--dsw-alias-border-l2);border-left:0}.sH4J3W_recommendations>div{grid-template-columns:1fr}}@media (prefers-reduced-motion:reduce){.sH4J3W_operation svg,.sH4J3W_loading svg,.sH4J3W_listLoading svg{animation:none}}";
+		//#region \0dsh-skin-market-css:/Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/src/client/SkinMarket.module.css.mjs
+		const css = ".VqXecW_root{box-sizing:border-box;width:100%;height:100%;min-height:0;color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2);grid-template-columns:330px minmax(0,1fr);display:grid;overflow:hidden}.VqXecW_settingsNavIcon{flex:none;justify-content:center;align-items:center;width:16px;height:16px;display:inline-flex}.VqXecW_settingsNavIcon svg{width:16px;height:16px;display:block}svg[data-dsh-skin-market-default-icon=hidden]{display:none}.VqXecW_catalog{border-right:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-2);flex-direction:column;min-width:0;display:flex}.VqXecW_catalogHeader{border-bottom:1px solid var(--dsw-alias-border-l2);flex-direction:column;gap:14px;padding:24px 22px 10px;display:flex}.VqXecW_catalogHeader h2,.VqXecW_detail h2,.VqXecW_detail h3,.VqXecW_catalogHeader p,.VqXecW_detail p{margin:0}.VqXecW_catalogHeader h2{margin-bottom:2px;font-size:20px;font-weight:600;line-height:28px}.VqXecW_catalogHeader p{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:12px;line-height:18px}.VqXecW_catalogTitle{justify-content:space-between;align-items:center;gap:12px;display:flex}.VqXecW_catalogTitle>div:first-child{min-width:0}.VqXecW_catalogTitleActions{flex:none;align-items:center;gap:6px;display:flex}.VqXecW_catalogRefresh[data-refreshing=true] svg{animation:1s linear infinite VqXecW_spin}.VqXecW_catalogHeader>span{height:48px;color:var(--dsw-alias-label-secondary);border:1px solid var(--dsw-alias-border-l2);background:0 0;border-radius:10px;align-items:center;gap:8px;padding:0 14px;display:flex}.VqXecW_catalogHeader>span:focus-within{border-color:var(--dsw-alias-border-l1)}.VqXecW_catalogHeader>span input{min-width:0;color:var(--dsw-alias-label-primary);background:0 0;border:0;outline:0;flex:1}.VqXecW_catalogHeader>span input::placeholder{color:var(--dsw-alias-label-caption)}.VqXecW_filterBar{justify-content:space-between;align-items:center;gap:8px;display:flex}.VqXecW_filters{flex-wrap:wrap;gap:4px;display:flex}.VqXecW_root .VqXecW_filters .VqXecW_filterPill{border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 11px;font-size:12px;line-height:18px;display:inline-flex;color:var(--dsw-alias-label-secondary)!important;background:0 0!important;border:1px solid #0000!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill:hover{background:var(--dsw-alias-interactive-bg-hover)!important}.VqXecW_root .VqXecW_filters .VqXecW_filterPill[data-active=true]{color:var(--dsw-alias-label-primary)!important;border-color:var(--dsw-alias-button-ghost-active-border,var(--dsw-alias-border-l1))!important;background:var(--dsw-alias-button-ghost-active-fill,var(--dsw-alias-interactive-bg-hover))!important}.VqXecW_staticPill{height:24px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border:none;border-radius:12px;align-items:center;gap:4px;padding:0 8px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton{cursor:pointer;white-space:nowrap;height:28px;color:var(--dsw-alias-label-secondary);background:0 0;border:0;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_sortButton:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_skinList{overscroll-behavior:contain;scrollbar-gutter:stable;touch-action:pan-y;-webkit-overflow-scrolling:touch;flex-direction:column;flex:1 1 0;gap:4px;height:0;min-height:0;margin:0;padding:8px 12px 16px;display:flex;overflow:hidden auto}.VqXecW_skinCard{box-sizing:border-box;cursor:pointer;text-align:left;width:100%;min-height:72px;color:inherit;font:inherit;background:0 0;border:0;border-radius:8px;align-items:center;gap:12px;padding:8px;display:flex}.VqXecW_skinCard:hover{background:var(--dsw-specific-sidebar-nav-item-hover,var(--dsw-alias-interactive-bg-hover))}.VqXecW_externalPlugin{cursor:default;border:1px dashed var(--dsw-alias-border-l2);min-height:58px}.VqXecW_skinCard[data-selected=true]{background:var(--dsw-specific-sidebar-nav-item-active,var(--dsw-alias-button-ghost-active-fill));box-shadow:inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border)}.VqXecW_skinCard>img{object-fit:cover;background:var(--dsw-alias-bg-layer-3);border-radius:7px;flex:none;width:56px;height:56px;display:block}.VqXecW_skinCardBody{flex-direction:column;flex:1;min-width:0;display:flex}.VqXecW_cardTitle{white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:400;line-height:22px;overflow:hidden}.VqXecW_cardMetaLine{min-width:0;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));align-items:center;gap:8px;font-size:12px;line-height:18px;display:flex}.VqXecW_cardMeta{white-space:nowrap;text-overflow:ellipsis;min-width:0;overflow:hidden}.VqXecW_cardStars{white-space:nowrap;flex:none;align-items:center;gap:3px;display:inline-flex}.VqXecW_cardStatus{height:20px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:5px;flex:none;align-items:center;padding:0 7px;font-size:10px;line-height:16px;display:inline-flex}.VqXecW_cardStatusUpdate{color:var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary));background:color-mix(in srgb, var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)) 10%, transparent)}.VqXecW_detail{flex-direction:column;gap:14px;min-width:0;min-height:0;padding:32px 28px 28px;display:flex;overflow-y:auto}.VqXecW_detail>*{flex:none}.VqXecW_mobileBack.VqXecW_nativeOutline{order:0;align-self:flex-start;display:none}.VqXecW_hero{aspect-ratio:16/8;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;order:4;width:100%;position:relative;overflow:hidden}.VqXecW_hero img{object-fit:cover;width:100%;height:100%;display:block}.VqXecW_thumbnails{order:5;gap:8px;display:flex;overflow-x:auto}.VqXecW_thumbnails button{cursor:pointer;border:1px solid var(--dsw-alias-border-l2);opacity:.62;background:0 0;border-radius:8px;flex:none;width:112px;padding:0;overflow:hidden}.VqXecW_thumbnails button[data-selected=true]{border-color:var(--dsw-alias-brand-primary);opacity:1}.VqXecW_thumbnails img{aspect-ratio:16/9;object-fit:cover;width:100%;display:block}.VqXecW_detailHeader{border-bottom:1px solid var(--dsw-alias-border-l2);order:1;grid-template-columns:138px minmax(0,1fr);align-items:start;gap:22px;padding:0 4px 16px;display:grid}.VqXecW_skinAvatar{object-fit:cover;background:var(--dsw-alias-bg-layer-1);border-radius:9px;width:138px;height:138px;display:block}.VqXecW_titleBlock{min-width:0;padding-top:10px}.VqXecW_titleBlock h2{letter-spacing:-.01em;font-size:23px;font-weight:620;line-height:31px}.VqXecW_titleBlock .VqXecW_author{color:var(--dsw-alias-label-secondary);margin-top:2px;font-size:13px;line-height:20px}.VqXecW_titleBlock .VqXecW_description{max-width:520px;color:var(--dsw-alias-label-secondary);margin-top:10px;font-size:13px;line-height:21px}.VqXecW_titleBlock .VqXecW_version{min-width:0;color:var(--dsw-alias-label-caption);align-items:center;gap:7px;margin-top:8px;font-size:12px;line-height:22px;display:flex}.VqXecW_status{height:20px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1);white-space:nowrap;border:0;border-radius:10px;align-items:center;padding:0 7px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_statusActive{color:var(--dsw-alias-state-success-primary);background:color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent)}.VqXecW_actionRow{border-bottom:1px solid var(--dsw-alias-border-l2);flex-wrap:wrap;order:2;align-items:center;gap:9px;min-height:42px;padding:0 4px 12px;display:flex}.VqXecW_stars{color:var(--dsw-alias-label-secondary);white-space:nowrap;flex:none;align-items:center;gap:5px;font-size:12px;line-height:20px;display:inline-flex}.VqXecW_actionDivider{background:var(--dsw-alias-border-l2);width:1px;height:22px;margin:0 3px}.VqXecW_repoMeta{flex:220px;align-items:center;gap:10px;min-width:0;display:flex}.VqXecW_repoLink{min-width:0;color:var(--dsw-alias-link-primary,var(--dsw-alias-state-business-primary,var(--dsw-alias-brand-primary)));align-items:center;gap:5px;font-size:12px;line-height:20px;text-decoration:none;display:inline-flex}.VqXecW_repoLink>svg{flex:none}.VqXecW_repoLink>span{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.VqXecW_repoLink:hover{text-decoration:underline}.VqXecW_nativePrimary,.VqXecW_nativeOutline{cursor:pointer;height:28px;font:inherit;border-radius:14px;justify-content:center;align-items:center;gap:4px;padding:0 10px;font-size:12px;line-height:18px;display:inline-flex}.VqXecW_nativePrimary{color:var(--dsw-alias-label-primary-foreground,var(--dsw-alias-label-primary-inverted,#fff));background:var(--dsw-alias-button-primary-fill,var(--dsw-alias-brand-primary));border:0}.VqXecW_nativePrimary:hover{background:var(--dsw-alias-button-primary-hover,var(--dsw-alias-brand-primary))}.VqXecW_nativeOutline{color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:0 0}.VqXecW_nativeOutline:hover{background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_iconOnlyButton{width:28px;padding:0}.VqXecW_compactActionIcon svg{width:14px;height:14px}.VqXecW_operation,.VqXecW_error{border-radius:10px;order:3;align-items:center;gap:7px;padding:9px 12px;font-size:12px;line-height:18px;display:flex}.VqXecW_operation{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_operation svg{animation:1s linear infinite VqXecW_spin}.VqXecW_error{color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-state-error-tertiary)}.VqXecW_aboutGrid{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;order:6;grid-template-columns:minmax(0,1fr) minmax(260px,1fr);display:grid}.VqXecW_aboutGrid>*{padding:16px 18px}.VqXecW_aboutGrid>aside{border-left:1px solid var(--dsw-alias-border-l2)}.VqXecW_aboutGrid h3,.VqXecW_recommendations h3{margin-bottom:10px;font-size:14px;font-weight:600;line-height:22px}.VqXecW_aboutGrid article>p{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:21px}.VqXecW_tags{flex-wrap:wrap;gap:6px;margin-top:12px;display:flex}.VqXecW_aboutGrid dl{margin:12px 0 0}.VqXecW_aboutGrid dl div{border-bottom:1px solid var(--dsw-alias-border-l3);justify-content:space-between;gap:12px;padding:7px 0;font-size:12px;line-height:18px;display:flex}.VqXecW_aboutGrid dt{color:var(--dsw-alias-label-caption)}.VqXecW_aboutGrid dd{text-align:right;color:var(--dsw-alias-label-secondary);margin:0}.VqXecW_notice{color:var(--dsw-alias-state-warning-primary);font-size:11px;line-height:17px;margin-top:10px!important}.VqXecW_changelog ol{gap:8px;margin:0 0 12px;padding:0;list-style:none;display:grid}.VqXecW_changelog li{color:var(--dsw-alias-label-secondary);grid-template-columns:64px minmax(0,1fr);gap:10px;font-size:12px;line-height:18px;display:grid}.VqXecW_changelog strong{color:var(--dsw-alias-label-caption);font-weight:500}.VqXecW_changelog a{color:var(--dsw-alias-label-primary);font-size:12px;text-decoration:none}.VqXecW_changelog a:hover{text-decoration:underline}.VqXecW_recommendations{border-top:1px solid var(--dsw-alias-border-l2);order:7;padding-top:18px}.VqXecW_recommendations>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;display:grid}.VqXecW_recommendations button{cursor:pointer;text-align:left;width:100%;min-width:0;height:auto;min-height:0;color:inherit;border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);font:inherit;border-radius:10px;flex-direction:column;align-self:start;padding:0;display:flex;overflow:hidden}.VqXecW_recommendations button:hover{border-color:var(--dsw-alias-border-l1);background:var(--dsw-alias-interactive-bg-hover)}.VqXecW_recommendations img{aspect-ratio:16/9;object-fit:contain;background:var(--dsw-alias-bg-layer-2);width:100%;display:block}.VqXecW_recommendations button>span{box-sizing:border-box;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;padding:11px 12px 12px;display:flex}.VqXecW_recommendations strong{white-space:normal;overflow-wrap:anywhere;min-width:0;font-size:13px;line-height:19px}.VqXecW_recommendations small{color:var(--dsw-alias-label-caption);flex:none;align-items:center;gap:3px;padding-top:1px;font-size:11px;line-height:18px;display:inline-flex}.VqXecW_loading,.VqXecW_listLoading,.VqXecW_empty{color:var(--dsw-alias-label-secondary);font-size:13px;line-height:20px}.VqXecW_loading{align-items:center;gap:7px;margin:auto;display:flex}.VqXecW_listLoading{justify-content:center;align-items:center;gap:7px;padding:24px 8px;display:flex}.VqXecW_loading svg,.VqXecW_listLoading svg{animation:1s linear infinite VqXecW_spin}.VqXecW_empty{text-align:center;padding:24px 8px}.VqXecW_submission{gap:10px;width:100%;min-width:0;max-width:100%;display:grid}.VqXecW_submission small{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.VqXecW_submission textarea{box-sizing:border-box;resize:vertical;width:100%;min-width:0;max-width:100%;min-height:300px;color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:10px;outline:none;padding:12px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}.VqXecW_submission textarea:focus{border-color:var(--dsw-alias-brand-primary)}@keyframes VqXecW_spin{to{transform:rotate(360deg)}}@media (width<=959px){.VqXecW_root{height:100%;min-height:0;max-height:100%;display:block;overflow:hidden}.VqXecW_catalog{border-right:0;height:100%;min-height:0;overflow:hidden}.VqXecW_detail{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;height:100%;min-height:0;display:none;overflow-y:auto}.VqXecW_root[data-detail=open] .VqXecW_catalog{display:none}.VqXecW_root[data-detail=open] .VqXecW_detail{display:flex}.VqXecW_mobileBack.VqXecW_nativeOutline{display:inline-flex}.VqXecW_detailHeader{grid-template-columns:76px minmax(0,1fr);align-items:start;gap:14px;display:grid}.VqXecW_skinAvatar{width:76px;height:76px}.VqXecW_titleBlock{padding-top:0}.VqXecW_titleBlock h2{font-size:20px;line-height:27px}.VqXecW_titleBlock .VqXecW_description{margin-top:7px}.VqXecW_titleBlock .VqXecW_version{flex-wrap:wrap;row-gap:2px;margin-top:6px}.VqXecW_actionRow{justify-content:flex-start}.VqXecW_aboutGrid{grid-template-columns:1fr}.VqXecW_aboutGrid>aside{border-top:1px solid var(--dsw-alias-border-l2);border-left:0}.VqXecW_recommendations>div{grid-template-columns:1fr}}@media (prefers-reduced-motion:reduce){.VqXecW_operation svg,.VqXecW_loading svg,.VqXecW_listLoading svg{animation:none}}";
 		const tagId = "dsh-skin-market/SkinMarket.module.css";
 		if (typeof document !== "undefined" && !document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]")) {
 			const tag = document.createElement("style");
@@ -259,59 +259,61 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var SkinMarket_module_css_default = {
-			"aboutGrid": "sH4J3W_aboutGrid",
-			"recommendations": "sH4J3W_recommendations",
-			"listLoading": "sH4J3W_listLoading",
-			"cardStatusUpdate": "sH4J3W_cardStatusUpdate",
-			"thumbnails": "sH4J3W_thumbnails",
-			"error": "sH4J3W_error",
-			"detailHeader": "sH4J3W_detailHeader",
-			"submission": "sH4J3W_submission",
-			"catalog": "sH4J3W_catalog",
-			"loading": "sH4J3W_loading",
-			"skinCard": "sH4J3W_skinCard",
-			"iconOnlyButton": "sH4J3W_iconOnlyButton",
-			"skinAvatar": "sH4J3W_skinAvatar",
-			"cardMetaLine": "sH4J3W_cardMetaLine",
-			"changelog": "sH4J3W_changelog",
-			"author": "sH4J3W_author",
-			"detail": "sH4J3W_detail",
-			"cardStars": "sH4J3W_cardStars",
-			"nativeOutline": "sH4J3W_nativeOutline",
-			"stars": "sH4J3W_stars",
-			"catalogTitle": "sH4J3W_catalogTitle",
-			"mobileBack": "sH4J3W_mobileBack",
-			"operation": "sH4J3W_operation",
-			"skinCardBody": "sH4J3W_skinCardBody",
-			"repoLink": "sH4J3W_repoLink",
-			"description": "sH4J3W_description",
-			"notice": "sH4J3W_notice",
-			"staticPill": "sH4J3W_staticPill",
-			"sortButton": "sH4J3W_sortButton",
-			"empty": "sH4J3W_empty",
-			"hero": "sH4J3W_hero",
-			"cardTitle": "sH4J3W_cardTitle",
-			"version": "sH4J3W_version",
-			"tags": "sH4J3W_tags",
-			"titleBlock": "sH4J3W_titleBlock",
-			"catalogHeader": "sH4J3W_catalogHeader",
-			"externalPlugin": "sH4J3W_externalPlugin",
-			"cardStatus": "sH4J3W_cardStatus",
-			"statusActive": "sH4J3W_statusActive",
-			"compactActionIcon": "sH4J3W_compactActionIcon",
-			"spin": "sH4J3W_spin",
-			"root": "sH4J3W_root",
-			"settingsNavIcon": "sH4J3W_settingsNavIcon",
-			"skinList": "sH4J3W_skinList",
-			"filterPill": "sH4J3W_filterPill",
-			"cardMeta": "sH4J3W_cardMeta",
-			"status": "sH4J3W_status",
-			"filters": "sH4J3W_filters",
-			"repoMeta": "sH4J3W_repoMeta",
-			"filterBar": "sH4J3W_filterBar",
-			"actionRow": "sH4J3W_actionRow",
-			"actionDivider": "sH4J3W_actionDivider",
-			"nativePrimary": "sH4J3W_nativePrimary"
+			"sortButton": "VqXecW_sortButton",
+			"status": "VqXecW_status",
+			"nativePrimary": "VqXecW_nativePrimary",
+			"listLoading": "VqXecW_listLoading",
+			"spin": "VqXecW_spin",
+			"skinAvatar": "VqXecW_skinAvatar",
+			"stars": "VqXecW_stars",
+			"operation": "VqXecW_operation",
+			"catalogHeader": "VqXecW_catalogHeader",
+			"root": "VqXecW_root",
+			"mobileBack": "VqXecW_mobileBack",
+			"detail": "VqXecW_detail",
+			"catalogRefresh": "VqXecW_catalogRefresh",
+			"skinCard": "VqXecW_skinCard",
+			"externalPlugin": "VqXecW_externalPlugin",
+			"cardTitle": "VqXecW_cardTitle",
+			"settingsNavIcon": "VqXecW_settingsNavIcon",
+			"description": "VqXecW_description",
+			"loading": "VqXecW_loading",
+			"catalogTitleActions": "VqXecW_catalogTitleActions",
+			"changelog": "VqXecW_changelog",
+			"cardMeta": "VqXecW_cardMeta",
+			"version": "VqXecW_version",
+			"notice": "VqXecW_notice",
+			"actionRow": "VqXecW_actionRow",
+			"skinList": "VqXecW_skinList",
+			"author": "VqXecW_author",
+			"cardStatus": "VqXecW_cardStatus",
+			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
+			"repoLink": "VqXecW_repoLink",
+			"filterPill": "VqXecW_filterPill",
+			"staticPill": "VqXecW_staticPill",
+			"submission": "VqXecW_submission",
+			"thumbnails": "VqXecW_thumbnails",
+			"repoMeta": "VqXecW_repoMeta",
+			"cardStars": "VqXecW_cardStars",
+			"hero": "VqXecW_hero",
+			"detailHeader": "VqXecW_detailHeader",
+			"tags": "VqXecW_tags",
+			"filterBar": "VqXecW_filterBar",
+			"catalog": "VqXecW_catalog",
+			"statusActive": "VqXecW_statusActive",
+			"iconOnlyButton": "VqXecW_iconOnlyButton",
+			"nativeOutline": "VqXecW_nativeOutline",
+			"aboutGrid": "VqXecW_aboutGrid",
+			"recommendations": "VqXecW_recommendations",
+			"filters": "VqXecW_filters",
+			"catalogTitle": "VqXecW_catalogTitle",
+			"cardMetaLine": "VqXecW_cardMetaLine",
+			"actionDivider": "VqXecW_actionDivider",
+			"skinCardBody": "VqXecW_skinCardBody",
+			"titleBlock": "VqXecW_titleBlock",
+			"compactActionIcon": "VqXecW_compactActionIcon",
+			"error": "VqXecW_error",
+			"empty": "VqXecW_empty"
 		};
 		//#endregion
 		//#region src/client/submission.ts
@@ -356,6 +358,22 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 		}
 		//#endregion
 		//#region src/client/SkinMarketSection.tsx
+		function captureListScroll(list) {
+			if (list === null) return null;
+			const listTop = list.getBoundingClientRect().top;
+			const card = [...list.querySelectorAll("[data-skin-id]")].find((item) => item.getBoundingClientRect().bottom > listTop);
+			return {
+				skinId: card?.dataset.skinId ?? null,
+				offset: card === void 0 ? 0 : card.getBoundingClientRect().top - listTop,
+				scrollTop: list.scrollTop
+			};
+		}
+		function restoreListScroll(list, anchor) {
+			if (list === null || anchor === null) return;
+			const card = anchor.skinId === null ? void 0 : [...list.querySelectorAll("[data-skin-id]")].find((item) => item.dataset.skinId === anchor.skinId);
+			if (card === void 0) list.scrollTop = anchor.scrollTop;
+			else list.scrollTop += card.getBoundingClientRect().top - list.getBoundingClientRect().top - anchor.offset;
+		}
 		const phases = {
 			queued: "正在排队…",
 			resolving: "正在解析版本…",
@@ -373,6 +391,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			uninstall: "卸载中"
 		};
 		const RELOAD_PARAM = "dsh-skin-reload";
+		const ACTIVATION_WARNING_KEY = "dsh-skin-market:activation-warning-accepted";
 		function restartReloadUrl(href, instanceId) {
 			const url = new URL(href);
 			url.searchParams.set(RELOAD_PARAM, instanceId);
@@ -421,46 +440,93 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			const [mutation, setMutation] = (0, react.useState)(null);
 			const [error, setError] = (0, react.useState)(null);
 			const [confirmUninstall, setConfirmUninstall] = (0, react.useState)(false);
+			const [confirmActivate, setConfirmActivate] = (0, react.useState)(false);
+			const [activationWarningAccepted, setActivationWarningAccepted] = (0, react.useState)(() => {
+				try {
+					return window.localStorage.getItem(ACTIVATION_WARNING_KEY) === "true";
+				} catch {
+					return false;
+				}
+			});
 			const [confirmRestart, setConfirmRestart] = (0, react.useState)(false);
 			const [restarting, setRestarting] = (0, react.useState)(false);
 			const [runningAgents, setRunningAgents] = (0, react.useState)(null);
+			const [restartCheckFinished, setRestartCheckFinished] = (0, react.useState)(false);
 			const [showDetail, setShowDetail] = (0, react.useState)(false);
 			const [showSubmission, setShowSubmission] = (0, react.useState)(false);
 			const [submissionCopied, setSubmissionCopied] = (0, react.useState)(false);
 			const [installPromptCopied, setInstallPromptCopied] = (0, react.useState)(null);
 			const [settingsNavIconHost, setSettingsNavIconHost] = (0, react.useState)(null);
-			const refresh = (0, react.useCallback)(async (showLoading = false) => {
+			const [catalogMeta, setCatalogMeta] = (0, react.useState)({});
+			const [catalogRefreshing, setCatalogRefreshing] = (0, react.useState)(false);
+			const skinListRef = (0, react.useRef)(null);
+			const pendingScrollAnchor = (0, react.useRef)(null);
+			const skinsRef = (0, react.useRef)([]);
+			const selectedIdRef = (0, react.useRef)("");
+			const refresh = (0, react.useCallback)(async (showLoading = false, forceCatalog = false) => {
 				if (showLoading) setLoading(true);
+				if (forceCatalog) setCatalogRefreshing(true);
 				try {
-					const [catalog, state] = await Promise.all([json("/dsh-skin-market/catalog"), json("/dsh-skin-market/state")]);
-					setSkins(catalog.skins);
+					const [catalog, state] = await Promise.all([json(forceCatalog ? "/dsh-skin-market/catalog/refresh" : "/dsh-skin-market/catalog", forceCatalog ? { method: "POST" } : void 0), json("/dsh-skin-market/state")]);
+					pendingScrollAnchor.current = captureListScroll(skinListRef.current);
+					const nextSkins = [...catalog.skins];
+					const selectedBeforeRefresh = selectedIdRef.current;
+					if (selectedBeforeRefresh !== "" && !nextSkins.some((skin) => skin.id === selectedBeforeRefresh)) {
+						const selectedSkin = skinsRef.current.find((skin) => skin.id === selectedBeforeRefresh);
+						if (selectedSkin !== void 0) nextSkins.push(selectedSkin);
+					}
+					skinsRef.current = nextSkins;
+					setSkins(nextSkins);
+					setCatalogMeta({
+						generatedAt: catalog.generatedAt,
+						source: catalog.catalogSource,
+						error: catalog.catalogError
+					});
 					setStates(state.skins);
 					setInstalledClientPlugins(state.installedClientPlugins ?? []);
-					setRunningAgents(Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null);
+					setRunningAgents(typeof state.runningAgentCount === "number" && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null);
 					setSelectedId((value) => {
-						if (value !== "" && catalog.skins.some((skin) => skin.id === value)) return value;
+						if (value !== "" && nextSkins.some((skin) => skin.id === value)) {
+							selectedIdRef.current = value;
+							return value;
+						}
 						const active = state.skins.find((item) => item.activation === "active");
-						if (active !== void 0 && catalog.skins.some((skin) => skin.id === active.skinId)) return active.skinId;
-						return catalog.skins[0]?.id ?? "";
+						const next = active !== void 0 && nextSkins.some((skin) => skin.id === active.skinId) ? active.skinId : nextSkins[0]?.id ?? "";
+						selectedIdRef.current = next;
+						return next;
 					});
 				} finally {
 					if (showLoading) setLoading(false);
+					if (forceCatalog) setCatalogRefreshing(false);
 				}
 			}, []);
 			const openRestartConfirm = (0, react.useCallback)(async () => {
 				setError(null);
 				setRunningAgents(null);
+				setRestartCheckFinished(false);
 				setConfirmRestart(true);
 				try {
 					const state = await json("/dsh-skin-market/state", { cache: "no-store" });
-					setRunningAgents(Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null);
+					setRunningAgents(typeof state.runningAgentCount === "number" && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null);
+					setRestartCheckFinished(true);
 				} catch (reason) {
+					setRestartCheckFinished(true);
 					setError(reason instanceof Error ? reason.message : String(reason));
 				}
 			}, []);
 			(0, react.useEffect)(() => {
 				refresh(true).catch((reason) => setError(reason instanceof Error ? reason.message : String(reason)));
 			}, [refresh]);
+			(0, react.useEffect)(() => {
+				const timer = window.setInterval(() => {
+					refresh(false).catch(() => void 0);
+				}, 3e5);
+				return () => window.clearInterval(timer);
+			}, [refresh]);
+			(0, react.useLayoutEffect)(() => {
+				restoreListScroll(skinListRef.current, pendingScrollAnchor.current);
+				pendingScrollAnchor.current = null;
+			}, [skins]);
 			(0, react.useEffect)(() => {
 				const url = new URL(window.location.href);
 				if (!url.searchParams.has(RELOAD_PARAM)) return;
@@ -526,8 +592,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							let needsRestart = false;
 							if (kind === "deactivate" || kind === "uninstall") await clientRuntime?.setActive(selected.package, false);
 							else if (kind === "activate" && clientRuntime !== void 0) {
-								await Promise.all(skins.filter((skin) => skin.id !== selected.id).map((skin) => clientRuntime.setActive(skin.package, false)));
-								needsRestart = !await clientRuntime.setActive(selected.package, true);
+								needsRestart = !await switchClientSkin(clientRuntime, skins.map((skin) => skin.package), selected.package);
 								restoreMarketStyleOrder();
 							}
 							await refresh();
@@ -588,6 +653,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				}
 			}, [selected]);
 			const select = (id) => {
+				selectedIdRef.current = id;
 				setSelectedId(id);
 				setShotIndex(0);
 				setShowDetail(true);
@@ -596,6 +662,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			};
 			const recommendations = selected?.recommendations.map((id) => skins.find((skin) => skin.id === id)).filter((skin) => skin !== void 0) ?? [];
 			const submissionPrompt = createSubmissionPrompt();
+			const catalogSourceLabel = catalogMeta.source === "remote" ? "在线目录" : catalogMeta.source === "cache" ? "缓存目录" : "内置目录";
 			const copySubmissionPrompt = async () => {
 				await navigator.clipboard.writeText(submissionPrompt);
 				setSubmissionCopied(true);
@@ -623,15 +690,37 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							children: [
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: SkinMarket_module_css_default.catalogTitle,
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: t("title") }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
-										className: SkinMarket_module_css_default.nativeOutline,
-										variant: "outline",
-										size: "sm",
-										onClick: () => {
-											setShowSubmission(true);
-											setSubmissionCopied(false);
-										},
-										children: "提交皮肤"
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: t("title") }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+										title: catalogMeta.error,
+										children: [
+											catalogSourceLabel,
+											catalogMeta.generatedAt ? ` · 更新于 ${displayDate(catalogMeta.generatedAt)}` : "",
+											catalogMeta.error ? " · 同步失败，已回退" : ""
+										]
+									})] }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+										className: SkinMarket_module_css_default.catalogTitleActions,
+										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+											className: `${SkinMarket_module_css_default.nativeOutline} ${SkinMarket_module_css_default.iconOnlyButton} ${SkinMarket_module_css_default.catalogRefresh}`,
+											variant: "outline",
+											size: "sm",
+											icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.IconRefreshOutline16, {}),
+											"aria-label": "刷新在线目录",
+											title: "立即检查最新皮肤目录",
+											disabled: catalogRefreshing,
+											"data-refreshing": catalogRefreshing ? "true" : void 0,
+											onClick: () => {
+												refresh(false, true).catch((reason) => setError(reason instanceof Error ? reason.message : String(reason)));
+											}
+										}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+											className: SkinMarket_module_css_default.nativeOutline,
+											variant: "outline",
+											size: "sm",
+											onClick: () => {
+												setShowSubmission(true);
+												setSubmissionCopied(false);
+											},
+											children: "提交皮肤"
+										})]
 									})]
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Input, {
@@ -673,6 +762,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							]
 						}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 							className: SkinMarket_module_css_default.skinList,
+							ref: skinListRef,
 							children: [
 								loading ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: SkinMarket_module_css_default.listLoading,
@@ -684,6 +774,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 									return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(_deepseek_ai_dsh_client_ui_primitives.Button, {
 										variant: "ghost",
 										className: SkinMarket_module_css_default.skinCard,
+										"data-skin-id": skin.id,
 										"data-selected": skin.id === selected?.id,
 										"aria-current": skin.id === selected?.id ? "true" : void 0,
 										onClick: () => select(skin.id),
@@ -842,7 +933,10 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 										variant: "primary",
 										size: "sm",
 										disabled: busy !== null,
-										onClick: () => void run("activate"),
+										onClick: () => {
+											if (activationWarningAccepted) run("activate");
+											else setConfirmActivate(true);
+										},
 										children: "使用"
 									}),
 									state.activation === "restart-required" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
@@ -1050,13 +1144,40 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 						})] })
 					}),
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Modal, {
+						open: confirmActivate,
+						onClose: () => setConfirmActivate(false),
+						title: "启用皮肤前请先关闭其他皮肤",
+						closeLabel: "关闭",
+						description: "多个皮肤或主题插件可能同时修改全局样式，造成界面错乱。请先在设置 → 插件中停用其他皮肤、主题和外观插件，再继续使用当前皮肤。此提醒只在首次使用时显示。",
+						footer: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+							className: SkinMarket_module_css_default.nativeOutline,
+							variant: "outline",
+							size: "sm",
+							onClick: () => setConfirmActivate(false),
+							children: "取消"
+						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+							className: SkinMarket_module_css_default.nativePrimary,
+							variant: "primary",
+							size: "sm",
+							onClick: () => {
+								try {
+									window.localStorage.setItem(ACTIVATION_WARNING_KEY, "true");
+								} catch {}
+								setActivationWarningAccepted(true);
+								setConfirmActivate(false);
+								run("activate");
+							},
+							children: "已关闭其他皮肤，继续"
+						})] })
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Modal, {
 						open: confirmRestart,
 						onClose: () => {
 							if (!restarting) setConfirmRestart(false);
 						},
 						title: "需要重启 DSH 应用此皮肤",
 						closeLabel: "关闭",
-						description: restarting ? "正在重新启动 DSH，请稍候…" : runningAgents === null ? "正在检查是否有 Agent 运行。状态确认前不能重启。" : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : "Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。",
+						description: restarting ? "正在重新启动 DSH，请稍候…" : runningAgents === null && !restartCheckFinished ? "正在检查是否有 Agent 运行。状态确认前不能重启。" : runningAgents === null ? "当前 DSH Host 版本无法返回 Agent 状态。请先退出此面板，并在确认没有任务运行后手动重启一次 DSH；安全检查会在新版本加载后生效。" : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : "Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。",
 						footer: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
 							className: SkinMarket_module_css_default.nativeOutline,
 							variant: "outline",
@@ -1070,7 +1191,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							size: "sm",
 							disabled: restarting || runningAgents !== 0,
 							onClick: () => void restartNow(),
-							children: restarting ? "正在重启…" : runningAgents === null ? "正在检查…" : runningAgents > 0 ? "有任务运行中" : "确认无任务，立即重启"
+							children: restarting ? "正在重启…" : runningAgents === null && !restartCheckFinished ? "正在检查…" : runningAgents === null ? "状态不可用" : runningAgents > 0 ? "有任务运行中" : "确认无任务，立即重启"
 						})] })
 					}),
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Modal, {
@@ -1124,6 +1245,10 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				catalog: "Skin catalog"
 			}
 		};
+		async function switchClientSkin(runtime, packageNames, target) {
+			for (const packageName of packageNames) await runtime.setActive(packageName, false);
+			return runtime.setActive(target, true);
+		}
 		function createClientSkinRuntime(loader) {
 			return { async setActive(packageName, active) {
 				const entry = [...loader.entries()].find((item) => item.options.name === packageName);
@@ -1176,6 +1301,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 		exports.inject = inject;
 		exports.missingPrimitives = missingPrimitives;
 		exports.name = name;
+		exports.switchClientSkin = switchClientSkin;
 		return module.exports;
 	}
 });

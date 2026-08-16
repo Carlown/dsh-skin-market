@@ -1,5 +1,8 @@
+import { mkdtempSync, readFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import { catalogWithStars, recommend, repositorySlug } from '../src/catalog.ts'
+import { CatalogStore, catalogWithStars, recommend, repositorySlug, validateCatalog } from '../src/catalog.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 describe('catalog', () => {
@@ -27,5 +30,39 @@ describe('catalog', () => {
     const result = await catalogWithStars('/unused-profile')
     expect(result[0]).toMatchObject({ githubStars: catalog.skins[0].starsSnapshot, starsStale: false, starsUpdatedAt: catalog.skins[0].starsUpdatedAt })
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('accepts a newer remote catalog, caches it, and reuses it offline', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'skin-catalog-'))
+    const bundled = loadCatalog()
+    const remote = structuredClone(bundled)
+    remote.generatedAt = new Date(Date.parse(bundled.generatedAt) + 60_000).toISOString()
+    remote.skins[0].starsSnapshot += 1
+    const fetcher = vi.fn(async () => ({ ok: true, status: 200, json: async () => remote }))
+    const store = new CatalogStore(dir, { fetcher, refreshIntervalMs: 60_000 })
+
+    const accepted = await store.refresh(true)
+    expect(accepted).toMatchObject({ source: 'remote', catalog: { generatedAt: remote.generatedAt } })
+    expect(accepted.catalog.skins[0].starsSnapshot).toBe(remote.skins[0].starsSnapshot)
+    expect(JSON.parse(readFileSync(join(dir, '.dsh-skin-market/catalog.json'), 'utf8')).generatedAt).toBe(remote.generatedAt)
+
+    const offline = new CatalogStore(dir, { fetcher: async () => { throw new Error('offline') } })
+    expect(offline.snapshot()).toMatchObject({ source: 'cache', catalog: { generatedAt: remote.generatedAt } })
+    expect((await offline.refresh(true)).source).toBe('cache')
+  })
+
+  it('rejects stale or structurally conflicting remote catalogs', async () => {
+    const bundled = loadCatalog()
+    const stale = { ...structuredClone(bundled), generatedAt: '2020-01-01T00:00:00.000Z' }
+    const staleStore = new CatalogStore(mkdtempSync(join(tmpdir(), 'skin-catalog-stale-')), {
+      fetcher: async () => ({ ok: true, status: 200, json: async () => stale }),
+    })
+    const result = await staleStore.refresh(true)
+    expect(result.source).toBe('bundled')
+    expect(result.error).toContain('older')
+
+    const duplicate = structuredClone(bundled)
+    duplicate.skins.push(structuredClone(duplicate.skins[0]))
+    expect(() => validateCatalog(duplicate)).toThrow('duplicate id')
   })
 })

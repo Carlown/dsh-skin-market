@@ -26,6 +26,11 @@ export interface ClientSkinRuntime {
   setActive(packageName: string, active: boolean): Promise<boolean>
 }
 
+export async function switchClientSkin(runtime: ClientSkinRuntime, packageNames: string[], target: string): Promise<boolean> {
+  for (const packageName of packageNames) await runtime.setActive(packageName, false)
+  return runtime.setActive(target, true)
+}
+
 export function createClientSkinRuntime(loader: ClientLoader): ClientSkinRuntime {
   return {
     async setActive(packageName, active) {

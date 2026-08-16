@@ -41,10 +41,25 @@ export function writeMarketState(profileDir: string, state: PersistedMarketState
   atomicWriteJson(marketStateFile(profileDir), state)
 }
 
-interface ProfileManifest { dependencies?: Record<string, string> }
+interface ProfileManifest {
+  dependencies?: Record<string, string>
+  dsh?: { profile?: { bundles?: string[] } }
+}
 
 export function readDependencies(profileDir: string): Record<string, string> {
   return readJson<ProfileManifest>(manifestFile(profileDir), {}).dependencies ?? {}
+}
+
+export function removeProfileBundles(profileDir: string, packageNames: Iterable<string>): void {
+  const file = manifestFile(profileDir)
+  const manifest = readJson<ProfileManifest>(file, {})
+  const bundles = manifest.dsh?.profile?.bundles
+  if (!Array.isArray(bundles)) return
+  const removed = new Set(packageNames)
+  const next = bundles.filter(name => !removed.has(name))
+  if (next.length === bundles.length) return
+  manifest.dsh = { ...manifest.dsh, profile: { ...manifest.dsh?.profile, bundles: next } }
+  atomicWriteJson(file, manifest)
 }
 
 export function packageManifest(profileDir: string, packageName: string): Record<string, unknown> | null {

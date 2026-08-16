@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { randomUUID } from 'node:crypto'
 import { join } from 'node:path'
-import { catalogWithStars, loadCatalog } from './catalog.ts'
+import { CatalogStore, catalogWithStars } from './catalog.ts'
 import { readSkinId, sameOrigin, sendJson } from './http.ts'
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts'
 import { installedClientPlugins } from './profile.ts'
@@ -29,7 +29,7 @@ export interface SkinMarketHost extends LifecycleHost {
   agents: AgentRegistryLike
 }
 
-export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; restart?: RestartScheduler }
+export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; restart?: RestartScheduler; catalogStore?: CatalogStore }
 
 export function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean {
   return state?.installation === 'installed'
@@ -60,10 +60,28 @@ function method(request: IncomingMessage, response: ServerResponse, expected: st
 }
 
 export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => void {
-  const lifecycle = new SkinLifecycle(host, options)
+  const catalogStore = options.catalogStore ?? new CatalogStore(options.profileDir)
+  const initialCatalog = catalogStore.snapshot().catalog
+  const lifecycle = new SkinLifecycle(host, options, initialCatalog.skins)
   lifecycle.start()
-  const catalogFile = loadCatalog()
+  let lifecycleCatalogGeneratedAt = initialCatalog.generatedAt
   const instanceId = randomUUID()
+
+  const catalogPayload = async (force: boolean) => {
+    const snapshot = await catalogStore.refresh(force)
+    if (snapshot.catalog.generatedAt !== lifecycleCatalogGeneratedAt) {
+      await lifecycle.replaceCatalog(snapshot.catalog.skins)
+      lifecycleCatalogGeneratedAt = snapshot.catalog.generatedAt
+    }
+    return {
+      schemaVersion: snapshot.catalog.schemaVersion,
+      generatedAt: snapshot.catalog.generatedAt,
+      skins: await catalogWithStars(options.profileDir, snapshot.catalog),
+      catalogSource: snapshot.source,
+      catalogLastCheckedAt: snapshot.lastCheckedAt,
+      ...(snapshot.error ? { catalogError: snapshot.error } : {}),
+    }
+  }
 
   const mutation = (kind: OperationKind) => async (request: IncomingMessage, response: ServerResponse) => {
     if (!method(request, response, 'POST')) return
@@ -80,8 +98,12 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
   const disposers = [
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/catalog', handler: async (request, response) => {
       if (!method(request, response, 'GET')) return
-      const skins = await catalogWithStars(options.profileDir)
-      sendJson(response, 200, { schemaVersion: catalogFile.schemaVersion, generatedAt: catalogFile.generatedAt, skins })
+      sendJson(response, 200, await catalogPayload(false))
+    } }),
+    host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/catalog/refresh', handler: async (request, response) => {
+      if (!method(request, response, 'POST')) return
+      if (!sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
+      sendJson(response, 200, await catalogPayload(true))
     } }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/state', handler: (request, response) => {
       if (!method(request, response, 'GET')) return
