@@ -15,14 +15,15 @@ vi.mock('@deepseek-ai/dsh-client-ui-primitives', () => {
   }
 })
 
-import { captureListScroll, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
+import { CATALOG_BATCH_SIZE, captureListScroll, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
 import { createClientSkinRuntime, missingPrimitives, switchClientSkin } from '../../src/client/index.ts'
+import type { CatalogSkin } from '../../src/client/types.ts'
 
 const skin = {
-  id: 'test.skin', name: { zh: '测试皮肤', en: 'Test Skin' }, author: 'author', description: 'description', repo: 'https://github.com/a/b', package: 'skin',
-  tags: ['dark'], modes: ['dark'], install: { version: '1.0.0', commit: 'a'.repeat(40) }, compatibility: { dsh: '0.1.0-rc.6', platform: ['web'] },
-  screenshots: ['https://example.com/preview.png'], license: { code: 'MIT', commercialUse: true }, githubStars: 42, starsStale: false, recommendations: [], updatedAt: '2026-08-16T00:00:00Z',
-}
+  id: 'test.skin', name: { zh: '测试皮肤', en: 'Test Skin' }, author: 'author', description: 'description', repo: 'https://github.com/a/b', package: 'skin', rowId: 'skin',
+  tags: ['dark'], modes: ['dark'], install: { target: 'https://github.com/a/b.git#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', version: '1.0.0', commit: 'a'.repeat(40) }, compatibility: { dsh: '0.1.0-rc.6', platform: ['web'] },
+  screenshots: ['https://example.com/preview.png'], license: { code: 'MIT', commercialUse: true }, githubStars: 42, starsStale: false, starsUpdatedAt: '2026-08-16T00:00:00Z', recommendations: [], releaseUpdatedAt: '2026-08-16T00:00:00Z', metadataUpdatedAt: '2026-08-16T00:00:00Z', updatedAt: '2026-08-16T00:00:00Z',
+} satisfies CatalogSkin
 
 afterEach(() => { cleanup(); window.localStorage.clear(); vi.unstubAllGlobals() })
 
@@ -75,7 +76,7 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览/ })).toBeTruthy()
-    expect(screen.queryByText(/内置目录|在线目录|更新于 2026年8月16日/)).toBeNull()
+    expect(screen.queryByText(/内置目录|在线目录/)).toBeNull()
     expect(screen.queryByRole('button', { name: '刷新在线目录' })).toBeNull()
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/catalog/refresh'))).toBe(false)
   })
@@ -156,6 +157,50 @@ describe('client market', () => {
     expect(screen.getByRole('button', { name: /当前皮肤 界面预览/ }).getAttribute('aria-current')).toBe('true')
     expect(screen.queryByText('正在加载皮肤列表…')).toBeNull()
     expect(screen.queryByText('正在加载皮肤详情…')).toBeNull()
+  })
+
+  it('shows the cached catalog before background revalidation finishes', async () => {
+    const catalogCache = { read: vi.fn(async () => [skin]), write: vi.fn(async () => undefined) }
+    vi.stubGlobal('fetch', vi.fn(async () => await new Promise(() => undefined)))
+
+    render(<SkinMarketSection t={key => key} catalogCache={catalogCache} />)
+
+    expect(await screen.findByRole('button', { name: /测试皮肤 界面预览/ })).toBeTruthy()
+    expect(screen.queryByText('正在加载皮肤列表…')).toBeNull()
+    expect(screen.getByText('正在加载皮肤详情…')).toBeTruthy()
+  })
+
+  it('writes a successfully refreshed catalog to the browser cache', async () => {
+    const catalogCache = { read: vi.fn(async () => null), write: vi.fn(async () => undefined) }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
+
+    render(<SkinMarketSection t={key => key} catalogCache={catalogCache} />)
+
+    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+    await waitFor(() => expect(catalogCache.write).toHaveBeenCalledWith([skin]))
+  })
+
+  it('renders the catalog in 20-item batches as the list scrolls', async () => {
+    const skins = Array.from({ length: CATALOG_BATCH_SIZE * 2 + 5 }, (_, index) => ({
+      ...skin,
+      id: `test.skin-${index}`,
+      package: `skin-${index}`,
+      name: { zh: `测试皮肤 ${index}`, en: `Test Skin ${index}` },
+      githubStars: CATALOG_BATCH_SIZE * 2 + 5 - index,
+    }))
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins } : { skins: [] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    await screen.findByRole('button', { name: /测试皮肤 0 界面预览/ })
+    expect(screen.getAllByRole('button', { name: /测试皮肤 \d+ 界面预览/ })).toHaveLength(CATALOG_BATCH_SIZE)
+    const list = screen.getByRole('button', { name: /测试皮肤 0 界面预览/ }).parentElement!
+    Object.defineProperties(list, { scrollHeight: { configurable: true, value: 2000 }, clientHeight: { configurable: true, value: 500 } })
+    list.scrollTop = 1300
+    fireEvent.scroll(list)
+    await waitFor(() => expect(screen.getAllByRole('button', { name: /测试皮肤 \d+ 界面预览/ })).toHaveLength(CATALOG_BATCH_SIZE * 2))
+    list.scrollTop = 1500
+    fireEvent.scroll(list)
+    await waitFor(() => expect(screen.getAllByRole('button', { name: /测试皮肤 \d+ 界面预览/ })).toHaveLength(skins.length))
   })
 
   it('keeps list and detail visible while refreshing after an operation', async () => {

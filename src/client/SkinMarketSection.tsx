@@ -120,6 +120,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [states, setStates] = useState<RuntimeSkin[]>([])
   const [installedClientPlugins, setInstalledClientPlugins] = useState<InstalledClientPlugin[]>([])
   const [loading, setLoading] = useState(true)
+  const [catalogLoading, setCatalogLoading] = useState(true)
   const [selectedId, setSelectedId] = useState<string>('')
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<'all' | 'installed'>('all')
@@ -172,19 +173,30 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   }, [])
 
   const refresh = useCallback(async (showLoading = false) => {
-    if (showLoading) setLoading(true)
+    if (showLoading) {
+      setLoading(true)
+      if (skinsRef.current.length === 0) setCatalogLoading(true)
+    }
     try {
-      const [catalog, state] = await Promise.all([
-        json<CatalogResponse>('/dsh-skin-market/catalog'),
-        json<MarketStateResponse>('/dsh-skin-market/state'),
-      ])
+      const catalogRequest = json<CatalogResponse>('/dsh-skin-market/catalog').then(catalog => {
+        if (showLoading) setCatalogLoading(false)
+        return catalog
+      })
+      const stateRequest = json<MarketStateResponse>('/dsh-skin-market/state').then(state => {
+        if (showLoading) setLoading(false)
+        return state
+      })
+      const [catalog, state] = await Promise.all([catalogRequest, stateRequest])
       acceptCatalog(catalog.skins, state.skins)
-      void catalogCache.write(catalog.skins)
+      void catalogCache.write(catalog.skins).catch(() => undefined)
       setStates(state.skins)
       setInstalledClientPlugins(state.installedClientPlugins ?? [])
       setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
     } finally {
-      if (showLoading) setLoading(false)
+      if (showLoading) {
+        setLoading(false)
+        setCatalogLoading(false)
+      }
     }
   }, [acceptCatalog, catalogCache])
 
@@ -208,7 +220,10 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     void (async () => {
       const cached = await catalogCache.read()
       if (disposed) return
-      if (cached !== null && cached.length > 0) acceptCatalog(cached)
+      if (cached !== null && cached.length > 0) {
+        acceptCatalog(cached)
+        setCatalogLoading(false)
+      }
       await refresh(true).catch(reason => setError(reason instanceof Error ? reason.message : String(reason)))
     })()
     return () => { disposed = true }
@@ -267,13 +282,14 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     if (filter === 'installed') return runtimeFor(states, skin.id).installation !== 'missing'
     return true
   }).sort((a, b) => sortBy === 'latest' ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt) : b.githubStars - a.githubStars), [skins, states, filter, query, sortBy])
-  const visibleSkins = filtered.slice(0, visibleCount)
+  const visibleSkins = useMemo(() => {
+    const visible = filtered.slice(0, visibleCount)
+    const selectedSkin = filtered.find(skin => skin.id === selectedId)
+    if (selectedSkin !== undefined && !visible.some(skin => skin.id === selectedSkin.id)) visible.push(selectedSkin)
+    return visible
+  }, [filtered, selectedId, visibleCount])
 
   useEffect(() => { setVisibleCount(CATALOG_BATCH_SIZE) }, [filter, query, sortBy])
-  useEffect(() => {
-    const selectedIndex = filtered.findIndex(skin => skin.id === selectedId)
-    if (selectedIndex >= visibleCount) setVisibleCount(Math.ceil((selectedIndex + 1) / CATALOG_BATCH_SIZE) * CATALOG_BATCH_SIZE)
-  }, [filtered, selectedId, visibleCount])
 
   const run = useCallback(async (kind: MutationKind) => {
     if (selected === undefined) return false
@@ -396,7 +412,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             setVisibleCount(value => Math.min(filtered.length, value + CATALOG_BATCH_SIZE))
           }
         }}>
-          {loading && skins.length === 0 ? <div className={css.listSkeleton} role="status" aria-label="正在加载皮肤列表">{Array.from({ length: 8 }, (_, index) => <div className={css.skeletonCard} key={index} aria-hidden="true"><span /><span><i /><i /></span><i /></div>)}</div> : visibleSkins.map(skin => {
+          {catalogLoading && skins.length === 0 ? <div className={css.listSkeleton} role="status" aria-label="正在加载皮肤列表"><span className={css.srOnly}>正在加载皮肤列表…</span>{Array.from({ length: 8 }, (_, index) => <div className={css.skeletonCard} key={index} aria-hidden="true"><span /><span><i /><i /></span><i /></div>)}</div> : visibleSkins.map(skin => {
             const itemState = runtimeFor(states, skin.id)
             const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
@@ -411,8 +427,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               <Pill className={mutationLabel !== null || itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : itemState.installation === 'missing' && skin.review?.compatibility === 'unverified' ? '待验证' : statusLabel(itemState))}</Pill>
             </Button>
           })}
-          {!loading && visibleCount < filtered.length && <div className={css.loadMoreHint} aria-hidden="true"><span /><span /></div>}
-          {!loading && filtered.length === 0 && <p className={css.empty}>没有匹配的皮肤</p>}
+          {!catalogLoading && visibleCount < filtered.length && <div className={css.loadMoreHint} aria-hidden="true"><span /><span /></div>}
+          {!catalogLoading && filtered.length === 0 && <p className={css.empty}>没有匹配的皮肤</p>}
           {!loading && filter === 'installed' && installedClientPlugins.map(plugin => <div className={`${css.skinCard} ${css.externalPlugin}`} key={plugin.package}>
             <span className={css.skinCardBody}>
               <span className={css.cardTitle}>{plugin.package}</span>
@@ -425,7 +441,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       </aside>
 
       <main className={css.detail}>
-        {loading ? <div className={css.detailSkeleton} role="status" aria-label="正在加载皮肤详情"><div><span /><i /></div><span /><span /><span /></div> : selected !== undefined && state !== null ? <>
+        {loading ? <div className={css.detailSkeleton} role="status" aria-label="正在加载皮肤详情"><p className={css.srOnly}>正在加载皮肤详情…</p><div><span /><i /></div><span /><span /><span /></div> : selected !== undefined && state !== null ? <>
           <Button className={`${css.mobileBack} ${css.nativeOutline}`} variant="outline" size="sm" icon={<IconChevronLeftOutline14 />} onClick={() => setShowDetail(false)}>返回列表</Button>
           <header className={css.detailHeader}>
             <img className={css.skinAvatar} src={selected.screenshots[0]} alt="" />
