@@ -5,6 +5,7 @@ import { promisify } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import { parse, stringify } from 'yaml'
 import { permitsCommercialUse } from './license.mjs'
+import { clientEntryPath, inspectSkinHealth } from './skin-health.mjs'
 
 const run = promisify(execFile)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -175,12 +176,13 @@ function readmeScreenshots(readme, target, sha) {
 }
 
 function compatibility(pkg, readme) {
+  const stated = /(?:DSH|DeepSeek Harness|Harness|兼容|支持)[^\n]{0,120}?((?:>=|\^|~)?\s*0\.1\.0-rc\.\d+)/i.exec(readme ?? '')?.[1]
+  if (stated) return stated.replace(/\s+/g, '')
   const groups = [pkg.peerDependencies ?? {}, pkg.dependencies ?? {}, pkg.devDependencies ?? {}]
   const candidates = groups.flatMap(group => Object.entries(group).filter(([name]) => name.startsWith('@deepseek-ai/dsh-')))
   const dependency = candidates.map(([, version]) => String(version)).find(version => /\d/.test(version) && !version.startsWith('workspace:'))
   if (dependency) return dependency
-  const stated = /(?:DSH|DeepSeek Harness|兼容|支持)[^\n]{0,100}?((?:>=|\^|~)?\s*0\.1\.0-rc\.\d+)/i.exec(readme ?? '')?.[1]
-  return stated?.replace(/\s+/g, '') ?? null
+  return null
 }
 
 async function commonScreenshots(target, sha) {
@@ -267,13 +269,20 @@ async function inspect(plugin, existing) {
   const dshVersion = detectedDshVersion ?? (prior?.value.review?.compatibility !== 'unverified' ? prior?.value.compatibility?.dsh : null)
   const detectedLicense = typeof pkg?.license === 'string' ? pkg.license : licenseText?.startsWith('MIT License') ? 'MIT' : null
   const license = detectedLicense ?? prior?.value.license?.code ?? null
+  const readmeShots = readmeScreenshots(combinedReadme, target, sha)
+  const clientPath = clientEntryPath(pkg)
+  const clientEntryPresent = clientPath ? await raw(target, sha, clientPath.replace(/^\.\//, '')) !== null : false
+  const health = inspectSkinHealth({ pkg, rowId: id, readmeScreenshotCount: readmeShots.length, compatibility: detectedDshVersion, clientEntryPresent })
+  const marketScreenshots = prior?.value.marketScreenshots ?? []
   const curatedShots = (plugin.screenshots ?? []).map(value => pinnedScreenshot(value, target, sha)).filter(Boolean)
-  const discoveredScreenshots = [...new Set([...curatedShots, ...readmeScreenshots(combinedReadme, target, sha), ...commonShots])].slice(0, 6)
-  const priorVerifiedScreenshots = prior?.value.review?.preview !== 'repository-card' ? prior?.value.screenshots ?? [] : []
+  const discoveredScreenshots = [...new Set([...curatedShots, ...readmeShots, ...commonShots])].slice(0, 6)
+  const priorVerifiedScreenshots = prior?.value.review?.preview !== 'repository-card'
+    ? (prior?.value.screenshots ?? []).filter(value => !marketScreenshots.includes(value))
+    : []
   const verifiedScreenshots = discoveredScreenshots.length > 0 ? discoveredScreenshots : priorVerifiedScreenshots
   const screenshots = verifiedScreenshots.length > 0
     ? verifiedScreenshots
-    : [`https://opengraph.githubassets.com/${sha}/${target.fullName}`]
+    : marketScreenshots.length > 0 ? [] : [`https://opengraph.githubassets.com/${sha}/${target.fullName}`]
   const blockers = []
   if (!pkg?.name) blockers.push('package name missing')
   if (!pkg?.version) blockers.push('package version missing')
@@ -310,12 +319,14 @@ async function inspect(plugin, existing) {
       ...(pkg.scripts?.prepare ? { allowBuild: `${pkg.name}@https://codeload.github.com/${target.fullName}/tar.gz/${sha}` } : {}),
     },
     compatibility: { dsh: dshVersion ?? 'unverified', platform: ['web'] },
+    ...(marketScreenshots.length > 0 ? { marketScreenshots } : {}),
     screenshots,
     review: {
       compatibility: dshVersion ? 'verified' : 'unverified',
-      preview: verifiedScreenshots.length > 0 ? 'verified' : 'repository-card',
-      installation: pkg.dsh.client && id ? 'verified' : 'manual-only',
+      preview: marketScreenshots.length > 0 || verifiedScreenshots.length > 0 ? 'verified' : 'repository-card',
+      installation: health.checks.installation === 'pass' ? 'verified' : 'manual-only',
     },
+    health,
     license: {
       code: license,
       commercialUse: permitsCommercialUse(license),

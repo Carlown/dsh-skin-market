@@ -3,6 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv from 'ajv/dist/2020.js'
 import { parse } from 'yaml'
+import { mergeScreenshots } from './registry-screenshots.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const schema = JSON.parse(await readFile(join(root, 'registry/skin.schema.json'), 'utf8'))
@@ -21,7 +22,10 @@ for (const file of files) {
   const repo = skin.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
   const expected = `github:${repo}#${skin.install.commit}${skin.subpath ? `&path:${skin.subpath}` : ''}`
   if (skin.install.target !== expected) throw new Error(`${file}: install.target must equal ${expected}`)
-  skins.push(skin)
+  const marketScreenshots = skin.marketScreenshots ?? []
+  const screenshots = mergeScreenshots(marketScreenshots, skin.screenshots)
+  if (screenshots.length === 0) throw new Error(`${file}: at least one market or upstream screenshot is required`)
+  skins.push({ ...skin, screenshots })
 }
 
 const ids = new Set()

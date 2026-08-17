@@ -58,6 +58,12 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .skin-row:hover { background: var(--surface-2); }
 .skin-row[data-selected="true"] { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .skin-row > img { display: block; width: 56px; height: 56px; flex: none; object-fit: cover; border-radius: 7px; background: var(--surface-3); }
+.preview-placeholder { box-sizing: border-box; display: flex; min-width: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; color: var(--caption); background: linear-gradient(145deg, var(--surface-3), var(--surface)); text-align: center; overflow: hidden; }
+.preview-placeholder strong { display: block; max-width: 88%; overflow: hidden; color: var(--secondary); font-size: 12px; font-weight: 550; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
+.preview-placeholder small { color: var(--caption); font-size: 10px; line-height: 15px; }
+.preview-placeholder[data-preview-kind="list"] { width: 56px; height: 56px; flex: none; border-radius: 7px; }
+.preview-placeholder[data-preview-kind="list"] strong { font-size: 9px; line-height: 12px; }
+.preview-placeholder[data-preview-kind="list"] small { display: none; }
 .row-copy { display: grid; min-width: 0; flex: 1; }
 .row-copy strong { overflow: hidden; font-size: 13px; font-weight: 550; line-height: 21px; text-overflow: ellipsis; white-space: nowrap; }
 .row-copy small { display: flex; min-width: 0; align-items: center; gap: 7px; overflow: hidden; color: var(--caption); font-size: 11px; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
@@ -69,7 +75,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .detail { display: flex; min-width: 0; max-width: 1040px; flex-direction: column; gap: 15px; padding: 32px 34px 70px; }
 .mobile-back { display: none; }
 .skin-head { display: grid; grid-template-columns: 136px minmax(0, 1fr); gap: 21px; padding: 0 2px 17px; border-bottom: 1px solid var(--border); }
-.avatar { display: block; width: 136px; height: 136px; object-fit: cover; border-radius: 10px; background: var(--surface-2); }
+.avatar { display: block; width: 136px; height: 136px; overflow: hidden; border-radius: 10px; background: var(--surface-2); }
+.avatar > img, .avatar > .preview-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
 .skin-title { min-width: 0; align-self: center; }
 .skin-title h2 { margin: 0; font-size: 25px; line-height: 32px; }
 .skin-title > div > p { margin: 2px 0 0; color: var(--secondary); font-size: 13px; }
@@ -83,12 +90,18 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .repo-button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detail-stars { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: var(--secondary); font-size: 12px; }
 .notice { margin: 0; padding: 10px 12px; color: #d9bd75; border: 1px solid color-mix(in srgb, var(--warning) 25%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--warning) 7%, transparent); font-size: 12px; line-height: 19px; }
+.health { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.health h3 { margin-bottom: 6px; }
+.health p { margin: 0; color: var(--muted); font-size: 12px; line-height: 19px; }
 .gallery { width: 100%; aspect-ratio: 16 / 8.4; overflow: hidden; border: 1px solid var(--border); border-radius: 11px; background: #090a0b; }
 .gallery img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.gallery > .preview-placeholder { width: 100%; height: 100%; }
+.gallery > .preview-placeholder strong { font-size: 17px; line-height: 25px; }
 .thumbs { display: flex; gap: 8px; overflow-x: auto; }
 .thumbs button { width: 112px; cursor: pointer; flex: none; padding: 0; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; background: transparent; opacity: .6; }
 .thumbs button[data-selected="true"] { border-color: var(--primary); opacity: 1; }
 .thumbs img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: var(--surface); }
+.thumbs .preview-placeholder { width: 100%; aspect-ratio: 16 / 9; }
 .information { display: grid; grid-template-columns: minmax(0, 1fr) 300px; border: 1px solid var(--border); border-radius: 11px; background: rgba(21, 22, 25, .55); }
 .information > * { padding: 17px 18px; }
 .information h3, .recommendations h3 { margin: 0 0 10px; font-size: 14px; line-height: 22px; }
@@ -105,6 +118,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .recommendations button { display: flex; min-width: 0; cursor: pointer; flex-direction: column; padding: 0; text-align: left; color: inherit; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
 .recommendations button:hover { border-color: var(--border-strong); background: var(--surface-2); }
 .recommendations img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #090a0b; }
+.recommendations .preview-placeholder { width: 100%; aspect-ratio: 16 / 9; }
 .recommendations button > span { display: flex; justify-content: space-between; gap: 10px; padding: 10px 11px; }
 .recommendations strong { min-width: 0; font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
 .recommendations small { display: inline-flex; flex: none; align-items: center; gap: 3px; color: var(--caption); font-size: 10px; }

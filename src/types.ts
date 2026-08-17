@@ -12,8 +12,10 @@ export interface SkinEntry {
   modes: Array<'light' | 'dark'>
   install: { target: string; version: string; commit: string; allowBuild?: string }
   compatibility: { dsh: string; platform: string[] }
+  marketScreenshots?: string[]
   screenshots: string[]
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
+  health?: SkinHealth
   license: { code: string; commercialUse: boolean; notice?: string }
   featuredRank: number
   starsSnapshot: number
@@ -21,6 +23,16 @@ export interface SkinEntry {
   metadataUpdatedAt: string
   starsUpdatedAt: string
   updatedAt: string
+}
+
+export interface SkinHealth {
+  status: 'healthy' | 'improvements'
+  checks: {
+    readmeScreenshots: 'pass' | 'improve'
+    compatibility: 'pass' | 'improve'
+    installation: 'pass' | 'improve'
+  }
+  suggestions: string[]
 }
 
 export interface CatalogFile {

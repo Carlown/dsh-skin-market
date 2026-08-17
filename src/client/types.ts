@@ -10,8 +10,18 @@ export interface CatalogSkin {
   modes: string[]
   install: { target: string; version: string; commit: string; allowBuild?: string }
   compatibility: { dsh: string; platform: string[] }
+  marketScreenshots?: string[]
   screenshots: string[]
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
+  health?: {
+    status: 'healthy' | 'improvements'
+    checks: {
+      readmeScreenshots: 'pass' | 'improve'
+      compatibility: 'pass' | 'improve'
+      installation: 'pass' | 'improve'
+    }
+    suggestions: string[]
+  }
   license: { code: string; commercialUse: boolean; notice?: string }
   githubStars: number
   starsStale: boolean

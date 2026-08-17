@@ -121,6 +121,27 @@ function displayDate(value: string): string {
   return Number.isNaN(date.getTime()) ? '未知' : new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium' }).format(date)
 }
 
+interface PreviewMediaProps {
+  skin: CatalogSkin
+  src?: string
+  alt: string
+  kind: 'list' | 'avatar' | 'hero' | 'thumbnail' | 'recommendation'
+  loading?: 'eager' | 'lazy'
+}
+
+function PreviewMedia({ skin, src, alt, kind, loading }: PreviewMediaProps) {
+  const [failed, setFailed] = useState(false)
+  const placeholder = skin.review?.preview === 'repository-card' || src === undefined || failed
+  if (placeholder) return <div className={css.previewPlaceholder} data-preview-kind={kind} role="img" aria-label={`${skin.name.zh} 暂无界面截图`}><MarkGithubIcon aria-hidden="true" /><strong>{skin.author}</strong><small>暂无界面截图</small></div>
+  return <img src={src} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => setFailed(true)} />
+}
+
+const healthLabels = {
+  readmeScreenshots: 'README 截图',
+  compatibility: '兼容版本',
+  installation: '一键安装准备',
+} as const
+
 export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCatalogCache }: SkinMarketSectionProps) {
   const [skins, setSkins] = useState<CatalogSkin[]>([])
   const [states, setStates] = useState<RuntimeSkin[]>([])
@@ -468,7 +489,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             const itemState = runtimeFor(states, skin.id)
             const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
-              <img src={skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} loading="lazy" decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={event => { event.currentTarget.dataset.failed = 'true' }} />
+              <PreviewMedia key={`${skin.id}:${skin.screenshots[0] ?? 'missing'}:list`} skin={skin} src={skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" />
               <span className={css.skinCardBody}>
                 <span className={css.cardTitle}>{skin.name.zh}</span>
                 <span className={css.cardMetaLine}>
@@ -496,7 +517,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         {loading ? <div className={css.detailSkeleton} role="status" aria-label="正在加载皮肤详情"><p className={css.srOnly}>正在加载皮肤详情…</p><div><span /><i /></div><span /><span /><span /></div> : selected !== undefined && state !== null ? <>
           <Button className={`${css.mobileBack} ${css.nativeOutline}`} variant="outline" size="sm" icon={<IconChevronLeftOutline14 />} onClick={() => setShowDetail(false)}>返回列表</Button>
           <header className={css.detailHeader}>
-            <img className={css.skinAvatar} src={selected.screenshots[0]} alt="" />
+            <div className={css.skinAvatar}><PreviewMedia key={`${selected.id}:${selected.screenshots[0] ?? 'missing'}:avatar`} skin={selected} src={selected.screenshots[0]} alt="" kind="avatar" /></div>
             <div className={css.titleBlock}>
               <h2>{selected.name.zh}</h2>
               <p className={css.author}>{selected.author}</p>
@@ -529,18 +550,18 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           {error !== null && <div className={css.error} role="alert">{error}</div>}
 
           <div className={css.hero}>
-            <img src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 大图预览`} />
+            <PreviewMedia key={`${selected.id}:${selected.screenshots[shotIndex] ?? selected.screenshots[0] ?? 'missing'}:hero`} skin={selected} src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 大图预览`} kind="hero" />
           </div>
           {selected.screenshots.length > 1 && <div className={css.thumbnails} aria-label="截图选择">
-            {selected.screenshots.map((shot, index) => <Button variant="ghost" key={shot} data-selected={index === shotIndex} onClick={() => setShotIndex(index)}><img src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} /></Button>)}
+            {selected.screenshots.map((shot, index) => <Button variant="ghost" key={shot} data-selected={index === shotIndex} onClick={() => setShotIndex(index)}><PreviewMedia skin={selected} src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" /></Button>)}
           </div>}
 
           <div className={css.aboutGrid}>
-            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>维护者尚未声明 DSH 兼容范围，市场暂不提供自动安装。可复制安装提示词交给 Agent 验证安装，或前往 GitHub 查看说明。</p>}{manualOnly && <p className={css.notice}>该仓库缺少市场自动注册所需的信息；请前往 GitHub 按维护者说明手动安装。</p>}{selected.review?.preview === 'repository-card' && <p className={css.notice}>该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
-            <aside className={css.changelog}><h3>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
+            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>维护者尚未声明 DSH 兼容范围，市场暂不提供自动安装。可复制安装提示词交给 Agent 验证安装，或前往 GitHub 查看说明。</p>}{manualOnly && <p className={css.notice}>该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。</p>}{selected.review?.preview === 'repository-card' && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{selected.marketScreenshots?.length && <p className={css.notice}>前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
+            <aside className={css.changelog}><h3>仓库健康</h3>{selected.health ? <><ol className={css.healthList}>{Object.entries(selected.health.checks).map(([key, value]) => <li key={key}><strong>{healthLabels[key as keyof typeof healthLabels]}</strong><span data-health={value}>{value === 'pass' ? '符合要求' : '建议完善'}</span></li>)}</ol>{selected.health.suggestions.map(suggestion => <p className={css.healthSuggestion} key={suggestion}>{suggestion}</p>)}</> : <p className={css.healthSuggestion}>等待下一次仓库健康扫描。</p>}<h3 className={css.collectionTitle}>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
           </div>
 
-          <section className={css.recommendations}><h3>更多推荐</h3><div>{recommendations.map(skin => <Button variant="ghost" key={skin.id} onClick={() => select(skin.id)}><img src={skin.screenshots[0]} alt="" /><span><strong>{skin.name.zh}</strong><small><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</small></span></Button>)}</div></section>
+          <section className={css.recommendations}><h3>更多推荐</h3><div>{recommendations.map(skin => <Button variant="ghost" key={skin.id} onClick={() => select(skin.id)}><PreviewMedia skin={skin} src={skin.screenshots[0]} alt="" kind="recommendation" loading="lazy" /><span><strong>{skin.name.zh}</strong><small><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</small></span></Button>)}</div></section>
         </> : <div className={css.loading}>暂无可展示的皮肤详情</div>}
       </main>
 

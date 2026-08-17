@@ -25,11 +25,10 @@ compatibility:
   dsh: ^0.1.0-rc.6
   platform:
     - web
-screenshots:
-  - https://opengraph.githubassets.com/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/KinGao294/dsh-skin
+screenshots: []
 review:
   compatibility: verified
-  preview: repository-card
+  preview: verified
   installation: verified
 license:
   code: MIT
@@ -37,6 +36,10 @@ license:
 featuredRank: 18
 starsSnapshot: 16
 releaseUpdatedAt: 2026-08-16T12:15:32.137Z
-metadataUpdatedAt: 2026-08-16T13:46:58.070Z
+metadataUpdatedAt: 2026-08-17T02:47:52.294Z
 starsUpdatedAt: 2026-08-16T13:46:58.070Z
-updatedAt: 2026-08-16T13:46:58.070Z
+updatedAt: 2026-08-17T02:47:52.294Z
+marketScreenshots:
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/home.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/conversation.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/settings.png

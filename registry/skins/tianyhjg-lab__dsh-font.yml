@@ -21,11 +21,10 @@ compatibility:
   dsh: ^0.1.0-rc.6
   platform:
     - web
-screenshots:
-  - https://opengraph.githubassets.com/d299f56bde1e10e7fef152848e74cff2eecd7917/tianyhjg-lab/dsh-font
+screenshots: []
 review:
   compatibility: verified
-  preview: repository-card
+  preview: verified
   installation: verified
 license:
   code: MIT
@@ -33,6 +32,10 @@ license:
 featuredRank: 20
 starsSnapshot: 7
 releaseUpdatedAt: 2026-08-16T12:15:41.349Z
-metadataUpdatedAt: 2026-08-16T13:47:29.410Z
+metadataUpdatedAt: 2026-08-17T02:47:52.499Z
 starsUpdatedAt: 2026-08-16T12:15:41.349Z
-updatedAt: 2026-08-16T13:47:29.410Z
+updatedAt: 2026-08-17T02:47:52.499Z
+marketScreenshots:
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/tianyhjg-lab__dsh-font/d299f56bde1e10e7fef152848e74cff2eecd7917/home.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/tianyhjg-lab__dsh-font/d299f56bde1e10e7fef152848e74cff2eecd7917/conversation.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/tianyhjg-lab__dsh-font/d299f56bde1e10e7fef152848e74cff2eecd7917/settings.png

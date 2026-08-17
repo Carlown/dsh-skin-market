@@ -117,7 +117,12 @@
 .skinCard[data-selected="true"] { background: var(--dsw-specific-sidebar-nav-item-active, var(--dsw-alias-button-ghost-active-fill)); box-shadow: inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border); }
 .skinCard > img { display: block; width: 56px; height: 56px; flex: none; object-fit: cover; border-radius: 7px; opacity: .35; background: var(--dsw-alias-bg-layer-3); transition: opacity 180ms ease-out; }
 .skinCard > img[data-loaded="true"] { opacity: 1; }
-.skinCard > img[data-failed="true"] { opacity: 0; }
+.previewPlaceholder { box-sizing: border-box; display: flex; min-width: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; color: var(--dsw-alias-label-caption); background: linear-gradient(145deg, var(--dsw-alias-bg-layer-2), var(--dsw-alias-bg-layer-1)); text-align: center; overflow: hidden; }
+.previewPlaceholder strong { display: block; max-width: 88%; overflow: hidden; color: var(--dsw-alias-label-secondary); font-size: 12px; font-weight: 500; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
+.previewPlaceholder small { color: var(--dsw-alias-label-caption); font-size: 10px; line-height: 15px; }
+.previewPlaceholder[data-preview-kind="list"] { width: 56px; height: 56px; flex: none; border-radius: 7px; }
+.previewPlaceholder[data-preview-kind="list"] strong { font-size: 9px; line-height: 12px; }
+.previewPlaceholder[data-preview-kind="list"] small { display: none; }
 .skinCardBody { display: flex; min-width: 0; flex: 1; flex-direction: column; }
 .cardTitle { font-size: 14px; font-weight: 400; line-height: 22px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .cardMetaLine { display: flex; min-width: 0; align-items: center; gap: 8px; color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary)); font-size: 12px; line-height: 18px; }
@@ -166,13 +171,17 @@
 .mobileBack.nativeOutline { display: none; order: 0; align-self: flex-start; }
 .hero { order: 4; position: relative; width: 100%; aspect-ratio: 16 / 8; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; overflow: hidden; background: var(--dsw-alias-bg-layer-1); }
 .hero img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hero > .previewPlaceholder { width: 100%; height: 100%; }
+.hero > .previewPlaceholder strong { font-size: 16px; line-height: 24px; }
 .thumbnails { order: 5; display: flex; gap: 8px; overflow-x: auto; }
 .thumbnails button { width: 112px; padding: 0; cursor: pointer; flex: none; border: 1px solid var(--dsw-alias-border-l2); border-radius: 8px; overflow: hidden; background: transparent; opacity: .62; }
 .thumbnails button[data-selected="true"] { border-color: var(--dsw-alias-brand-primary); opacity: 1; }
 .thumbnails img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.thumbnails .previewPlaceholder { width: 100%; aspect-ratio: 16 / 9; }
 
 .detailHeader { order: 1; display: grid; grid-template-columns: 138px minmax(0, 1fr); align-items: start; gap: 22px; padding: 0 4px 16px; border-bottom: 1px solid var(--dsw-alias-border-l2); }
-.skinAvatar { display: block; width: 138px; height: 138px; object-fit: cover; border-radius: 9px; background: var(--dsw-alias-bg-layer-1); }
+.skinAvatar { display: block; width: 138px; height: 138px; overflow: hidden; border-radius: 9px; background: var(--dsw-alias-bg-layer-1); }
+.skinAvatar > img, .skinAvatar > .previewPlaceholder { display: block; width: 100%; height: 100%; object-fit: cover; }
 .titleBlock { min-width: 0; padding-top: 10px; }
 .titleBlock h2 { font-size: 23px; font-weight: 620; line-height: 31px; letter-spacing: -.01em; }
 .titleBlock .author { margin-top: 2px; color: var(--dsw-alias-label-secondary); font-size: 13px; line-height: 20px; }
@@ -220,12 +229,17 @@
 .changelog strong { color: var(--dsw-alias-label-caption); font-weight: 500; }
 .changelog a { color: var(--dsw-alias-label-primary); font-size: 12px; text-decoration: none; }
 .changelog a:hover { text-decoration: underline; }
+.healthList span[data-health="pass"] { color: var(--dsw-alias-state-success-primary, #2f9e63); }
+.healthList span[data-health="improve"] { color: var(--dsw-alias-state-warning-primary); }
+.healthSuggestion { margin: 8px 0 0; color: var(--dsw-alias-label-secondary); font-size: 11px; line-height: 17px; }
+.collectionTitle { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--dsw-alias-border-l3); }
 
 .recommendations { order: 7; padding-top: 18px; border-top: 1px solid var(--dsw-alias-border-l2); }
 .recommendations > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .recommendations button { display: flex; width: 100%; height: auto; min-width: 0; min-height: 0; cursor: pointer; align-self: start; flex-direction: column; padding: 0; text-align: left; color: inherit; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; overflow: hidden; background: var(--dsw-alias-bg-layer-1); font: inherit; }
 .recommendations button:hover { border-color: var(--dsw-alias-border-l1); background: var(--dsw-alias-interactive-bg-hover); }
 .recommendations img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: var(--dsw-alias-bg-layer-2); }
+.recommendations .previewPlaceholder { width: 100%; aspect-ratio: 16 / 9; }
 .recommendations button > span { display: flex; width: 100%; box-sizing: border-box; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 11px 12px 12px; }
 .recommendations strong { min-width: 0; font-size: 13px; line-height: 19px; white-space: normal; overflow-wrap: anywhere; }
 .recommendations small { display: inline-flex; flex: none; align-items: center; gap: 3px; padding-top: 1px; color: var(--dsw-alias-label-caption); font-size: 11px; line-height: 18px; }

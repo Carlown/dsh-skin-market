@@ -445,7 +445,28 @@ describe('client market', () => {
     expect(open).toHaveBeenCalledWith(unverified.repo, '_blank', 'noopener,noreferrer')
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
     expect(screen.getByText('维护者尚未声明 DSH 兼容范围，市场暂不提供自动安装。可复制安装提示词交给 Agent 验证安装，或前往 GitHub 查看说明。')).toBeTruthy()
-    expect(screen.getByText('该仓库没有可识别的皮肤截图，当前展示的是 GitHub 仓库卡片，并非界面预览。')).toBeTruthy()
+    expect(screen.getByText('该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。')).toBeTruthy()
+    expect(screen.getAllByRole('img', { name: '测试皮肤 暂无界面截图' }).length).toBeGreaterThanOrEqual(2)
+    expect(document.querySelector(`img[src="${unverified.screenshots[0]}"]`)).toBeNull()
+  })
+
+  it('replaces a failed verified screenshot instead of retaining stale image pixels', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    const preview = await screen.findByAltText('测试皮肤 大图预览')
+    fireEvent.error(preview)
+
+    expect(screen.getByRole('img', { name: '测试皮肤 暂无界面截图' })).toBeTruthy()
+  })
+
+  it('labels supplemental market captures and exposes the maintainer removal path', async () => {
+    const supplemented = { ...skin, marketScreenshots: ['https://example.com/market-home.png'] }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [supplemented] } : { skins: [] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+    expect(screen.getByText('前 1 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。')).toBeTruthy()
   })
 
   it('sends verified client-only skins to their manual installation guide', async () => {
@@ -459,7 +480,22 @@ describe('client market', () => {
     fireEvent.click(await screen.findByTitle('前往 GitHub 查看维护者提供的手动安装方式'))
     expect(open).toHaveBeenCalledWith(manual.repo, '_blank', 'noopener,noreferrer')
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
-    expect(screen.getByText('该仓库缺少市场自动注册所需的信息；请前往 GitHub 按维护者说明手动安装。')).toBeTruthy()
+    expect(screen.getByText('该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。')).toBeTruthy()
+  })
+
+  it('shows constructive repository health checks and suggestions', async () => {
+    const healthSkin = { ...skin, health: {
+      status: 'improvements' as const,
+      checks: { readmeScreenshots: 'pass' as const, compatibility: 'improve' as const, installation: 'pass' as const },
+      suggestions: ['建议声明支持的 DSH Web 版本范围。'],
+    } }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [healthSkin] } : { skins: [] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    expect(await screen.findByRole('heading', { name: '仓库健康' })).toBeTruthy()
+    expect(screen.getByText('README 截图').nextSibling?.textContent).toBe('符合要求')
+    expect(screen.getByText('兼容版本').nextSibling?.textContent).toBe('建议完善')
+    expect(screen.getByText('建议声明支持的 DSH Web 版本范围。')).toBeTruthy()
   })
 
   it('generates and copies an agent PR prompt without submitting to GitHub', async () => {

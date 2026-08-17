@@ -93,6 +93,16 @@
 - 预览图必须是仓库中的真实界面截图
 - Topic、仓库名称和 Stars 只用于发现与排序，不代表安全审核或官方背书
 
+## 仓库健康建议
+
+市场在同步已收录仓库时会检查三项便于用户理解和安装的基础规范，并在皮肤详情页展示结果：
+
+- README 是否展示仓库内、可固定到版本的真实界面截图
+- README 或 package 元数据是否明确声明支持的 DSH Web 版本范围
+- package 名称、`dsh.client` Web 声明、row ID 和已构建客户端入口是否满足市场的一键安装要求
+
+检查结果用于给维护者提供改进建议，不代表安全认证。暂未满足某项规范时，页面会说明如何完善，而不会把仓库描述为“不可用”。
+
 ## 本地开发
 
 需要 Node.js 22 或更高版本。
@@ -124,6 +134,23 @@ npm run crawl:smoke
 npm run crawl:top-stars
 npm run crawl:full-ingest
 ```
+
+为没有仓库截图的皮肤生成实机截图时，先联网缓存固定 commit 的源码包，之后安装与截图阶段可离线重复运行：
+
+```bash
+npm run screenshots:prepare
+npm run screenshots:capture
+```
+
+当前脚本覆盖 `KinGao294/dsh-skin`、`tianyhjg-lab/dsh-font` 与 `bilbillm/deepseek-harness-angelina-themes`，每个仓库补录首页、对话历史和设置页，产物和校验报告写入 `.preview/skin-screenshots/`。脚本只在本地历史模板不存在时连接监听 `127.0.0.1` 的临时 mock，创建一条 `test` 历史；mock 固定返回零 usage。后续皮肤复制该隔离模板，只点“新会话”并从左侧历史重新打开 `test`，不会再次发送消息。报告会断言目标截图阶段 `messageSent: false`、`localMockRequests: 0`、`externalModelRequestSent: false`、`historyReopened: true` 和 `tokenSpend: 0`。`npm run screenshots:trial` 可在缓存缺失时自动下载后立即试跑；截图使用独立 DSH home，不修改日常 `web` profile。
+
+逐张确认是插件生效后的真实 DSH 界面，再显式提升到站点：
+
+```bash
+npm run screenshots:promote -- --skin kingao294.dsh-skin --yes-reviewed
+```
+
+提升后的 URL 写入条目的 `marketScreenshots`。构建目录时，市场补录图固定排在前面，仓库自己的 `screenshots` 去重后保持原顺序接在后面；后续同步不会覆盖补录图。维护者可向市场仓库提交 PR 删除或替换 `marketScreenshots`，也可以先把图片提交到上游仓库，再由市场 PR 移除补录版本。
 
 正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。全量任务会合并 Awesome DSH 与 GitHub `dsh-plugin` Topic 两个发现源；只有 `dsh.client` 的手动注册型皮肤也会展示，但只提供跳转 GitHub 的“手动安装”。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
 

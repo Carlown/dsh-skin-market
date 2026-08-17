@@ -8,3 +8,5 @@ coverage/
 dist-site/
 design-qa-*.png
 design-qa.md
+收录.md
+.pnpm-store/
