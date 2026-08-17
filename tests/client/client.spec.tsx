@@ -28,6 +28,12 @@ const skin = {
 
 afterEach(() => { cleanup(); window.localStorage.clear(); vi.unstubAllGlobals() })
 
+async function openSkinCard(name: RegExp = /测试皮肤 界面预览/) {
+  const card = await screen.findByRole('button', { name })
+  fireEvent.click(card)
+  return card
+}
+
 describe('client market', () => {
   it('restores the visible list anchor after background reordering', () => {
     const list = document.createElement('div')
@@ -153,7 +159,7 @@ describe('client market', () => {
     expect(missingPrimitives({ Button: true })).toEqual(['Input', 'Modal', 'Pill'])
   })
 
-  it('shows list and detail loading hints, then defaults to the active skin', async () => {
+  it('shows the feed loading hint, then puts the active skin first in Installed', async () => {
     const activeSkin = { ...skin, id: 'test.active', name: { zh: '当前皮肤', en: 'Active Skin' } }
     let resolveCatalog!: (value: unknown) => void
     let resolveState!: (value: unknown) => void
@@ -163,21 +169,89 @@ describe('client market', () => {
     })))
 
     render(<SkinMarketSection t={key => key} />)
-    expect(screen.getByRole('status', { name: '正在加载皮肤列表' })).toBeTruthy()
-    expect(screen.getByRole('status', { name: '正在加载皮肤详情' })).toBeTruthy()
+    expect(screen.getByText('正在加载皮肤…')).toBeTruthy()
     expect(screen.queryByText('没有匹配的皮肤')).toBeNull()
 
     await waitFor(() => expect(typeof resolveCatalog).toBe('function'))
     resolveCatalog({ ok: true, json: async () => ({ skins: [skin, activeSkin] }) })
     resolveState({ ok: true, json: async () => ({ skins: [
       { skinId: skin.id, installation: 'installed', activation: 'inactive', installedVersion: '1.0.0', updateAvailable: false },
-      { skinId: activeSkin.id, installation: 'installed', activation: 'active', installedVersion: '1.0.0', updateAvailable: false },
+      { skinId: activeSkin.id, installation: 'installed', activation: 'active', installedVersion: '1.0.0', updateAvailable: true },
     ] }) })
 
-    expect(await screen.findByRole('heading', { name: '当前皮肤' })).toBeTruthy()
-    expect(screen.getByRole('button', { name: /当前皮肤 界面预览/ }).getAttribute('aria-current')).toBe('true')
-    expect(screen.queryByText('正在加载皮肤列表…')).toBeNull()
-    expect(screen.queryByText('正在加载皮肤详情…')).toBeNull()
+    const activeCard = await screen.findByRole('button', { name: /当前皮肤 界面预览/ })
+    expect(activeCard.getAttribute('aria-current')).toBe('true')
+    expect(activeCard.textContent).toContain('使用中')
+    expect(activeCard.textContent).not.toContain('可更新')
+    expect(screen.queryByText('正在加载皮肤…')).toBeNull()
+  })
+
+  it('opens details in a labelled modal surface with an explicit close action', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    await openSkinCard()
+    expect(screen.getByRole('dialog', { name: '皮肤详情' })).toBeTruthy()
+    const close = screen.getByRole('button', { name: '关闭皮肤详情' })
+    expect(close.textContent).toContain('关闭详情')
+    fireEvent.click(close)
+    expect(screen.queryByRole('dialog', { name: '皮肤详情' })).toBeNull()
+  })
+
+  it('orders Installed by active then install time and opens the installed browser from the overflow card', async () => {
+    const installedSkins = Array.from({ length: 6 }, (_, index) => ({
+      ...skin,
+      id: `test.installed-${index}`,
+      name: { zh: `已装皮肤 ${index}`, en: `Installed Skin ${index}` },
+      package: `installed-skin-${index}`,
+      rowId: `installed-skin-${index}`,
+      githubStars: index,
+    }))
+    const runtime = installedSkins.map((item, index) => ({
+      skinId: item.id,
+      installation: 'installed',
+      activation: index === 5 ? 'active' : 'inactive',
+      installedVersion: '1.0.0',
+      updateAvailable: false,
+      installedAt: `2026-08-${String(index + 1).padStart(2, '0')}T00:00:00Z`,
+    }))
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: installedSkins } : { skins: runtime },
+    })))
+    render(<SkinMarketSection t={key => key} />)
+
+    const installedSection = (await screen.findByRole('heading', { name: '已安装' })).closest('section')!
+    const cards = [...installedSection.querySelectorAll<HTMLButtonElement>('button[aria-label$="界面预览"]')]
+    expect(cards.map(card => card.getAttribute('aria-label'))).toEqual([
+      '已装皮肤 5 界面预览',
+      '已装皮肤 4 界面预览',
+      '已装皮肤 3 界面预览',
+      '已装皮肤 2 界面预览',
+    ])
+
+    fireEvent.click(screen.getByRole('button', { name: '查看全部已安装' }))
+    expect(await screen.findByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: '已装皮肤 5' })).toBeTruthy()
+  })
+
+  it('opens an installed card directly in its selected detail', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{
+        skinId: skin.id,
+        installation: 'installed',
+        activation: 'inactive',
+        installedVersion: '1.0.0',
+        updateAvailable: false,
+        installedAt: '2026-08-16T00:00:00Z',
+      }] },
+    })))
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: /测试皮肤 界面预览/ }))
+    expect(await screen.findByRole('heading', { name: '测试皮肤' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
   })
 
   it('shows the cached catalog before background revalidation finishes', async () => {
@@ -214,13 +288,13 @@ describe('client market', () => {
 
     await screen.findByRole('button', { name: /测试皮肤 0 界面预览/ })
     expect(screen.getAllByRole('button', { name: /测试皮肤 \d+ 界面预览/ })).toHaveLength(CATALOG_BATCH_SIZE)
-    const list = screen.getByRole('button', { name: /测试皮肤 0 界面预览/ }).parentElement!
-    Object.defineProperties(list, { scrollHeight: { configurable: true, value: 2000 }, clientHeight: { configurable: true, value: 500 } })
-    list.scrollTop = 1300
-    fireEvent.scroll(list)
+    const feed = screen.getByRole('main')
+    Object.defineProperties(feed, { scrollHeight: { configurable: true, value: 2000 }, clientHeight: { configurable: true, value: 500 } })
+    feed.scrollTop = 1300
+    fireEvent.scroll(feed)
     await waitFor(() => expect(screen.getAllByRole('button', { name: /测试皮肤 \d+ 界面预览/ })).toHaveLength(CATALOG_BATCH_SIZE * 2))
-    list.scrollTop = 1500
-    fireEvent.scroll(list)
+    feed.scrollTop = 1500
+    fireEvent.scroll(feed)
     await waitFor(() => expect(screen.getAllByRole('button', { name: /测试皮肤 \d+ 界面预览/ })).toHaveLength(skins.length))
   })
 
@@ -244,6 +318,7 @@ describe('client market', () => {
     }))
 
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
     fireEvent.click(await screen.findByRole('button', { name: '停用' }))
     await waitFor(() => expect(catalogCalls).toBe(2))
 
@@ -259,6 +334,7 @@ describe('client market', () => {
       return { ok: true, json: async () => ({ skins: [{ skinId: skin.id, installation: 'installed', activation: active ? 'active' : 'inactive', installedVersion: '1.0.0', updateAvailable: true }] }) }
     }))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
     const use = await screen.findByRole('button', { name: '使用' })
     const inactiveUpdate = screen.getByRole('button', { name: '更新' })
     expect(use.getAttribute('variant')).toBe('primary')
@@ -268,6 +344,7 @@ describe('client market', () => {
     active = true
     cleanup()
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
     const stop = await screen.findByRole('button', { name: '停用' })
     const activeUpdate = screen.getByRole('button', { name: '更新' })
     const uninstall = screen.getByRole('button', { name: '卸载' })
@@ -288,6 +365,7 @@ describe('client market', () => {
       throw new Error(`Unexpected request: ${url}`)
     }))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     expect(await screen.findByText('首次启用提示：请先在设置 → 插件中停用其他皮肤、主题和外观插件，避免全局样式冲突。点击“使用”即表示已确认。')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: '使用' }))
@@ -298,7 +376,9 @@ describe('client market', () => {
   it('uses the DSH outline capsule for the mobile back action', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
-    const back = await screen.findByRole('button', { name: '返回列表' })
+    await openSkinCard()
+    const back = (await screen.findAllByRole('button', { name: '返回发现' }))
+      .find((button) => button.className.includes('mobileBack'))!
     expect(back.getAttribute('variant')).toBe('outline')
     expect(back.querySelector('[aria-hidden="true"]')).toBeTruthy()
   })
@@ -306,6 +386,7 @@ describe('client market', () => {
   it('replaces Use with a restart confirmation when activation needs restart', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { runningAgentCount: 0, skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     const restart = await screen.findByRole('button', { name: '重启以应用' })
     expect(screen.queryByRole('button', { name: '使用' })).toBeNull()
@@ -319,6 +400,7 @@ describe('client market', () => {
   it('disables restart when the Host reports a running Agent', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { runningAgentCount: 2, skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     fireEvent.click(await screen.findByRole('button', { name: '重启以应用' }))
     expect(await screen.findByText('检测到 2 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。')).toBeTruthy()
@@ -328,6 +410,7 @@ describe('client market', () => {
   it('allows an explicit one-time restart when the old Host cannot report Agent state', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     fireEvent.click(await screen.findByRole('button', { name: '重启以应用' }))
     const override = await screen.findByRole('button', { name: '我已确认无任务，仍然重启' })
@@ -345,6 +428,7 @@ describe('client market', () => {
     }))
     const clientRuntime = { setActive: vi.fn(async () => false) }
     render(<SkinMarketSection t={key => key} clientRuntime={clientRuntime} />)
+    await openSkinCard()
 
     fireEvent.click(await screen.findByRole('button', { name: '使用' }))
     expect(await screen.findByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })).toBeTruthy()
@@ -354,20 +438,15 @@ describe('client market', () => {
   it('filters the catalog from the native search input', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
-    await waitFor(() => expect(screen.getAllByText('测试皮肤')).toHaveLength(2))
+    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'missing' } })
     expect(screen.getByText('没有匹配的皮肤')).toBeTruthy()
   })
 
-  it('offers All and Installed filters with Stars and latest sorting', async () => {
+  it('keeps Stars and latest sorting on the discovery feed', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
-    await waitFor(() => expect(screen.getByRole('button', { name: '全部' })).toBeTruthy())
-    expect(screen.queryByRole('button', { name: '精选' })).toBeNull()
-    expect(screen.getByRole('button', { name: '已安装' })).toBeTruthy()
-    expect(screen.getByRole('button', { name: '全部' }).getAttribute('data-active')).toBe('true')
-    fireEvent.click(screen.getByRole('button', { name: '已安装' }))
-    expect(screen.getByRole('button', { name: '已安装' }).getAttribute('data-active')).toBe('true')
+    await screen.findByRole('heading', { name: '发现更多' })
     fireEvent.click(screen.getByRole('button', { name: 'Stars' }))
     expect(screen.getByRole('button', { name: '最新' })).toBeTruthy()
   })
@@ -377,7 +456,8 @@ describe('client market', () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin, secondSkin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
 
-    const first = await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+    await openSkinCard()
+    const first = screen.getByRole('button', { name: /测试皮肤 界面预览/ })
     const second = screen.getByRole('button', { name: /第二皮肤 界面预览/ })
     expect(first.getAttribute('aria-current')).toBe('true')
     expect(second.getAttribute('aria-current')).toBeNull()
@@ -397,6 +477,7 @@ describe('client market', () => {
       throw new Error(`Unexpected request: ${url}`)
     }))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     const automatic = await screen.findByRole('button', { name: '安装并使用' })
     const installOnly = screen.getByRole('button', { name: '仅安装' })
@@ -419,6 +500,7 @@ describe('client market', () => {
     })
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     fireEvent.click(await screen.findByRole('button', { name: '安装并使用' }))
 
@@ -435,6 +517,7 @@ describe('client market', () => {
     })
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     const otherMethods = await screen.findByRole('button', { name: '其他安装方式' })
     const automatic = screen.getByRole('button', { name: '安装并使用' })
@@ -454,6 +537,7 @@ describe('client market', () => {
     const writeText = vi.fn(async () => undefined)
     Object.assign(navigator, { clipboard: { writeText } })
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     fireEvent.click(await screen.findByRole('button', { name: '其他安装方式' }))
     const dialog = screen.getByRole('dialog', { name: '安装 测试皮肤' })
@@ -466,6 +550,7 @@ describe('client market', () => {
   it('replaces a failed verified screenshot instead of retaining stale image pixels', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     const preview = await screen.findByAltText('测试皮肤 大图预览')
     fireEvent.error(preview)
@@ -521,6 +606,7 @@ describe('client market', () => {
     } }
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [healthSkin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
 
     expect(await screen.findByRole('heading', { name: '仓库健康' })).toBeTruthy()
     expect(screen.getByText('README 截图').nextSibling?.textContent).toBe('符合要求')
