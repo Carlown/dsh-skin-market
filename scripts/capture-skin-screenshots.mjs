@@ -57,6 +57,69 @@ const targets = [
     settingsSurface: 'dskin-panel',
     localStorage: {},
   },
+  {
+    id: 'wsxwj123.skin-gallery',
+    owner: 'wsxwj123',
+    repo: 'dsh-plugins',
+    subpath: 'packages/skin-gallery',
+    package: 'dsh-skin-gallery',
+    version: '0.1.0',
+    commit: 'ae7b7d50efdc0151477735ccadf4d59807abfec3',
+    smokeOnly: true,
+    readyText: /完整皮肤/,
+    activationSurface: 'skin-gallery',
+    selectionText: /Minecraft 方块世界/,
+    expectedBodyAttribute: 'data-dsh-minecraft',
+    localStorage: {},
+  },
+  {
+    id: 'anneheartrecord.dsh-desk-pet',
+    owner: 'anneheartrecord',
+    repo: 'dsh-desk-pet',
+    package: 'dsh-desk-pet',
+    version: '0.1.0',
+    commit: '93c0a90e8147c53cb5d3f3f4babb75e89ebe930b',
+    smokeOnly: true,
+    readyText: /dsh-desk-pet/i,
+    settingsSurface: 'plugin-list',
+    localStorage: {},
+  },
+  {
+    id: 'linkingoscar.dsh-billing-glass',
+    owner: 'linkingoscar',
+    repo: 'dsh-billing-glass',
+    package: 'dsh-billing-glass',
+    version: '0.2.0',
+    commit: '7a5b6a60e6748f011d5822d99c65b0a736b367ff',
+    smokeOnly: true,
+    readyText: /billing-glass|dsh-billing-glass/i,
+    settingsSurface: 'plugin-list',
+    localStorage: {},
+  },
+  {
+    id: 'luoyu-xingu.dsh-background',
+    owner: 'luoyu-xingu',
+    repo: 'dsh-background',
+    package: 'dsh-background',
+    version: '0.2.9',
+    commit: '14980c518e7a64c37d1875af4a8be44feaa53f12',
+    smokeOnly: true,
+    readyText: /dsh-background|background/i,
+    settingsSurface: 'plugin-list',
+    localStorage: {},
+  },
+  {
+    id: 'omdsh-dev.dsh-fun-weather',
+    owner: 'omdsh-dev',
+    repo: 'dsh-fun-weather',
+    package: '@deepseek-ai/dsh-fun-weather',
+    version: '0.1.0',
+    commit: 'efe1bec16889571f5e67bc7118163b0435768101',
+    smokeOnly: true,
+    readyText: /dsh-fun-weather|fun-weather/i,
+    settingsSurface: 'plugin-list',
+    localStorage: {},
+  },
 ]
 
 function usage() {
@@ -118,7 +181,7 @@ function parseArgs(argv) {
 }
 
 function selectedTargets(ids) {
-  if (ids.length === 0) return targets
+  if (ids.length === 0) return targets.filter(target => target.smokeOnly !== true)
   const unique = [...new Set(ids)]
   return unique.map(id => {
     const target = targets.find(item => item.id === id)
@@ -194,18 +257,29 @@ async function extractSource(workRoot, archive, target) {
   await rm(sourceDir, { recursive: true, force: true })
   await mkdir(sourceDir, { recursive: true })
   await run('tar', ['-xzf', archive, '--strip-components=1', '-C', sourceDir])
-  const manifest = JSON.parse(await readFile(join(sourceDir, 'package.json'), 'utf8'))
+  const packageDir = target.subpath === undefined ? sourceDir : safeChild(sourceDir, join(sourceDir, target.subpath))
+  const manifest = JSON.parse(await readFile(join(packageDir, 'package.json'), 'utf8'))
   if (manifest.name !== target.package || manifest.version !== target.version) {
     throw new Error(`${target.id}: archive package identity mismatch`)
   }
-  return sourceDir
+  return packageDir
 }
 
-async function installOffline(dshHome, sourceDir, target) {
+async function installOffline(dshHome, sourceDir, target, workRoot) {
   const env = { DSH_HOME: dshHome }
   console.log(`[install:offline] ${target.id}`)
+  const packageDir = safeChild(workRoot, join(workRoot, 'packages', target.id))
+  await rm(packageDir, { recursive: true, force: true })
+  await mkdir(packageDir, { recursive: true })
+  const packed = await run('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', packageDir], { cwd: sourceDir })
+  const packReport = JSON.parse(packed.stdout)
+  const filename = packReport[0]?.filename
+  if (typeof filename !== 'string' || filename.length === 0) {
+    throw new Error(`${target.id}: npm pack did not report a tarball`)
+  }
+  const tarball = safeChild(packageDir, join(packageDir, filename))
   await run('dsh', ['plugin', '--profile', 'web', 'install', '--offline'], { env })
-  await run('dsh', ['plugin', '--profile', 'web', 'add', '--offline', '-w', sourceDir], { env })
+  await run('dsh', ['plugin', '--profile', 'web', 'add', '--offline', tarball], { env })
   const installed = join(dshHome, 'profiles', 'web', 'node_modules', target.package, 'package.json')
   const manifest = JSON.parse(await readFile(installed, 'utf8'))
   if (manifest.name !== target.package || manifest.version !== target.version) {
@@ -332,10 +406,32 @@ async function openTargetSettingsSurface(page, target) {
     await page.getByText(/点一只小猫再选品种/).waitFor({ state: 'visible', timeout: 10_000 })
     return
   }
+  if (target.settingsSurface === 'plugin-list') {
+    await dismissOnboarding(page)
+    const settings = page.locator('button[aria-haspopup="dialog"]').filter({ hasText: /设置|Settings/i }).last()
+    await settings.click()
+    const dialog = page.getByRole('dialog').last()
+    await dialog.waitFor({ state: 'visible', timeout: 10_000 })
+    const plugins = dialog.getByRole('button', { name: /插件|Plugins/i }).first()
+    await plugins.click()
+    await dialog.getByText(target.readyText).first().waitFor({ state: 'visible', timeout: 15_000 })
+    return
+  }
   await openGeneralSettings(page, target)
 }
 
 async function activateTargetTheme(page, target) {
+  if (target.activationSurface === 'skin-gallery') {
+    const dialog = await openGeneralSettings(page, target)
+    const choice = dialog.getByRole('button', { name: target.selectionText }).first()
+    await choice.waitFor({ state: 'visible', timeout: 10_000 })
+    const card = choice.locator('..')
+    await card.getByRole('button', { name: '应用', exact: true }).click()
+    await page.waitForFunction(attribute => document.body.hasAttribute(attribute), target.expectedBodyAttribute, { timeout: 15_000 })
+    await dialog.getByRole('button', { name: /关闭|Close/i }).last().click()
+    await dialog.waitFor({ state: 'hidden', timeout: 10_000 })
+    return
+  }
   if (target.selectionText === undefined) return
   const dialog = await openGeneralSettings(page, target)
   const choice = dialog.getByRole('button', { name: target.selectionText }).first()
@@ -534,7 +630,7 @@ async function captureTarget(options, workRoot, historyTemplate, target, index) 
   const dshHome = safeChild(workRoot, join(workRoot, 'dsh-homes', target.id))
   await rm(dshHome, { recursive: true, force: true })
   await cp(historyTemplate.templateDir, dshHome, { recursive: true })
-  await installOffline(dshHome, sourceDir, target)
+  await installOffline(dshHome, sourceDir, target, workRoot)
 
   const port = options.portBase + index
   const url = `http://127.0.0.1:${port}`
