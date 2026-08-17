@@ -79,7 +79,7 @@ function App({ skins }: { skins: Skin[] }) {
           <span><strong>扫码打开</strong><small>分享后也能访问</small></span>
         </a>
         <a className="button outline" href={MARKET_REPOSITORY} target="_blank" rel="noreferrer"><GithubLogo size={17} /> GitHub</a>
-        <button className="button primary" onClick={() => void copyPrompt('market', MARKET_PROMPT)}>{copied === 'market' ? <Check size={17} /> : <Copy size={17} />}{copied === 'market' ? '已复制' : '安装皮肤市场'}</button>
+        <button className="button outline" onClick={() => void copyPrompt('market', MARKET_PROMPT)}>{copied === 'market' ? <Check size={17} /> : <Copy size={17} />}{copied === 'market' ? '已复制' : '安装皮肤市场'}</button>
       </nav>
     </header>
 
@@ -108,7 +108,8 @@ function App({ skins }: { skins: Skin[] }) {
         </header>
 
         <div className="detail-actions">
-          <button className="button primary" onClick={() => void copyPrompt(selected.id, skinPrompt(selected.repo, verified))}>{copied === selected.id ? <Check size={17} /> : <Copy size={17} />}{copied === selected.id ? '已复制' : '复制安装提示词'}</button>
+          <button className="button primary" onClick={() => void copyPrompt('market', MARKET_PROMPT)}>{copied === 'market' ? <Check size={17} /> : <Copy size={17} />}{copied === 'market' ? '已复制' : '安装皮肤市场'}</button>
+          <button className="button outline" onClick={() => void copyPrompt(selected.id, skinPrompt(selected.repo, verified))}>{copied === selected.id ? <Check size={17} /> : <Copy size={17} />}{copied === selected.id ? '已复制' : '复制安装提示词'}</button>
           <a className="button outline repo-button" href={selected.repo} target="_blank" rel="noreferrer"><GithubLogo size={17} /><span>{selected.repo.replace('https://', '')}</span></a>
           <span className="detail-stars"><StarIcon size={16} /> {selected.starsSnapshot}</span>
         </div>
