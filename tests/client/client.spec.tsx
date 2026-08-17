@@ -469,6 +469,23 @@ describe('client market', () => {
     expect(screen.getByText('前 1 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。')).toBeTruthy()
   })
 
+  it('uses the upstream cover in list cards while opening market captures first in detail', async () => {
+    const market = 'https://example.com/market-home.png'
+    const upstreamCover = 'https://example.com/upstream-cover.png'
+    const supplemented = {
+      ...skin,
+      listScreenshot: upstreamCover,
+      marketScreenshots: [market],
+      screenshots: [market, upstreamCover],
+    }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [supplemented] } : { skins: [] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+    expect(document.querySelector(`img[src="${upstreamCover}"]`)).toBeTruthy()
+    expect(screen.getByAltText('测试皮肤 大图预览').getAttribute('src')).toBe(market)
+  })
+
   it('sends verified client-only skins to their manual installation guide', async () => {
     const manual = { ...skin, review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'manual-only' as const } }
     const open = vi.fn()

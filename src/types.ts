@@ -13,6 +13,7 @@ export interface SkinEntry {
   install: { target: string; version: string; commit: string; allowBuild?: string }
   compatibility: { dsh: string; platform: string[] }
   marketScreenshots?: string[]
+  listScreenshot?: string
   screenshots: string[]
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
   health?: SkinHealth

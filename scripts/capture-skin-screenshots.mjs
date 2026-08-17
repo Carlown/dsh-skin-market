@@ -46,6 +46,17 @@ const targets = [
     expectedTheme: 'angelina-dark',
     localStorage: { 'dsh-angelina-themes.selection': 'angelina-dark' },
   },
+  {
+    id: 'dancingmemory.dskin',
+    owner: 'dancingmemory',
+    repo: 'dskin',
+    package: 'dskin',
+    version: '1.0.13',
+    commit: 'f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed',
+    readyText: /DSKIN|猫咪|小猫|爪爪/i,
+    settingsSurface: 'dskin-panel',
+    localStorage: {},
+  },
 ]
 
 function usage() {
@@ -313,6 +324,17 @@ async function openGeneralSettings(page, target) {
   return dialog
 }
 
+async function openTargetSettingsSurface(page, target) {
+  if (target.settingsSurface === 'dskin-panel') {
+    const paw = page.locator('[title="猫咪面板"]').first()
+    await paw.waitFor({ state: 'visible', timeout: 15_000 })
+    await paw.click()
+    await page.getByText(/点一只小猫再选品种/).waitFor({ state: 'visible', timeout: 10_000 })
+    return
+  }
+  await openGeneralSettings(page, target)
+}
+
 async function activateTargetTheme(page, target) {
   if (target.selectionText === undefined) return
   const dialog = await openGeneralSettings(page, target)
@@ -539,9 +561,16 @@ async function captureTarget(options, workRoot, historyTemplate, target, index) 
       colorScheme: 'dark',
     })
     let promptRequests = 0
-    await context.route('**/api/session.prompt', async route => {
-      promptRequests += 1
-      await route.continue()
+    let externalBrowserRequestsBlocked = 0
+    await context.route('**/*', async route => {
+      const requestUrl = route.request().url()
+      if (requestUrl.includes('/api/session.prompt')) promptRequests += 1
+      if (requestUrl.startsWith(`${url}/`) || requestUrl === url) {
+        await route.continue()
+      } else {
+        externalBrowserRequestsBlocked += 1
+        await route.abort('blockedbyclient')
+      }
     })
     await context.addInitScript(entries => {
       for (const [key, value] of Object.entries(entries)) localStorage.setItem(key, value)
@@ -563,7 +592,7 @@ async function captureTarget(options, workRoot, historyTemplate, target, index) 
     await openExistingTestConversation(page, target)
     await capturePage(page, screenshots.conversation)
     if (promptRequests !== 0) throw new Error(`${target.id}: target capture unexpectedly sent ${promptRequests} prompt request(s)`)
-    await openGeneralSettings(page, target)
+    await openTargetSettingsSurface(page, target)
     await page.waitForTimeout(750)
     await capturePage(page, screenshots.settings)
     const title = await page.title()
@@ -588,6 +617,7 @@ async function captureTarget(options, workRoot, historyTemplate, target, index) 
         externalModelRequestSent: false,
         localMockRequests: 0,
         seedMockRequests: historyTemplate.seedMockRequests,
+        externalBrowserRequestsBlocked,
         tokenSpend: 0,
         method: 'reused-zero-token-history-template',
       },

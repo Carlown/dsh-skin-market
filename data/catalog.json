@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-17T02:56:16.048Z",
+  "generatedAt": "2026-08-17T03:45:15.731Z",
   "skins": [
     {
       "id": "king-of-soy-sauce.liang-intensity",
@@ -2014,6 +2014,9 @@
         ]
       },
       "screenshots": [
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/home.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/conversation.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/settings.png",
         "https://raw.githubusercontent.com/dancingmemory/dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/assets/banner.jpg",
         "https://raw.githubusercontent.com/dancingmemory/dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/assets/shot-bigorange.png",
         "https://raw.githubusercontent.com/dancingmemory/dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/assets/shot-white.png",
@@ -2025,6 +2028,18 @@
         "preview": "verified",
         "installation": "verified"
       },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "improve",
+          "compatibility": "improve",
+          "installation": "pass"
+        },
+        "suggestions": [
+          "建议在 README 中加入至少一张可识别的 DSH Web 实机运行截图；现有封面、角色特写和线框预览会继续保留。",
+          "建议在 README 或 package.json 中明确声明已验证的 DSH Web 版本或兼容范围。"
+        ]
+      },
       "license": {
         "code": "MIT",
         "commercialUse": true
@@ -2032,9 +2047,15 @@
       "featuredRank": 38,
       "starsSnapshot": 34,
       "releaseUpdatedAt": "2026-08-16T13:46:39.411Z",
-      "metadataUpdatedAt": "2026-08-16T13:46:39.411Z",
+      "metadataUpdatedAt": "2026-08-17T03:44:20.095Z",
       "starsUpdatedAt": "2026-08-16T13:46:39.411Z",
-      "updatedAt": "2026-08-16T13:46:39.411Z"
+      "updatedAt": "2026-08-17T03:44:20.095Z",
+      "marketScreenshots": [
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/home.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/conversation.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/settings.png"
+      ],
+      "listScreenshot": "https://raw.githubusercontent.com/dancingmemory/dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/assets/banner.jpg"
     },
     {
       "id": "xiake595.touhou-hakurei",

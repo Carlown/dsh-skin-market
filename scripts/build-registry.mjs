@@ -25,7 +25,8 @@ for (const file of files) {
   const marketScreenshots = skin.marketScreenshots ?? []
   const screenshots = mergeScreenshots(marketScreenshots, skin.screenshots)
   if (screenshots.length === 0) throw new Error(`${file}: at least one market or upstream screenshot is required`)
-  skins.push({ ...skin, screenshots })
+  const listScreenshot = skin.listScreenshot ?? (marketScreenshots.length > 0 ? skin.screenshots[0] : undefined)
+  skins.push({ ...skin, ...(listScreenshot ? { listScreenshot } : {}), screenshots })
 }
 
 const ids = new Set()

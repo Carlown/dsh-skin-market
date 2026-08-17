@@ -24,6 +24,7 @@ export interface SkinEntry {
         platform: string[];
     };
     marketScreenshots?: string[];
+    listScreenshot?: string;
     screenshots: string[];
     review?: {
         compatibility: 'verified' | 'unverified';

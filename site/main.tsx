@@ -18,6 +18,7 @@ interface Skin {
   install: { version: string; commit: string }
   compatibility: { dsh: string; platform: string[] }
   marketScreenshots?: string[]
+  listScreenshot?: string
   screenshots: string[]
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card' }
   health?: { status: 'healthy' | 'improvements'; checks: { readmeScreenshots: 'pass' | 'improve'; compatibility: 'pass' | 'improve'; installation: 'pass' | 'improve' }; suggestions: string[] }
@@ -92,7 +93,7 @@ function App({ skins }: { skins: Skin[] }) {
         </div>
         <div className="skin-list">
           {filtered.map(skin => <button className="skin-row" data-selected={skin.id === selected.id} aria-current={skin.id === selected.id ? 'true' : undefined} key={skin.id} onClick={() => select(skin.id)}>
-            <PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.screenshots[0]} alt="" kind="list" loading="lazy" />
+            <PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="list" loading="lazy" />
             <span className="row-copy"><strong>{skin.name.zh}</strong><small>{skin.author}<span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
             <span className={skin.review?.compatibility === 'unverified' ? 'status pending' : 'status'}>{skin.review?.compatibility === 'unverified' ? '待验证' : '可安装'}</span>
           </button>)}
@@ -103,7 +104,7 @@ function App({ skins }: { skins: Skin[] }) {
       <section className="detail">
         <button className="mobile-back" onClick={() => setDetailOpen(false)}><ArrowLeft size={16} /> 返回列表</button>
         <header className="skin-head">
-          <div className="avatar"><PreviewMedia key={`${selected.id}:avatar`} skin={selected} src={selected.screenshots[0]} alt="" kind="avatar" /></div>
+          <div className="avatar"><PreviewMedia key={`${selected.id}:avatar`} skin={selected} src={selected.listScreenshot ?? selected.screenshots[0]} alt="" kind="avatar" /></div>
           <div className="skin-title"><div><h2>{selected.name.zh}</h2><p>{selected.author}</p></div><p className="description">{selected.description}</p><div className="meta"><span>版本 {selected.install.version}</span><span>DSH {selected.compatibility.dsh}</span><span className={verified ? 'verified' : 'unverified'}>{verified ? '兼容已验证' : '兼容待验证'}</span></div></div>
         </header>
 
@@ -128,7 +129,7 @@ function App({ skins }: { skins: Skin[] }) {
           <dl><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div><div><dt>平台</dt><dd>{selected.compatibility.platform.join(' / ')}</dd></div></dl>
         </div>
 
-        {recommendations.length > 0 && <section className="recommendations"><h3>更多推荐</h3><div>{recommendations.map(skin => <button key={skin.id} onClick={() => select(skin.id)}><PreviewMedia skin={skin} src={skin.screenshots[0]} alt="" kind="recommendation" loading="lazy" /><span><strong>{skin.name.zh}</strong><small><StarIcon size={12} /> {skin.starsSnapshot}</small></span></button>)}</div></section>}
+        {recommendations.length > 0 && <section className="recommendations"><h3>更多推荐</h3><div>{recommendations.map(skin => <button key={skin.id} onClick={() => select(skin.id)}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="recommendation" loading="lazy" /><span><strong>{skin.name.zh}</strong><small><StarIcon size={12} /> {skin.starsSnapshot}</small></span></button>)}</div></section>}
       </section>
     </main>
 

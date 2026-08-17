@@ -33,12 +33,25 @@ review:
   compatibility: unverified
   preview: verified
   installation: verified
+health:
+  status: improvements
+  checks:
+    readmeScreenshots: improve
+    compatibility: improve
+    installation: pass
+  suggestions:
+    - 建议在 README 中加入至少一张可识别的 DSH Web 实机运行截图；现有封面、角色特写和线框预览会继续保留。
+    - 建议在 README 或 package.json 中明确声明已验证的 DSH Web 版本或兼容范围。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 38
 starsSnapshot: 34
 releaseUpdatedAt: 2026-08-16T13:46:39.411Z
-metadataUpdatedAt: 2026-08-16T13:46:39.411Z
+metadataUpdatedAt: 2026-08-17T03:44:20.095Z
 starsUpdatedAt: 2026-08-16T13:46:39.411Z
-updatedAt: 2026-08-16T13:46:39.411Z
+updatedAt: 2026-08-17T03:44:20.095Z
+marketScreenshots:
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/home.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/conversation.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dancingmemory__dskin/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed/settings.png
