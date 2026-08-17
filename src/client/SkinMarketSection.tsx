@@ -378,12 +378,10 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     const recent = Date.parse(bState.installedAt ?? '') - Date.parse(aState.installedAt ?? '')
     return Number.isNaN(recent) || recent === 0 ? b.githubStars - a.githubStars : recent
   }), [skins, states])
-  const installedIds = useMemo(() => new Set(installedSkins.map(skin => skin.id)), [installedSkins])
   const discoverySkins = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
-    if (!haystack.includes(homeQuery.trim().toLowerCase())) return false
-    return homeQuery.trim() !== '' || !installedIds.has(skin.id)
-  }).sort((a, b) => sortBy === 'latest' ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt) : b.githubStars - a.githubStars), [homeQuery, installedIds, skins, sortBy])
+    return haystack.includes(homeQuery.trim().toLowerCase())
+  }).sort((a, b) => sortBy === 'latest' ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt) : b.githubStars - a.githubStars), [homeQuery, skins, sortBy])
   const visibleDiscoverySkins = useMemo(() => discoverySkins.slice(0, homeVisibleCount), [discoverySkins, homeVisibleCount])
   const installedRowSkins = installedSkins.length > installedSlots ? installedSkins.slice(0, Math.max(1, installedSlots - 1)) : installedSkins
   const installedOverflow = installedSkins.length > installedRowSkins.length
@@ -391,13 +389,14 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   useEffect(() => { setVisibleCount(CATALOG_BATCH_SIZE) }, [filter, query, sortBy])
   useEffect(() => { setHomeVisibleCount(CATALOG_BATCH_SIZE) }, [homeQuery, sortBy])
 
-  const run = useCallback(async (kind: MutationKind) => {
-    if (selected === undefined) return false
+  const runForSkin = useCallback(async (skinId: string, kind: MutationKind) => {
+    const target = skins.find(skin => skin.id === skinId)
+    if (target === undefined) return false
     setError(null)
-    setMutation({ skinId: selected.id, kind })
+    setMutation({ skinId: target.id, kind })
     try {
       const result = await json<{ operationId: string }>(`/dsh-skin-market/${kind}`, {
-        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ skinId: selected.id }),
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ skinId: target.id }),
       })
       for (;;) {
         const operation = await json<Operation>(`/dsh-skin-market/operations/${result.operationId}`)
@@ -406,16 +405,16 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           setBusy(null)
           let needsRestart = false
           if (kind === 'deactivate' || kind === 'uninstall') {
-            await clientRuntime?.setActive(selected.package, false)
+            await clientRuntime?.setActive(target.package, false)
           } else if (kind === 'activate' && clientRuntime !== undefined) {
             // Match uninstall-then-use semantics: wait for every old skin to
             // finish disposing before loading the selected skin.
-            needsRestart = !(await switchClientSkin(clientRuntime, skins.map(skin => skin.package), selected.package))
+            needsRestart = !(await switchClientSkin(clientRuntime, skins.map(skin => skin.package), target.package))
             restoreMarketStyleOrder()
           }
           await refresh()
           if (needsRestart) {
-            setStates(value => value.map(item => item.skinId === selected.id
+            setStates(value => value.map(item => item.skinId === target.id
               ? { ...item, activation: 'restart-required' }
               : item))
             await openRestartConfirm()
@@ -433,7 +432,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     } finally {
       setMutation(null)
     }
-  }, [clientRuntime, openRestartConfirm, refresh, selected, skins])
+  }, [clientRuntime, openRestartConfirm, refresh, skins])
+
+  const run = useCallback(async (kind: MutationKind) => selected === undefined ? false : runForSkin(selected.id, kind), [runForSkin, selected])
 
   const activateSelected = useCallback(() => {
     try { window.localStorage.setItem(ACTIVATION_WARNING_KEY, 'true') } catch { /* storage may be unavailable */ }
@@ -488,6 +489,20 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     if (target !== undefined) openBrowser(target, 'installed')
   }
   const closeBrowser = () => { setBrowserOpen(false); setShowDetail(false) }
+  const openCardInstall = (skin: CatalogSkin) => {
+    if (skin.review?.installation === 'manual-only') {
+      chooseSkin(skin.id)
+      setInstallCopied(null)
+      setShowInstallOptions(true)
+      return
+    }
+    void runForSkin(skin.id, 'install')
+  }
+  const activateCard = (skinId: string) => {
+    try { window.localStorage.setItem(ACTIVATION_WARNING_KEY, 'true') } catch { /* storage may be unavailable */ }
+    setActivationWarningAccepted(true)
+    void runForSkin(skinId, 'activate')
+  }
   const recommendations = selected?.recommendations.map(id => skins.find(skin => skin.id === id)).filter((skin): skin is CatalogSkin => skin !== undefined) ?? []
   const submissionPrompt = createSubmissionPrompt()
   const copySubmissionPrompt = async () => {
@@ -498,6 +513,43 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     if (selected === undefined) return
     await navigator.clipboard.writeText(method === 'prompt' ? createSkinInstallPrompt(selected) : createSkinInstallCommand(selected))
     setInstallCopied(`${selected.id}:${method}`)
+  }
+  const renderHomeCard = (skin: CatalogSkin, location: 'installed' | 'discover', feedSize?: number) => {
+    const itemState = runtimeFor(states, skin.id)
+    const cardMutation = mutation?.skinId === skin.id ? mutation : null
+    const needsInstall = itemState.installation === 'missing' || itemState.installation === 'broken'
+    const actionCount = cardMutation !== null || needsInstall
+      ? 1
+      : itemState.installation === 'installed'
+        ? Number(itemState.activation === 'inactive' || itemState.activation === 'active') + Number(itemState.updateAvailable)
+        : 0
+    const stateText = itemState.installation === 'broken'
+      ? '安装异常'
+      : itemState.activation === 'active'
+        ? '使用中'
+        : itemState.activation === 'restart-required'
+          ? '待重启'
+          : itemState.installation === 'installed'
+            ? '已安装'
+            : null
+    const open = () => location === 'installed' ? openInstalledBrowser(skin.id) : openBrowser(skin.id, 'discover')
+    return <article className={css.homeCard} data-active={itemState.activation === 'active' ? 'true' : undefined} data-feed-size={feedSize} data-actions={actionCount} key={`${location}:${skin.id}`}>
+      <Button variant="ghost" className={css.homeCardOpen} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
+        <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
+        <span className={css.homeCardCopy}>
+          <span className={css.homeCardTitleRow}><strong title={skin.name.zh}>{skin.name.zh}</strong>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</span>
+          <small><span>{skin.author}</span>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</small>
+        </span>
+      </Button>
+      {actionCount > 0 && <div className={css.cardInlineActions} role="group" aria-label={`${skin.name.zh} 操作`}>
+        {cardMutation !== null ? <span className={css.cardActionProgress}><IconLoadingOutline16 />{mutationLabels[cardMutation.kind]}</span> : <>
+          {needsInstall && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} title={skin.review?.installation === 'manual-only' ? '复制安装提示词' : '直接安装到当前 DSH'} onClick={() => openCardInstall(skin)}>安装</Button>}
+          {itemState.installation === 'installed' && itemState.activation === 'inactive' && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} onClick={() => activateCard(skin.id)}>使用</Button>}
+          {itemState.installation === 'installed' && itemState.activation === 'active' && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} onClick={() => { void runForSkin(skin.id, 'deactivate') }}>停用</Button>}
+          {itemState.installation === 'installed' && itemState.updateAvailable && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} onClick={() => { void runForSkin(skin.id, 'update') }}>更新</Button>}
+        </>}
+      </div>}
+    </article>
   }
 
   return (
@@ -534,13 +586,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           {homeQuery.trim() === '' && <section className={css.homeSection} aria-labelledby="installed-skins-title">
             <div className={css.homeSectionTitle}><h3 id="installed-skins-title">已安装</h3><span>当前使用优先，其余按最近安装排序</span></div>
             {installedSkins.length > 0 ? <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties}>
-              {installedRowSkins.map(skin => {
-                const itemState = runtimeFor(states, skin.id)
-                return <Button variant="ghost" className={css.homeCard} key={skin.id} data-active={itemState.activation === 'active' ? 'true' : undefined} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={`${skin.name.zh} 界面预览`} onClick={() => openInstalledBrowser(skin.id)}>
-                  <PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" />
-                  <span className={css.homeCardCopy}><strong>{skin.name.zh}</strong><small><span>{skin.author}</span><span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{itemState.activation === 'active' ? '使用中' : itemState.updateAvailable ? '可更新' : '已安装'}</span></small></span>
-                </Button>
-              })}
+              {installedRowSkins.map(skin => renderHomeCard(skin, 'installed'))}
               {installedOverflow && <Button variant="ghost" className={`${css.homeCard} ${css.installedMoreCard}`} onClick={() => openInstalledBrowser()}><SquaresFourIcon size={24} aria-hidden="true" /><strong>查看全部已安装</strong></Button>}
             </div> : <div className={css.installedEmpty}>尚未安装皮肤，从下面挑一个喜欢的开始。</div>}
           </section>}
@@ -551,14 +597,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               <Button className={css.sortButton} variant="ghost" size="sm" onClick={() => setSortBy(value => value === 'stars' ? 'latest' : 'stars')}>{sortBy === 'stars' ? 'Stars' : '最新'} <IconChevronDownOutline14 /></Button>
             </div>
             {catalogLoading && skins.length === 0 ? <div className={css.homeLoading}><IconLoadingOutline16 /> 正在加载皮肤…</div> : visibleDiscoverySkins.length > 0 ? <div className={css.discoveryGrid}>
-              {visibleDiscoverySkins.map((skin, index) => {
-                const itemState = runtimeFor(states, skin.id)
-                return <Button variant="ghost" className={css.homeCard} data-feed-size={index % 3} key={skin.id} aria-label={`${skin.name.zh} 界面预览`} onClick={() => openBrowser(skin.id, 'discover')}>
-                  <PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" />
-                  <span className={css.homeCardCopy}><strong>{skin.name.zh}</strong><small><span>{skin.author}</span><span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}<span className={css.cardStatus}>{itemState.installation === 'missing' ? '可安装' : statusLabel(itemState)}</span></span></small></span>
-                </Button>
-              })}
+              {visibleDiscoverySkins.map((skin, index) => renderHomeCard(skin, 'discover', index % 3))}
             </div> : <p className={css.empty}>没有匹配的皮肤</p>}
+            {error !== null && !browserOpen && <div className={css.homeError} role="alert">{error}</div>}
             {!catalogLoading && homeVisibleCount < discoverySkins.length && <div className={css.homeLoadMore} aria-hidden="true"><span /><span /></div>}
           </section>
         </div>
@@ -620,7 +661,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
                 </span>
               </span>
-              <Pill className={mutationLabel !== null ? `${css.cardStatus} ${css.cardStatusUpdate}` : itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.activation === 'active' ? '使用中' : itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : statusLabel(itemState))}</Pill>
+              <span className={mutationLabel !== null ? `${css.cardStatus} ${css.cardStatusUpdate}` : itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.activation === 'active' ? '使用中' : itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : statusLabel(itemState))}</span>
             </Button>
           })}
           {!catalogLoading && visibleCount < filtered.length && <div className={css.loadMoreHint} aria-hidden="true"><span /><span /></div>}
@@ -632,7 +673,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             </span>
             <Pill className={css.cardStatus}>市场外</Pill>
           </div>)}
-          {!loading && selected === undefined && error !== null && <div className={css.error} role="alert">{error}</div>}
+          {!loading && browserOpen && selected === undefined && error !== null && <div className={css.error} role="alert">{error}</div>}
         </div>
       </aside>
 
@@ -697,12 +738,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         onClose={() => setShowInstallOptions(false)}
         title={`安装 ${selected?.name.zh ?? '皮肤'}`}
         closeLabel="关闭"
-        description="任选一种，不用都执行。"
-        footer={<Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowInstallOptions(false)}>关闭</Button>}
+        description={manualOnly ? '该皮肤暂不支持市场直接安装，请复制提示词交给 Agent 处理。' : '任选一种，不用都执行。'}
+        footer={manualOnly ? <><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowInstallOptions(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => void copyInstallOption('prompt')}>{installCopied === `${selected?.id}:prompt` ? '提示词已复制' : '复制提示词'}</Button></> : <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowInstallOptions(false)}>关闭</Button>}
       >
         <div className={css.installOptions}>
           <div><strong>提示词</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallPrompt(selected)}>{selected === undefined ? '' : createSkinInstallPrompt(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:prompt` ? '提示词已复制' : '复制提示词'} title="复制提示词" onClick={() => void copyInstallOption('prompt')} /></span></div>
-          <div><strong>命令</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallCommand(selected)}>{selected === undefined ? '' : createSkinInstallCommand(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:command` ? '命令已复制' : '复制命令'} title="复制命令" onClick={() => void copyInstallOption('command')} /></span></div>
+          {!manualOnly && <div><strong>命令</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallCommand(selected)}>{selected === undefined ? '' : createSkinInstallCommand(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:command` ? '命令已复制' : '复制命令'} title="复制命令" onClick={() => void copyInstallOption('command')} /></span></div>}
         </div>
       </Modal>
       <Modal open={confirmRestart} onClose={() => { if (!restarting) setConfirmRestart(false) }} title="需要重启 DSH 应用此皮肤" closeLabel="关闭" description={restarting ? '正在重新启动 DSH，请稍候…' : runningAgents === null && !restartCheckFinished ? '正在检查是否有 Agent 运行。状态确认前不能重启。' : runningAgents === null ? '当前 Host 尚未加载安全检查。请确认没有 Agent 正在运行、重要内容已保存；你可以继续完成这一次升级重启。新版本加载后会自动检测 Agent 状态。' : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : 'Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" disabled={restarting} onClick={() => setConfirmRestart(false)}>稍后</Button><Button className={css.nativePrimary} variant="primary" size="sm" disabled={restarting || (runningAgents === null && !restartCheckFinished) || (runningAgents ?? 0) > 0} onClick={() => void restartNow()}>{restarting ? '正在重启…' : runningAgents === null && !restartCheckFinished ? '正在检查…' : runningAgents === null ? '我已确认无任务，仍然重启' : runningAgents > 0 ? '有任务运行中' : '确认无任务，立即重启'}</Button></>} />

@@ -179,7 +179,7 @@ describe('client market', () => {
       { skinId: activeSkin.id, installation: 'installed', activation: 'active', installedVersion: '1.0.0', updateAvailable: true },
     ] }) })
 
-    const activeCard = await screen.findByRole('button', { name: /当前皮肤 界面预览/ })
+    const activeCard = await screen.findByRole('button', { name: /当前皮肤 已安装卡片/ })
     expect(activeCard.getAttribute('aria-current')).toBe('true')
     expect(activeCard.textContent).toContain('使用中')
     expect(activeCard.textContent).not.toContain('可更新')
@@ -222,12 +222,12 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     const installedSection = (await screen.findByRole('heading', { name: '已安装' })).closest('section')!
-    const cards = [...installedSection.querySelectorAll<HTMLButtonElement>('button[aria-label$="界面预览"]')]
+    const cards = [...installedSection.querySelectorAll<HTMLButtonElement>('button[aria-label$="已安装卡片"]')]
     expect(cards.map(card => card.getAttribute('aria-label'))).toEqual([
-      '已装皮肤 5 界面预览',
-      '已装皮肤 4 界面预览',
-      '已装皮肤 3 界面预览',
-      '已装皮肤 2 界面预览',
+      '已装皮肤 5 已安装卡片',
+      '已装皮肤 4 已安装卡片',
+      '已装皮肤 3 已安装卡片',
+      '已装皮肤 2 已安装卡片',
     ])
 
     fireEvent.click(screen.getByRole('button', { name: '查看全部已安装' }))
@@ -249,9 +249,81 @@ describe('client market', () => {
     })))
     render(<SkinMarketSection t={key => key} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: /测试皮肤 界面预览/ }))
+    fireEvent.click(await screen.findByRole('button', { name: /测试皮肤 已安装卡片/ }))
     expect(await screen.findByRole('heading', { name: '测试皮肤' })).toBeTruthy()
     expect(screen.getByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
+  })
+
+  it('uses a low-priority card action to install without activating', async () => {
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return await new Promise(() => undefined)
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+
+    const install = await screen.findByRole('button', { name: '安装' })
+    expect(install.getAttribute('variant')).toBe('ghost')
+    expect(screen.queryByText('可安装')).toBeNull()
+    fireEvent.click(install)
+
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/install') && init?.method === 'POST')).toBe(true))
+    expect(screen.getByRole('group', { name: '测试皮肤 操作' }).textContent).toContain('安装中')
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/activate'))).toBe(false)
+  })
+
+  it('opens a prompt-only install dialog for manual cards', async () => {
+    const manual = { ...skin, review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'manual-only' as const } }
+    const writeText = vi.fn(async () => undefined)
+    Object.assign(navigator, { clipboard: { writeText } })
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [manual] } : { skins: [] } })))
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '安装' }))
+    const dialog = screen.getByRole('dialog', { name: '安装 测试皮肤' })
+    expect(dialog.textContent).toContain('暂不支持市场直接安装')
+    expect(screen.queryByRole('button', { name: '复制命令' })).toBeNull()
+    const copyPrompt = screen.getAllByRole('button', { name: '复制提示词' }).at(-1)!
+    fireEvent.click(copyPrompt)
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(createSkinInstallPrompt(manual)))
+  })
+
+  it('keeps installed skins in discovery and exposes Use and Update on both cards', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{
+        skinId: skin.id,
+        installation: 'installed',
+        activation: 'inactive',
+        installedVersion: '1.0.0',
+        updateAvailable: true,
+        installedAt: '2026-08-16T00:00:00Z',
+      }] },
+    })))
+    render(<SkinMarketSection t={key => key} />)
+
+    expect(await screen.findByRole('button', { name: '测试皮肤 已安装卡片' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: '测试皮肤 界面预览' })).toBeTruthy()
+    expect(screen.getAllByRole('button', { name: '使用' })).toHaveLength(2)
+    expect(screen.getAllByRole('button', { name: '更新' })).toHaveLength(2)
+  })
+
+  it('exposes Stop on active installed cards', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{
+        skinId: skin.id,
+        installation: 'installed',
+        activation: 'active',
+        installedVersion: '1.0.0',
+        updateAvailable: false,
+      }] },
+    })))
+    render(<SkinMarketSection t={key => key} />)
+
+    expect(await screen.findAllByRole('button', { name: '停用' })).toHaveLength(2)
   })
 
   it('shows the cached catalog before background revalidation finishes', async () => {
