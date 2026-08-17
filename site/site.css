@@ -33,7 +33,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .brand > span:last-child { display: grid; }
 .brand strong { font-size: 15px; line-height: 20px; }
 .brand small { color: var(--caption); font-size: 11px; line-height: 15px; }
-.top-actions { display: flex; gap: 9px; }
+.top-actions { display: flex; align-items: center; gap: 9px; }
+.qr-share { display: flex; height: 56px; align-items: center; gap: 9px; padding: 5px 10px 5px 5px; color: var(--text); border: 1px solid var(--border); border-radius: 10px; background: var(--surface); text-decoration: none; }
+.qr-share:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.qr-share img { display: block; width: 44px; height: 44px; flex: none; border-radius: 5px; image-rendering: pixelated; }
+.qr-share span { display: grid; }
+.qr-share strong { font-size: 11px; line-height: 17px; }
+.qr-share small { color: var(--caption); font-size: 9px; line-height: 14px; white-space: nowrap; }
 .button { display: inline-flex; height: 34px; cursor: pointer; align-items: center; justify-content: center; gap: 7px; padding: 0 13px; border-radius: 17px; font-size: 12px; font-weight: 550; line-height: 18px; text-decoration: none; white-space: nowrap; }
 .button.primary { color: #fff; border: 0; background: var(--primary); }
 .button.primary:hover { background: var(--primary-hover); }
@@ -128,7 +134,9 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 
 @media (max-width: 820px) {
   .topbar { height: 62px; padding: 0 14px; }
-  .brand small, .top-actions .outline { display: none; }
+  .brand small, .top-actions .outline, .qr-share span { display: none; }
+  .qr-share { width: 42px; height: 42px; padding: 3px; }
+  .qr-share img { width: 34px; height: 34px; }
   .top-actions .button { padding: 0 11px; }
   .market { display: block; min-height: calc(100vh - 62px); }
   .catalog { position: static; height: calc(100vh - 62px); border-right: 0; }

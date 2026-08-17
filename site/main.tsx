@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass } from '@phosphor-icons/react'
 import { StarIcon } from '@primer/octicons-react'
 import { fetchLiveCatalog } from './catalog.ts'
-import { MARKET_PROMPT, MARKET_REPOSITORY, skinPrompt } from './prompts.ts'
+import { MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinPrompt } from './prompts.ts'
 import './site.css'
 
 interface Skin {
@@ -74,6 +74,10 @@ function App({ skins }: { skins: Skin[] }) {
         <span><strong>皮肤市场</strong><small>社区外观目录</small></span>
       </a>
       <nav className="top-actions" aria-label="平台操作">
+        <a className="qr-share" href={MARKET_PUBLIC_URL} target="_blank" rel="noreferrer" aria-label="扫描二维码打开 DSH 皮肤市场">
+          <img src={`${import.meta.env.BASE_URL}market-qr.svg`} alt="DSH 皮肤市场二维码" />
+          <span><strong>扫码打开</strong><small>分享后也能访问</small></span>
+        </a>
         <a className="button outline" href={MARKET_REPOSITORY} target="_blank" rel="noreferrer"><GithubLogo size={17} /> GitHub</a>
         <button className="button primary" onClick={() => void copyPrompt('market', MARKET_PROMPT)}>{copied === 'market' ? <Check size={17} /> : <Copy size={17} />}{copied === 'market' ? '已复制' : '安装皮肤市场'}</button>
       </nav>
