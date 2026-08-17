@@ -26,12 +26,12 @@ compatibility:
   platform:
     - web
 screenshots:
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-6.png
+  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-9.png
   - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image.png
   - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-2.png
   - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-3.png
   - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-4.png
-  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-6.png
-  - https://raw.githubusercontent.com/Tkingxiao/dsh-any-background/13acd6f4866dc3ce60a918b588ba38c4d4edd3ce/example_img/image-9.png
 review:
   compatibility: verified
   preview: verified
@@ -42,6 +42,6 @@ license:
 featuredRank: 7
 starsSnapshot: 6
 releaseUpdatedAt: 2026-08-16T12:31:59.883Z
-metadataUpdatedAt: 2026-08-16T13:47:55.737Z
+metadataUpdatedAt: 2026-08-17T09:04:13.000Z
 starsUpdatedAt: 2026-08-16T12:31:59.883Z
-updatedAt: 2026-08-16T13:47:55.737Z
+updatedAt: 2026-08-17T09:04:13.000Z

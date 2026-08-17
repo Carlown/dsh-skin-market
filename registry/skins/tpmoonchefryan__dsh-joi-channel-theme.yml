@@ -23,12 +23,12 @@ compatibility:
   platform:
     - web
 screenshots:
-  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/app-logo-flowers.png
   - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-flowers.png
   - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-library.png
   - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-flowers-dark.png
   - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/new-chat-library-dark.png
   - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/app-logo-library.png
+  - https://raw.githubusercontent.com/tpmoonchefryan/dsh-joi-channel-theme/5d971cfd2877f699668c0c7062e46a11c690c50e/docs/app-logo-flowers.png
 review:
   compatibility: verified
   preview: verified
@@ -39,6 +39,6 @@ license:
 featuredRank: 94
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-16T13:54:05.830Z
-metadataUpdatedAt: 2026-08-16T14:23:18.001Z
+metadataUpdatedAt: 2026-08-17T09:04:13.000Z
 starsUpdatedAt: 2026-08-16T13:54:05.830Z
-updatedAt: 2026-08-16T14:23:18.001Z
+updatedAt: 2026-08-17T09:04:13.000Z
