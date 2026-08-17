@@ -12,7 +12,13 @@
 
 ## 安装皮肤市场
 
-复制下面的提示词给你的 DSH Agent：
+可以直接使用 DSH CLI 安装：
+
+```sh
+dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
+```
+
+也可以复制下面的提示词给你的 DSH Agent：
 
 ```text
 请帮我把这个插件安装到 DSH 的 web profile：https://github.com/kingOfSoySauce/dsh-skin-market。安装完成后告诉我如何重启 DSH Web，并确认可以从“设置 → 皮肤市场”打开它。不要替我安装任何皮肤。
@@ -103,6 +109,11 @@
 
 检查结果用于给维护者提供改进建议，不代表安全认证。暂未满足某项规范时，页面会说明如何完善，而不会把仓库描述为“不可用”。
 
+“兼容性待验证”和“市场能否安装”是两个独立维度：
+
+- 兼容性表示维护者是否明确声明并验证了支持的 DSH Web 版本；缺少声明时会提示风险，但不会单独阻止市场安装。
+- 市场安装表示目录是否具备固定安装目标、package、`dsh.client` Web 声明、row ID 和可解析的已构建客户端入口。符合这些条件时，市场会调用 DSH CLI 的 `plugin add` 完成安装；不要求插件仓库自行实现名为 `add` 的命令。
+
 ## 本地开发
 
 需要 Node.js 22 或更高版本。
@@ -152,7 +163,7 @@ npm run screenshots:promote -- --skin kingao294.dsh-skin --yes-reviewed
 
 提升后的 URL 写入条目的 `marketScreenshots`。构建目录时，详情轮播中的市场补录图固定排在前面，仓库自己的 `screenshots` 去重后保持原顺序接在后面；左侧列表和推荐卡片仍优先使用仓库原始第一张图作为封面，仓库没有图片时才使用市场实机图。后续同步不会覆盖补录图。维护者可向市场仓库提交 PR 删除或替换 `marketScreenshots`，也可以先把图片提交到上游仓库，再由市场 PR 移除补录版本。
 
-正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。全量任务会合并 Awesome DSH 与 GitHub `dsh-plugin` Topic 两个发现源；只有 `dsh.client` 的手动注册型皮肤也会展示，但只提供跳转 GitHub 的“手动安装”。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
+正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。全量任务会合并 Awesome DSH 与 GitHub `dsh-plugin` Topic 两个发现源；只有 `dsh.client`、但元数据不足以由市场安全注册的皮肤仍会展示，并提供仓库安装说明。具备稳定 package、Web client 声明、row ID 和已构建入口的纯前端皮肤可由市场自动注册，不要求额外提供 `dsh.bundle`。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
 
 ## 安全说明
 

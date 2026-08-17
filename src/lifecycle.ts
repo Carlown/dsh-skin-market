@@ -130,7 +130,10 @@ export class SkinLifecycle {
   }
 
   begin(kind: OperationKind, skinId: string): Operation {
-    this.skin(skinId)
+    const skin = this.skin(skinId)
+    if ((kind === 'install' || kind === 'update') && skin.review?.installation === 'manual-only') {
+      throw new Error('该皮肤尚未满足市场自动安装所需信息，请查看仓库安装说明')
+    }
     if (this.activeOperation !== null) throw new Error('another skin operation is already running')
     const operation: Operation = { id: randomUUID(), kind, skinId, phase: 'queued', startedAt: new Date().toISOString() }
     this.operations.set(operation.id, operation)

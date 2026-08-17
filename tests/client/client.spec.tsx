@@ -423,10 +423,8 @@ describe('client market', () => {
     await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/activate') && init?.method === 'POST')).toBe(true))
   })
 
-  it('highlights the Agent prompt instead of automatically installing an unverified skin', async () => {
+  it('allows market installation while warning that compatibility is unverified', async () => {
     const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const, installation: 'verified' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
-    const open = vi.fn()
-    vi.stubGlobal('open', open)
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [unverified] }) }
       if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
@@ -437,14 +435,13 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     const copyPrompt = await screen.findByRole('button', { name: '复制安装提示词' })
-    const manualInstall = screen.getByRole('button', { name: '待验证，手动安装' })
-    expect(copyPrompt.getAttribute('variant')).toBe('primary')
-    expect(manualInstall.getAttribute('variant')).toBe('outline')
-    expect(screen.queryByRole('button', { name: '安装并使用' })).toBeNull()
-    fireEvent.click(manualInstall)
-    expect(open).toHaveBeenCalledWith(unverified.repo, '_blank', 'noopener,noreferrer')
-    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
-    expect(screen.getByText('维护者尚未声明 DSH 兼容范围，市场暂不提供自动安装。可复制安装提示词交给 Agent 验证安装，或前往 GitHub 查看说明。')).toBeTruthy()
+    const automatic = screen.getByRole('button', { name: '安装并使用' })
+    expect(automatic.getAttribute('variant')).toBe('primary')
+    expect(copyPrompt.getAttribute('variant')).toBe('outline')
+    expect(screen.queryByRole('button', { name: '待验证，手动安装' })).toBeNull()
+    fireEvent.click(automatic)
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
+    expect(screen.getByText('市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。')).toBeTruthy()
     expect(screen.getByText('该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。')).toBeTruthy()
     expect(screen.getAllByRole('img', { name: '测试皮肤 暂无界面截图' }).length).toBeGreaterThanOrEqual(2)
     expect(document.querySelector(`img[src="${unverified.screenshots[0]}"]`)).toBeNull()

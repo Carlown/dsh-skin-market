@@ -42,6 +42,18 @@ describe('skin lifecycle', () => {
     expect(lifecycle.states().some(state => state.skinId === added.id)).toBe(true)
   })
 
+  it('gates market installation by installation readiness, not compatibility verification', () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog[0]
+    const compatibleManual = { ...base, id: 'manual.skin', review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'manual-only' as const } }
+    const unverifiedInstallable = { ...base, id: 'installable.skin', review: { compatibility: 'unverified' as const, preview: 'verified' as const, installation: 'verified' as const } }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() }, [compatibleManual, unverifiedInstallable])
+
+    expect(() => lifecycle.begin('install', compatibleManual.id)).toThrow('尚未满足市场自动安装所需信息')
+    expect(() => lifecycle.begin('install', unverifiedInstallable.id)).not.toThrow()
+  })
+
   it('reconciles an already installed package instead of failing the install action', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })

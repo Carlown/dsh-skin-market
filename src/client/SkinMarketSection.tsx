@@ -335,7 +335,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const state = selected === undefined ? null : runtimeFor(states, selected.id)
   const compatibilityUnverified = selected?.review?.compatibility === 'unverified'
   const manualOnly = selected?.review?.installation === 'manual-only'
-  const autoInstallable = !compatibilityUnverified && !manualOnly
+  const autoInstallable = !manualOnly
   const filtered = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     if (!haystack.includes(query.trim().toLowerCase())) return false
@@ -497,7 +497,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
                 </span>
               </span>
-              <Pill className={mutationLabel !== null || itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : itemState.installation === 'missing' && skin.review?.compatibility === 'unverified' ? '待验证' : statusLabel(itemState))}</Pill>
+              <Pill className={mutationLabel !== null || itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : statusLabel(itemState))}</Pill>
             </Button>
           })}
           {!catalogLoading && visibleCount < filtered.length && <div className={css.loadMoreHint} aria-hidden="true"><span /><span /></div>}
@@ -522,7 +522,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               <h2>{selected.name.zh}</h2>
               <p className={css.author}>{selected.author}</p>
               <p className={css.description}>{selected.description}</p>
-              <p className={css.version}>版本 {selected.install.version}<span aria-hidden="true"> · </span>{compatibilityUnverified ? 'DSH 兼容性待验证' : `兼容 DSH ${selected.compatibility.dsh}`}<Pill className={state.activation === 'active' ? `${css.status} ${css.statusActive}` : css.status}>{compatibilityUnverified && state.installation === 'missing' ? '待验证' : statusLabel(state)}</Pill></p>
+              <p className={css.version}>版本 {selected.install.version}<span aria-hidden="true"> · </span>{compatibilityUnverified ? 'DSH 兼容性待验证' : `兼容 DSH ${selected.compatibility.dsh}`}<Pill className={state.activation === 'active' ? `${css.status} ${css.statusActive}` : css.status}>{statusLabel(state)}</Pill></p>
             </div>
           </header>
 
@@ -530,7 +530,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               {state.installation === 'missing' && <>
                 {autoInstallable && <Button className={css.nativePrimary} variant="primary" size="sm" icon={<IconDownloadOutline16 />} disabled={busy !== null} onClick={() => void installAndActivate()}>安装并使用</Button>}
                 <Button className={autoInstallable ? css.nativeOutline : css.nativePrimary} variant={autoInstallable ? 'outline' : 'primary'} size="sm" icon={<IconCopyOutline16 />} disabled={busy !== null} onClick={() => void copyInstallPrompt()}>{installPromptCopied === selected.id ? '安装提示词已复制' : '复制安装提示词'}</Button>
-                {!autoInstallable && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>{compatibilityUnverified ? '待验证，手动安装' : '查看安装说明'}</Button>}
+                {manualOnly && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>查看安装说明</Button>}
               </>}
               {state.installation === 'installed' && state.activation === 'inactive' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={activateSelected}>使用</Button>}
               {state.activation === 'restart-required' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void openRestartConfirm()}>重启以应用</Button>}
@@ -557,7 +557,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           </div>}
 
           <div className={css.aboutGrid}>
-            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>维护者尚未声明 DSH 兼容范围，市场暂不提供自动安装。可复制安装提示词交给 Agent 验证安装，或前往 GitHub 查看说明。</p>}{manualOnly && <p className={css.notice}>该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。</p>}{selected.review?.preview === 'repository-card' && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{selected.marketScreenshots?.length && <p className={css.notice}>前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
+            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。</p>}{manualOnly && <p className={css.notice}>该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。</p>}{selected.review?.preview === 'repository-card' && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{selected.marketScreenshots?.length && <p className={css.notice}>前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
             <aside className={css.changelog}><h3>仓库健康</h3>{selected.health ? <><ol className={css.healthList}>{Object.entries(selected.health.checks).map(([key, value]) => <li key={key}><strong>{healthLabels[key as keyof typeof healthLabels]}</strong><span data-health={value}>{value === 'pass' ? '符合要求' : '建议完善'}</span></li>)}</ol>{selected.health.suggestions.map(suggestion => <p className={css.healthSuggestion} key={suggestion}>{suggestion}</p>)}</> : <p className={css.healthSuggestion}>等待下一次仓库健康扫描。</p>}<h3 className={css.collectionTitle}>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
           </div>
 

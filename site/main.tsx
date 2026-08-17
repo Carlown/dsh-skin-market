@@ -15,12 +15,12 @@ interface Skin {
   subpath?: string
   tags: string[]
   modes: string[]
-  install: { version: string; commit: string }
+  install: { target: string; version: string; commit: string }
   compatibility: { dsh: string; platform: string[] }
   marketScreenshots?: string[]
   listScreenshot?: string
   screenshots: string[]
-  review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card' }
+  review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
   health?: { status: 'healthy' | 'improvements'; checks: { readmeScreenshots: 'pass' | 'improve'; compatibility: 'pass' | 'improve'; installation: 'pass' | 'improve' }; suggestions: string[] }
   license: { code: string; commercialUse: boolean; notice?: string }
   featuredRank: number
@@ -95,7 +95,7 @@ function App({ skins }: { skins: Skin[] }) {
           {filtered.map(skin => <button className="skin-row" data-selected={skin.id === selected.id} aria-current={skin.id === selected.id ? 'true' : undefined} key={skin.id} onClick={() => select(skin.id)}>
             <PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="list" loading="lazy" />
             <span className="row-copy"><strong>{skin.name.zh}</strong><small>{skin.author}<span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
-            <span className={skin.review?.compatibility === 'unverified' ? 'status pending' : 'status'}>{skin.review?.compatibility === 'unverified' ? '待验证' : '可安装'}</span>
+            <span className={skin.review?.installation === 'manual-only' ? 'status pending' : 'status'}>{skin.review?.installation === 'manual-only' ? '需手动安装' : '市场可安装'}</span>
           </button>)}
           {filtered.length === 0 && <p className="no-results">没有匹配的皮肤</p>}
         </div>
@@ -110,7 +110,7 @@ function App({ skins }: { skins: Skin[] }) {
 
         <div className="detail-actions">
           <button className="button primary" onClick={() => void copyPrompt('market', MARKET_PROMPT)}>{copied === 'market' ? <Check size={17} /> : <Copy size={17} />}{copied === 'market' ? '已复制' : '安装皮肤市场'}</button>
-          <button className="button outline" onClick={() => void copyPrompt(selected.id, skinPrompt(selected.repo, verified))}>{copied === selected.id ? <Check size={17} /> : <Copy size={17} />}{copied === selected.id ? '已复制' : '复制安装提示词'}</button>
+          <button className="button outline" onClick={() => void copyPrompt(selected.id, skinPrompt(selected.repo, verified, selected.install.target))}>{copied === selected.id ? <Check size={17} /> : <Copy size={17} />}{copied === selected.id ? '已复制' : '复制安装提示词'}</button>
           <a className="button outline repo-button" href={selected.repo} target="_blank" rel="noreferrer"><GithubLogo size={17} /><span>{selected.repo.replace('https://', '')}</span></a>
           <span className="detail-stars"><StarIcon size={16} /> {selected.starsSnapshot}</span>
         </div>
