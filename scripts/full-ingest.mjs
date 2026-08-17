@@ -45,7 +45,7 @@ async function headSha(target) {
   } catch { return null }
 }
 
-async function repositoryStars(target) {
+async function repositoryMetadata(target) {
   const key = target.fullName.toLowerCase()
   if (!starsByRepository.has(key)) {
     starsByRepository.set(key, (async () => {
@@ -61,21 +61,21 @@ async function repositoryStars(target) {
           const body = await response.json()
           if (Number.isInteger(body.stargazers_count) && body.stargazers_count >= 0) {
             verifiedStarsRepositories.add(key)
-            return body.stargazers_count
+            return { stars: body.stargazers_count, topics: Array.isArray(body.topics) ? body.topics : [] }
           }
         }
       } catch { /* fall back to the public repository page */ }
       try {
         const response = await fetch(target.repository, { headers: { 'user-agent': headers['user-agent'] }, signal: AbortSignal.timeout(20000) })
-        if (!response.ok) return null
+        if (!response.ok) return { stars: null, topics: null }
         const html = await response.text()
         const value = /([\d,]+)\s+users starred this repository/i.exec(html)?.[1]
-        if (!value) return null
+        if (!value) return { stars: null, topics: null }
         const stars = Number(value.replaceAll(',', ''))
-        if (!Number.isInteger(stars) || stars < 0) return null
+        if (!Number.isInteger(stars) || stars < 0) return { stars: null, topics: null }
         verifiedStarsRepositories.add(key)
-        return stars
-      } catch { return null }
+        return { stars, topics: null }
+      } catch { return { stars: null, topics: null } }
     })())
   }
   return starsByRepository.get(key)
@@ -256,7 +256,8 @@ async function inspect(plugin, existing) {
   if (target === null) return { plugin, status: 'blocked', blockers: ['unsupported repository URL'] }
   const prior = existing.find(item => item.value.repo?.toLowerCase() === target.repository.toLowerCase() && (item.value.subpath ?? null) === target.subpath)
 
-  const [sha, liveStars] = await Promise.all([headSha(target), repositoryStars(target)])
+  const [sha, repository] = await Promise.all([headSha(target), repositoryMetadata(target)])
+  const liveStars = repository.stars
   plugin = { ...plugin, stars: liveStars ?? plugin.stars }
   if (sha === null) return { plugin, target, status: 'blocked', blockers: ['cannot resolve repository HEAD'] }
   const [packageText, patchText, readme, readmeZh, licenseText, commonShots] = await Promise.all([
@@ -272,7 +273,9 @@ async function inspect(plugin, existing) {
   const readmeShots = readmeScreenshots(combinedReadme, target, sha)
   const clientPath = clientEntryPath(pkg)
   const clientEntryPresent = clientPath ? await raw(target, sha, clientPath.replace(/^\.\//, '')) !== null : false
-  const health = inspectSkinHealth({ pkg, rowId: id, readmeScreenshotCount: readmeShots.length, compatibility: detectedDshVersion, clientEntryPresent })
+  const readmeHasInstallCommand = /\bdsh\s+plugin\b[^\n]*\badd\b/i.test(combinedReadme)
+  const hasDshPluginTopic = repository.topics?.includes('dsh-plugin') ?? plugin.githubTopicSource === true
+  const health = inspectSkinHealth({ pkg, rowId: id, readmeScreenshotCount: readmeShots.length, compatibility: detectedDshVersion, clientEntryPresent, readmeHasInstallCommand, hasDshPluginTopic })
   const marketScreenshots = prior?.value.marketScreenshots ?? []
   const curatedShots = (plugin.screenshots ?? []).map(value => pinnedScreenshot(value, target, sha)).filter(Boolean)
   const discoveredScreenshots = [...new Set([...curatedShots, ...readmeShots, ...commonShots])].slice(0, 6)

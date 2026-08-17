@@ -67,7 +67,9 @@
           "properties": {
             "readmeScreenshots": { "enum": ["pass", "improve"] },
             "compatibility": { "enum": ["pass", "improve"] },
-            "installation": { "enum": ["pass", "improve"] }
+            "installation": { "enum": ["pass", "improve"] },
+            "installCommand": { "enum": ["pass", "improve"] },
+            "topic": { "enum": ["pass", "improve"] }
           }
         },
         "suggestions": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }

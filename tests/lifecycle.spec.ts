@@ -135,7 +135,6 @@ describe('skin lifecycle', () => {
     expect((await finished(lifecycle.begin('activate', second.id))).phase).toBe('done')
     expect(updates).toEqual([
       `${skin.rowId}:true`,
-      `${second.rowId}:true`,
       `${second.rowId}:null`,
     ])
     expect((await finished(lifecycle.begin('activate', skin.id))).phase).toBe('done')

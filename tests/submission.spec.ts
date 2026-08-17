@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createSkinInstallPrompt, createSubmissionPrompt, normalizeGitHubRepository, REGISTRY_REPOSITORY } from '../src/client/submission.ts'
+import { createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt, normalizeGitHubRepository, REGISTRY_REPOSITORY } from '../src/client/submission.ts'
 import type { CatalogSkin } from '../src/client/types.ts'
 
 describe('agent-assisted skin submission', () => {
@@ -42,5 +42,6 @@ describe('agent-assisted skin submission', () => {
     expect(prompt).toContain(skin.install.allowBuild!)
     expect(prompt).toContain('不得开启 dangerouslyAllowAllBuilds')
     expect(prompt).toContain('cordis.patch.yml')
+    expect(createSkinInstallCommand(skin)).toBe(`dsh plugin --profile web add '${skin.install.target}'`)
   })
 })

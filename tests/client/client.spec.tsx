@@ -17,6 +17,7 @@ vi.mock('@deepseek-ai/dsh-client-ui-primitives', () => {
 
 import { CATALOG_BATCH_SIZE, captureListScroll, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
 import { createClientSkinRuntime, missingPrimitives, switchClientSkin } from '../../src/client/index.ts'
+import { createSkinInstallCommand, createSkinInstallPrompt } from '../../src/client/submission.ts'
 import type { CatalogSkin } from '../../src/client/types.ts'
 
 const skin = {
@@ -398,10 +399,11 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     const automatic = await screen.findByRole('button', { name: '安装并使用' })
-    const copyPrompt = screen.getByRole('button', { name: '复制安装提示词' })
+    const installOnly = screen.getByRole('button', { name: '仅安装' })
+    const otherMethods = screen.getByRole('button', { name: '其他安装方式' })
     expect(automatic.getAttribute('variant')).toBe('primary')
-    expect(copyPrompt.getAttribute('variant')).toBe('outline')
-    expect(copyPrompt.querySelector('[aria-hidden="true"]')).toBeTruthy()
+    expect(installOnly.getAttribute('variant')).toBe('outline')
+    expect(otherMethods.getAttribute('variant')).toBe('outline')
     fireEvent.click(automatic)
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览.*安装中/ })).toBeTruthy()
   })
@@ -434,10 +436,10 @@ describe('client market', () => {
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
-    const copyPrompt = await screen.findByRole('button', { name: '复制安装提示词' })
+    const otherMethods = await screen.findByRole('button', { name: '其他安装方式' })
     const automatic = screen.getByRole('button', { name: '安装并使用' })
     expect(automatic.getAttribute('variant')).toBe('primary')
-    expect(copyPrompt.getAttribute('variant')).toBe('outline')
+    expect(otherMethods.getAttribute('variant')).toBe('outline')
     expect(screen.queryByRole('button', { name: '待验证，手动安装' })).toBeNull()
     fireEvent.click(automatic)
     await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
@@ -445,6 +447,20 @@ describe('client market', () => {
     expect(screen.getByText('该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。')).toBeTruthy()
     expect(screen.getAllByRole('img', { name: '测试皮肤 暂无界面截图' }).length).toBeGreaterThanOrEqual(2)
     expect(document.querySelector(`img[src="${unverified.screenshots[0]}"]`)).toBeNull()
+  })
+
+  it('shows prompt and command as two alternative copy capsules', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
+    const writeText = vi.fn(async () => undefined)
+    Object.assign(navigator, { clipboard: { writeText } })
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '其他安装方式' }))
+    const dialog = screen.getByRole('dialog', { name: '安装 测试皮肤' })
+    expect(dialog.textContent).toContain('任选一种，不用都执行。')
+    expect([...dialog.querySelectorAll('code')].map(node => node.textContent)).toEqual([createSkinInstallPrompt(skin), createSkinInstallCommand(skin)])
+    fireEvent.click(screen.getByRole('button', { name: '复制命令' }))
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(createSkinInstallCommand(skin)))
   })
 
   it('replaces a failed verified screenshot instead of retaining stale image pixels', async () => {

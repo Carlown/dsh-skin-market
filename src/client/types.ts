@@ -20,6 +20,8 @@ export interface CatalogSkin {
       readmeScreenshots: 'pass' | 'improve'
       compatibility: 'pass' | 'improve'
       installation: 'pass' | 'improve'
+      installCommand?: 'pass' | 'improve'
+      topic?: 'pass' | 'improve'
     }
     suggestions: string[]
   }

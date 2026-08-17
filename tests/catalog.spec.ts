@@ -51,6 +51,19 @@ describe('catalog', () => {
     expect((await offline.refresh(true)).source).toBe('cache')
   })
 
+  it('keeps the bundled catalog in local development mode without requesting remote data', async () => {
+    const fetcher = vi.fn(async () => ({ ok: true, status: 200, json: async () => { throw new Error('remote should not be called') } }))
+    const store = new CatalogStore(mkdtempSync(join(tmpdir(), 'skin-catalog-local-')), {
+      fetcher,
+      preferBundled: true,
+    })
+
+    const snapshot = await store.refresh(true)
+    expect(snapshot.source).toBe('bundled')
+    expect(snapshot.catalog).toEqual(loadCatalog())
+    expect(fetcher).not.toHaveBeenCalled()
+  })
+
   it('rejects stale or structurally conflicting remote catalogs', async () => {
     const bundled = loadCatalog()
     const stale = { ...structuredClone(bundled), generatedAt: '2020-01-01T00:00:00.000Z' }

@@ -18,7 +18,7 @@ import {
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import css from './SkinMarket.module.css'
 import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
-import { createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
+import { createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import type { CatalogSkin, InstalledClientPlugin, Operation, RuntimeSkin } from './types.ts'
 
@@ -139,7 +139,9 @@ function PreviewMedia({ skin, src, alt, kind, loading }: PreviewMediaProps) {
 const healthLabels = {
   readmeScreenshots: 'README 截图',
   compatibility: '兼容版本',
-  installation: '一键安装准备',
+  installation: '市场安装就绪',
+  installCommand: '安装命令',
+  topic: 'dsh-plugin Topic',
 } as const
 
 export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCatalogCache }: SkinMarketSectionProps) {
@@ -168,7 +170,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [showDetail, setShowDetail] = useState(false)
   const [showSubmission, setShowSubmission] = useState(false)
   const [submissionCopied, setSubmissionCopied] = useState(false)
-  const [installPromptCopied, setInstallPromptCopied] = useState<string | null>(null)
+  const [showInstallOptions, setShowInstallOptions] = useState(false)
+  const [installCopied, setInstallCopied] = useState<string | null>(null)
   const [marketUpdate, setMarketUpdate] = useState<MarketUpdateStatus | null>(null)
   const [marketUpdating, setMarketUpdating] = useState(false)
   const [showMarketUpdated, setShowMarketUpdated] = useState(false)
@@ -433,17 +436,17 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     }
   }, [selected])
 
-  const select = (id: string) => { userSelectedRef.current = true; selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setShowDetail(true); setError(null); setInstallPromptCopied(null) }
+  const select = (id: string) => { userSelectedRef.current = true; selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setShowDetail(true); setError(null); setInstallCopied(null); setShowInstallOptions(false) }
   const recommendations = selected?.recommendations.map(id => skins.find(skin => skin.id === id)).filter((skin): skin is CatalogSkin => skin !== undefined) ?? []
   const submissionPrompt = createSubmissionPrompt()
   const copySubmissionPrompt = async () => {
     await navigator.clipboard.writeText(submissionPrompt)
     setSubmissionCopied(true)
   }
-  const copyInstallPrompt = async () => {
+  const copyInstallOption = async (method: 'prompt' | 'command') => {
     if (selected === undefined) return
-    await navigator.clipboard.writeText(createSkinInstallPrompt(selected))
-    setInstallPromptCopied(selected.id)
+    await navigator.clipboard.writeText(method === 'prompt' ? createSkinInstallPrompt(selected) : createSkinInstallCommand(selected))
+    setInstallCopied(`${selected.id}:${method}`)
   }
 
   return (
@@ -529,7 +532,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           <div className={css.actionRow}>
               {state.installation === 'missing' && <>
                 {autoInstallable && <Button className={css.nativePrimary} variant="primary" size="sm" icon={<IconDownloadOutline16 />} disabled={busy !== null} onClick={() => void installAndActivate()}>安装并使用</Button>}
-                <Button className={autoInstallable ? css.nativeOutline : css.nativePrimary} variant={autoInstallable ? 'outline' : 'primary'} size="sm" icon={<IconCopyOutline16 />} disabled={busy !== null} onClick={() => void copyInstallPrompt()}>{installPromptCopied === selected.id ? '安装提示词已复制' : '复制安装提示词'}</Button>
+                {autoInstallable && <Button className={css.nativeOutline} variant="outline" size="sm" disabled={busy !== null} onClick={() => void run('install')}>仅安装</Button>}
+                {autoInstallable && <Button className={css.nativeOutline} variant="outline" size="sm" disabled={busy !== null} onClick={() => { setInstallCopied(null); setShowInstallOptions(true) }}>其他安装方式</Button>}
                 {manualOnly && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>查看安装说明</Button>}
               </>}
               {state.installation === 'installed' && state.activation === 'inactive' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={activateSelected}>使用</Button>}
@@ -566,6 +570,19 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       </main>
 
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />
+      <Modal
+        open={showInstallOptions}
+        onClose={() => setShowInstallOptions(false)}
+        title={`安装 ${selected?.name.zh ?? '皮肤'}`}
+        closeLabel="关闭"
+        description="任选一种，不用都执行。"
+        footer={<Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowInstallOptions(false)}>关闭</Button>}
+      >
+        <div className={css.installOptions}>
+          <div><strong>提示词</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallPrompt(selected)}>{selected === undefined ? '' : createSkinInstallPrompt(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:prompt` ? '提示词已复制' : '复制提示词'} title="复制提示词" onClick={() => void copyInstallOption('prompt')} /></span></div>
+          <div><strong>命令</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallCommand(selected)}>{selected === undefined ? '' : createSkinInstallCommand(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:command` ? '命令已复制' : '复制命令'} title="复制命令" onClick={() => void copyInstallOption('command')} /></span></div>
+        </div>
+      </Modal>
       <Modal open={confirmRestart} onClose={() => { if (!restarting) setConfirmRestart(false) }} title="需要重启 DSH 应用此皮肤" closeLabel="关闭" description={restarting ? '正在重新启动 DSH，请稍候…' : runningAgents === null && !restartCheckFinished ? '正在检查是否有 Agent 运行。状态确认前不能重启。' : runningAgents === null ? '当前 Host 尚未加载安全检查。请确认没有 Agent 正在运行、重要内容已保存；你可以继续完成这一次升级重启。新版本加载后会自动检测 Agent 状态。' : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : 'Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" disabled={restarting} onClick={() => setConfirmRestart(false)}>稍后</Button><Button className={css.nativePrimary} variant="primary" size="sm" disabled={restarting || (runningAgents === null && !restartCheckFinished) || (runningAgents ?? 0) > 0} onClick={() => void restartNow()}>{restarting ? '正在重启…' : runningAgents === null && !restartCheckFinished ? '正在检查…' : runningAgents === null ? '我已确认无任务，仍然重启' : runningAgents > 0 ? '有任务运行中' : '确认无任务，立即重启'}</Button></>} />
       <Modal
         open={showMarketUpdated}

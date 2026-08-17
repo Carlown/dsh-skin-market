@@ -190,6 +190,12 @@
 .status { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border: 0; border-radius: 10px; color: var(--dsw-alias-label-secondary); background: var(--dsw-alias-bg-layer-1); font-size: 11px; line-height: 18px; white-space: nowrap; }
 .statusActive { color: var(--dsw-alias-state-success-primary); background: color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent); }
 .actionRow { order: 2; display: flex; align-items: center; gap: 9px; min-height: 42px; padding: 0 4px 12px; border-bottom: 1px solid var(--dsw-alias-border-l2); flex-wrap: wrap; }
+.installOptions { display: grid; gap: 12px; }
+.installOptions > div { display: grid; gap: 6px; }
+.installOptions strong { font-size: 12px; font-weight: 550; }
+.copyCapsule { display: flex; min-width: 0; align-items: center; padding-left: 12px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 17px; background: var(--dsw-alias-bg-layer-1); }
+.copyCapsule code { min-width: 0; flex: 1; overflow: hidden; color: var(--dsw-alias-label-secondary); font: 11px/32px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.copyCapsule .copyCapsuleButton { min-width: 32px; height: 32px; padding: 0 8px; flex: none; border-width: 0 0 0 1px; border-radius: 0 16px 16px 0; }
 .stars { display: inline-flex; flex: none; align-items: center; gap: 5px; color: var(--dsw-alias-label-secondary); font-size: 12px; line-height: 20px; white-space: nowrap; }
 .actionDivider { width: 1px; height: 22px; margin: 0 3px; background: var(--dsw-alias-border-l2); }
 .repoMeta { display: flex; min-width: 0; flex: 1 1 220px; align-items: center; gap: 10px; }

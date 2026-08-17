@@ -12,7 +12,7 @@
 
 ## 安装皮肤市场
 
-可以直接使用 DSH CLI 安装：
+可以直接使用命令安装：
 
 ```sh
 dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
@@ -112,7 +112,7 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 “兼容性待验证”和“市场能否安装”是两个独立维度：
 
 - 兼容性表示维护者是否明确声明并验证了支持的 DSH Web 版本；缺少声明时会提示风险，但不会单独阻止市场安装。
-- 市场安装表示目录是否具备固定安装目标、package、`dsh.client` Web 声明、row ID 和可解析的已构建客户端入口。符合这些条件时，市场会调用 DSH CLI 的 `plugin add` 完成安装；不要求插件仓库自行实现名为 `add` 的命令。
+- 市场安装表示目录是否具备固定安装目标、package、`dsh.client` Web 声明、row ID 和可解析的已构建客户端入口。符合这些条件时，市场会调用 DSH 的 `plugin add` 命令完成安装；不要求插件仓库自行实现名为 `add` 的命令。
 
 ## 本地开发
 
@@ -126,6 +126,18 @@ npm run dev
 ```
 
 `npm run dev` 只启动使用 Mock Host 数据的预览页面，不会修改任何 DSH profile。
+
+### 本地目录调试
+
+本地开发 DSH 皮肤时，市场默认仍会从 GitHub Pages 请求远程 `catalog.json`，因此刚写入本地 `registry/skins` 的条目可能被远程目录覆盖。启动 DSH Web 前设置下面的开发环境变量，市场会固定使用当前构建包内的 `data/catalog.json`，不发起远程目录请求：
+
+```sh
+DSH_SKIN_MARKET_LOCAL_CATALOG=1 dsh web
+```
+
+该开关只影响当前进程的目录读取；安装、激活、停用、更新和卸载仍然经过本地市场的完整生命周期。未设置时保持线上行为：优先读取远程目录，并在失败时回退到缓存和内置目录。
+
+本地条目验证完成后，再删除该环境变量运行 DSH，确认远程目录行为没有被改变。
 
 常用检查命令：
 

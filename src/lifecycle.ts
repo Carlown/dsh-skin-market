@@ -85,7 +85,16 @@ export class SkinLifecycle {
 
   private async setEntryDisabled(skin: SkinEntry, disabled: boolean): Promise<{ found: boolean; live: boolean }> {
     const entries = this.entriesFor(skin)
-    for (const entry of entries) await entry.update({ disabled: disabled ? true : null }, false, true)
+    for (const entry of entries) {
+      // Do not rewrite an already-correct loader state during startup. The
+      // DSH client module registry builds its browser boot graph while loader
+      // entries are becoming live; an unnecessary disabled -> enabled cycle
+      // can make an active skin disappear from that graph until the next
+      // restart.
+      const currentlyDisabled = entry.options.disabled === true
+      if (currentlyDisabled === disabled) continue
+      await entry.update({ disabled: disabled ? true : null }, false, true)
+    }
     return { found: entries.length > 0, live: entries.some(entry => entry.fiber !== undefined) }
   }
 

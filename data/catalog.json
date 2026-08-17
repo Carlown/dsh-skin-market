@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-17T03:45:15.731Z",
+  "generatedAt": "2026-08-17T07:43:02.937Z",
   "skins": [
     {
       "id": "king-of-soy-sauce.liang-intensity",
@@ -111,6 +111,60 @@
       "metadataUpdatedAt": "2026-08-16T13:46:17.056Z",
       "starsUpdatedAt": "2026-08-16T14:15:26.009Z",
       "updatedAt": "2026-08-16T14:15:26.009Z"
+    },
+    {
+      "id": "king-of-soy-sauce.musk-intensity",
+      "name": {
+        "zh": "马斯克强度",
+        "en": "Musk Intensity Skin"
+      },
+      "author": "kingOfSoySauce",
+      "description": "马斯克五阶段红色强度皮肤 for DeepSeek Harness",
+      "repo": "https://github.com/kingOfSoySauce/dsh-musk-skin",
+      "package": "dsh-client-musk-intensity-skin",
+      "rowId": "musk-intensity-skin",
+      "category": "interactive",
+      "tags": [
+        "mars-red",
+        "musk",
+        "reasoning-slider",
+        "motion",
+        "composer"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:kingOfSoySauce/dsh-musk-skin#79a994304d42aeebc5dc085346bf53559486f363",
+        "version": "0.1.4",
+        "commit": "79a994304d42aeebc5dc085346bf53559486f363"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-musk-skin/79a994304d42aeebc5dc085346bf53559486f363/assets/musk-poster.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "repository-card",
+        "installation": "manual-only"
+      },
+      "license": {
+        "code": "NOASSERTION",
+        "commercialUse": false,
+        "notice": "仓库当前未声明许可证；安装和再分发前请向作者确认授权。"
+      },
+      "featuredRank": 2,
+      "starsSnapshot": 0,
+      "releaseUpdatedAt": "2026-08-17T00:00:00.000Z",
+      "metadataUpdatedAt": "2026-08-17T00:00:00.000Z",
+      "starsUpdatedAt": "2026-08-17T00:00:00.000Z",
+      "updatedAt": "2026-08-17T00:00:00.000Z"
     },
     {
       "id": "zhijun-dai.catppuccin",

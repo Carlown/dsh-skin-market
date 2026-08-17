@@ -96,6 +96,24 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .repo-button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detail-stars { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: var(--secondary); font-size: 12px; }
 .notice { margin: 0; padding: 10px 12px; color: #d9bd75; border: 1px solid color-mix(in srgb, var(--warning) 25%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--warning) 7%, transparent); font-size: 12px; line-height: 19px; }
+.install-dialog-backdrop { position: fixed; z-index: 100; inset: 0; display: grid; padding: 20px; place-items: center; background: rgba(0, 0, 0, .62); backdrop-filter: blur(5px); }
+.install-dialog { box-sizing: border-box; display: grid; width: min(760px, 100%); gap: 14px; padding: 20px; border: 1px solid var(--border-strong); border-radius: 16px; background: #1b1c20; box-shadow: 0 24px 80px rgba(0, 0, 0, .45); }
+.install-dialog > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.install-dialog h2 { margin: 0; font-size: 18px; line-height: 26px; }
+.install-dialog p { margin: 3px 0 0; color: var(--caption); font-size: 11px; line-height: 17px; }
+.install-dialog > header > button { display: grid; width: 30px; height: 30px; cursor: pointer; flex: none; color: var(--secondary); border: 0; border-radius: 15px; background: transparent; place-items: center; }
+.install-dialog > header > button:hover { color: var(--text); background: var(--surface-3); }
+.install-method-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.install-method-grid[data-single="true"] { grid-template-columns: minmax(0, 1fr); }
+.install-group { display: grid; min-width: 0; gap: 10px; }
+.install-group h3 { margin: 0; font-size: 13px; line-height: 20px; }
+.install-option { display: grid; gap: 6px; }
+.install-option > strong { font-size: 12px; font-weight: 550; }
+.copy-capsule { display: flex; min-width: 0; align-items: center; padding-left: 13px; border: 1px solid var(--border-strong); border-radius: 18px; background: var(--surface); }
+.copy-capsule code { min-width: 0; flex: 1; overflow: hidden; color: var(--secondary); font: 11px/34px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.copy-capsule button { display: grid; width: 36px; height: 34px; cursor: pointer; flex: none; color: var(--secondary); border: 0; border-left: 1px solid var(--border-strong); border-radius: 0 17px 17px 0; background: transparent; place-items: center; }
+.copy-capsule button:hover { color: var(--text); background: var(--surface-3); }
+@media (max-width: 680px) { .install-method-grid { grid-template-columns: minmax(0, 1fr); } }
 .health { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
 .health h3 { margin-bottom: 6px; }
 .health p { margin: 0; color: var(--muted); font-size: 12px; line-height: 19px; }

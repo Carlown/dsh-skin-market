@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_REPOSITORY, skinPrompt } from '../site/prompts.ts'
+import { MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_REPOSITORY, skinCommand, skinPrompt } from '../site/prompts.ts'
 
 describe('static catalog prompts', () => {
   it('generates the platform installation prompt', () => {
@@ -9,23 +9,24 @@ describe('static catalog prompts', () => {
     expect(MARKET_PROMPT).toContain('不要替我安装任何皮肤')
   })
 
-  it('generates the requested one-line skin prompt', () => {
-    expect(skinPrompt('https://github.com/example/dsh-skin')).toBe('帮我安装这个皮肤：https://github.com/example/dsh-skin')
+  it('asks the agent to install the selected skin through the market', () => {
+    const prompt = skinPrompt('https://github.com/example/dsh-skin')
+    expect(prompt).toContain('请帮我安装这个 DSH Web 皮肤：https://github.com/example/dsh-skin')
   })
 
   it('adds a review-first guard to unverified skin prompts', () => {
     const prompt = skinPrompt('https://github.com/example/dsh-skin', false)
 
-    expect(prompt).toContain('帮我安装这个皮肤：https://github.com/example/dsh-skin')
+    expect(prompt).toContain('请帮我安装这个 DSH Web 皮肤：https://github.com/example/dsh-skin')
     expect(prompt).toContain('先只读检查仓库')
     expect(prompt).toContain('等待我确认后再安装')
     expect(prompt).toContain('不要直接安装')
   })
 
-  it('includes the catalog-pinned DSH CLI target when available', () => {
+  it('generates a command for the catalog-pinned skin target', () => {
     const target = `github:example/dsh-skin#${'a'.repeat(40)}`
-    const prompt = skinPrompt('https://github.com/example/dsh-skin', true, target)
+    const command = skinCommand(target)
 
-    expect(prompt).toContain(`dsh plugin --profile web add '${target}'`)
+    expect(command).toBe(`dsh plugin --profile web add '${target}'`)
   })
 })

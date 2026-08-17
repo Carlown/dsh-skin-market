@@ -6,6 +6,7 @@ import type { CatalogFile, CatalogSkin, SkinEntry } from './types.ts'
 
 export const REMOTE_CATALOG_URL = 'https://kingofsoysauce.github.io/dsh-skin-market/catalog.json'
 export const CATALOG_REFRESH_INTERVAL_MS = 5 * 60 * 1000
+export const LOCAL_CATALOG_ENV = 'DSH_SKIN_MARKET_LOCAL_CATALOG'
 
 const schema = JSON.parse(readFileSync(new URL('../registry/skin.schema.json', import.meta.url), 'utf8')) as object
 const validateSkin = new Ajv({ allErrors: true, strict: false, validateFormats: false }).compile(schema)
@@ -63,6 +64,8 @@ interface FetchResponse {
 
 export interface CatalogStoreOptions {
   remoteUrl?: string
+  /** Keep the bundled registry for local plugin development; never call the remote catalog. */
+  preferBundled?: boolean
   refreshIntervalMs?: number
   fetcher?: (url: string, init: RequestInit) => Promise<FetchResponse>
   now?: () => number
@@ -78,6 +81,7 @@ export class CatalogStore {
   private error?: string
   private refreshing?: Promise<CatalogSnapshot>
   private readonly remoteUrl: string
+  private readonly preferBundled: boolean
   private readonly refreshIntervalMs: number
   private readonly fetcher: (url: string, init: RequestInit) => Promise<FetchResponse>
   private readonly now: () => number
@@ -86,12 +90,13 @@ export class CatalogStore {
     const bundled = validateCatalog(loadCatalog())
     this.current = bundled
     this.remoteUrl = options.remoteUrl ?? REMOTE_CATALOG_URL
+    this.preferBundled = options.preferBundled ?? process.env[LOCAL_CATALOG_ENV] === '1'
     this.refreshIntervalMs = options.refreshIntervalMs ?? CATALOG_REFRESH_INTERVAL_MS
     this.fetcher = options.fetcher ?? ((url, init) => fetch(url, init))
     this.now = options.now ?? Date.now
 
     const file = cacheFile(profileDir)
-    if (existsSync(file)) {
+    if (!this.preferBundled && existsSync(file)) {
       try {
         const cached = validateCatalog(JSON.parse(readFileSync(file, 'utf8')))
         if (Date.parse(cached.generatedAt) >= Date.parse(bundled.generatedAt)) {
@@ -114,6 +119,7 @@ export class CatalogStore {
   }
 
   async refresh(force = false): Promise<CatalogSnapshot> {
+    if (this.preferBundled) return this.snapshot()
     if (!force && this.checkedAt !== 0 && this.now() - this.checkedAt < this.refreshIntervalMs) return this.snapshot()
     if (this.refreshing !== undefined) return this.refreshing
     this.refreshing = this.fetchRemote()
