@@ -41,6 +41,51 @@ describe('profile state', () => {
     expect(runtimeState(dir, skin, null, false, true)).toMatchObject({ installation: 'installed', activation: 'inactive' })
   })
 
+  it('overrides a bundle-owned loader row without duplicating the composed entry', () => {
+    const dir = fixture()
+    const skin = loadCatalog().skins[0]
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(dir, 'package.json'), {
+      dependencies: { [skin.package]: skin.install.target },
+      dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', 'dsh-skin-market'] } },
+    })
+    atomicWriteJson(join(packageDir, 'package.json'), {
+      name: skin.package,
+      version: skin.install.version,
+      dsh: { bundle: { patch: './cordis.patch.yml' }, client: { platform: 'web' } },
+    })
+    atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${skin.rowId}\n      name: ${skin.package}\n      marker: bundle-owned\n`)
+    atomicWriteText(profilePatchFile(dir), `- insert:\n    - id: ${skin.rowId}\n      name: ${JSON.stringify(skin.package)}\n`)
+
+    ensureSkinRegistration(dir, skin, true)
+
+    const bundlePatch = parse(readFileSync(join(packageDir, 'cordis.patch.yml'), 'utf8')) as Array<Record<string, unknown>>
+    const profilePatch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<Record<string, unknown>>
+    const inserted = bundlePatch.flatMap(operation => Array.isArray(operation.insert) ? operation.insert as Array<Record<string, unknown>> : [])
+    const overrides = profilePatch.filter(operation => operation.id === skin.rowId)
+    expect(inserted).toHaveLength(1)
+    expect(overrides).toEqual([{ id: skin.rowId, disabled: true }])
+    expect(JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).dsh.profile.bundles).toContain(skin.package)
+
+    const composed = [...inserted.map(row => ({ ...row })), ...overrides].reduce((rows, patch) => {
+      const target = rows.find(row => row.id === patch.id)
+      if (target === undefined) rows.push({ ...patch })
+      else Object.assign(target, patch)
+      return rows
+    }, [] as Array<Record<string, unknown>>)
+    expect(composed.filter(row => row.id === skin.rowId)).toEqual([{
+      id: skin.rowId, name: skin.package, marker: 'bundle-owned', disabled: true,
+    }])
+
+    ensureSkinRegistration(dir, skin, false)
+    const enabledPatch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<Record<string, unknown>>
+    expect(enabledPatch.filter(operation => operation.id === skin.rowId)).toEqual([])
+    removeSkinRegistration(dir, skin)
+    const removedPatch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as unknown[]
+    expect(removedPatch).toEqual([])
+  })
+
   it('registers and validates a client-only skin idempotently', () => {
     const dir = fixture()
     const skin = loadCatalog().skins.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!

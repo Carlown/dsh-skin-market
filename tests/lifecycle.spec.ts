@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { SkinLifecycle } from '../src/lifecycle.ts'
-import { atomicWriteJson, readDependencies, readMarketState } from '../src/profile.ts'
+import { atomicWriteJson, atomicWriteText, readDependencies, readMarketState } from '../src/profile.ts'
 import type { CommandResult, PluginRunner } from '../src/commands.ts'
 import type { LoaderEntry, Operation } from '../src/types.ts'
 
@@ -23,6 +23,13 @@ async function finished(operation: Operation): Promise<Operation> {
 
 function success(): CommandResult { return { exitCode: 0, stdout: '', stderr: '', timedOut: false } }
 
+function writeBundlePackage(dir: string, skin: { package: string; rowId: string; install: { version: string } }): void {
+  const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+  mkdirSync(packageDir, { recursive: true })
+  atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+  atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${skin.rowId}\n      name: ${JSON.stringify(skin.package)}\n`)
+}
+
 describe('skin lifecycle', () => {
   it('can replace its installable catalog without restarting the market plugin', async () => {
     const dir = fixture()
@@ -40,9 +47,7 @@ describe('skin lifecycle', () => {
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
     const skin = probe.catalog[0]
     atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
-    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
-    mkdirSync(packageDir, { recursive: true })
-    atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+    writeBundlePackage(dir, skin)
     let calls = 0
     const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => { calls += 1; return success() } })
 
@@ -60,9 +65,7 @@ describe('skin lifecycle', () => {
       dependencies: { [skin.package]: skin.install.target },
       dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', skin.package, 'dsh-skin-market'] } },
     })
-    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
-    mkdirSync(packageDir, { recursive: true })
-    atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { client: {} } })
+    writeBundlePackage(dir, skin)
     const entry: LoaderEntry = {
       options: { id: skin.rowId, name: skin.package },
       fiber: {},
@@ -78,7 +81,7 @@ describe('skin lifecycle', () => {
     expect(readMarketState(dir).activeSkinId).toBe(skin.id)
     expect(lifecycle.states()[0]).toMatchObject({ installation: 'installed', activation: 'active' })
     const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh: { profile: { bundles: string[] } } }
-    expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', 'dsh-skin-market'])
+    expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', skin.package, 'dsh-skin-market'])
 
     expect((await finished(lifecycle.begin('deactivate', skin.id))).phase).toBe('done')
     expect(lifecycle.states()[0]).toMatchObject({ installation: 'installed', activation: 'inactive' })
@@ -94,9 +97,7 @@ describe('skin lifecycle', () => {
       const skin = lifecycle.catalog.find(item => args.includes(item.install.target) || args.includes(item.package))
       if (args[0] === 'add' && skin !== undefined) {
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { ...readDependencies(dir), [skin.package]: skin.install.target } })
-        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
-        mkdirSync(packageDir, { recursive: true })
-        atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+        writeBundlePackage(dir, skin)
         entries.set(skin.rowId, { options: { id: skin.rowId, name: skin.rowId, disabled: true }, update: async function (value) { updates.push(`${skin.rowId}:${String(value.disabled)}`); this.options.disabled = value.disabled; this.fiber = value.disabled ? undefined : {} } })
       }
       if (args[0] === 'remove' && skin !== undefined) {
@@ -128,6 +129,8 @@ describe('skin lifecycle', () => {
     expect((await finished(lifecycle.begin('activate', skin.id))).phase).toBe('done')
     expect((await finished(lifecycle.begin('deactivate', skin.id))).phase).toBe('done')
     expect(readDependencies(dir)[skin.package]).toBeDefined()
+    expect(readMarketState(dir).activeSkinId).toBeNull()
+    await lifecycle.replay()
     expect(readMarketState(dir).activeSkinId).toBeNull()
     expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
     expect(readDependencies(dir)[skin.package]).toBeUndefined()

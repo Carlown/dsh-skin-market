@@ -10,7 +10,6 @@ import {
   readDependencies,
   readMarketState,
   readProfileBundles,
-  removeProfileBundles,
   removeSkinRegistration,
   restoreFile,
   restoreManifest,
@@ -95,16 +94,23 @@ export class SkinLifecycle {
     const dependencies = readDependencies(this.options.profileDir)
     const installed = this.catalog.filter(skin => dependencies[skin.package] !== undefined)
     const rootBundles = new Set(readProfileBundles(this.options.profileDir))
-    const manuallyActive = installed.filter(skin => rootBundles.has(skin.package)).at(-1)
+    // A complete skin bundle remains in dsh.profile.bundles even when the
+    // market manages its disabled state. Only adopt an explicitly bundled
+    // skin when it has not already been marked as market-managed.
+    const manuallyActive = state.activeSkinId === null
+      ? installed.filter(skin => rootBundles.has(skin.package) && !state.disabledSkinIds.includes(skin.id)).at(-1)
+      : undefined
     if (manuallyActive !== undefined) {
       state.activeSkinId = manuallyActive.id
       state.disabledSkinIds = this.catalog.filter(skin => skin.id !== manuallyActive.id).map(skin => skin.id)
       writeMarketState(this.options.profileDir, state)
+    } else if (state.activeSkinId === null) {
+      const disabledSkinIds = [...new Set([...state.disabledSkinIds, ...installed.map(skin => skin.id)])]
+      if (disabledSkinIds.length !== state.disabledSkinIds.length) {
+        state.disabledSkinIds = disabledSkinIds
+        writeMarketState(this.options.profileDir, state)
+      }
     }
-    // `dsh plugin add` promotes bundles to the profile root. Market-managed
-    // skins must instead live in our patch rows, otherwise every installed
-    // bundle is composed and multiple skins load together on the next boot.
-    removeProfileBundles(this.options.profileDir, installed.map(skin => skin.package))
     for (const skin of installed) ensureSkinRegistration(this.options.profileDir, skin, state.activeSkinId !== skin.id)
     for (const skin of this.catalog) await this.setEntryDisabled(skin, true)
     const active = this.catalog.find(skin => skin.id === state.activeSkinId)
@@ -167,7 +173,6 @@ export class SkinLifecycle {
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
       const state = readMarketState(this.options.profileDir)
-      removeProfileBundles(this.options.profileDir, [skin.package])
       ensureSkinRegistration(this.options.profileDir, skin, state.activeSkinId !== skin.id)
       if (state.activeSkinId === skin.id) state.disabledSkinIds = state.disabledSkinIds.filter(id => id !== skin.id)
       else if (!state.disabledSkinIds.includes(skin.id)) state.disabledSkinIds.push(skin.id)
@@ -186,7 +191,6 @@ export class SkinLifecycle {
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
-      removeProfileBundles(this.options.profileDir, [skin.package])
       ensureSkinRegistration(this.options.profileDir, skin)
       const state = readMarketState(this.options.profileDir)
       state.activeSkinId = state.activeSkinId === skin.id ? null : state.activeSkinId
@@ -209,7 +213,6 @@ export class SkinLifecycle {
     const previous = readMarketState(this.options.profileDir)
     const next: PersistedMarketState = { version: 1, activeSkinId: skin.id, disabledSkinIds: this.catalog.filter(item => item.id !== skin.id).map(item => item.id) }
     try {
-      removeProfileBundles(this.options.profileDir, [skin.package])
       ensureSkinRegistration(this.options.profileDir, skin, false)
       // Switching must be two distinct phases. Enabling the target while the
       // old skin is still disposing can leave both global style sets mounted.
@@ -228,7 +231,6 @@ export class SkinLifecycle {
     const skin = this.skin(operation.skinId)
     this.update(operation, 'activating')
     const state = readMarketState(this.options.profileDir)
-    removeProfileBundles(this.options.profileDir, [skin.package])
     ensureSkinRegistration(this.options.profileDir, skin, true)
     await this.setEntryDisabled(skin, true)
     if (state.activeSkinId === skin.id) state.activeSkinId = null
@@ -251,7 +253,6 @@ export class SkinLifecycle {
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok || validation.version !== skin.install.version) throw new Error(validation.reason ?? 'installed version did not change to the reviewed version')
-      removeProfileBundles(this.options.profileDir, [skin.package])
       ensureSkinRegistration(this.options.profileDir, skin)
       if (wasActive) await this.activate(operation)
       else await this.deactivate(operation)

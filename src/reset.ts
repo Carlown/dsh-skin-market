@@ -6,7 +6,6 @@ import {
   profilePatchFile,
   readDependencies,
   readMarketState,
-  removeProfileBundles,
   restoreFile,
   snapshotFile,
   writeMarketState,
@@ -26,7 +25,6 @@ export function resetManagedSkins(profileDir: string, catalog: SkinEntry[] = loa
   const installed = catalog.filter(skin => dependencies[skin.package] !== undefined)
 
   try {
-    removeProfileBundles(profileDir, catalog.map(skin => skin.package))
     for (const skin of installed) ensureSkinRegistration(profileDir, skin, true)
     const state = readMarketState(profileDir)
     state.activeSkinId = null

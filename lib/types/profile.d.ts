@@ -11,6 +11,7 @@ export declare function readMarketState(profileDir: string): PersistedMarketStat
 export declare function writeMarketState(profileDir: string, state: PersistedMarketState): void;
 export declare function readDependencies(profileDir: string): Record<string, string>;
 export declare function readProfileBundles(profileDir: string): string[];
+/** Remove legacy market-promoted bundles; normal registration preserves bundle layers. */
 export declare function removeProfileBundles(profileDir: string, packageNames: Iterable<string>): void;
 export declare function packageManifest(profileDir: string, packageName: string): Record<string, unknown> | null;
 export declare function validateInstalledSkin(profileDir: string, skin: SkinEntry): {
