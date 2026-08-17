@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass } from '@phosphor-icons/react'
 import { StarIcon } from '@primer/octicons-react'
-import rawCatalog from '../data/catalog.json'
+import { fetchLiveCatalog } from './catalog.ts'
 import { MARKET_PROMPT, MARKET_REPOSITORY, skinPrompt } from './prompts.ts'
 import './site.css'
 
@@ -27,8 +27,7 @@ interface Skin {
   updatedAt: string
 }
 
-const skins = rawCatalog.skins as Skin[]
-function App() {
+function App({ skins }: { skins: Skin[] }) {
   const [selectedId, setSelectedId] = useState(skins[0]?.id ?? '')
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState<'stars' | 'latest'>('stars')
@@ -132,6 +131,27 @@ function App() {
   </div>
 }
 
+function Site() {
+  const [catalog, setCatalog] = useState<{ skins?: Skin[]; error?: string }>({})
+
+  useEffect(() => {
+    const controller = new AbortController()
+    const url = `${import.meta.env.BASE_URL}catalog.json`
+    void fetchLiveCatalog<Skin>(url, (input, init) => fetch(input, { ...init, signal: controller.signal }))
+      .then(skins => setCatalog({ skins }))
+      .catch(error => {
+        if (!controller.signal.aborted) setCatalog({ error: error instanceof Error ? error.message : String(error) })
+      })
+    return () => controller.abort()
+  }, [])
+
+  if (catalog.error !== undefined) {
+    return <main className="empty-page">目录加载失败：{catalog.error}。请刷新页面重试。</main>
+  }
+  if (catalog.skins === undefined) return <main className="empty-page">正在加载最新皮肤目录…</main>
+  return <App skins={catalog.skins} />
+}
+
 function PreviewMedia({ skin, src, alt, kind, loading }: { skin: Skin; src?: string; alt: string; kind: 'list' | 'avatar' | 'gallery' | 'thumbnail' | 'recommendation'; loading?: 'eager' | 'lazy' }) {
   const [failed, setFailed] = useState(false)
   if (skin.review?.preview === 'repository-card' || src === undefined || failed) {
@@ -140,4 +160,4 @@ function PreviewMedia({ skin, src, alt, kind, loading }: { skin: Skin; src?: str
   return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
 }
 
-createRoot(document.getElementById('root')!).render(<App />)
+createRoot(document.getElementById('root')!).render(<Site />)
