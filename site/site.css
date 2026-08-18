@@ -61,8 +61,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .feed-section-title > button { cursor: pointer; padding: 5px 9px; color: var(--secondary); border: 0; border-radius: 12px; background: transparent; font-size: 11px; }
 .feed-section-title > button:hover { color: var(--text); background: var(--surface-3); }
 .skin-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.feed-card { position: relative; display: flex; width: 100%; height: 100%; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
-.feed-card:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.feed-card { position: relative; display: flex; width: 100%; height: 100%; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 0%, transparent), 0 0 0 color-mix(in srgb, var(--primary) 0%, transparent); transition: border-color .22s ease, background .22s ease, box-shadow .26s ease-out; }
+.feed-card:hover, .feed-card:focus-within { border-color: color-mix(in srgb, var(--primary) 34%, var(--border-strong)); background: var(--surface-2); box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent), 0 0 10px color-mix(in srgb, var(--primary) 14%, transparent); }
 .feed-card-open { display: flex; width: 100%; min-width: 0; cursor: pointer; flex-direction: column; align-items: stretch; padding: 0; color: inherit; border: 0; background: transparent; text-align: left; }
 .feed-card-media { display: block; width: 100%; height: clamp(180px, 18vw, 220px); max-height: 220px; overflow: hidden; background: #090a0b; }
 .feed-card-media > img, .feed-card-media > .preview-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
@@ -105,7 +105,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .skin-row { display: flex; width: 100%; min-height: 72px; cursor: pointer; align-items: center; gap: 11px; padding: 8px; text-align: left; color: inherit; border: 0; border-radius: 9px; background: transparent; }
 .skin-row:hover { background: var(--surface-2); }
 .skin-row[data-selected="true"] { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--border-strong); }
-.skin-row > img { display: block; width: 56px; height: 56px; flex: none; object-fit: cover; border-radius: 7px; background: var(--surface-3); }
+.skin-row-preview { display: block; width: 56px; height: 56px; flex: none; overflow: hidden; border-radius: 7px; background: var(--surface-3); }
+.skin-row-preview > img, .skin-row-preview > .preview-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
 .preview-placeholder { box-sizing: border-box; display: flex; min-width: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; color: var(--caption); background: linear-gradient(145deg, var(--surface-3), var(--surface)); text-align: center; overflow: hidden; }
 .preview-placeholder strong { display: block; max-width: 88%; overflow: hidden; color: var(--secondary); font-size: 12px; font-weight: 550; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
 .preview-placeholder small { color: var(--caption); font-size: 10px; line-height: 15px; }
@@ -165,8 +166,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .gallery-group { display: grid; gap: 8px; }
 .gallery { position: relative; width: 100%; aspect-ratio: 16 / 8.4; overflow: hidden; border: 1px solid var(--border); border-radius: 11px; background: #090a0b; }
 .gallery-open { display: block; width: 100%; height: 100%; cursor: zoom-in; padding: 0; color: inherit; border: 0; background: transparent; }
-.gallery img { display: block; width: 100%; height: 100%; object-fit: contain; transition: transform .24s ease-out; }
-.gallery:hover .gallery-open img { transform: scale(1.018); }
+.gallery img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .gallery-open > .preview-placeholder { width: 100%; height: 100%; }
 .gallery-open > .preview-placeholder strong { font-size: 17px; line-height: 25px; }
 .gallery-nav { position: absolute; z-index: 2; top: 50%; display: grid; width: 44px; height: 44px; cursor: pointer; padding: 0; color: rgba(255, 255, 255, .82); border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; background: rgba(15, 16, 19, .42); box-shadow: 0 4px 18px rgba(0, 0, 0, .16); backdrop-filter: blur(10px); opacity: .78; transform: translateY(-50%); place-items: center; transition: opacity .18s, background .18s, transform .18s; }
@@ -182,7 +182,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .thumb-progress { position: absolute; z-index: 1; inset: 0; pointer-events: none; background: rgba(255, 255, 255, .1); transform: scaleX(0); transform-origin: left center; animation: gallery-progress 5.6s linear forwards; transition: transform .24s ease-in; }
 .gallery-group[data-paused="true"] .thumb-progress { animation: none; transform: scaleX(0); }
 .lightbox { position: fixed; z-index: 200; inset: 0; display: grid; overflow: hidden; background: rgba(5, 6, 8, .94); backdrop-filter: blur(18px); }
-.lightbox-stage { position: absolute; inset: 22px 58px 94px; display: grid; min-width: 0; min-height: 0; place-items: center; }
+.lightbox-stage { position: absolute; inset: 22px 58px 94px; display: grid; min-width: 0; min-height: 0; cursor: zoom-out; padding: 0; color: inherit; border: 0; background: transparent; place-items: center; }
 .lightbox-stage img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .lightbox-stage > .preview-placeholder { width: 100%; height: 100%; }
 .lightbox-close { position: absolute; z-index: 3; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); display: grid; width: 44px; height: 44px; cursor: pointer; color: rgba(255, 255, 255, .78); border: 1px solid rgba(255, 255, 255, .12); border-radius: 22px; background: rgba(20, 21, 24, .6); backdrop-filter: blur(12px); place-items: center; }
@@ -263,5 +263,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
   .thumb-progress { display: none; animation: none; }
-  .gallery:hover .gallery-open img { transform: none; }
+}
+
+@media (hover: hover) and (pointer: fine) {
 }

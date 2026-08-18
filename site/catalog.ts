@@ -6,6 +6,8 @@ interface CatalogResponse {
 
 type CatalogFetcher = (url: string, init: RequestInit) => Promise<CatalogResponse>
 
+export const REMOTE_CATALOG_URL = 'https://raw.githubusercontent.com/kingOfSoySauce/dsh-skin-market/main/data/catalog.json'
+
 export async function fetchLiveCatalog<T>(url: string, fetcher: CatalogFetcher = fetch): Promise<T[]> {
   const response = await fetcher(url, {
     cache: 'no-store',
@@ -18,4 +20,16 @@ export async function fetchLiveCatalog<T>(url: string, fetcher: CatalogFetcher =
   if (catalog.schemaVersion !== 1) throw new Error('目录版本不受支持')
   if (!Array.isArray(catalog.skins)) throw new Error('目录缺少皮肤列表')
   return catalog.skins as T[]
+}
+
+export async function fetchLiveCatalogWithFallback<T>(remoteUrl: string, fallbackUrl: string, fetcher: CatalogFetcher = fetch): Promise<T[]> {
+  try {
+    return await fetchLiveCatalog<T>(remoteUrl, fetcher)
+  } catch (remoteError) {
+    try {
+      return await fetchLiveCatalog<T>(fallbackUrl, fetcher)
+    } catch {
+      throw remoteError
+    }
+  }
 }

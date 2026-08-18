@@ -30,6 +30,22 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 
 安装完成后，重启 DSH Web，打开「设置 → 皮肤市场」。
 
+### 安装失败时，让 DSH 自己排查
+
+皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态，可以把下面的提示词和完整原始报错一起复制给你的 DSH Agent：
+
+```text
+请帮我排查 DSH Web 皮肤市场的安装失败。下面是完整原始报错：
+
+<把完整报错粘贴到这里>
+
+请严格按以下 3 步处理，并报告每一步的结果：
+
+1. 确认当前使用的 profile 名称和实际目录，并检查 DSH 进程自身是否能找到 pnpm（Windows 同时检查 pnpm.cmd）。如果 pnpm 不在 PATH，先说明如何安装或修复 pnpm，并停止把问题误判为 allowBuilds 配置问题。
+2. 只有确认 pnpm 可用后，才检查 profile 的 pnpm-workspace.yaml。若 pnpm 输出了构建审批 key，只把报错中完整、精确的 key 合并到 allowBuilds，对应值设为 true；不要启用 dangerouslyAllowAllBuilds，也不要放宽其他包。不要读取 .env、凭据或聊天记录。
+3. 重新执行原来的皮肤安装命令。完成后验证 profile package.json 依赖、node_modules 中目标包的 package.json、dsh.client/dsh.bundle 声明和 loader 注册项；如果仍失败，请指出具体失败阶段和完整错误，不要把 package manifest missing 当作根因。
+```
+
 <p align="center">
   <img src="./docs/assets/skin-market-liang.png" alt="DSH 皮肤市场中的 Liang 皮肤详情页" width="70%">
 </p>

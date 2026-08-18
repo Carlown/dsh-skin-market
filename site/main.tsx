@@ -2,10 +2,11 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { StarIcon } from '@primer/octicons-react'
-import { fetchLiveCatalog } from './catalog.ts'
+import { fetchLiveCatalogWithFallback, REMOTE_CATALOG_URL } from './catalog.ts'
 import { comparePublicCatalogOrder, shouldRenderPublicPreview } from './catalog-order.ts'
 import { MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinCommand, skinPrompt } from './prompts.ts'
 import './site.css'
+import '../src/client/media-hover.module.css'
 
 interface Skin {
   id: string
@@ -34,7 +35,7 @@ const GALLERY_INTERVAL_MS = 5600
 function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => void; onInstall: () => void }) {
   const repoLabel = skin.repo.replace(/^https?:\/\/github\.com\//, '')
   return <article className="feed-card">
-    <button className="feed-card-open" aria-label={`${skin.name.zh} 界面预览`} onClick={onOpen}>
+    <button className="feed-card-open dsh-skin-media-hover" aria-label={`${skin.name.zh} 界面预览`} onClick={onOpen}>
       <span className="feed-card-media"><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
       <span className="feed-card-copy">
         <span className="feed-card-title"><strong title={skin.description}>{skin.description}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
@@ -194,7 +195,7 @@ function App({ skins }: { skins: Skin[] }) {
         </div>
         <div className="skin-list">
           {filtered.map(skin => <button className="skin-row" data-selected={skin.id === selected.id} aria-current={skin.id === selected.id ? 'true' : undefined} key={skin.id} onClick={() => { setSelectedId(skin.id); setShot(0) }}>
-            <PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="list" loading="lazy" />
+            <span className="skin-row-preview dsh-skin-media-hover"><PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="list" loading="lazy" /></span>
             <span className="row-copy"><strong title={skin.description}>{skin.description}</strong><small><span title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span><span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
             <span className={skin.review?.installation === 'manual-only' ? 'status pending' : 'status'}>{skin.review?.installation === 'manual-only' ? '需手动安装' : '市场可安装'}</span>
           </button>)}
@@ -221,12 +222,12 @@ function App({ skins }: { skins: Skin[] }) {
 
         <div className="gallery-group" data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPaused(true)} onMouseLeave={() => setCarouselPaused(false)} onFocusCapture={() => setCarouselPaused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPaused(false) }}>
           <div className="gallery">
-            <button className="gallery-open" aria-label={`全屏查看 ${selected.name.zh} 截图 ${shot + 1}`} onClick={() => setLightboxOpen(true)}>
+            <button className="gallery-open dsh-skin-media-hover" aria-label={`全屏查看 ${selected.name.zh} 截图 ${shot + 1}`} onClick={() => setLightboxOpen(true)}>
               <PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:gallery`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 界面预览`} kind="gallery" />
             </button>
             {shotCount > 1 && <><button className="gallery-nav gallery-prev" aria-label="上一张截图" onClick={() => moveShot(-1)}><ArrowLeft size={18} /></button><button className="gallery-nav gallery-next" aria-label="下一张截图" onClick={() => moveShot(1)}><ArrowLeft size={18} /></button></>}
           </div>
-          {selected.screenshots.length > 1 && <div className="thumbs" aria-label="截图选择">{selected.screenshots.map((image, index) => <button key={image} data-selected={index === shot} onClick={() => { setShot(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={image} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shot && <span className="thumb-progress" key={`${selected.id}:${shot}:${carouselEpoch}`} aria-hidden="true" />}</button>)}</div>}
+          {selected.screenshots.length > 1 && <div className="thumbs" aria-label="截图选择">{selected.screenshots.map((image, index) => <button className="dsh-skin-media-hover" key={image} data-selected={index === shot} onClick={() => { setShot(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={image} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shot && <span className="thumb-progress" key={`${selected.id}:${shot}:${carouselEpoch}`} aria-hidden="true" />}</button>)}</div>}
         </div>
 
         <div className="information">
@@ -242,9 +243,9 @@ function App({ skins }: { skins: Skin[] }) {
     {lightboxOpen && <section className="lightbox" role="dialog" aria-modal="true" aria-label={`${selected.name.zh} 全屏截图查看`}>
       <button className="lightbox-close" aria-label="关闭全屏查看" onClick={() => setLightboxOpen(false)}><X size={20} /></button>
       {selected.screenshots.length > 1 && <button className="lightbox-nav lightbox-prev" aria-label="上一张截图" onClick={() => moveShot(-1)}><ArrowLeft size={26} /></button>}
-      <div className="lightbox-stage"><PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:lightbox`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 全屏截图 ${shot + 1}`} kind="gallery" /></div>
+      <button className="lightbox-stage" aria-label="退出全屏查看" onClick={() => setLightboxOpen(false)}><PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:lightbox`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 全屏截图 ${shot + 1}`} kind="gallery" /></button>
       {selected.screenshots.length > 1 && <button className="lightbox-nav lightbox-next" aria-label="下一张截图" onClick={() => moveShot(1)}><ArrowLeft size={26} /></button>}
-      {selected.screenshots.length > 1 && <div className="lightbox-thumbs" aria-label="全屏截图选择">{selected.screenshots.map((image, index) => <button key={image} data-selected={index === shot} aria-label={`查看截图 ${index + 1}`} onClick={() => setShot(index)}><PreviewMedia skin={selected} src={image} alt="" kind="thumbnail" loading="lazy" /></button>)}</div>}
+      {selected.screenshots.length > 1 && <div className="lightbox-thumbs" aria-label="全屏截图选择">{selected.screenshots.map((image, index) => <button className="dsh-skin-media-hover" key={image} data-selected={index === shot} aria-label={`查看截图 ${index + 1}`} onClick={() => setShot(index)}><PreviewMedia skin={selected} src={image} alt="" kind="thumbnail" loading="lazy" /></button>)}</div>}
     </section>}
 
     {installDialog !== null && <div className="install-dialog-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setInstallDialog(null) }}>
@@ -274,8 +275,8 @@ function Site() {
 
   useEffect(() => {
     const controller = new AbortController()
-    const url = `${import.meta.env.BASE_URL}catalog.json`
-    void fetchLiveCatalog<Skin>(url, (input, init) => fetch(input, { ...init, signal: controller.signal }))
+    const fallbackUrl = `${import.meta.env.BASE_URL}catalog.json`
+    void fetchLiveCatalogWithFallback<Skin>(REMOTE_CATALOG_URL, fallbackUrl, (input, init) => fetch(input, { ...init, signal: controller.signal }))
       .then(skins => setCatalog({ skins }))
       .catch(error => {
         if (!controller.signal.aborted) setCatalog({ error: error instanceof Error ? error.message : String(error) })

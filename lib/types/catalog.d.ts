@@ -1,5 +1,5 @@
 import type { CatalogFile, CatalogSkin, SkinEntry } from './types.ts';
-export declare const REMOTE_CATALOG_URL = "https://kingofsoysauce.github.io/dsh-skin-market/catalog.json";
+export declare const REMOTE_CATALOG_URL = "https://raw.githubusercontent.com/kingOfSoySauce/dsh-skin-market/main/data/catalog.json";
 export declare const CATALOG_REFRESH_INTERVAL_MS: number;
 export declare const LOCAL_CATALOG_ENV = "DSH_SKIN_MARKET_LOCAL_CATALOG";
 export declare function loadCatalog(): CatalogFile;

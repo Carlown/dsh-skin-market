@@ -1,0 +1,21 @@
+:global(.dsh-skin-media-hover) img {
+  transition: opacity 180ms ease-out, transform 240ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :global(.dsh-skin-media-hover:hover) img,
+  :global(.dsh-skin-media-hover:focus-visible) img {
+    transform: scale(1.018);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(.dsh-skin-media-hover) img {
+    transition: none;
+  }
+
+  :global(.dsh-skin-media-hover:hover) img,
+  :global(.dsh-skin-media-hover:focus-visible) img {
+    transform: none;
+  }
+}
