@@ -91,7 +91,7 @@ describe('client market', () => {
     window.dispatchEvent(new Event('focus'))
 
     await waitFor(() => expect(catalogRequests).toBe(2))
-    expect(screen.getByRole('heading', { name: 'description' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: '第二皮肤' })).toBeTruthy()
     expect(screen.getByRole('dialog', { name: '提交你的皮肤' })).toBeTruthy()
   })
 
@@ -255,7 +255,7 @@ describe('client market', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '查看全部已安装' }))
     expect(await screen.findByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'description' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: '已装皮肤 5' })).toBeTruthy()
   })
 
   it('shows installed skeletons while runtime state loads and hides the section when empty', async () => {
@@ -288,7 +288,7 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     fireEvent.click(await screen.findByRole('button', { name: /测试皮肤 已安装卡片/ }))
-    expect(await screen.findByRole('heading', { name: 'description' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: '测试皮肤' })).toBeTruthy()
     expect(screen.getByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
   })
 
@@ -432,7 +432,7 @@ describe('client market', () => {
     fireEvent.click(await screen.findByRole('button', { name: '停用' }))
     await waitFor(() => expect(catalogCalls).toBe(2))
 
-    expect(screen.getByRole('heading', { name: 'description' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: '测试皮肤' })).toBeTruthy()
     expect(screen.queryByText('正在加载皮肤列表…')).toBeNull()
     expect(screen.queryByText('正在加载皮肤详情…')).toBeNull()
   })

@@ -16,6 +16,11 @@ describe('catalog', () => {
     }
   })
 
+  it('keeps the Chinese homepage description for dsh-ads', () => {
+    const skin = loadCatalog().skins.find(item => item.id === 'nagi-ovo.dsh-ads')
+    expect(skin?.description).toMatch(/[\u3400-\u9fff]/)
+  })
+
   it('ranks only other skins and caps recommendations at four', () => {
     const catalog = loadCatalog()
     const result = recommend(catalog.skins[0], catalog.skins, new Map())

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-18T17:26:03.550Z",
+  "generatedAt": "2026-08-18T17:43:57.594Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -9208,7 +9208,7 @@
         "en": "dsh-ads"
       },
       "author": "Nagi-ovo",
-      "description": "DSH ad-infestation plugin: localized Chinese portal ads and English scam-ad parody, with fake pop-ups, a jackpot wheel, rewarded inference ads, and fake-game animation.",
+      "description": "把 DeepSeek Harness 变成 2005 年门户网站：在侧栏、对话和推理过程中加入虚构广告、假游戏与弹窗，支持中英文切换。",
       "repo": "https://github.com/Nagi-ovo/dsh-ads",
       "package": "@dsh-external/dsh-ads",
       "rowId": "dsh-ads",

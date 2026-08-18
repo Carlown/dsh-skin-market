@@ -298,7 +298,8 @@ async function inspect(plugin, existing) {
     raw(target, sha, 'package.json'), raw(target, sha, 'cordis.patch.yml'), raw(target, sha, 'README.md'), findChineseReadme(target, sha), raw(target, sha, 'LICENSE'), commonScreenshots(target, sha),
   ])
   const pkg = parsePackage(packageText)
-  const readmeZh = chineseReadme.text
+  const defaultReadmeDescription = readmeDescription(readme)
+  const readmeZh = chineseReadme.text ?? (defaultReadmeDescription ? readme : null)
   const combinedReadme = `${readme ?? ''}\n${readmeZh ?? ''}`
   const id = rowId(patchText) ?? rowId(combinedReadme)
   const detectedDshVersion = pkg ? compatibility(pkg, combinedReadme) : null
@@ -330,9 +331,14 @@ async function inspect(plugin, existing) {
   if (blockers.length) return { plugin, target, sha, package: pkg ? { name: pkg.name, version: pkg.version } : null, status: 'blocked', blockers, screenshots }
 
   const displayName = plugin.name.split('#').pop()
-  const upstreamDescription = plugin.registryOnly
-    ? prior?.value.description ?? readmeDescription(readmeZh) ?? pkg.description
-    : plugin.description?.zh ?? readmeDescription(readmeZh) ?? plugin.description?.en ?? pkg.description
+  const readmeLocalizedDescription = readmeDescription(readmeZh) ?? defaultReadmeDescription
+  const priorDescription = typeof prior?.value.description === 'string' ? prior.value.description : null
+  const keepCuratedChineseDescription = priorDescription !== null && /[\u3400-\u9fff]/.test(priorDescription)
+  const upstreamDescription = keepCuratedChineseDescription
+    ? priorDescription
+    : readmeLocalizedDescription
+      ?? (plugin.registryOnly ? priorDescription : plugin.description?.zh ?? plugin.description?.en)
+    ?? pkg.description
   const description = typeof upstreamDescription === 'string' && upstreamDescription.trim()
     ? upstreamDescription.trim()
     : prior?.value.description
@@ -385,7 +391,7 @@ async function inspect(plugin, existing) {
     updatedAt: releaseChanged || metadataChanged || starsChanged ? now : prior.value.updatedAt,
   }
   const changed = prior === undefined || JSON.stringify(withoutUpdatedAt(prior.value)) !== JSON.stringify(withoutUpdatedAt(entry))
-  return { plugin, target, sha, prior, changed, releaseChanged, metadataChanged, readmeZhPath: chineseReadme.path, starsVerified: liveStars !== null, status: 'ready', entry }
+  return { plugin, target, sha, prior, changed, releaseChanged, metadataChanged, readmeZhPath: chineseReadme.path ?? (defaultReadmeDescription ? 'README.md' : null), starsVerified: liveStars !== null, status: 'ready', entry }
 }
 
 async function main() {
