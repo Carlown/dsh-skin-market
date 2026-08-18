@@ -29,6 +29,8 @@ interface Skin {
   updatedAt: string
 }
 
+const GALLERY_INTERVAL_MS = 5600
+
 function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => void; onInstall: () => void }) {
   const repoLabel = skin.repo.replace(/^https?:\/\/github\.com\//, '')
   return <article className="feed-card">
@@ -48,6 +50,9 @@ function App({ skins }: { skins: Skin[] }) {
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState<'stars' | 'latest'>('stars')
   const [shot, setShot] = useState(0)
+  const [galleryPaused, setGalleryPaused] = useState(false)
+  const [carouselEpoch, setCarouselEpoch] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [visibleCount, setVisibleCount] = useState(24)
   const [copied, setCopied] = useState<string | null>(null)
@@ -55,6 +60,7 @@ function App({ skins }: { skins: Skin[] }) {
   const detailRef = useRef<HTMLElement | null>(null)
 
   const selected = skins.find(item => item.id === selectedId) ?? skins[0]
+  const shotCount = selected?.screenshots.length ?? 0
   const filtered = useMemo(() => skins.filter(skin => {
     const text = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     return text.includes(query.trim().toLowerCase())
@@ -94,10 +100,45 @@ function App({ skins }: { skins: Skin[] }) {
 
   useEffect(() => {
     if (!detailOpen) return
-    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setDetailOpen(false) }
-    document.addEventListener('keydown', closeOnEscape)
-    return () => document.removeEventListener('keydown', closeOnEscape)
-  }, [detailOpen])
+    const handleGalleryKeys = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (lightboxOpen) {
+          event.preventDefault()
+          event.stopPropagation()
+          event.stopImmediatePropagation()
+          setLightboxOpen(false)
+        } else setDetailOpen(false)
+        return
+      }
+      if (!lightboxOpen || shotCount < 2) return
+      if (event.key === 'ArrowLeft') setShot(current => (current - 1 + shotCount) % shotCount)
+      if (event.key === 'ArrowRight') setShot(current => (current + 1) % shotCount)
+    }
+    window.addEventListener('keydown', handleGalleryKeys, true)
+    return () => window.removeEventListener('keydown', handleGalleryKeys, true)
+  }, [detailOpen, lightboxOpen, shotCount])
+
+  useEffect(() => {
+    const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!detailOpen || galleryPaused || lightboxOpen || shotCount < 2 || reduceMotion) return
+    const timer = window.setTimeout(() => setShot(current => (current + 1) % shotCount), GALLERY_INTERVAL_MS)
+    return () => window.clearTimeout(timer)
+  }, [carouselEpoch, detailOpen, galleryPaused, lightboxOpen, selected?.id, shot, shotCount])
+
+  useEffect(() => {
+    setGalleryPaused(false)
+    setLightboxOpen(false)
+    setCarouselEpoch(current => current + 1)
+  }, [selected?.id])
+
+  const setCarouselPaused = (paused: boolean) => {
+    setGalleryPaused(paused)
+    setCarouselEpoch(current => current + 1)
+  }
+
+  const moveShot = (direction: -1 | 1) => {
+    if (shotCount > 1) setShot(current => (current + direction + shotCount) % shotCount)
+  }
 
   const copyPrompt = async (key: string, value: string) => {
     await navigator.clipboard.writeText(value)
@@ -178,10 +219,15 @@ function App({ skins }: { skins: Skin[] }) {
         {selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className="notice">该仓库暂无可识别的皮肤截图，页面使用本地占位卡，不会加载 GitHub 仓库图片。</p>}
         {selected.marketScreenshots?.length && <p className="notice">前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录，仓库自己的截图会按原顺序接在后面。维护者可向目录仓库提交 PR 删除或替换这些补录图。</p>}
 
-        <div className="gallery">
-          <PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:gallery`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 界面预览`} kind="gallery" />
+        <div className="gallery-group" data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPaused(true)} onMouseLeave={() => setCarouselPaused(false)} onFocusCapture={() => setCarouselPaused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPaused(false) }}>
+          <div className="gallery">
+            <button className="gallery-open" aria-label={`全屏查看 ${selected.name.zh} 截图 ${shot + 1}`} onClick={() => setLightboxOpen(true)}>
+              <PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:gallery`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 界面预览`} kind="gallery" />
+            </button>
+            {shotCount > 1 && <><button className="gallery-nav gallery-prev" aria-label="上一张截图" onClick={() => moveShot(-1)}><ArrowLeft size={18} /></button><button className="gallery-nav gallery-next" aria-label="下一张截图" onClick={() => moveShot(1)}><ArrowLeft size={18} /></button></>}
+          </div>
+          {selected.screenshots.length > 1 && <div className="thumbs" aria-label="截图选择">{selected.screenshots.map((image, index) => <button key={image} data-selected={index === shot} onClick={() => { setShot(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={image} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shot && <span className="thumb-progress" key={`${selected.id}:${shot}:${carouselEpoch}`} aria-hidden="true" />}</button>)}</div>}
         </div>
-        {selected.screenshots.length > 1 && <div className="thumbs" aria-label="截图选择">{selected.screenshots.map((image, index) => <button key={image} data-selected={index === shot} onClick={() => setShot(index)}><PreviewMedia skin={selected} src={image} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" /></button>)}</div>}
 
         <div className="information">
           <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className="tags">{selected.tags.map(tag => <span key={tag}>{tag}</span>)}</div>{selected.health && <div className="health"><h3>仓库健康</h3><p>{selected.health.status === 'healthy' ? 'README 展示、兼容声明和一键安装准备均符合要求。' : selected.health.suggestions.join(' ')}</p></div>}</article>
@@ -192,6 +238,14 @@ function App({ skins }: { skins: Skin[] }) {
         </section>
       </section>
     </div>}
+
+    {lightboxOpen && <section className="lightbox" role="dialog" aria-modal="true" aria-label={`${selected.name.zh} 全屏截图查看`}>
+      <button className="lightbox-close" aria-label="关闭全屏查看" onClick={() => setLightboxOpen(false)}><X size={20} /></button>
+      {selected.screenshots.length > 1 && <button className="lightbox-nav lightbox-prev" aria-label="上一张截图" onClick={() => moveShot(-1)}><ArrowLeft size={26} /></button>}
+      <div className="lightbox-stage"><PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:lightbox`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 全屏截图 ${shot + 1}`} kind="gallery" /></div>
+      {selected.screenshots.length > 1 && <button className="lightbox-nav lightbox-next" aria-label="下一张截图" onClick={() => moveShot(1)}><ArrowLeft size={26} /></button>}
+      {selected.screenshots.length > 1 && <div className="lightbox-thumbs" aria-label="全屏截图选择">{selected.screenshots.map((image, index) => <button key={image} data-selected={index === shot} aria-label={`查看截图 ${index + 1}`} onClick={() => setShot(index)}><PreviewMedia skin={selected} src={image} alt="" kind="thumbnail" loading="lazy" /></button>)}</div>}
+    </section>}
 
     {installDialog !== null && <div className="install-dialog-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setInstallDialog(null) }}>
       <section className="install-dialog" role="dialog" aria-modal="true" aria-labelledby="install-dialog-title">

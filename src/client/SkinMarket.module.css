@@ -298,15 +298,41 @@
 .detail > * { flex: none; }
 
 .mobileBack.nativeOutline { display: none; order: 0; align-self: flex-start; }
-.hero { order: 4; position: relative; width: 100%; aspect-ratio: 16 / 8; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; overflow: hidden; background: var(--dsw-alias-bg-layer-1); }
-.hero img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.hero > .previewPlaceholder { width: 100%; height: 100%; }
-.hero > .previewPlaceholder strong { font-size: 16px; line-height: 24px; }
-.thumbnails { order: 5; display: flex; gap: 8px; overflow-x: auto; }
-.thumbnails button { width: 112px; padding: 0; cursor: pointer; flex: none; border: 1px solid var(--dsw-alias-border-l2); border-radius: 8px; overflow: hidden; background: transparent; opacity: .62; }
+.galleryGroup { order: 4; display: grid; gap: 8px; }
+.hero { position: relative; width: 100%; aspect-ratio: 16 / 8; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; overflow: hidden; background: var(--dsw-alias-bg-layer-1); }
+.heroOpen { display: block; width: 100%; height: 100%; cursor: zoom-in; padding: 0; color: inherit; border: 0; background: transparent; }
+.hero img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .24s ease-out; }
+.hero:hover .heroOpen img { transform: scale(1.018); }
+.heroOpen > .previewPlaceholder { width: 100%; height: 100%; }
+.heroOpen > .previewPlaceholder strong { font-size: 16px; line-height: 24px; }
+.heroNav { position: absolute; z-index: 2; top: 50%; display: grid; width: 44px; min-width: 44px; height: 44px; min-height: 44px; cursor: pointer; padding: 0; color: rgba(255, 255, 255, .82); border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; background: rgba(15, 16, 19, .42); box-shadow: 0 4px 18px rgba(0, 0, 0, .16); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: .78; transform: translateY(-50%); place-items: center; transition: opacity .18s, background .18s, transform .18s; }
+.heroNav:hover { color: #fff; background: rgba(28, 30, 35, .68); opacity: 1; transform: translateY(-50%) scale(1.04); }
+.heroPrev { left: 12px; }
+.heroNext { right: 12px; }
+.heroNext svg { transform: rotate(180deg); }
+.thumbnails { display: flex; gap: 8px; overflow-x: auto; }
+.thumbnails button { position: relative; width: 112px; padding: 0; cursor: pointer; flex: none; border: 1px solid var(--dsw-alias-border-l2); border-radius: 8px; overflow: hidden; background: transparent; opacity: .62; }
 .thumbnails button[data-selected="true"] { border-color: var(--dsw-alias-brand-primary); opacity: 1; }
 .thumbnails img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 .thumbnails .previewPlaceholder { width: 100%; aspect-ratio: 16 / 9; }
+.thumbnailProgress { position: absolute; z-index: 1; inset: 0; pointer-events: none; background: color-mix(in srgb, var(--dsw-alias-label-primary) 10%, transparent); transform: scaleX(0); transform-origin: left center; animation: galleryProgress 5.6s linear forwards; transition: transform .24s ease-in; }
+.galleryGroup[data-paused="true"] .thumbnailProgress { animation: none; transform: scaleX(0); }
+
+.lightbox { box-sizing: border-box; position: fixed; z-index: 10000; inset: 0; display: grid; overflow: hidden; color: #fff; background: rgba(5, 6, 8, .94); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.lightboxStage { position: absolute; inset: 22px 58px 94px; display: grid; min-width: 0; min-height: 0; place-items: center; }
+.lightboxStage img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lightboxStage > .previewPlaceholder { width: 100%; height: 100%; }
+.lightboxClose { position: absolute; z-index: 3; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); display: grid; width: 44px; min-width: 44px; height: 44px; min-height: 44px; cursor: pointer; padding: 0; color: rgba(255, 255, 255, .78); border: 1px solid rgba(255, 255, 255, .12); border-radius: 22px; background: rgba(20, 21, 24, .6); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); place-items: center; }
+.lightboxClose:hover { color: #fff; background: rgba(45, 47, 53, .72); }
+.lightboxNav { position: absolute; z-index: 2; top: 0; bottom: 86px; display: grid; width: clamp(48px, 5vw, 72px); min-width: 0; height: auto; min-height: 44px; cursor: pointer; padding: 0; color: rgba(255, 255, 255, .62); border: 0; border-radius: 0; background: transparent; place-items: center; transition: color .18s, background .18s; }
+.lightboxNav:hover { color: #fff; background: rgba(255, 255, 255, .035); }
+.lightboxPrev { left: 0; }
+.lightboxNext { right: 0; }
+.lightboxNext svg { transform: rotate(180deg); }
+.lightboxThumbnails { position: absolute; z-index: 2; right: 64px; bottom: max(18px, env(safe-area-inset-bottom)); left: 64px; display: flex; justify-content: center; gap: 8px; overflow-x: auto; }
+.lightboxThumbnails button { width: 88px; min-width: 88px; height: auto; min-height: 0; cursor: pointer; flex: none; padding: 0; border: 1px solid rgba(255, 255, 255, .16); border-radius: 7px; overflow: hidden; background: #111216; opacity: .52; }
+.lightboxThumbnails button[data-selected="true"] { border-color: rgba(255, 255, 255, .72); opacity: 1; }
+.lightboxThumbnails img, .lightboxThumbnails .previewPlaceholder { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 
 .detailHeader { order: 1; display: grid; grid-template-columns: 138px minmax(0, 1fr); align-items: start; gap: 22px; padding: 0 4px 16px; border-bottom: 1px solid var(--dsw-alias-border-l2); }
 .skinAvatar { display: block; width: 138px; height: 138px; overflow: hidden; border-radius: 9px; background: var(--dsw-alias-bg-layer-1); }
@@ -403,6 +429,7 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes skeletonShimmer { to { background-position: -200% 0; } }
+@keyframes galleryProgress { to { transform: scaleX(1); } }
 
 @media (prefers-reduced-motion: reduce) {
   .root .marketUpdateButton { transition: none; }
@@ -413,6 +440,9 @@
   .loadMoreHint span { animation: none; }
   .skinCard > img { transition: none; }
   .homeLoading svg { animation: none; }
+  .thumbnailProgress { display: none; animation: none; }
+  .hero img, .heroNav { transition: none; }
+  .hero:hover .heroOpen img { transform: none; }
 }
 
 @media (max-width: 959px) {
@@ -448,6 +478,10 @@
   .aboutGrid { grid-template-columns: 1fr; }
   .aboutGrid > aside { border-top: 1px solid var(--dsw-alias-border-l2); border-left: 0; }
   .recommendations > div { grid-template-columns: 1fr; }
+  .lightboxStage { inset: 54px 44px 92px; }
+  .lightboxNav { bottom: 82px; width: 44px; }
+  .lightboxThumbnails { right: 48px; left: 48px; justify-content: flex-start; }
+  .lightboxThumbnails button { width: 72px; min-width: 72px; }
 }
 
 @media (max-width: 520px) {

@@ -162,15 +162,41 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .health { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
 .health h3 { margin-bottom: 6px; }
 .health p { margin: 0; color: var(--muted); font-size: 12px; line-height: 19px; }
-.gallery { width: 100%; aspect-ratio: 16 / 8.4; overflow: hidden; border: 1px solid var(--border); border-radius: 11px; background: #090a0b; }
-.gallery img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.gallery > .preview-placeholder { width: 100%; height: 100%; }
-.gallery > .preview-placeholder strong { font-size: 17px; line-height: 25px; }
+.gallery-group { display: grid; gap: 8px; }
+.gallery { position: relative; width: 100%; aspect-ratio: 16 / 8.4; overflow: hidden; border: 1px solid var(--border); border-radius: 11px; background: #090a0b; }
+.gallery-open { display: block; width: 100%; height: 100%; cursor: zoom-in; padding: 0; color: inherit; border: 0; background: transparent; }
+.gallery img { display: block; width: 100%; height: 100%; object-fit: contain; transition: transform .24s ease-out; }
+.gallery:hover .gallery-open img { transform: scale(1.018); }
+.gallery-open > .preview-placeholder { width: 100%; height: 100%; }
+.gallery-open > .preview-placeholder strong { font-size: 17px; line-height: 25px; }
+.gallery-nav { position: absolute; z-index: 2; top: 50%; display: grid; width: 44px; height: 44px; cursor: pointer; padding: 0; color: rgba(255, 255, 255, .82); border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; background: rgba(15, 16, 19, .42); box-shadow: 0 4px 18px rgba(0, 0, 0, .16); backdrop-filter: blur(10px); opacity: .78; transform: translateY(-50%); place-items: center; transition: opacity .18s, background .18s, transform .18s; }
+.gallery-nav:hover { color: #fff; background: rgba(28, 30, 35, .68); opacity: 1; transform: translateY(-50%) scale(1.04); }
+.gallery-prev { left: 12px; }
+.gallery-next { right: 12px; }
+.gallery-next svg { transform: rotate(180deg); }
 .thumbs { display: flex; gap: 8px; overflow-x: auto; }
-.thumbs button { width: 112px; cursor: pointer; flex: none; padding: 0; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; background: transparent; opacity: .6; }
+.thumbs button { position: relative; width: 112px; cursor: pointer; flex: none; padding: 0; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; background: transparent; opacity: .6; }
 .thumbs button[data-selected="true"] { border-color: var(--primary); opacity: 1; }
 .thumbs img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: var(--surface); }
 .thumbs .preview-placeholder { width: 100%; aspect-ratio: 16 / 9; }
+.thumb-progress { position: absolute; z-index: 1; inset: 0; pointer-events: none; background: rgba(255, 255, 255, .1); transform: scaleX(0); transform-origin: left center; animation: gallery-progress 5.6s linear forwards; transition: transform .24s ease-in; }
+.gallery-group[data-paused="true"] .thumb-progress { animation: none; transform: scaleX(0); }
+.lightbox { position: fixed; z-index: 200; inset: 0; display: grid; overflow: hidden; background: rgba(5, 6, 8, .94); backdrop-filter: blur(18px); }
+.lightbox-stage { position: absolute; inset: 22px 58px 94px; display: grid; min-width: 0; min-height: 0; place-items: center; }
+.lightbox-stage img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lightbox-stage > .preview-placeholder { width: 100%; height: 100%; }
+.lightbox-close { position: absolute; z-index: 3; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); display: grid; width: 44px; height: 44px; cursor: pointer; color: rgba(255, 255, 255, .78); border: 1px solid rgba(255, 255, 255, .12); border-radius: 22px; background: rgba(20, 21, 24, .6); backdrop-filter: blur(12px); place-items: center; }
+.lightbox-close:hover { color: #fff; background: rgba(45, 47, 53, .72); }
+.lightbox-nav { position: absolute; z-index: 2; top: 0; bottom: 86px; display: grid; width: clamp(48px, 5vw, 72px); cursor: pointer; color: rgba(255, 255, 255, .62); border: 0; background: transparent; place-items: center; transition: color .18s, background .18s; }
+.lightbox-nav:hover { color: #fff; background: rgba(255, 255, 255, .035); }
+.lightbox-prev { left: 0; }
+.lightbox-next { right: 0; }
+.lightbox-next svg { transform: rotate(180deg); }
+.lightbox-thumbs { position: absolute; z-index: 2; right: 64px; bottom: max(18px, env(safe-area-inset-bottom)); left: 64px; display: flex; justify-content: center; gap: 8px; overflow-x: auto; }
+.lightbox-thumbs button { width: 88px; cursor: pointer; flex: none; padding: 0; border: 1px solid rgba(255, 255, 255, .16); border-radius: 7px; overflow: hidden; background: #111216; opacity: .52; }
+.lightbox-thumbs button[data-selected="true"] { border-color: rgba(255, 255, 255, .72); opacity: 1; }
+.lightbox-thumbs img, .lightbox-thumbs .preview-placeholder { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+@keyframes gallery-progress { to { transform: scaleX(1); } }
 .information { display: grid; grid-template-columns: minmax(0, 1fr) 300px; border: 1px solid var(--border); border-radius: 11px; background: rgba(21, 22, 25, .55); }
 .information > * { padding: 17px 18px; }
 .information h3, .recommendations h3 { margin: 0 0 10px; font-size: 14px; line-height: 22px; }
@@ -220,6 +246,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
   .repo-button { max-width: calc(100% - 52px); }
   .detail-stars { margin-left: 0; }
   .gallery { aspect-ratio: 16 / 10; }
+  .lightbox-stage { inset: 54px 44px 92px; }
+  .lightbox-nav { bottom: 82px; width: 44px; }
+  .lightbox-thumbs { right: 48px; left: 48px; justify-content: flex-start; }
+  .lightbox-thumbs button { width: 72px; }
   .information { grid-template-columns: 1fr; }
   .information dl { border-top: 1px solid var(--border); border-left: 0; }
   .recommendations > div { grid-template-columns: 1fr; }
@@ -232,4 +262,6 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+  .thumb-progress { display: none; animation: none; }
+  .gallery:hover .gallery-open img { transform: none; }
 }
