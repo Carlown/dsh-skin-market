@@ -68,8 +68,10 @@
   overflow: hidden;
   background: var(--dsw-alias-bg-layer-1);
   font: inherit;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--dsw-alias-brand-primary) 0%, transparent), 0 0 0 color-mix(in srgb, var(--dsw-alias-brand-primary) 0%, transparent);
+  transition: border-color .22s ease, background .22s ease, box-shadow .26s ease-out;
 }
-.homeCard:hover { border-color: var(--dsw-alias-border-l1); background: var(--dsw-alias-interactive-bg-hover); }
+.homeCard:hover, .homeCard:focus-within { border-color: color-mix(in srgb, var(--dsw-alias-brand-primary) 34%, var(--dsw-alias-border-l1)); background: var(--dsw-alias-interactive-bg-hover); box-shadow: 0 0 0 1px color-mix(in srgb, var(--dsw-alias-brand-primary) 12%, transparent), 0 0 10px color-mix(in srgb, var(--dsw-alias-brand-primary) 14%, transparent); }
 .homeCard[data-active="true"] { background: color-mix(in srgb, var(--dsw-alias-state-success-primary) 4%, var(--dsw-alias-bg-layer-1)); }
 .homeCardOpen { display: flex; width: 100%; min-width: 0; flex: 1; flex-direction: column; align-items: stretch; padding: 0; color: inherit; border: 0; background: transparent; text-align: left; }
 .homeCardMedia { display: block; width: 100%; height: clamp(180px, 18vw, 220px); max-height: 220px; flex: none; overflow: hidden; background: var(--dsw-alias-bg-layer-2); }
@@ -91,7 +93,14 @@
 .cardActionProgress svg { width: 13px; height: 13px; animation: spin 1s linear infinite; }
 .installedMoreCard { min-height: 0; align-items: center; justify-content: center; gap: 9px; color: var(--dsw-alias-label-secondary); background: transparent; text-align: center; }
 .installedMoreCard strong { font-size: 13px; font-weight: 550; line-height: 19px; }
-.installedEmpty { display: grid; min-height: 110px; place-items: center; color: var(--dsw-alias-label-secondary); border: 1px dashed var(--dsw-alias-border-l2); border-radius: 10px; font-size: 12px; line-height: 18px; }
+.installedSkeletonCard { display: grid; overflow: hidden; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; background: var(--dsw-alias-bg-layer-1); }
+.installedSkeletonCard > span:first-child { display: block; width: 100%; height: clamp(106px, 11vw, 148px); max-height: 148px; }
+.installedSkeletonCard > span:last-child { display: grid; gap: 7px; padding: 11px 14px 12px; }
+.installedSkeletonCard i { display: block; height: 11px; border-radius: 6px; }
+.installedSkeletonCard i:first-child { width: 76%; }
+.installedSkeletonCard i:last-child { width: 48%; height: 9px; }
+.installedSkeletonCard > span:first-child,
+.installedSkeletonCard i { background: linear-gradient(90deg, var(--dsw-alias-bg-layer-1) 25%, var(--dsw-alias-interactive-bg-hover) 50%, var(--dsw-alias-bg-layer-1) 75%); background-size: 200% 100%; animation: skeletonShimmer 1.4s ease-in-out infinite; }
 .discoveryGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .discoveryGrid .homeCard { height: 100%; }
 .installedRow .homeCardMedia { height: clamp(106px, 11vw, 148px); max-height: 148px; }
@@ -243,8 +252,10 @@
 .skinCard:hover { background: var(--dsw-specific-sidebar-nav-item-hover, var(--dsw-alias-interactive-bg-hover)); }
 .externalPlugin { min-height: 58px; cursor: default; border: 1px dashed var(--dsw-alias-border-l2); }
 .skinCard[data-selected="true"] { background: var(--dsw-specific-sidebar-nav-item-active, var(--dsw-alias-button-ghost-active-fill)); box-shadow: inset 0 0 0 1px var(--dsw-alias-button-ghost-active-border); }
-.skinCard > img { display: block; width: 56px; height: 56px; flex: none; object-fit: cover; border-radius: 7px; opacity: .35; background: var(--dsw-alias-bg-layer-3); transition: opacity 180ms ease-out; }
-.skinCard > img[data-loaded="true"] { opacity: 1; }
+.skinCardPreview { display: block; width: 56px; height: 56px; flex: none; overflow: hidden; border-radius: 7px; background: var(--dsw-alias-bg-layer-3); }
+.skinCardPreview > img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: .35; transition: opacity 180ms ease-out, transform 240ms ease-out; }
+.skinCardPreview > img[data-loaded="true"] { opacity: 1; }
+.skinCardPreview > .previewPlaceholder { width: 100%; height: 100%; }
 .previewPlaceholder { box-sizing: border-box; display: flex; min-width: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; color: var(--dsw-alias-label-caption); background: linear-gradient(145deg, var(--dsw-alias-bg-layer-2), var(--dsw-alias-bg-layer-1)); text-align: center; overflow: hidden; }
 .previewPlaceholder strong { display: block; max-width: 88%; overflow: hidden; color: var(--dsw-alias-label-secondary); font-size: 12px; font-weight: 500; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
 .previewPlaceholder small { color: var(--dsw-alias-label-caption); font-size: 10px; line-height: 15px; }
@@ -301,8 +312,7 @@
 .galleryGroup { order: 4; display: grid; gap: 8px; }
 .hero { position: relative; width: 100%; aspect-ratio: 16 / 8; border: 1px solid var(--dsw-alias-border-l2); border-radius: 10px; overflow: hidden; background: var(--dsw-alias-bg-layer-1); }
 .heroOpen { display: block; width: 100%; height: 100%; cursor: zoom-in; padding: 0; color: inherit; border: 0; background: transparent; }
-.hero img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .24s ease-out; }
-.hero:hover .heroOpen img { transform: scale(1.018); }
+.hero img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .heroOpen > .previewPlaceholder { width: 100%; height: 100%; }
 .heroOpen > .previewPlaceholder strong { font-size: 16px; line-height: 24px; }
 .heroNav { position: absolute; z-index: 2; top: 50%; display: grid; width: 44px; min-width: 44px; height: 44px; min-height: 44px; cursor: pointer; padding: 0; color: rgba(255, 255, 255, .82); border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; background: rgba(15, 16, 19, .42); box-shadow: 0 4px 18px rgba(0, 0, 0, .16); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: .78; transform: translateY(-50%); place-items: center; transition: opacity .18s, background .18s, transform .18s; }
@@ -319,7 +329,7 @@
 .galleryGroup[data-paused="true"] .thumbnailProgress { animation: none; transform: scaleX(0); }
 
 .lightbox { box-sizing: border-box; position: fixed; z-index: 10000; inset: 0; display: grid; overflow: hidden; color: #fff; background: rgba(5, 6, 8, .94); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
-.lightboxStage { position: absolute; inset: 22px 58px 94px; display: grid; min-width: 0; min-height: 0; place-items: center; }
+.lightboxStage { position: absolute; inset: 22px 58px 94px; display: grid; min-width: 0; min-height: 0; cursor: zoom-out; padding: 0; color: inherit; border: 0; background: transparent; place-items: center; }
 .lightboxStage img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .lightboxStage > .previewPlaceholder { width: 100%; height: 100%; }
 .lightboxClose { position: absolute; z-index: 3; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); display: grid; width: 44px; min-width: 44px; height: 44px; min-height: 44px; cursor: pointer; padding: 0; color: rgba(255, 255, 255, .78); border: 1px solid rgba(255, 255, 255, .12); border-radius: 22px; background: rgba(20, 21, 24, .6); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); place-items: center; }
@@ -435,14 +445,20 @@
   .root .marketUpdateButton { transition: none; }
   .skeletonCard span:first-child,
   .skeletonCard i,
+  .installedSkeletonCard > span:first-child,
+  .installedSkeletonCard i,
   .detailSkeleton span,
   .detailSkeleton i,
   .loadMoreHint span { animation: none; }
   .skinCard > img { transition: none; }
   .homeLoading svg { animation: none; }
+  .homeCard { transition: none; }
   .thumbnailProgress { display: none; animation: none; }
   .hero img, .heroNav { transition: none; }
   .hero:hover .heroOpen img { transform: none; }
+}
+
+@media (hover: hover) and (pointer: fine) {
 }
 
 @media (max-width: 959px) {
@@ -457,6 +473,7 @@
   .homeCardCopy > small { align-items: center; flex-direction: row; gap: 6px; }
   .homeCardMedia { height: 160px; max-height: 160px; }
   .installedRow .homeCardMedia { height: 104px; max-height: 104px; }
+  .installedSkeletonCard > span:first-child { height: 104px; max-height: 104px; }
   .cardInlineActions { right: 8px; }
   .browser { display: block; padding: 0; background: var(--dsw-alias-bg-layer-2); backdrop-filter: none; }
   .browserBackdrop,

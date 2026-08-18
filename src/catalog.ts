@@ -4,7 +4,7 @@ import Ajv from 'ajv/dist/2020.js'
 import { atomicWriteJson } from './profile.ts'
 import type { CatalogFile, CatalogSkin, SkinEntry } from './types.ts'
 
-export const REMOTE_CATALOG_URL = 'https://kingofsoysauce.github.io/dsh-skin-market/catalog.json'
+export const REMOTE_CATALOG_URL = 'https://raw.githubusercontent.com/kingOfSoySauce/dsh-skin-market/main/data/catalog.json'
 export const CATALOG_REFRESH_INTERVAL_MS = 5 * 60 * 1000
 export const LOCAL_CATALOG_ENV = 'DSH_SKIN_MARKET_LOCAL_CATALOG'
 

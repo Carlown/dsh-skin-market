@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-18T01:31:01.907Z",
+  "generatedAt": "2026-08-18T09:25:42.440Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -178,7 +178,7 @@
       },
       "author": "kingOfSoySauce",
       "description": "马斯克五阶段红色强度皮肤 for DeepSeek Harness",
-      "repo": "https://github.com/kingOfSoySauce/dsh-musk-skin",
+      "repo": "https://github.com/kingOfSoySauce/dsh-elon-skin",
       "package": "dsh-client-musk-intensity-skin",
       "rowId": "musk-intensity-skin",
       "category": "interactive",
@@ -194,9 +194,9 @@
         "dark"
       ],
       "install": {
-        "target": "github:kingOfSoySauce/dsh-musk-skin#a9b0c2989f002d52b8a636372c23798eef914c16",
+        "target": "github:kingOfSoySauce/dsh-elon-skin#84f23f027ea76ad58a9b9f4b63e2cb815ead3254",
         "version": "0.1.4",
-        "commit": "a9b0c2989f002d52b8a636372c23798eef914c16"
+        "commit": "84f23f027ea76ad58a9b9f4b63e2cb815ead3254"
       },
       "compatibility": {
         "dsh": "0.1.0-rc.6",
@@ -205,12 +205,24 @@
         ]
       },
       "screenshots": [
-        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-musk-skin/79a994304d42aeebc5dc085346bf53559486f363/assets/musk-poster.png"
+        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-elon-skin/84f23f027ea76ad58a9b9f4b63e2cb815ead3254/assets/readme-preview.png",
+        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-elon-skin/84f23f027ea76ad58a9b9f4b63e2cb815ead3254/docs/musk-skin-demo.gif"
       ],
       "review": {
         "compatibility": "verified",
-        "preview": "repository-card",
+        "preview": "verified",
         "installation": "manual-only"
+      },
+      "health": {
+        "status": "healthy",
+        "checks": {
+          "readmeScreenshots": "pass",
+          "compatibility": "pass",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": []
       },
       "license": {
         "code": "NOASSERTION",
@@ -218,11 +230,11 @@
         "notice": "仓库当前未声明许可证；安装和再分发前请向作者确认授权。"
       },
       "featuredRank": 2,
-      "starsSnapshot": 0,
-      "releaseUpdatedAt": "2026-08-17T00:00:00.000Z",
-      "metadataUpdatedAt": "2026-08-17T00:00:00.000Z",
-      "starsUpdatedAt": "2026-08-17T00:00:00.000Z",
-      "updatedAt": "2026-08-17T00:00:00.000Z"
+      "starsSnapshot": 1,
+      "releaseUpdatedAt": "2026-08-18T09:10:56Z",
+      "metadataUpdatedAt": "2026-08-18T09:15:01.000Z",
+      "starsUpdatedAt": "2026-08-18T09:15:01.000Z",
+      "updatedAt": "2026-08-18T09:15:01.000Z"
     },
     {
       "id": "zhijun-dai.catppuccin",
@@ -7246,6 +7258,340 @@
       "metadataUpdatedAt": "2026-08-17T15:21:28Z",
       "starsUpdatedAt": "2026-08-17T09:44:21Z",
       "updatedAt": "2026-08-17T15:21:28Z"
+    },
+    {
+      "id": "ayase34.gal-view",
+      "name": {
+        "zh": "gal-view",
+        "en": "gal-view"
+      },
+      "author": "Ayase34",
+      "description": "DSH Web 会话页的 Galgame 风格对话视图：16:9 舞台、对话框、打字机台词与可拖拽场景编辑器。",
+      "repo": "https://github.com/Ayase34/gal-view",
+      "package": "gal-view",
+      "rowId": "gal-view",
+      "category": "theme",
+      "tags": [
+        "anime",
+        "motion",
+        "utility"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:Ayase34/gal-view#d002fe0e7051c618a2665af3c653f9838cd6aa8a",
+        "version": "0.3.3",
+        "commit": "d002fe0e7051c618a2665af3c653f9838cd6aa8a"
+      },
+      "compatibility": {
+        "dsh": "unverified",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/Ayase34/gal-view/d002fe0e7051c618a2665af3c653f9838cd6aa8a/image.png"
+      ],
+      "review": {
+        "compatibility": "unverified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "pass",
+          "compatibility": "improve",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": [
+          "建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。"
+        ]
+      },
+      "license": {
+        "code": "MIT",
+        "commercialUse": true
+      },
+      "featuredRank": 135,
+      "starsSnapshot": 87,
+      "releaseUpdatedAt": "2026-08-16T09:00:49+09:00",
+      "metadataUpdatedAt": "2026-08-18T06:24:38Z",
+      "starsUpdatedAt": "2026-08-18T06:24:38Z",
+      "updatedAt": "2026-08-18T06:24:38Z"
+    },
+    {
+      "id": "alingalingling.ui-status-label",
+      "name": {
+        "zh": "ui-status-label",
+        "en": "ui-status-label"
+      },
+      "author": "alingalingling",
+      "description": "为 DSH Web 提供可配置的运行中状态文案，在 General 设置区编辑并同步到聊天视图状态栏。",
+      "repo": "https://github.com/alingalingling/ui-status-label",
+      "package": "dsh-ui-status-label",
+      "rowId": "ui-status-label",
+      "category": "utility",
+      "tags": [
+        "utility",
+        "settings"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:alingalingling/ui-status-label#a1621413a4700cb489655ad3ebf7fa8484c3645f",
+        "version": "0.1.0",
+        "commit": "a1621413a4700cb489655ad3ebf7fa8484c3645f"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://opengraph.githubassets.com/a1621413a4700cb489655ad3ebf7fa8484c3645f/alingalingling/ui-status-label"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "repository-card",
+        "installation": "verified"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "improve",
+          "compatibility": "pass",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": [
+          "建议在 README 中加入能够显示该功能实际效果的 DSH Web 实机截图；原生空白界面不作为插件效果证据。"
+        ]
+      },
+      "license": {
+        "code": "MIT",
+        "commercialUse": true
+      },
+      "featuredRank": 136,
+      "starsSnapshot": 38,
+      "releaseUpdatedAt": "2026-08-15T16:56:59+08:00",
+      "metadataUpdatedAt": "2026-08-18T06:24:38Z",
+      "starsUpdatedAt": "2026-08-18T06:24:38Z",
+      "updatedAt": "2026-08-18T06:24:38Z"
+    },
+    {
+      "id": "featherhunter.dsh-opencode-palette",
+      "name": {
+        "zh": "dsh-opencode-palette",
+        "en": "dsh-opencode-palette"
+      },
+      "author": "FeatherHunter",
+      "description": "将 opencode 的 34 套经典配色带入 DSH Web，支持一键切换、持久化与设置页主题选择。",
+      "repo": "https://github.com/FeatherHunter/dsh-opencode-palette",
+      "subpath": "package",
+      "package": "dsh-opencode-palette",
+      "rowId": "opencode-palette",
+      "category": "theme",
+      "tags": [
+        "token-theme",
+        "dark",
+        "retro"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:FeatherHunter/dsh-opencode-palette#5aeadca70606ceb38f94080694e0c9fe47d4b10f&path:package",
+        "version": "1.6.4",
+        "commit": "5aeadca70606ceb38f94080694e0c9fe47d4b10f"
+      },
+      "compatibility": {
+        "dsh": "unverified",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/FeatherHunter__dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/home.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/FeatherHunter__dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/conversation.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/FeatherHunter__dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/settings.png",
+        "https://raw.githubusercontent.com/FeatherHunter/dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/assets/setup-panel-zh.svg"
+      ],
+      "review": {
+        "compatibility": "unverified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "improve",
+          "compatibility": "improve",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": [
+          "建议在 README 中加入至少一张皮肤实际运行于 DSH Web 的界面截图；原生空白界面不作为效果证据。",
+          "建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。"
+        ]
+      },
+      "license": {
+        "code": "MIT",
+        "commercialUse": true
+      },
+      "featuredRank": 139,
+      "starsSnapshot": 4,
+      "releaseUpdatedAt": "2026-08-18T12:25:52+08:00",
+      "metadataUpdatedAt": "2026-08-18T07:08:55.042Z",
+      "starsUpdatedAt": "2026-08-18T06:24:38Z",
+      "updatedAt": "2026-08-18T07:08:55.042Z",
+      "marketScreenshots": [
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/FeatherHunter__dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/home.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/FeatherHunter__dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/conversation.png",
+        "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/FeatherHunter__dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/settings.png"
+      ],
+      "listScreenshot": "https://raw.githubusercontent.com/FeatherHunter/dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/assets/setup-panel-zh.svg"
+    },
+    {
+      "id": "xhr666.dsh-mpkg-wallpaper",
+      "name": {
+        "zh": "dsh-mpkg-wallpaper",
+        "en": "dsh-mpkg-wallpaper"
+      },
+      "author": "XHR666",
+      "description": "DSH Web 的 Wallpaper Engine 背景插件：解析 mpkg、播放视频或预览 GIF，支持日夜切换、模糊、缩放与本地壁纸库。",
+      "repo": "https://github.com/XHR666/dsh-mpkg-wallpaper",
+      "package": "dsh-mpkg-wallpaper",
+      "rowId": "dsh-mpkg-wallpaper",
+      "category": "theme",
+      "tags": [
+        "wallpaper",
+        "glass",
+        "motion"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:XHR666/dsh-mpkg-wallpaper#82bc1dd42020617e02de879f007dd12e070cf693",
+        "version": "3.0.0",
+        "commit": "82bc1dd42020617e02de879f007dd12e070cf693"
+      },
+      "compatibility": {
+        "dsh": "unverified",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/XHR666/dsh-mpkg-wallpaper/82bc1dd42020617e02de879f007dd12e070cf693/screenshots/dhsw1.jpg",
+        "https://raw.githubusercontent.com/XHR666/dsh-mpkg-wallpaper/82bc1dd42020617e02de879f007dd12e070cf693/screenshots/dshw2.jpg",
+        "https://raw.githubusercontent.com/XHR666/dsh-mpkg-wallpaper/82bc1dd42020617e02de879f007dd12e070cf693/screenshots/dshw3.jpg"
+      ],
+      "review": {
+        "compatibility": "unverified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "pass",
+          "compatibility": "improve",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": [
+          "建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。"
+        ]
+      },
+      "license": {
+        "code": "MIT",
+        "commercialUse": true
+      },
+      "featuredRank": 141,
+      "starsSnapshot": 2,
+      "releaseUpdatedAt": "2026-08-18T13:58:38+08:00",
+      "metadataUpdatedAt": "2026-08-18T06:24:38Z",
+      "starsUpdatedAt": "2026-08-18T06:24:38Z",
+      "updatedAt": "2026-08-18T06:24:38Z"
+    },
+    {
+      "id": "nagi-ovo.dsh-ads",
+      "name": {
+        "zh": "dsh-ads",
+        "en": "dsh-ads"
+      },
+      "author": "Nagi-ovo",
+      "description": "把 DSH Web 变成 2005 年门户网站的恶搞广告插件：侧栏广告、对话推荐、推理激励广告、弹窗与假游戏，支持中英文切换。",
+      "repo": "https://github.com/Nagi-ovo/dsh-ads",
+      "package": "@dsh-external/dsh-ads",
+      "rowId": "dsh-ads",
+      "category": "theme",
+      "tags": [
+        "retro",
+        "motion",
+        "utility"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:Nagi-ovo/dsh-ads#3a2ba704bc383099c686d3288ff6e0d61fc391e5",
+        "version": "0.1.0",
+        "commit": "3a2ba704bc383099c686d3288ff6e0d61fc391e5"
+      },
+      "compatibility": {
+        "dsh": "unverified",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/Nagi-ovo/dsh-ads/3a2ba704bc383099c686d3288ff6e0d61fc391e5/assets/screenshot.webp",
+        "https://raw.githubusercontent.com/Nagi-ovo/dsh-ads/3a2ba704bc383099c686d3288ff6e0d61fc391e5/assets/english-mode.png",
+        "https://raw.githubusercontent.com/Nagi-ovo/dsh-ads/3a2ba704bc383099c686d3288ff6e0d61fc391e5/assets/settings.webp"
+      ],
+      "review": {
+        "compatibility": "unverified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "pass",
+          "compatibility": "improve",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": [
+          "建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。"
+        ]
+      },
+      "license": {
+        "code": "BSD-3-Clause",
+        "commercialUse": true
+      },
+      "featuredRank": 142,
+      "starsSnapshot": 486,
+      "releaseUpdatedAt": "2026-08-18T02:28:44+01:00",
+      "metadataUpdatedAt": "2026-08-18T06:24:38Z",
+      "starsUpdatedAt": "2026-08-18T06:24:38Z",
+      "updatedAt": "2026-08-18T06:24:38Z"
     }
   ]
 }

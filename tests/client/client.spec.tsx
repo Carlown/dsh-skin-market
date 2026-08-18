@@ -242,18 +242,35 @@ describe('client market', () => {
     })))
     render(<SkinMarketSection t={key => key} />)
 
-    const installedSection = (await screen.findByRole('heading', { name: '已安装' })).closest('section')!
-    const cards = [...installedSection.querySelectorAll<HTMLButtonElement>('button[aria-label$="已安装卡片"]')]
-    expect(cards.map(card => card.getAttribute('aria-label'))).toEqual([
-      '已装皮肤 5 已安装卡片',
-      '已装皮肤 4 已安装卡片',
-      '已装皮肤 3 已安装卡片',
-      '已装皮肤 2 已安装卡片',
-    ])
+    await waitFor(() => {
+      const installedSection = screen.getByRole('heading', { name: '已安装' }).closest('section')!
+      const cards = [...installedSection.querySelectorAll<HTMLButtonElement>('button[aria-label$="已安装卡片"]')]
+      expect(cards.map(card => card.getAttribute('aria-label'))).toEqual([
+        '已装皮肤 5 已安装卡片',
+        '已装皮肤 4 已安装卡片',
+        '已装皮肤 3 已安装卡片',
+        '已装皮肤 2 已安装卡片',
+      ])
+    })
 
     fireEvent.click(screen.getByRole('button', { name: '查看全部已安装' }))
     expect(await screen.findByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
     expect(screen.getByRole('heading', { name: '已装皮肤 5' })).toBeTruthy()
+  })
+
+  it('shows installed skeletons while runtime state loads and hides the section when empty', async () => {
+    let resolveState!: (value: { skins: never[] }) => void
+    const state = new Promise<{ skins: never[] }>(resolve => { resolveState = resolve })
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : state,
+    })))
+
+    render(<SkinMarketSection t={key => key} />)
+
+    expect(await screen.findByRole('status', { name: '正在加载已安装皮肤' })).toBeTruthy()
+    resolveState({ skins: [] })
+    await waitFor(() => expect(screen.queryByRole('heading', { name: '已安装' })).toBeNull())
   })
 
   it('opens an installed card directly in its selected detail', async () => {

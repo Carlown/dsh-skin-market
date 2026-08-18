@@ -4,6 +4,16 @@
 
 安装版本固定到对应收录 commit；预览图使用 registry 中记录的仓库素材。收录市场不等于 DSH 官方、安全团队或市场对皮肤的安全背书；兼容性和素材授权状态请以皮肤仓库说明为准。
 
+## 2026-08-18 · dsh-opencode-palette
+
+[dsh-opencode-palette](https://github.com/FeatherHunter/dsh-opencode-palette) 将 opencode 的 34 款经典配色带入 DSH Web，支持在插件设置面板中切换主题、字体和字号，并持久化选择。
+
+- GitHub：[FeatherHunter/dsh-opencode-palette](https://github.com/FeatherHunter/dsh-opencode-palette)
+- 收录版本：`1.6.4`
+- 固定 commit：`5aeadca70606ceb38f94080694e0c9fe47d4b10f`
+
+![dsh-opencode-palette 设置面板预览](https://raw.githubusercontent.com/FeatherHunter/dsh-opencode-palette/5aeadca70606ceb38f94080694e0c9fe47d4b10f/assets/setup-panel-zh.svg)
+
 ## 2026-08-18 · Open Sea Skin
 
 [Open Sea 海洋皮肤](https://github.com/d-dev0101/open-sea-skin) 为 DSH Web 提供实时 WebGPU 海洋背景、玻璃界面和左下角调节控制。

@@ -17,6 +17,7 @@ import {
   Pill,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import css from './SkinMarket.module.css'
+import './media-hover.module.css'
 import { compareCatalogOrder, hasCatalogPreview } from '../catalog-order.ts'
 import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
@@ -599,7 +600,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             : null
     const open = () => location === 'installed' ? openInstalledBrowser(skin.id) : openBrowser(skin.id, 'discover')
     return <article className={css.homeCard} data-active={itemState.activation === 'active' ? 'true' : undefined} data-actions={actionCount} key={`${location}:${skin.id}`}>
-      <Button variant="ghost" className={css.homeCardOpen} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
+      <Button variant="ghost" className={`${css.homeCardOpen} dsh-skin-media-hover`} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
         <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
         <span className={css.homeCardCopy}>
           <span className={css.homeCardTitleRow}><strong title={skin.description}>{skin.description}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
@@ -648,12 +649,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         </header>
 
         <div className={css.homeContent}>
-          {homeQuery.trim() === '' && <section className={css.homeSection} aria-labelledby="installed-skins-title">
+          {homeQuery.trim() === '' && (loading || installedSkins.length > 0) && <section className={css.homeSection} aria-labelledby="installed-skins-title">
             <div className={css.homeSectionTitle}><h3 id="installed-skins-title">已安装</h3><span>当前使用优先，其余按最近安装排序</span></div>
-            {installedSkins.length > 0 ? <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties}>
+            {loading ? <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties} role="status" aria-label="正在加载已安装皮肤"><span className={css.srOnly}>正在加载已安装皮肤…</span>{Array.from({ length: installedSlots }, (_, index) => <article className={css.installedSkeletonCard} key={index} aria-hidden="true"><span /><span><i /><i /></span></article>)}</div> : <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties}>
               {installedRowSkins.map(skin => renderHomeCard(skin, 'installed'))}
               {installedOverflow && <Button variant="ghost" className={`${css.homeCard} ${css.installedMoreCard}`} onClick={() => openInstalledBrowser()}><SquaresFourIcon size={24} aria-hidden="true" /><strong>查看全部已安装</strong></Button>}
-            </div> : <div className={css.installedEmpty}>尚未安装皮肤，从下面挑一个喜欢的开始。</div>}
+            </div>}
           </section>}
 
           <section className={css.homeSection} aria-labelledby="discover-skins-title">
@@ -718,7 +719,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             const itemState = runtimeFor(states, skin.id)
             const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
-              <PreviewMedia key={`${skin.id}:${skin.listScreenshot ?? skin.screenshots[0] ?? 'missing'}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" />
+              <span className={`${css.skinCardPreview} dsh-skin-media-hover`}><PreviewMedia key={`${skin.id}:${skin.listScreenshot ?? skin.screenshots[0] ?? 'missing'}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" /></span>
               <span className={css.skinCardBody}>
                 <span className={css.cardTitle} title={skin.description}>{skin.description}</span>
                 <span className={css.cardMetaLine}>
@@ -781,13 +782,13 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
           <div className={css.galleryGroup} data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPausedState(true)} onMouseLeave={() => setCarouselPausedState(false)} onFocusCapture={() => setCarouselPausedState(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPausedState(false) }}>
             <div className={css.hero}>
-              <button className={css.heroOpen} aria-label={`全屏查看 ${selected.name.zh} 截图 ${shotIndex + 1}`} onClick={() => setLightboxOpen(true)}>
+              <button className={`${css.heroOpen} dsh-skin-media-hover`} aria-label={`全屏查看 ${selected.name.zh} 截图 ${shotIndex + 1}`} onClick={() => setLightboxOpen(true)}>
                 <PreviewMedia key={`${selected.id}:${selected.screenshots[shotIndex] ?? selected.screenshots[0] ?? 'missing'}:hero`} skin={selected} src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 大图预览`} kind="hero" />
               </button>
               {shotCount > 1 && <><Button className={`${css.heroNav} ${css.heroPrev}`} variant="ghost" icon={<IconChevronLeftOutline14 size={18} />} aria-label="上一张截图" onClick={() => moveShot(-1)} /><Button className={`${css.heroNav} ${css.heroNext}`} variant="ghost" icon={<IconChevronLeftOutline14 size={18} />} aria-label="下一张截图" onClick={() => moveShot(1)} /></>}
             </div>
             {selected.screenshots.length > 1 && <div className={css.thumbnails} aria-label="截图选择">
-              {selected.screenshots.map((shot, index) => <Button variant="ghost" key={shot} data-selected={index === shotIndex} onClick={() => { setShotIndex(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shotIndex && <span className={css.thumbnailProgress} key={`${selected.id}:${shotIndex}:${carouselEpoch}`} aria-hidden="true" />}</Button>)}
+              {selected.screenshots.map((shot, index) => <Button className="dsh-skin-media-hover" variant="ghost" key={shot} data-selected={index === shotIndex} onClick={() => { setShotIndex(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shotIndex && <span className={css.thumbnailProgress} key={`${selected.id}:${shotIndex}:${carouselEpoch}`} aria-hidden="true" />}</Button>)}
             </div>}
           </div>
 
@@ -805,9 +806,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       {lightboxOpen && selected !== undefined && createPortal(<section className={css.lightbox} role="dialog" aria-modal="true" aria-label={`${selected.name.zh} 全屏截图查看`}>
         <Button className={css.lightboxClose} variant="ghost" icon={<XIcon size={20} />} aria-label="关闭全屏查看" onClick={() => setLightboxOpen(false)} />
         {shotCount > 1 && <Button className={`${css.lightboxNav} ${css.lightboxPrev}`} variant="ghost" icon={<IconChevronLeftOutline14 size={26} />} aria-label="上一张截图" onClick={() => moveShot(-1)} />}
-        <div className={css.lightboxStage}><PreviewMedia key={`${selected.id}:${selected.screenshots[shotIndex] ?? selected.screenshots[0] ?? 'missing'}:lightbox`} skin={selected} src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 全屏截图 ${shotIndex + 1}`} kind="hero" /></div>
+        <button className={css.lightboxStage} aria-label="退出全屏查看" onClick={() => setLightboxOpen(false)}><PreviewMedia key={`${selected.id}:${selected.screenshots[shotIndex] ?? selected.screenshots[0] ?? 'missing'}:lightbox`} skin={selected} src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 全屏截图 ${shotIndex + 1}`} kind="hero" /></button>
         {shotCount > 1 && <Button className={`${css.lightboxNav} ${css.lightboxNext}`} variant="ghost" icon={<IconChevronLeftOutline14 size={26} />} aria-label="下一张截图" onClick={() => moveShot(1)} />}
-        {shotCount > 1 && <div className={css.lightboxThumbnails} aria-label="全屏截图选择">{selected.screenshots.map((shot, index) => <Button variant="ghost" key={shot} data-selected={index === shotIndex} aria-label={`查看截图 ${index + 1}`} onClick={() => setShotIndex(index)}><PreviewMedia skin={selected} src={shot} alt="" kind="thumbnail" loading="lazy" /></Button>)}</div>}
+        {shotCount > 1 && <div className={css.lightboxThumbnails} aria-label="全屏截图选择">{selected.screenshots.map((shot, index) => <Button className="dsh-skin-media-hover" variant="ghost" key={shot} data-selected={index === shotIndex} aria-label={`查看截图 ${index + 1}`} onClick={() => setShotIndex(index)}><PreviewMedia skin={selected} src={shot} alt="" kind="thumbnail" loading="lazy" /></Button>)}</div>}
       </section>, document.body)}
 
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />

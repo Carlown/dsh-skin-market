@@ -1,0 +1,49 @@
+id: alingalingling.ui-status-label
+name:
+  zh: ui-status-label
+  en: ui-status-label
+author: alingalingling
+description: 为 DSH Web 提供可配置的运行中状态文案，在 General 设置区编辑并同步到聊天视图状态栏。
+repo: https://github.com/alingalingling/ui-status-label
+package: dsh-ui-status-label
+rowId: ui-status-label
+category: utility
+tags:
+  - utility
+  - settings
+modes:
+  - light
+  - dark
+install:
+  target: github:alingalingling/ui-status-label#a1621413a4700cb489655ad3ebf7fa8484c3645f
+  version: 0.1.0
+  commit: a1621413a4700cb489655ad3ebf7fa8484c3645f
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+    - web
+screenshots:
+  - https://opengraph.githubassets.com/a1621413a4700cb489655ad3ebf7fa8484c3645f/alingalingling/ui-status-label
+review:
+  compatibility: verified
+  preview: repository-card
+  installation: verified
+health:
+  status: improvements
+  checks:
+    readmeScreenshots: improve
+    compatibility: pass
+    installation: pass
+    installCommand: pass
+    topic: pass
+  suggestions:
+    - 建议在 README 中加入能够显示该功能实际效果的 DSH Web 实机截图；原生空白界面不作为插件效果证据。
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 136
+starsSnapshot: 38
+releaseUpdatedAt: 2026-08-15T16:56:59+08:00
+metadataUpdatedAt: 2026-08-18T06:24:38Z
+starsUpdatedAt: 2026-08-18T06:24:38Z
+updatedAt: 2026-08-18T06:24:38Z
