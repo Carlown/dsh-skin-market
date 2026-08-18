@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-18T07:47:19.818Z",
+  "generatedAt": "2026-08-18T09:19:20.056Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -178,7 +178,7 @@
       },
       "author": "kingOfSoySauce",
       "description": "马斯克五阶段红色强度皮肤 for DeepSeek Harness",
-      "repo": "https://github.com/kingOfSoySauce/dsh-musk-skin",
+      "repo": "https://github.com/kingOfSoySauce/dsh-elon-skin",
       "package": "dsh-client-musk-intensity-skin",
       "rowId": "musk-intensity-skin",
       "category": "interactive",
@@ -194,9 +194,9 @@
         "dark"
       ],
       "install": {
-        "target": "github:kingOfSoySauce/dsh-musk-skin#a9b0c2989f002d52b8a636372c23798eef914c16",
+        "target": "github:kingOfSoySauce/dsh-elon-skin#84f23f027ea76ad58a9b9f4b63e2cb815ead3254",
         "version": "0.1.4",
-        "commit": "a9b0c2989f002d52b8a636372c23798eef914c16"
+        "commit": "84f23f027ea76ad58a9b9f4b63e2cb815ead3254"
       },
       "compatibility": {
         "dsh": "0.1.0-rc.6",
@@ -205,12 +205,26 @@
         ]
       },
       "screenshots": [
-        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-musk-skin/79a994304d42aeebc5dc085346bf53559486f363/assets/musk-poster.png"
+        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-elon-skin/84f23f027ea76ad58a9b9f4b63e2cb815ead3254/assets/readme-preview.png",
+        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-elon-skin/84f23f027ea76ad58a9b9f4b63e2cb815ead3254/docs/musk-skin-demo.gif"
       ],
       "review": {
         "compatibility": "verified",
-        "preview": "repository-card",
+        "preview": "verified",
         "installation": "manual-only"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "pass",
+          "compatibility": "pass",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "improve"
+        },
+        "suggestions": [
+          "建议为插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) Topic，方便 DSH 用户和社区目录发现这个插件。"
+        ]
       },
       "license": {
         "code": "NOASSERTION",
@@ -218,11 +232,11 @@
         "notice": "仓库当前未声明许可证；安装和再分发前请向作者确认授权。"
       },
       "featuredRank": 2,
-      "starsSnapshot": 0,
-      "releaseUpdatedAt": "2026-08-17T00:00:00.000Z",
-      "metadataUpdatedAt": "2026-08-17T00:00:00.000Z",
-      "starsUpdatedAt": "2026-08-17T00:00:00.000Z",
-      "updatedAt": "2026-08-17T00:00:00.000Z"
+      "starsSnapshot": 1,
+      "releaseUpdatedAt": "2026-08-18T09:10:56Z",
+      "metadataUpdatedAt": "2026-08-18T09:15:01.000Z",
+      "starsUpdatedAt": "2026-08-18T09:15:01.000Z",
+      "updatedAt": "2026-08-18T09:15:01.000Z"
     },
     {
       "id": "zhijun-dai.catppuccin",

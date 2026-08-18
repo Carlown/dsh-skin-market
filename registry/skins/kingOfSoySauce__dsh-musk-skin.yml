@@ -31,14 +31,24 @@ screenshots:
 review:
   compatibility: verified
   preview: verified
-  installation: verified
+  installation: manual-only
+health:
+  status: improvements
+  checks:
+    readmeScreenshots: pass
+    compatibility: pass
+    installation: pass
+    installCommand: pass
+    topic: improve
+  suggestions:
+    - 建议为插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) Topic，方便 DSH 用户和社区目录发现这个插件。
 license:
   code: NOASSERTION
   commercialUse: false
   notice: 仓库当前未声明许可证；安装和再分发前请向作者确认授权。
 featuredRank: 2
-starsSnapshot: 0
-releaseUpdatedAt: 2026-08-17T00:00:00.000Z
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-18T09:10:56Z
 metadataUpdatedAt: 2026-08-18T09:15:01.000Z
 starsUpdatedAt: 2026-08-18T09:15:01.000Z
 updatedAt: 2026-08-18T09:15:01.000Z
