@@ -18,7 +18,7 @@
 查看[近期收录日志](./docs/recently-added.md)
 
 <!-- DSH_SKIN_MARKET_AUTO_STATS:START -->
-当前在线目录收录 **142 款**社区皮肤。
+当前在线目录收录 **201 款**社区皮肤。
 
 最近一次自动同步：2026-08-18。自动任务会同步 registry、catalog、项目 README 和近期收录日志。
 <!-- DSH_SKIN_MARKET_AUTO_STATS:END -->
