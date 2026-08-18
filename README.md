@@ -1,28 +1,31 @@
 # DSH 皮肤市场
 
 一个嵌入 DSH 设置页的皮肤市场，可以浏览、安装、使用、停用、更新和卸载社区皮肤。
+<p align="center">
+  <img src="./docs/assets/skin-market-liang.png" alt="DSH 设置中的皮肤市场发现页" width="70%">
+</p>
 
-## 在线预览
+<p align="center">
+  <img src="./docs/assets/skin-market-deep-whale.png" alt="DSH 皮肤市场中的 Deep Whale 皮肤详情弹窗" width="70%">
+</p>
 
-无需安装即可浏览已收录的皮肤：
+### 在线预览
 
 [点击查看在线皮肤市场](https://kingofsoysauce.github.io/dsh-skin-market/)
 
-## 近期收录
+### 近期收录
 
-想了解最近加入市场的社区皮肤？查看[近期收录](./docs/recently-added.md)，按时间倒序浏览皮肤名称、GitHub 仓库和预览图。
+查看[近期收录日志](./docs/recently-added.md)
 
-在线页面仅用于浏览皮肤。需要安装、使用、更新或卸载皮肤时，请先安装下面的皮肤市场插件。
+## 安装皮肤市场插件
 
-## 安装皮肤市场
-
-可以直接使用命令安装：
+用命令安装：
 
 ```sh
 dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 ```
 
-也可以复制下面的提示词给你的 DSH Agent：
+或者复制下面的提示词给你的 DSH：
 
 ```text
 请帮我把这个插件安装到 DSH 的 web profile：https://github.com/kingOfSoySauce/dsh-skin-market。安装完成后告诉我如何重启 DSH Web，并确认可以从“设置 → 皮肤市场”打开它。不要替我安装任何皮肤。
@@ -30,7 +33,7 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 
 安装完成后，重启 DSH Web，打开「设置 → 皮肤市场」。
 
-### 安装失败时，让 DSH 自己排查
+### 安装失败时，可以让 DSH 自己排查
 
 皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态，可以把下面的提示词和完整原始报错一起复制给你的 DSH Agent：
 
@@ -45,14 +48,6 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 2. 只有确认 pnpm 可用后，才检查 profile 的 pnpm-workspace.yaml。若 pnpm 输出了构建审批 key，只把报错中完整、精确的 key 合并到 allowBuilds，对应值设为 true；不要启用 dangerouslyAllowAllBuilds，也不要放宽其他包。不要读取 .env、凭据或聊天记录。
 3. 重新执行原来的皮肤安装命令。完成后验证 profile package.json 依赖、node_modules 中目标包的 package.json、dsh.client/dsh.bundle 声明和 loader 注册项；如果仍失败，请指出具体失败阶段和完整错误，不要把 package manifest missing 当作根因。
 ```
-
-<p align="center">
-  <img src="./docs/assets/skin-market-liang.png" alt="DSH 皮肤市场中的 Liang 皮肤详情页" width="70%">
-</p>
-
-<p align="center">
-  <img src="./docs/assets/skin-market-deep-whale.png" alt="DSH 皮肤市场中的 Deep Whale 皮肤详情页" width="70%">
-</p>
 
 当前面向 DSH Web `0.1.0-rc.6`。目录中的安装目标固定到收录时的完整 commit。
 
