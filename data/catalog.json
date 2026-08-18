@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-18T09:19:20.056Z",
+  "generatedAt": "2026-08-18T09:25:42.440Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -214,17 +214,15 @@
         "installation": "manual-only"
       },
       "health": {
-        "status": "improvements",
+        "status": "healthy",
         "checks": {
           "readmeScreenshots": "pass",
           "compatibility": "pass",
           "installation": "pass",
           "installCommand": "pass",
-          "topic": "improve"
+          "topic": "pass"
         },
-        "suggestions": [
-          "建议为插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) Topic，方便 DSH 用户和社区目录发现这个插件。"
-        ]
+        "suggestions": []
       },
       "license": {
         "code": "NOASSERTION",

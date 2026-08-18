@@ -33,15 +33,14 @@ review:
   preview: verified
   installation: manual-only
 health:
-  status: improvements
+  status: healthy
   checks:
     readmeScreenshots: pass
     compatibility: pass
     installation: pass
     installCommand: pass
-    topic: improve
-  suggestions:
-    - 建议为插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) Topic，方便 DSH 用户和社区目录发现这个插件。
+    topic: pass
+  suggestions: []
 license:
   code: NOASSERTION
   commercialUse: false
