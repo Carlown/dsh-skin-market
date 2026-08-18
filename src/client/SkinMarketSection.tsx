@@ -74,6 +74,7 @@ const mutationLabels: Record<MutationKind, string> = {
 const RELOAD_PARAM = 'dsh-skin-reload'
 const ACTIVATION_WARNING_KEY = 'dsh-skin-market:activation-warning-accepted'
 export const CATALOG_BATCH_SIZE = 20
+const GALLERY_INTERVAL_MS = 5600
 
 export function restartReloadUrl(href: string, instanceId: string): string {
   const url = new URL(href)
@@ -174,6 +175,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [homeVisibleCount, setHomeVisibleCount] = useState(CATALOG_BATCH_SIZE)
   const [installedSlots, setInstalledSlots] = useState(5)
   const [shotIndex, setShotIndex] = useState(0)
+  const [galleryPaused, setGalleryPaused] = useState(false)
+  const [carouselEpoch, setCarouselEpoch] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const [busy, setBusy] = useState<Operation | null>(null)
   const [mutation, setMutation] = useState<{ skinId: string; kind: MutationKind } | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -372,6 +376,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   }, [])
 
   const selected = skins.find(skin => skin.id === selectedId) ?? skins[0]
+  const shotCount = selected?.screenshots.length ?? 0
   const state = selected === undefined ? null : runtimeFor(states, selected.id)
   const compatibilityUnverified = selected?.review?.compatibility === 'unverified'
   const manualOnly = selected?.review?.installation === 'manual-only'
@@ -404,6 +409,47 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const visibleDiscoverySkins = useMemo(() => discoverySkins.slice(0, homeVisibleCount), [discoverySkins, homeVisibleCount])
   const installedRowSkins = installedSkins.length > installedSlots ? installedSkins.slice(0, Math.max(1, installedSlots - 1)) : installedSkins
   const installedOverflow = installedSkins.length > installedRowSkins.length
+
+  useEffect(() => {
+    const isNarrow = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 959px)').matches
+    const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!browserOpen || (!showDetail && isNarrow) || galleryPaused || lightboxOpen || shotCount < 2 || reduceMotion) return
+    const timer = window.setTimeout(() => setShotIndex(current => (current + 1) % shotCount), GALLERY_INTERVAL_MS)
+    return () => window.clearTimeout(timer)
+  }, [browserOpen, carouselEpoch, galleryPaused, lightboxOpen, selected?.id, shotCount, shotIndex, showDetail])
+
+  useEffect(() => {
+    setGalleryPaused(false)
+    setLightboxOpen(false)
+    setCarouselEpoch(current => current + 1)
+  }, [selected?.id])
+
+  useEffect(() => {
+    if (!lightboxOpen) return
+    const handleLightboxKeys = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        event.stopImmediatePropagation()
+        setLightboxOpen(false)
+        return
+      }
+      if (shotCount < 2) return
+      if (event.key === 'ArrowLeft') setShotIndex(current => (current - 1 + shotCount) % shotCount)
+      if (event.key === 'ArrowRight') setShotIndex(current => (current + 1) % shotCount)
+    }
+    window.addEventListener('keydown', handleLightboxKeys, true)
+    return () => window.removeEventListener('keydown', handleLightboxKeys, true)
+  }, [lightboxOpen, shotCount])
+
+  const setCarouselPausedState = (paused: boolean) => {
+    setGalleryPaused(paused)
+    setCarouselEpoch(current => current + 1)
+  }
+
+  const moveShot = (direction: -1 | 1) => {
+    if (shotCount > 1) setShotIndex(current => (current + direction + shotCount) % shotCount)
+  }
 
   useEffect(() => { setVisibleCount(CATALOG_BATCH_SIZE) }, [filter, query, sortBy])
   useEffect(() => { setHomeVisibleCount(CATALOG_BATCH_SIZE) }, [homeQuery, sortBy])
@@ -493,7 +539,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     }
   }, [selected])
 
-  const chooseSkin = (id: string) => { userSelectedRef.current = true; selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setError(null); setInstallCopied(null); setShowInstallOptions(false) }
+  const chooseSkin = (id: string) => { userSelectedRef.current = true; selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setLightboxOpen(false); setError(null); setInstallCopied(null); setShowInstallOptions(false) }
   const select = (id: string) => { chooseSkin(id); setShowDetail(true) }
   const openBrowser = (id: string, origin: 'discover' | 'installed') => {
     chooseSkin(id)
@@ -507,7 +553,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     const target = id ?? installedSkins.find(skin => runtimeFor(states, skin.id).activation === 'active')?.id ?? installedSkins[0]?.id
     if (target !== undefined) openBrowser(target, 'installed')
   }
-  const closeBrowser = () => { setBrowserOpen(false); setShowDetail(false) }
+  const closeBrowser = () => { setLightboxOpen(false); setBrowserOpen(false); setShowDetail(false) }
   const openCardInstall = (skin: CatalogSkin) => {
     if (skin.review?.installation === 'manual-only') {
       chooseSkin(skin.id)
@@ -733,12 +779,17 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           {busy !== null && <div className={css.operation} role="status"><IconLoadingOutline16 size={16} /> {phases[busy.phase]}</div>}
           {error !== null && <div className={css.error} role="alert">{error}</div>}
 
-          <div className={css.hero}>
-            <PreviewMedia key={`${selected.id}:${selected.screenshots[shotIndex] ?? selected.screenshots[0] ?? 'missing'}:hero`} skin={selected} src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 大图预览`} kind="hero" />
+          <div className={css.galleryGroup} data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPausedState(true)} onMouseLeave={() => setCarouselPausedState(false)} onFocusCapture={() => setCarouselPausedState(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPausedState(false) }}>
+            <div className={css.hero}>
+              <button className={css.heroOpen} aria-label={`全屏查看 ${selected.name.zh} 截图 ${shotIndex + 1}`} onClick={() => setLightboxOpen(true)}>
+                <PreviewMedia key={`${selected.id}:${selected.screenshots[shotIndex] ?? selected.screenshots[0] ?? 'missing'}:hero`} skin={selected} src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 大图预览`} kind="hero" />
+              </button>
+              {shotCount > 1 && <><Button className={`${css.heroNav} ${css.heroPrev}`} variant="ghost" icon={<IconChevronLeftOutline14 size={18} />} aria-label="上一张截图" onClick={() => moveShot(-1)} /><Button className={`${css.heroNav} ${css.heroNext}`} variant="ghost" icon={<IconChevronLeftOutline14 size={18} />} aria-label="下一张截图" onClick={() => moveShot(1)} /></>}
+            </div>
+            {selected.screenshots.length > 1 && <div className={css.thumbnails} aria-label="截图选择">
+              {selected.screenshots.map((shot, index) => <Button variant="ghost" key={shot} data-selected={index === shotIndex} onClick={() => { setShotIndex(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shotIndex && <span className={css.thumbnailProgress} key={`${selected.id}:${shotIndex}:${carouselEpoch}`} aria-hidden="true" />}</Button>)}
+            </div>}
           </div>
-          {selected.screenshots.length > 1 && <div className={css.thumbnails} aria-label="截图选择">
-            {selected.screenshots.map((shot, index) => <Button variant="ghost" key={shot} data-selected={index === shotIndex} onClick={() => setShotIndex(index)}><PreviewMedia skin={selected} src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" /></Button>)}
-          </div>}
 
           <div className={css.aboutGrid}>
             <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。</p>}{manualOnly && <p className={css.notice}>该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。</p>}{selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{selected.marketScreenshots?.length && <p className={css.notice}>前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
@@ -750,6 +801,14 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       </main>
         </div>
       </section>
+
+      {lightboxOpen && selected !== undefined && createPortal(<section className={css.lightbox} role="dialog" aria-modal="true" aria-label={`${selected.name.zh} 全屏截图查看`}>
+        <Button className={css.lightboxClose} variant="ghost" icon={<XIcon size={20} />} aria-label="关闭全屏查看" onClick={() => setLightboxOpen(false)} />
+        {shotCount > 1 && <Button className={`${css.lightboxNav} ${css.lightboxPrev}`} variant="ghost" icon={<IconChevronLeftOutline14 size={26} />} aria-label="上一张截图" onClick={() => moveShot(-1)} />}
+        <div className={css.lightboxStage}><PreviewMedia key={`${selected.id}:${selected.screenshots[shotIndex] ?? selected.screenshots[0] ?? 'missing'}:lightbox`} skin={selected} src={selected.screenshots[shotIndex] ?? selected.screenshots[0]} alt={`${selected.name.zh} 全屏截图 ${shotIndex + 1}`} kind="hero" /></div>
+        {shotCount > 1 && <Button className={`${css.lightboxNav} ${css.lightboxNext}`} variant="ghost" icon={<IconChevronLeftOutline14 size={26} />} aria-label="下一张截图" onClick={() => moveShot(1)} />}
+        {shotCount > 1 && <div className={css.lightboxThumbnails} aria-label="全屏截图选择">{selected.screenshots.map((shot, index) => <Button variant="ghost" key={shot} data-selected={index === shotIndex} aria-label={`查看截图 ${index + 1}`} onClick={() => setShotIndex(index)}><PreviewMedia skin={selected} src={shot} alt="" kind="thumbnail" loading="lazy" /></Button>)}</div>}
+      </section>, document.body)}
 
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />
       <Modal
