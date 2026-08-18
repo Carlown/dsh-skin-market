@@ -1,0 +1,50 @@
+id: ayase34.gal-view
+name:
+  zh: gal-view
+  en: gal-view
+author: Ayase34
+description: DSH Web 会话页的 Galgame 风格对话视图：16:9 舞台、对话框、打字机台词与可拖拽场景编辑器。
+repo: https://github.com/Ayase34/gal-view
+package: gal-view
+rowId: gal-view
+category: theme
+tags:
+  - anime
+  - motion
+  - utility
+modes:
+  - light
+  - dark
+install:
+  target: github:Ayase34/gal-view#d002fe0e7051c618a2665af3c653f9838cd6aa8a
+  version: 0.3.3
+  commit: d002fe0e7051c618a2665af3c653f9838cd6aa8a
+compatibility:
+  dsh: unverified
+  platform:
+    - web
+screenshots:
+  - https://raw.githubusercontent.com/Ayase34/gal-view/d002fe0e7051c618a2665af3c653f9838cd6aa8a/image.png
+review:
+  compatibility: unverified
+  preview: verified
+  installation: verified
+health:
+  status: improvements
+  checks:
+    readmeScreenshots: pass
+    compatibility: improve
+    installation: pass
+    installCommand: pass
+    topic: pass
+  suggestions:
+    - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 135
+starsSnapshot: 87
+releaseUpdatedAt: 2026-08-16T09:00:49+09:00
+metadataUpdatedAt: 2026-08-18T06:24:38Z
+starsUpdatedAt: 2026-08-18T06:24:38Z
+updatedAt: 2026-08-18T06:24:38Z
