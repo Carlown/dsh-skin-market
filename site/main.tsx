@@ -4,7 +4,8 @@ import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass, X } from '@phospho
 import { StarIcon } from '@primer/octicons-react'
 import { fetchLiveCatalogWithFallback, REMOTE_CATALOG_URL } from './catalog.ts'
 import { comparePublicCatalogOrder, shouldRenderPublicPreview } from './catalog-order.ts'
-import { MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinCommand, skinPrompt } from './prompts.ts'
+import { CLI_INSTALL_WARNING, MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinCommand, skinPrompt } from './prompts.ts'
+import { displayTitle, githubRepoLabel } from '../src/display-title.ts'
 import './site.css'
 import '../src/client/media-hover.module.css'
 
@@ -33,12 +34,13 @@ interface Skin {
 const GALLERY_INTERVAL_MS = 5600
 
 function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => void; onInstall: () => void }) {
-  const repoLabel = skin.repo.replace(/^https?:\/\/github\.com\//, '')
+  const repoLabel = githubRepoLabel(skin.repo)
+  const title = displayTitle(skin.description)
   return <article className="feed-card">
-    <button className="feed-card-open dsh-skin-media-hover" aria-label={`${skin.name.zh} 界面预览`} onClick={onOpen}>
+    <button className="feed-card-open dsh-skin-media-hover" aria-label={`${title} 界面预览`} onClick={onOpen}>
       <span className="feed-card-media"><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
       <span className="feed-card-copy">
-        <span className="feed-card-title"><strong title={skin.description}>{skin.description}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
+        <span className="feed-card-title"><strong title={skin.description}>{title}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
         <small><span title={repoLabel}>{repoLabel}</span>{skin.review?.installation === 'manual-only' && <span className="status pending">手动安装</span>}</small>
       </span>
     </button>
@@ -185,7 +187,7 @@ function App({ skins }: { skins: Skin[] }) {
     {detailOpen && <div className="browser-overlay" role="presentation">
       <button className="browser-mask" aria-hidden="true" tabIndex={-1} onClick={() => setDetailOpen(false)} />
       <section className="browser-panel" role="dialog" aria-modal="true" aria-label="皮肤详情">
-        <header className="browser-titlebar"><span><strong>皮肤详情</strong><small>{selected.name.zh}</small></span><button className="button outline" onClick={() => setDetailOpen(false)}><X size={15} /> 关闭详情</button></header>
+        <header className="browser-titlebar"><span><strong>皮肤详情</strong><small>{githubRepoLabel(selected.repo)}</small></span><button className="button outline" onClick={() => setDetailOpen(false)}><X size={15} /> 关闭详情</button></header>
         <aside className="catalog" aria-label="皮肤目录">
         <div className="catalog-head">
           <button className="mobile-back modal-home-back" onClick={() => setDetailOpen(false)}><ArrowLeft size={16} /> 返回发现</button>
@@ -196,7 +198,7 @@ function App({ skins }: { skins: Skin[] }) {
         <div className="skin-list">
           {filtered.map(skin => <button className="skin-row" data-selected={skin.id === selected.id} aria-current={skin.id === selected.id ? 'true' : undefined} key={skin.id} onClick={() => { setSelectedId(skin.id); setShot(0) }}>
             <span className="skin-row-preview dsh-skin-media-hover"><PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="list" loading="lazy" /></span>
-            <span className="row-copy"><strong title={skin.description}>{skin.description}</strong><small><span title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span><span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
+            <span className="row-copy"><strong title={skin.description}>{displayTitle(skin.description)}</strong><small><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span><span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
             <span className={skin.review?.installation === 'manual-only' ? 'status pending' : 'status'}>{skin.review?.installation === 'manual-only' ? '需手动安装' : '市场可安装'}</span>
           </button>)}
           {filtered.length === 0 && <p className="no-results">没有匹配的皮肤</p>}
@@ -207,7 +209,7 @@ function App({ skins }: { skins: Skin[] }) {
         <button className="mobile-back" onClick={() => setDetailOpen(false)}><ArrowLeft size={16} /> 返回发现</button>
         <header className="skin-head">
           <div className="avatar"><PreviewMedia key={`${selected.id}:avatar`} skin={selected} src={selected.listScreenshot ?? selected.screenshots[0]} alt="" kind="avatar" /></div>
-          <div className="skin-title"><div><h2>{selected.name.zh}</h2><p>{selected.author}</p></div><p className="description">{selected.description}</p><div className="meta"><span>版本 {selected.install.version}</span><span>DSH {selected.compatibility.dsh}</span><span className={verified ? 'verified' : 'unverified'}>{verified ? '兼容已验证' : '兼容待验证'}</span></div></div>
+          <div className="skin-title"><div><h2>{displayTitle(selected.description)}</h2><p className="repo-id">{githubRepoLabel(selected.repo)}</p></div><div className="meta"><span>版本 {selected.install.version}</span><span>DSH {selected.compatibility.dsh}</span><span className={verified ? 'verified' : 'unverified'}>{verified ? '兼容已验证' : '兼容待验证'}</span></div></div>
         </header>
 
         <div className="detail-actions">
@@ -262,12 +264,12 @@ function App({ skins }: { skins: Skin[] }) {
   </div>
 }
 
-function InstallOption({ label, value, copied, onCopy }: { label: string; value: string; copied: boolean; onCopy: () => void }) {
-  return <div className="install-option"><strong>{label}</strong><div className="copy-capsule"><code title={value}>{value}</code><button aria-label={`复制${label}`} title={`复制${label}`} onClick={onCopy}>{copied ? <Check size={16} /> : <Copy size={16} />}</button></div></div>
+function InstallOption({ label, value, copied, onCopy, note }: { label: string; value: string; copied: boolean; onCopy: () => void; note?: string }) {
+  return <div className="install-option"><strong>{label}</strong><div className="copy-capsule"><code title={value}>{value}</code><button aria-label={`复制${label}`} title={`复制${label}`} onClick={onCopy}>{copied ? <Check size={16} /> : <Copy size={16} />}</button></div>{note && <small>{note}</small>}</div>
 }
 
 function InstallGroup({ title, prompt, command, copyKey, copied, onCopy }: { title?: string; prompt: string; command?: string; copyKey: string; copied: string | null; onCopy: (key: string, value: string) => Promise<void> }) {
-  return <section className="install-group">{title && <h3>{title}</h3>}<InstallOption label="提示词" value={prompt} copied={copied === `${copyKey}:prompt`} onCopy={() => void onCopy(`${copyKey}:prompt`, prompt)} />{command !== undefined && <InstallOption label="命令" value={command} copied={copied === `${copyKey}:command`} onCopy={() => void onCopy(`${copyKey}:command`, command)} />}</section>
+  return <section className="install-group">{title && <h3>{title}</h3>}<InstallOption label="提示词" value={prompt} copied={copied === `${copyKey}:prompt`} onCopy={() => void onCopy(`${copyKey}:prompt`, prompt)} />{command !== undefined && <InstallOption label="命令" value={command} copied={copied === `${copyKey}:command`} onCopy={() => void onCopy(`${copyKey}:command`, command)} note={CLI_INSTALL_WARNING} />}</section>
 }
 
 function Site() {

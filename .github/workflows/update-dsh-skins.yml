@@ -88,6 +88,8 @@ jobs:
           add-paths: |
             registry/skins/*.yml
             data/catalog.json
+            README.md
+            docs/recently-added.md
 
   deploy:
     environment:

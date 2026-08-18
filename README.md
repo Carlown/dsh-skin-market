@@ -17,6 +17,12 @@
 
 查看[近期收录日志](./docs/recently-added.md)
 
+<!-- DSH_SKIN_MARKET_AUTO_STATS:START -->
+当前在线目录收录 **142 款**社区皮肤。
+
+最近一次自动同步：2026-08-18。自动任务会同步 registry、catalog、项目 README 和近期收录日志。
+<!-- DSH_SKIN_MARKET_AUTO_STATS:END -->
+
 ## 安装皮肤市场插件
 
 用命令安装：
@@ -25,28 +31,41 @@
 dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 ```
 
-或者复制下面的提示词给你的 DSH：
+> 安装前请确保已关闭其他皮肤插件，避免冲突；或者使用下面的提示词，让 DSH 先检查冲突再安装，更省心。
+
+<details>
+<summary><strong>复制给 DSH：先检查冲突，再安装皮肤市场</strong></summary>
+
+展开后复制下面的完整提示词：
 
 ```text
-请把 dsh-skin-market 插件安装到 DSH 的 web profile，直接执行下面的命令，不要先去读 GitHub README：
+请把 dsh-skin-market 插件安装到 DSH 的 web profile。不能先安装再检查，必须严格按以下顺序执行：
+
+1. 安装前只读检查 web profile 的 package.json（dependencies 与 dsh.profile.bundles）、profile 的 cordis.patch.yml 和 $DSH_HOME/cordis.patch.yml（如有）。
+2. 从当前启用的 bundles 中识别皮肤、主题或外观插件：排除 @deepseek-ai/dsh-base、@deepseek-ai/dsh-web-app 和 dsh-skin-market；读取候选 package.json 的名称、描述、dsh.client/dsh.bundle 声明，必要时再读 README。无法确定的候选先列出包名和描述。
+3. 如果发现已启用的皮肤插件，列出它们并停在安装前，提醒我先停用以避免冲突；未经我确认不得修改任何 profile 文件，也不得执行安装。
+4. 如果没有冲突，明确说“未检测到已启用的皮肤插件”，然后直接执行：
 
 dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 
-这条命令会安装插件并自动把它注册进 dsh.profile.bundles。安装完成后进行验证以及冲突检测：
+5. 安装后读取 web profile 的 package.json，确认 dependencies 和 dsh.profile.bundles 中都有 dsh-skin-market；缺失则报告安装或注册失败。
+6. 告诉我如何重启 DSH Web，并确认重启后可从“设置 → 皮肤市场”打开。不要替我安装任何皮肤。
 
-1. 验证安装：读取 web profile 的 package.json，确认 dependencies 和 dsh.profile.bundles 里都有 dsh-skin-market；没有则说明注册失败，报告给我。
-2. 只读检查当前启用的皮肤插件：读取 web profile 的 package.json（dsh.profile.bundles 与 dependencies）、cordis.patch.yml 和 $DSH_HOME/cordis.patch.yml（如有）。bundles 中存在、且未被任何 patch 层标记 disabled: true、且不属于 @deepseek-ai/dsh-base、@deepseek-ai/dsh-web-app 和 dsh-skin-market 自身的插件为候选；对每个候选读取其 package.json 描述和 README 判断是否皮肤插件，无法确定的列出包名和描述问我确认。
-3. 若存在已启用的皮肤插件，提醒我它们可能与市场皮肤冲突，建议先在「设置 → 皮肤市场」或 profile 的 cordis.patch.yml 中停用；无论结果如何，未经我确认不得修改任何 profile 文件。
-4. 未发现已启用的皮肤插件时，直接说「未检测到已启用的皮肤插件」。
-
-安装成功后告诉我如何重启 DSH Web 使插件生效。如果上面的安装命令报错（例如 pnpm 不在 PATH、allowBuilds 构建审批、manifest 缺失），再读 https://github.com/kingOfSoySauce/dsh-skin-market 的 README「安装失败时，可以让 DSH 自己排查」一节处理，或把完整报错贴给我。
+如果安装命令报错（例如 pnpm 不在 PATH、allowBuilds 构建审批、manifest 缺失），再读 https://github.com/kingOfSoySauce/dsh-skin-market 的 README「安装失败时，可以让 DSH 自己排查」一节处理，或把完整报错贴给我。
 ```
+
+</details>
 
 安装完成后，重启 DSH Web，打开「设置 → 皮肤市场」。
 
 ### 安装失败时，可以让 DSH 自己排查
 
-皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态，可以把下面的提示词和完整原始报错一起复制给你的 DSH Agent：
+皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态。
+
+<details>
+<summary><strong>复制安装失败排查提示词</strong></summary>
+
+把完整原始报错填入后复制给你的 DSH Agent：
 
 ```text
 请帮我排查 DSH Web 皮肤市场的安装失败。下面是完整原始报错：
@@ -59,6 +78,8 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 2. 只有确认 pnpm 可用后，才检查 profile 的 pnpm-workspace.yaml。若 pnpm 输出了构建审批 key，只把报错中完整、精确的 key 合并到 allowBuilds，对应值设为 true；不要启用 dangerouslyAllowAllBuilds，也不要放宽其他包。不要读取 .env、凭据或聊天记录。
 3. 重新执行原来的皮肤安装命令。完成后验证 profile package.json 依赖、node_modules 中目标包的 package.json、dsh.client/dsh.bundle 声明和 loader 注册项；如果仍失败，请指出具体失败阶段和完整错误，不要把 package manifest missing 当作根因。
 ```
+
+</details>
 
 当前面向 DSH Web `0.1.0-rc.6`。目录中的安装目标固定到收录时的完整 commit。
 
@@ -204,6 +225,8 @@ npm run screenshots:promote -- --skin kingao294.dsh-skin --yes-reviewed
 提升后的 URL 写入条目的 `marketScreenshots`。构建目录时，详情轮播中的市场补录图固定排在前面，仓库自己的 `screenshots` 去重后保持原顺序接在后面；左侧列表和推荐卡片仍优先使用仓库原始第一张图作为封面，仓库没有图片时才使用市场实机图。后续同步不会覆盖补录图。维护者可向市场仓库提交 PR 删除或替换 `marketScreenshots`，也可以先把图片提交到上游仓库，再由市场 PR 移除补录版本。
 
 正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。全量任务会合并 Awesome DSH 与 GitHub `dsh-plugin` Topic 两个发现源；只有 `dsh.client`、但元数据不足以由市场安全注册的皮肤仍会展示，并提供仓库安装说明。具备稳定 package、Web client 声明、row ID 和已构建入口的纯前端皮肤可由市场自动注册，不要求额外提供 `dsh.bundle`。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
+
+全量任务会同时尝试抓取 `README.zh-CN.md`、`README.zh.md`、`README-zh.md`、`README_CN.md` 及 `docs/README.zh*.md` 等中文文档；如果仓库没有单独的中文描述，中文 README 的首段会作为目录描述的回退来源。定时同步还会刷新 README 的目录统计和[近期收录日志](./docs/recently-added.md)。
 
 ## 安全说明
 

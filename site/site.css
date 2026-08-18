@@ -63,12 +63,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .skin-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .feed-card { position: relative; display: flex; width: 100%; height: 100%; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 0%, transparent), 0 0 0 color-mix(in srgb, var(--primary) 0%, transparent); transition: border-color .22s ease, background .22s ease, box-shadow .26s ease-out; }
 .feed-card:hover, .feed-card:focus-within { border-color: color-mix(in srgb, var(--primary) 34%, var(--border-strong)); background: var(--surface-2); box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent), 0 0 10px color-mix(in srgb, var(--primary) 14%, transparent); }
-.feed-card-open { display: flex; width: 100%; min-width: 0; cursor: pointer; flex-direction: column; align-items: stretch; padding: 0; color: inherit; border: 0; background: transparent; text-align: left; }
+.feed-card-open { display: flex; width: 100%; min-width: 0; cursor: pointer; flex-direction: column; align-items: stretch; padding: 0; color: inherit; border: 0; border-radius: 0; background: transparent !important; text-align: left; }
+.feed-card-open:hover, .feed-card-open:focus-visible, .feed-card-open:active { border-radius: 0; background: transparent !important; }
 .feed-card-media { display: block; width: 100%; height: clamp(180px, 18vw, 220px); max-height: 220px; overflow: hidden; background: #090a0b; }
 .feed-card-media > img, .feed-card-media > .preview-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.feed-card-copy { display: grid; width: 100%; min-width: 0; gap: 6px; padding: 12px 14px 10px; }
-.feed-card-title { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 8px; }
-.feed-card-title > strong { min-width: 0; flex: 1; overflow: hidden; font-size: 13px; font-weight: 550; line-height: 19px; text-overflow: ellipsis; white-space: nowrap; }
+.feed-card-copy { display: flex; width: 100%; min-width: 0; flex: 1; flex-direction: column; justify-content: space-between; gap: 6px; padding: 12px 14px 10px; }
+.feed-card-title { display: flex; min-width: 0; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.feed-card-title > strong { display: -webkit-box; min-width: 0; flex: 1; overflow: hidden; font-size: 13px; font-weight: 550; line-height: 19px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
 .feed-card-stats { display: inline-flex; flex: none; align-items: center; gap: 4px; color: var(--caption); font-size: 11px; font-weight: 400; line-height: 18px; white-space: nowrap; }
 .feed-card-copy > small { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 8px; padding-right: 42px; color: var(--caption); font-size: 11px; line-height: 18px; }
 .feed-card-copy > small > span { display: inline-flex; min-width: 0; align-items: center; gap: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -114,7 +115,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .preview-placeholder[data-preview-kind="list"] strong { font-size: 9px; line-height: 12px; }
 .preview-placeholder[data-preview-kind="list"] small { display: none; }
 .row-copy { display: grid; min-width: 0; flex: 1; }
-.row-copy strong { overflow: hidden; font-size: 13px; font-weight: 550; line-height: 21px; text-overflow: ellipsis; white-space: nowrap; }
+.row-copy strong { display: -webkit-box; overflow: hidden; font-size: 13px; font-weight: 550; line-height: 21px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
 .row-copy small { display: flex; min-width: 0; align-items: center; gap: 7px; overflow: hidden; color: var(--caption); font-size: 11px; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
 .row-copy small > span { display: inline-flex; align-items: center; gap: 3px; }
 .row-copy small > span:first-child { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -130,7 +131,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .avatar { display: block; width: 136px; height: 136px; overflow: hidden; border-radius: 10px; background: var(--surface-2); }
 .avatar > img, .avatar > .preview-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
 .skin-title { min-width: 0; align-self: center; }
-.skin-title h2 { margin: 0; font-size: 25px; line-height: 32px; }
+.skin-title h2 { display: -webkit-box; margin: 0; overflow: hidden; font-size: 25px; line-height: 32px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; }
 .skin-title > div > p { margin: 2px 0 0; color: var(--secondary); font-size: 13px; }
 .description { max-width: 700px; margin: 11px 0 0; color: var(--secondary); font-size: 13px; line-height: 21px; }
 .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 10px; color: var(--caption); font-size: 11px; }
@@ -155,6 +156,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .install-group h3 { margin: 0; font-size: 13px; line-height: 20px; }
 .install-option { display: grid; gap: 6px; }
 .install-option > strong { font-size: 12px; font-weight: 550; }
+.install-option > small { color: var(--caption); font-size: 11px; line-height: 17px; }
 .copy-capsule { display: flex; min-width: 0; align-items: center; padding-left: 13px; border: 1px solid var(--border-strong); border-radius: 18px; background: var(--surface); }
 .copy-capsule code { min-width: 0; flex: 1; overflow: hidden; color: var(--secondary); font: 11px/34px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; text-overflow: ellipsis; white-space: nowrap; }
 .copy-capsule button { display: grid; width: 36px; height: 34px; cursor: pointer; flex: none; color: var(--secondary); border: 0; border-left: 1px solid var(--border-strong); border-radius: 0 17px 17px 0; background: transparent; place-items: center; }

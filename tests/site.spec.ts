@@ -7,17 +7,22 @@ describe('static catalog prompts', () => {
     expect(MARKET_PROMPT).toContain(MARKET_CLI_COMMAND)
     expect(MARKET_PROMPT).toContain('web profile')
     expect(MARKET_PROMPT).toContain('不要替我安装任何皮肤')
+    expect(MARKET_PROMPT).toContain('不能先安装再检查')
+    expect(MARKET_PROMPT).toContain('停在安装前')
+    expect(MARKET_PROMPT.indexOf('安装前只读检查')).toBeLessThan(MARKET_PROMPT.indexOf(MARKET_CLI_COMMAND))
   })
 
   it('asks the agent to install the selected skin through the market', () => {
     const prompt = skinPrompt('https://github.com/example/dsh-skin')
-    expect(prompt).toContain('请帮我安装这个 DSH Web 皮肤：https://github.com/example/dsh-skin')
+    expect(prompt).toContain('请安装这个 DSH Web 皮肤：https://github.com/example/dsh-skin')
+    expect(prompt).toContain('必须先检查冲突再安装')
+    expect(prompt).toContain('停在安装前')
   })
 
   it('adds a review-first guard to unverified skin prompts', () => {
     const prompt = skinPrompt('https://github.com/example/dsh-skin', false)
 
-    expect(prompt).toContain('请帮我安装这个 DSH Web 皮肤：https://github.com/example/dsh-skin')
+    expect(prompt).toContain('请安装这个 DSH Web 皮肤：https://github.com/example/dsh-skin')
     expect(prompt).toContain('先只读检查仓库')
     expect(prompt).toContain('等待我确认后再安装')
     expect(prompt).toContain('不要直接安装')

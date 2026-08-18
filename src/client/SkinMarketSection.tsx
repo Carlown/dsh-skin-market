@@ -20,8 +20,9 @@ import css from './SkinMarket.module.css'
 import './media-hover.module.css'
 import { compareCatalogOrder, hasCatalogPreview } from '../catalog-order.ts'
 import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
-import { createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
+import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
+import { displayTitle, githubRepoLabel } from '../display-title.ts'
 import type { CatalogSkin, InstalledClientPlugin, Operation, RuntimeSkin } from './types.ts'
 
 export interface SkinMarketSectionProps {
@@ -603,8 +604,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       <Button variant="ghost" className={`${css.homeCardOpen} dsh-skin-media-hover`} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
         <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
         <span className={css.homeCardCopy}>
-          <span className={css.homeCardTitleRow}><strong title={skin.description}>{skin.description}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
-          <small><span title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</small>
+          <span className={css.homeCardTitleRow}><strong title={skin.description}>{displayTitle(skin.description)}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
+          <small><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</small>
         </span>
       </Button>
       {actionCount > 0 && <div className={css.cardInlineActions} role="group" aria-label={`${skin.name.zh} 操作`}>
@@ -675,7 +676,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         <button type="button" className={css.browserBackdrop} aria-hidden="true" tabIndex={-1} onClick={closeBrowser} />
         <div className={css.browserPanel}>
         <header className={css.browserTitlebar}>
-          <span><strong>{browserOrigin === 'installed' ? '已安装皮肤' : '皮肤详情'}</strong><small>{selected?.name.zh}</small></span>
+          <span><strong>{browserOrigin === 'installed' ? '已安装皮肤' : '皮肤详情'}</strong><small>{selected === undefined ? '' : githubRepoLabel(selected.repo)}</small></span>
           <Button className={`${css.browserClose} ${css.nativeOutline}`} variant="outline" size="sm" icon={<XIcon size={15} />} aria-label="关闭皮肤详情" title="关闭当前详情，返回皮肤市场" onClick={closeBrowser}>关闭详情</Button>
         </header>
       <aside className={css.catalog} aria-label={t('catalog')}>
@@ -721,9 +722,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
               <span className={`${css.skinCardPreview} dsh-skin-media-hover`}><PreviewMedia key={`${skin.id}:${skin.listScreenshot ?? skin.screenshots[0] ?? 'missing'}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" /></span>
               <span className={css.skinCardBody}>
-                <span className={css.cardTitle} title={skin.description}>{skin.description}</span>
+                <span className={css.cardTitle} title={skin.description}>{displayTitle(skin.description)}</span>
                 <span className={css.cardMetaLine}>
-                  <span className={css.cardMeta} title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span>
+                  <span className={css.cardMeta} title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span>
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
                 </span>
               </span>
@@ -749,9 +750,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           <header className={css.detailHeader}>
             <div className={css.skinAvatar}><PreviewMedia key={`${selected.id}:${selected.listScreenshot ?? selected.screenshots[0] ?? 'missing'}:avatar`} skin={selected} src={selected.listScreenshot ?? selected.screenshots[0]} alt="" kind="avatar" /></div>
             <div className={css.titleBlock}>
-              <h2>{selected.name.zh}</h2>
-              <p className={css.author}>{selected.author}</p>
-              <p className={css.description}>{selected.description}</p>
+              <h2>{displayTitle(selected.description)}</h2>
+              <p className={css.author}>{githubRepoLabel(selected.repo)}</p>
               <p className={css.version}>版本 {selected.install.version}<span aria-hidden="true"> · </span>{compatibilityUnverified ? 'DSH 兼容性待验证' : `兼容 DSH ${selected.compatibility.dsh}`}<Pill className={state.activation === 'active' ? `${css.status} ${css.statusActive}` : css.status}>{statusLabel(state)}</Pill></p>
             </div>
           </header>
@@ -822,7 +822,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       >
         <div className={css.installOptions}>
           <div><strong>提示词</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallPrompt(selected)}>{selected === undefined ? '' : createSkinInstallPrompt(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:prompt` ? '提示词已复制' : '复制提示词'} title="复制提示词" onClick={() => void copyInstallOption('prompt')} /></span></div>
-          {!manualOnly && <div><strong>命令</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallCommand(selected)}>{selected === undefined ? '' : createSkinInstallCommand(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:command` ? '命令已复制' : '复制命令'} title="复制命令" onClick={() => void copyInstallOption('command')} /></span></div>}
+          {!manualOnly && <div><strong>命令</strong><span className={css.copyCapsule}><code title={selected === undefined ? '' : createSkinInstallCommand(selected)}>{selected === undefined ? '' : createSkinInstallCommand(selected)}</code><Button className={`${css.nativeOutline} ${css.copyCapsuleButton}`} variant="outline" size="sm" icon={<IconCopyOutline16 />} aria-label={installCopied === `${selected?.id}:command` ? '命令已复制' : '复制命令'} title="复制命令" onClick={() => void copyInstallOption('command')} /></span><small>{CLI_INSTALL_WARNING}</small></div>}
         </div>
       </Modal>
       <Modal open={confirmRestart} onClose={() => { if (!restarting) setConfirmRestart(false) }} title="需要重启 DSH 应用此皮肤" closeLabel="关闭" description={restarting ? '正在重新启动 DSH，请稍候…' : runningAgents === null && !restartCheckFinished ? '正在检查是否有 Agent 运行。状态确认前不能重启。' : runningAgents === null ? '当前 Host 尚未加载安全检查。请确认没有 Agent 正在运行、重要内容已保存；你可以继续完成这一次升级重启。新版本加载后会自动检测 Agent 状态。' : runningAgents > 0 ? `检测到 ${runningAgents} 个 Agent 正在运行，现在不能重启。请等待任务完全结束后再试，否则可能中断任务并导致会话历史无法加载。` : 'Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" disabled={restarting} onClick={() => setConfirmRestart(false)}>稍后</Button><Button className={css.nativePrimary} variant="primary" size="sm" disabled={restarting || (runningAgents === null && !restartCheckFinished) || (runningAgents ?? 0) > 0} onClick={() => void restartNow()}>{restarting ? '正在重启…' : runningAgents === null && !restartCheckFinished ? '正在检查…' : runningAgents === null ? '我已确认无任务，仍然重启' : runningAgents > 0 ? '有任务运行中' : '确认无任务，立即重启'}</Button></>} />

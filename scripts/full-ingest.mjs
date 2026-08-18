@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { parse, stringify } from 'yaml'
 import { permitsCommercialUse } from './license.mjs'
 import { clientEntryPath, inspectSkinHealth } from './skin-health.mjs'
+import { updateProjectDocs } from './update-docs.mjs'
 
 const run = promisify(execFile)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -137,9 +138,42 @@ async function raw(target, sha, path) {
   return fetchText(`https://raw.githubusercontent.com/${target.fullName}/${sha}/${prefix}${path}`)
 }
 
+const chineseReadmePaths = [
+  'README.zh-CN.md',
+  'README.zh_CN.md',
+  'README.zh.md',
+  'README-zh-CN.md',
+  'README-zh.md',
+  'README_CN.md',
+  'README_cn.md',
+  'docs/README.zh-CN.md',
+  'docs/README.zh.md',
+]
+
+async function findChineseReadme(target, sha) {
+  const results = await Promise.all(chineseReadmePaths.map(async path => ({ path, text: await raw(target, sha, path) })))
+  return results.find(result => result.text !== null) ?? { path: null, text: null }
+}
+
 function parsePackage(text) {
   if (text === null) return null
   try { return JSON.parse(text) } catch { return null }
+}
+
+function readmeDescription(text) {
+  if (typeof text !== 'string') return null
+  const blocks = text
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .split(/\n\s*\n/)
+    .map(block => block
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/^\s*#+\s*/gm, '')
+      .replace(/[>*`_~]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim())
+    .filter(block => /[\u3400-\u9fff]/.test(block) && block.length >= 8 && block.length <= 280)
+  return blocks[0] ?? null
 }
 
 function rowId(patchText) {
@@ -260,10 +294,11 @@ async function inspect(plugin, existing) {
   const liveStars = repository.stars
   plugin = { ...plugin, stars: liveStars ?? plugin.stars }
   if (sha === null) return { plugin, target, status: 'blocked', blockers: ['cannot resolve repository HEAD'] }
-  const [packageText, patchText, readme, readmeZh, licenseText, commonShots] = await Promise.all([
-    raw(target, sha, 'package.json'), raw(target, sha, 'cordis.patch.yml'), raw(target, sha, 'README.md'), raw(target, sha, 'README.zh.md'), raw(target, sha, 'LICENSE'), commonScreenshots(target, sha),
+  const [packageText, patchText, readme, chineseReadme, licenseText, commonShots] = await Promise.all([
+    raw(target, sha, 'package.json'), raw(target, sha, 'cordis.patch.yml'), raw(target, sha, 'README.md'), findChineseReadme(target, sha), raw(target, sha, 'LICENSE'), commonScreenshots(target, sha),
   ])
   const pkg = parsePackage(packageText)
+  const readmeZh = chineseReadme.text
   const combinedReadme = `${readme ?? ''}\n${readmeZh ?? ''}`
   const id = rowId(patchText) ?? rowId(combinedReadme)
   const detectedDshVersion = pkg ? compatibility(pkg, combinedReadme) : null
@@ -296,8 +331,8 @@ async function inspect(plugin, existing) {
 
   const displayName = plugin.name.split('#').pop()
   const upstreamDescription = plugin.registryOnly
-    ? pkg.description
-    : plugin.description?.zh ?? plugin.description?.en ?? pkg.description
+    ? prior?.value.description ?? readmeDescription(readmeZh) ?? pkg.description
+    : plugin.description?.zh ?? readmeDescription(readmeZh) ?? plugin.description?.en ?? pkg.description
   const description = typeof upstreamDescription === 'string' && upstreamDescription.trim()
     ? upstreamDescription.trim()
     : prior?.value.description
@@ -350,7 +385,7 @@ async function inspect(plugin, existing) {
     updatedAt: releaseChanged || metadataChanged || starsChanged ? now : prior.value.updatedAt,
   }
   const changed = prior === undefined || JSON.stringify(withoutUpdatedAt(prior.value)) !== JSON.stringify(withoutUpdatedAt(entry))
-  return { plugin, target, sha, prior, changed, starsVerified: liveStars !== null, status: 'ready', entry }
+  return { plugin, target, sha, prior, changed, releaseChanged, metadataChanged, readmeZhPath: chineseReadme.path, starsVerified: liveStars !== null, status: 'ready', entry }
 }
 
 async function main() {
@@ -399,6 +434,7 @@ async function main() {
   const usedRows = new Set(existing.map(item => item.value.rowId))
   const promoted = []
   const updated = []
+  const recentChanges = []
   for (const item of ready) {
     const entry = item.entry
     if (item.prior) {
@@ -420,6 +456,7 @@ async function main() {
     usedIds.add(entry.id); usedPackages.add(entry.package); usedRows.add(entry.rowId)
     const filename = item.prior?.file ?? `${item.target.owner}__${item.target.repo}${item.target.subpath ? `--${item.target.subpath.replaceAll('/', '--')}` : ''}.yml`.replace(/[^A-Za-z0-9_.-]/g, '_')
     if (!item.prior || item.changed) await writeFile(join(registryDir, filename), stringify(entry, { lineWidth: 0 }))
+    if (!item.prior || item.releaseChanged || item.metadataChanged) recentChanges.push(entry)
     if (item.prior) {
       item.status = item.changed ? 'updated' : 'unchanged'
       if (item.changed) updated.push({ id: entry.id, file: filename, repository: item.plugin.url, version: entry.install.version, commit: entry.install.commit, stars: entry.starsSnapshot })
@@ -430,9 +467,10 @@ async function main() {
   }
 
   await mkdir(outputDir, { recursive: true })
+  const generatedAt = new Date().toISOString()
   const summary = {
     schemaVersion: 1,
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     source: sourceUrl,
     sources: [sourceUrl, 'GitHub Search API: topic:dsh-plugin'],
     githubDiscovered: githubDiscovered.length,
@@ -444,10 +482,12 @@ async function main() {
     promoted: promoted.length,
     blocked: results.filter(item => item.status === 'blocked').length,
     starsVerified: verifiedStarsRepositories.size,
+    chineseReadmes: results.filter(item => item.readmeZhPath !== null).length,
     promotions: promoted,
     updates: updated,
     results,
   }
+  await updateProjectDocs({ root, catalogCount: existing.length + promoted.length, syncAt: generatedAt, changes: recentChanges })
   await writeFile(join(outputDir, 'results.json'), `${JSON.stringify(summary, null, 2)}\n`)
   const blockedRows = results.filter(item => item.status === 'blocked').map(item => `| [${item.plugin.owner}/${item.plugin.name}](${item.plugin.url}) | ${item.plugin.stars ?? 0} | ${(item.blockers ?? []).join('; ')} |`)
   await writeFile(join(outputDir, 'report.md'), `# Full skin ingestion report\n\n- Candidates and registered repositories checked: ${selected.length}\n- Repositories with Stars verified directly from GitHub: ${summary.starsVerified}\n- Existing entries updated: ${summary.updated}\n- Existing entries unchanged: ${summary.unchanged}\n- Newly promoted: ${summary.promoted}\n- Total registry entries: ${summary.totalRegistry}\n- Blocked: ${summary.blocked}\n\nClient-only plugins with a verified package, DSH client manifest, loader row ID, and committed client entry can be registered automatically by the market. A missing DSH compatibility declaration is reported independently as a warning and does not by itself disable market installation. Repositories without a real screenshot use a clearly labelled repository-card fallback.\n\n## Updated\n\n${updated.map(item => `- ${item.stars} stars — [${item.id}](${item.repository}) → ${item.version} at \`${item.commit.slice(0, 12)}\``).join('\n') || '- None'}\n\n## Promoted\n\n${promoted.map(item => `- ${item.stars} stars — [${item.id}](${item.repository}) → \`${item.file}\``).join('\n') || '- None'}\n\n## Blocked\n\n| Candidate | Stars | Reason |\n|---|---:|---|\n${blockedRows.join('\n')}\n`)

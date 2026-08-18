@@ -14,6 +14,7 @@ const headers = {
 }
 const appearancePattern = /(?:\bskin\b|\btheme\b|\bwallpaper\b|皮肤|主题|壁纸|外观)/i
 const namePattern = /(?:skin|theme|wallpaper|background|deep-whale|transparent|translucent|liquid-glass)/i
+const chineseReadmePaths = ['README.zh-CN.md', 'README.zh_CN.md', 'README.zh.md', 'README-zh-CN.md', 'README-zh.md', 'README_CN.md', 'README_cn.md', 'docs/README.zh-CN.md', 'docs/README.zh.md']
 
 async function json(url) {
   const response = await fetch(url, { headers, signal: AbortSignal.timeout(20000) })
@@ -29,6 +30,11 @@ async function raw(repository, branch, path) {
     if (!response.ok) return null
     return response.text()
   } catch { return null }
+}
+
+async function chineseReadme(repository, branch) {
+  const results = await Promise.all(chineseReadmePaths.map(async path => ({ path, text: await raw(repository, branch, path) })))
+  return results.find(result => result.text !== null)?.text ?? null
 }
 
 function packageSignals(text) {
@@ -48,7 +54,7 @@ async function inspect(repository) {
   const [packageText, readme, readmeZh, dshSkin, skin, patch] = await Promise.all([
     raw(repository.full_name, repository.default_branch, 'package.json'),
     raw(repository.full_name, repository.default_branch, 'README.md'),
-    raw(repository.full_name, repository.default_branch, 'README.zh.md'),
+    chineseReadme(repository.full_name, repository.default_branch),
     raw(repository.full_name, repository.default_branch, 'dsh-skin.json'),
     raw(repository.full_name, repository.default_branch, 'skin.json'),
     raw(repository.full_name, repository.default_branch, 'cordis.patch.yml'),
