@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-market",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Native skin marketplace and lifecycle manager for DeepSeek Harness",
   "type": "module",
   "main": "lib/index.js",
@@ -13,6 +13,7 @@
     "dev": "vite --config vite.preview.config.ts",
     "dev:site": "vite --config vite.site.config.ts",
     "registry": "node scripts/build-registry.mjs",
+    "registry:check": "node scripts/build-registry.mjs --check",
     "crawl:smoke": "node scripts/crawl-smoke.mjs",
     "crawl:top-stars": "node scripts/crawl-top-stars.mjs",
     "crawl:full-discovery": "node scripts/crawl-top-stars.mjs",

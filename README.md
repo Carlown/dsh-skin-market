@@ -8,6 +8,10 @@
 
 [点击查看在线皮肤市场](https://kingofsoysauce.github.io/dsh-skin-market/)
 
+## 近期收录
+
+想了解最近加入市场的社区皮肤？查看[近期收录](./docs/recently-added.md)，按时间倒序浏览皮肤名称、GitHub 仓库和预览图。
+
 在线页面仅用于浏览皮肤。需要安装、使用、更新或卸载皮肤时，请先安装下面的皮肤市场插件。
 
 ## 安装皮肤市场
@@ -81,15 +85,17 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 3. 解析准备收录版本对应的完整 40 位 commit SHA。安装目标必须固定到该 SHA，禁止使用 main、master、HEAD 或其他可变分支。
 4. 不要猜测皮肤名、包名、rowId、许可证、兼容版本或素材授权。缺少关键信息时先列出缺项，不要创建虚假条目。
 5. 预览图只选择仓库内真实截图，使用固定 commit 的 GitHub raw HTTPS 地址；不要使用 SVG、data URI、第三方图床或带追踪参数的 URL。
-6. fork 或 clone 目标目录仓库并新建分支；按照 registry/skin.schema.json，在 registry/skins 下新增一个独立 YAML。不要修改无关文件，也不要覆盖已有条目。
-7. 在目标目录仓库根目录运行 npm run registry 和相关测试。不得安装到我的真实 DSH profile，不得读取 .env、凭据、聊天记录或工作区外的私密文件。
-8. 检查 git diff，提交变更并向目标目录仓库创建 PR。PR 标题使用“feat(registry): add <皮肤名>”，正文列出仓库、子包、版本、commit、许可证、预览来源、兼容性、自动检查结果和仍需人工确认的风险。
+6. fork 或 clone 目标目录仓库并新建分支；按照 registry/skin.schema.json，在 registry/skins 下只新增一个独立 YAML。不要修改或提交生成的 data/catalog.json，也不要覆盖已有条目。
+7. 在目标目录仓库根目录运行 npm run registry:check 和相关测试。这个检查只验证 registry，不会改写生成文件。不得安装到我的真实 DSH profile，不得读取 .env、凭据、聊天记录或工作区外的私密文件。
+8. 检查 git diff --name-only，确认变更只包含 registry/skins/<条目文件>.yml；提交变更并向目标目录仓库创建 PR。PR 标题使用“feat(registry): add <皮肤名>”，正文列出仓库、子包、版本、commit、许可证、预览来源、兼容性、自动检查结果和仍需人工确认的风险。
 9. 创建 PR 后返回 PR 链接；如果没有 GitHub 权限或需要登录，只准备好分支、commit 和可复制的 PR 内容，并明确告诉我下一步。
 
 收录不等于安全认证。不要声称该皮肤已被 DSH 官方、安全团队或市场背书。
 ```
 
 皮肤市场里的「提交皮肤」也可以根据仓库地址生成这段提示词。
+
+`registry/skins/` 是社区提交的唯一事实来源，每个皮肤一个 YAML 文件。`data/catalog.json` 是生成文件，不需要在社区 PR 中维护；PR 合并到 `main` 后会由仓库自动重生成。这样新增皮肤之间不会因为共同编辑一个目录文件而反复冲突。
 
 ## 收录要求
 

@@ -17,6 +17,7 @@ import {
   Pill,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import css from './SkinMarket.module.css'
+import { compareCatalogOrder, hasCatalogPreview } from '../catalog-order.ts'
 import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
@@ -127,18 +128,11 @@ function displayDate(value: string): string {
  * the upstream entry still carries the repository-card marker.
  */
 export function hasSkinPreview(skin: Pick<CatalogSkin, 'review' | 'marketScreenshots' | 'listScreenshot' | 'screenshots'>): boolean {
-  const hasMarketScreenshots = (skin.marketScreenshots?.length ?? 0) > 0
-  const hasScreenshots = hasMarketScreenshots || skin.listScreenshot !== undefined || skin.screenshots.length > 0
-  return hasScreenshots && (hasMarketScreenshots || skin.review?.preview !== 'repository-card')
+  return hasCatalogPreview(skin)
 }
 
 export function compareSkinOrder(a: CatalogSkin, b: CatalogSkin, sortBy: 'stars' | 'latest'): number {
-  const aHasPreview = hasSkinPreview(a)
-  const bHasPreview = hasSkinPreview(b)
-  if (aHasPreview !== bHasPreview) return aHasPreview ? -1 : 1
-  return sortBy === 'latest'
-    ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt)
-    : b.githubStars - a.githubStars
+  return compareCatalogOrder(a, b, sortBy, skin => skin.githubStars, skin => skin.releaseUpdatedAt)
 }
 
 interface PreviewMediaProps {
@@ -204,6 +198,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
   const skinListRef = useRef<HTMLDivElement | null>(null)
   const homeRef = useRef<HTMLElement | null>(null)
+  const detailRef = useRef<HTMLElement | null>(null)
   const pendingScrollAnchor = useRef<ListScrollAnchor | null>(null)
   const skinsRef = useRef<CatalogSkin[]>([])
   const selectedIdRef = useRef('')
@@ -331,6 +326,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     restoreListScroll(skinListRef.current, pendingScrollAnchor.current)
     pendingScrollAnchor.current = null
   }, [skins])
+  useLayoutEffect(() => {
+    if (detailRef.current !== null) detailRef.current.scrollTop = 0
+  }, [selectedId])
   useEffect(() => {
     const url = new URL(window.location.href)
     if (!url.searchParams.has(RELOAD_PARAM)) return
@@ -535,7 +533,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     await navigator.clipboard.writeText(method === 'prompt' ? createSkinInstallPrompt(selected) : createSkinInstallCommand(selected))
     setInstallCopied(`${selected.id}:${method}`)
   }
-  const renderHomeCard = (skin: CatalogSkin, location: 'installed' | 'discover', feedSize?: number) => {
+  const renderHomeCard = (skin: CatalogSkin, location: 'installed' | 'discover') => {
     const itemState = runtimeFor(states, skin.id)
     const cardMutation = mutation?.skinId === skin.id ? mutation : null
     const needsInstall = itemState.installation === 'missing' || itemState.installation === 'broken'
@@ -554,12 +552,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             ? '已安装'
             : null
     const open = () => location === 'installed' ? openInstalledBrowser(skin.id) : openBrowser(skin.id, 'discover')
-    return <article className={css.homeCard} data-active={itemState.activation === 'active' ? 'true' : undefined} data-feed-size={feedSize} data-actions={actionCount} key={`${location}:${skin.id}`}>
+    return <article className={css.homeCard} data-active={itemState.activation === 'active' ? 'true' : undefined} data-actions={actionCount} key={`${location}:${skin.id}`}>
       <Button variant="ghost" className={css.homeCardOpen} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
         <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
         <span className={css.homeCardCopy}>
-          <span className={css.homeCardTitleRow}><strong title={skin.name.zh}>{skin.name.zh}</strong>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</span>
-          <small><span>{skin.author}</span>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</small>
+          <span className={css.homeCardTitleRow}><strong title={skin.description}>{skin.description}</strong>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</span>
+          <small><span title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</small>
         </span>
       </Button>
       {actionCount > 0 && <div className={css.cardInlineActions} role="group" aria-label={`${skin.name.zh} 操作`}>
@@ -618,7 +616,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               <Button className={css.sortButton} variant="ghost" size="sm" onClick={() => setSortBy(value => value === 'stars' ? 'latest' : 'stars')}>{sortBy === 'stars' ? 'Stars' : '最新'} <IconChevronDownOutline14 /></Button>
             </div>
             {catalogLoading && skins.length === 0 ? <div className={css.homeLoading}><IconLoadingOutline16 /> 正在加载皮肤…</div> : visibleDiscoverySkins.length > 0 ? <div className={css.discoveryGrid}>
-              {visibleDiscoverySkins.map((skin, index) => renderHomeCard(skin, 'discover', index % 3))}
+              {visibleDiscoverySkins.map(skin => renderHomeCard(skin, 'discover'))}
             </div> : <p className={css.empty}>没有匹配的皮肤</p>}
             {error !== null && !browserOpen && <div className={css.homeError} role="alert">{error}</div>}
             {!catalogLoading && homeVisibleCount < discoverySkins.length && <div className={css.homeLoadMore} aria-hidden="true"><span /><span /></div>}
@@ -676,9 +674,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
               <PreviewMedia key={`${skin.id}:${skin.listScreenshot ?? skin.screenshots[0] ?? 'missing'}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" />
               <span className={css.skinCardBody}>
-                <span className={css.cardTitle}>{skin.name.zh}</span>
+                <span className={css.cardTitle} title={skin.description}>{skin.description}</span>
                 <span className={css.cardMetaLine}>
-                  <span className={css.cardMeta}>{skin.author}</span>
+                  <span className={css.cardMeta} title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span>
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
                 </span>
               </span>
@@ -698,7 +696,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         </div>
       </aside>
 
-      <main className={css.detail}>
+      <main className={css.detail} ref={detailRef} aria-label="皮肤详情内容">
         {loading ? <div className={css.detailSkeleton} role="status" aria-label="正在加载皮肤详情"><p className={css.srOnly}>正在加载皮肤详情…</p><div><span /><i /></div><span /><span /><span /></div> : selected !== undefined && state !== null ? <>
           <Button className={`${css.mobileBack} ${css.nativeOutline}`} variant="outline" size="sm" icon={<IconChevronLeftOutline14 />} onClick={() => browserOrigin === 'discover' ? closeBrowser() : setShowDetail(false)}>{browserOrigin === 'discover' ? '返回发现' : '返回列表'}</Button>
           <header className={css.detailHeader}>
@@ -747,7 +745,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             <aside className={css.changelog}><h3>仓库健康</h3>{selected.health ? <><ol className={css.healthList}>{Object.entries(selected.health.checks).map(([key, value]) => <li key={key}><strong>{healthLabels[key as keyof typeof healthLabels]}</strong><span data-health={value}>{value === 'pass' ? '符合要求' : '建议完善'}</span></li>)}</ol>{selected.health.suggestions.map(suggestion => <p className={css.healthSuggestion} key={suggestion}>{suggestion}</p>)}</> : <p className={css.healthSuggestion}>等待下一次仓库健康扫描。</p>}<h3 className={css.collectionTitle}>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
           </div>
 
-          <section className={css.recommendations}><h3>更多推荐</h3><div>{recommendations.map(skin => <Button variant="ghost" key={skin.id} onClick={() => select(skin.id)}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="recommendation" loading="lazy" /><span><strong>{skin.name.zh}</strong><small><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</small></span></Button>)}</div></section>
+          <section className={css.recommendations}><h3>更多推荐</h3><div>{recommendations.map(skin => renderHomeCard(skin, 'discover'))}</div></section>
         </> : <div className={css.loading}>暂无可展示的皮肤详情</div>}
       </main>
         </div>

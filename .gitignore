@@ -6,6 +6,7 @@ node_modules/
 coverage/
 .preview/
 dist-site/
+downloads/
 design-qa-*.png
 design-qa.md
 收录.md

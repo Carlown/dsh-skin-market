@@ -1,0 +1,38 @@
+# 近期收录
+
+这里记录 DSH 皮肤市场在首批全量目录之后手动新增的社区皮肤，按进入市场主分支的时间倒序排列。首批全量目录中的 36 个条目、自动抓取批次和单纯的实机截图补录不在这里重复列出。
+
+安装版本固定到对应收录 commit；预览图使用 registry 中记录的仓库素材。收录市场不等于 DSH 官方、安全团队或市场对皮肤的安全背书；兼容性和素材授权状态请以皮肤仓库说明为准。
+
+## 2026-08-18 · Open Sea Skin
+
+[Open Sea 海洋皮肤](https://github.com/d-dev0101/open-sea-skin) 为 DSH Web 提供实时 WebGPU 海洋背景、玻璃界面和左下角调节控制。
+
+- GitHub：[d-dev0101/open-sea-skin](https://github.com/d-dev0101/open-sea-skin)
+- 收录版本：`1.2.0`
+- 固定 commit：`5ae54402ec6d4c961d41aee8ed786280799712c7`
+
+![Open Sea Skin 在 DSH Web 中的预览](https://raw.githubusercontent.com/d-dev0101/open-sea-skin/5ae54402ec6d4c961d41aee8ed786280799712c7/docs/marketplace/open-sea-harness-cover.png)
+
+## 2026-08-17 · dsh-aemeath
+
+[dsh-aemeath](https://github.com/hachimi-ai/dsh-aemeath) 是鸣潮爱弥斯主题皮肤，包含冰蓝粉紫壁纸、半透明界面和状态联动像素桌宠。
+
+- GitHub：[hachimi-ai/dsh-aemeath](https://github.com/hachimi-ai/dsh-aemeath)
+- 收录版本：`0.1.0`
+- 固定 commit：`f58eef75dcadb5aeaee9e78542e7e1d9ba43f821`
+- 兼容性：仓库尚未明确声明已验证的 DSH Web 版本
+
+![dsh-aemeath 预览](https://raw.githubusercontent.com/hachimi-ai/dsh-aemeath/f58eef75dcadb5aeaee9e78542e7e1d9ba43f821/image/image1.png)
+
+## 2026-08-17 · Denia · Void Bubble
+
+[Denia · Void Bubble](https://github.com/Ewnscat-ya/dsh-client-ui-skin-denia) 是鸣潮达妮娅主题皮肤，提供亮暗双形态、玻璃卡片、泡泡粒子、锁链边框和侧边角色布景。
+
+- GitHub：[Ewnscat-ya/dsh-client-ui-skin-denia](https://github.com/Ewnscat-ya/dsh-client-ui-skin-denia)
+- 收录版本：`0.0.1`
+- 固定 commit：`41a64c8984bed21483cf06285532d1641a52dc91`
+- 兼容性：仓库尚未明确声明已验证的 DSH Web 版本
+- 授权提示：仓库声明为 CC BY-NC-SA-4.0，角色和美术素材归原权利人所有
+
+![Denia · Void Bubble 预览](https://raw.githubusercontent.com/Ewnscat-ya/dsh-client-ui-skin-denia/41a64c8984bed21483cf06285532d1641a52dc91/preview/light.webp)

@@ -1,0 +1,73 @@
+name: Validate registry submission
+
+on:
+  pull_request:
+    paths:
+      - 'registry/skins/**'
+      - 'registry/skin.schema.json'
+      - 'data/catalog.json'
+      - 'scripts/build-registry.mjs'
+      - 'src/client/submission.ts'
+      - 'tests/submission.spec.ts'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate registry entries without writing generated files
+        run: npm run registry:check
+
+      - name: Run submission prompt smoke tests
+        run: npm run smoke:submission
+
+      - name: Reject generated catalog changes in community PRs
+        if: github.event.pull_request.head.ref != 'automation/dsh-skin-registry'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -Fxq 'data/catalog.json'; then
+            echo 'Community registry PRs must not modify generated data/catalog.json.'
+            echo 'Add or update only registry/skins/<entry>.yml; main will regenerate the catalog after merge.'
+            exit 1
+          fi
+
+      - name: Enforce one-file community registry submissions
+        if: github.event.pull_request.head.ref != 'automation/dsh-skin-registry'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          changed_files="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+          if ! printf '%s\n' "$changed_files" | grep -q '^registry/skins/'; then
+            exit 0
+          fi
+
+          registry_file_count="$(printf '%s\n' "$changed_files" | awk '/^registry\/skins\/[^/]+\.yml$/ { count++ } END { print count + 0 }')"
+          invalid_files="$(printf '%s\n' "$changed_files" | grep -vE '^registry/skins/[^/]+\.yml$' || true)"
+          if [ "$registry_file_count" -ne 1 ] || [ -n "$invalid_files" ]; then
+            echo 'Community registry submissions must change exactly one registry/skins/<entry>.yml file.'
+            printf 'Changed files:\n%s\n' "$changed_files"
+            exit 1
+          fi

@@ -6,6 +6,7 @@ import { parse } from 'yaml'
 import { mergeScreenshots } from './registry-screenshots.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const checkOnly = process.argv.includes('--check')
 const schema = JSON.parse(await readFile(join(root, 'registry/skin.schema.json'), 'utf8'))
 const ajv = new Ajv({ allErrors: true, strict: false, validateFormats: false })
 const validate = ajv.compile(schema)
@@ -54,5 +55,5 @@ const catalog = {
   generatedAt,
   skins: sortedSkins,
 }
-await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`)
-console.log(`validated ${skins.length} skins`)
+if (!checkOnly) await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`)
+console.log(`validated ${skins.length} skins${checkOnly ? ' (catalog not written)' : ''}`)
