@@ -15,6 +15,8 @@
 
 ### 近期收录
 
+- 2026-08-18：[dsh-endfield-ui](https://github.com/rison114514/dsh-endfield-ui)（`0.5.0`）——终末地工业风 DSH Web 工作台主题，安装版本固定到 commit `7993d607`。
+
 查看[近期收录日志](./docs/recently-added.md)
 
 <!-- DSH_SKIN_MARKET_AUTO_STATS:START -->
