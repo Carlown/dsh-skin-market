@@ -28,7 +28,18 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 或者复制下面的提示词给你的 DSH：
 
 ```text
-请帮我把这个插件安装到 DSH 的 web profile：https://github.com/kingOfSoySauce/dsh-skin-market。安装完成后告诉我如何重启 DSH Web，并确认可以从“设置 → 皮肤市场”打开它。不要替我安装任何皮肤。
+请把 dsh-skin-market 插件安装到 DSH 的 web profile，直接执行下面的命令，不要先去读 GitHub README：
+
+dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
+
+这条命令会安装插件并自动把它注册进 dsh.profile.bundles。安装完成后进行验证以及冲突检测：
+
+1. 验证安装：读取 web profile 的 package.json，确认 dependencies 和 dsh.profile.bundles 里都有 dsh-skin-market；没有则说明注册失败，报告给我。
+2. 只读检查当前启用的皮肤插件：读取 web profile 的 package.json（dsh.profile.bundles 与 dependencies）、cordis.patch.yml 和 $DSH_HOME/cordis.patch.yml（如有）。bundles 中存在、且未被任何 patch 层标记 disabled: true、且不属于 @deepseek-ai/dsh-base、@deepseek-ai/dsh-web-app 和 dsh-skin-market 自身的插件为候选；对每个候选读取其 package.json 描述和 README 判断是否皮肤插件，无法确定的列出包名和描述问我确认。
+3. 若存在已启用的皮肤插件，提醒我它们可能与市场皮肤冲突，建议先在「设置 → 皮肤市场」或 profile 的 cordis.patch.yml 中停用；无论结果如何，未经我确认不得修改任何 profile 文件。
+4. 未发现已启用的皮肤插件时，直接说「未检测到已启用的皮肤插件」。
+
+安装成功后告诉我如何重启 DSH Web 使插件生效。如果上面的安装命令报错（例如 pnpm 不在 PATH、allowBuilds 构建审批、manifest 缺失），再读 https://github.com/kingOfSoySauce/dsh-skin-market 的 README「安装失败时，可以让 DSH 自己排查」一节处理，或把完整报错贴给我。
 ```
 
 安装完成后，重启 DSH Web，打开「设置 → 皮肤市场」。
