@@ -15,7 +15,7 @@ vi.mock('@deepseek-ai/dsh-client-ui-primitives', () => {
   }
 })
 
-import { CATALOG_BATCH_SIZE, captureListScroll, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
+import { CATALOG_BATCH_SIZE, captureListScroll, compareSkinOrder, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
 import { createClientSkinRuntime, missingPrimitives, switchClientSkin } from '../../src/client/index.ts'
 import { createSkinInstallCommand, createSkinInstallPrompt } from '../../src/client/submission.ts'
 import type { CatalogSkin } from '../../src/client/types.ts'
@@ -35,6 +35,27 @@ async function openSkinCard(name: RegExp = /测试皮肤 界面预览/) {
 }
 
 describe('client market', () => {
+  it('puts skins without a usable preview after previewed skins before comparing stars', () => {
+    const noPreview = {
+      ...skin,
+      id: 'test.no-preview',
+      githubStars: 999,
+      review: { compatibility: 'verified' as const, preview: 'repository-card' as const, installation: 'verified' as const },
+    }
+    const supplemented = {
+      ...skin,
+      id: 'test.supplemented',
+      githubStars: 1,
+      review: { compatibility: 'verified' as const, preview: 'repository-card' as const, installation: 'verified' as const },
+      marketScreenshots: ['https://example.com/market-preview.png'],
+    }
+
+    expect([noPreview, supplemented].sort((a, b) => compareSkinOrder(a, b, 'stars')).map(item => item.id)).toEqual([
+      supplemented.id,
+      noPreview.id,
+    ])
+  })
+
   it('restores the visible list anchor after background reordering', () => {
     const list = document.createElement('div')
     const card = document.createElement('button')
@@ -647,6 +668,7 @@ describe('client market', () => {
       listScreenshot: upstreamCover,
       marketScreenshots: [market],
       screenshots: [market, upstreamCover],
+      review: { compatibility: 'verified' as const, preview: 'repository-card' as const, installation: 'verified' as const },
     }
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [supplemented] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)

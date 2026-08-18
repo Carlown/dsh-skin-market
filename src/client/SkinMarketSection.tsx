@@ -121,6 +121,26 @@ function displayDate(value: string): string {
   return Number.isNaN(date.getTime()) ? '未知' : new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium' }).format(date)
 }
 
+/**
+ * `screenshots` can contain a GitHub repository card for entries that have no
+ * usable preview. Market-supplemented screenshots are real previews even if
+ * the upstream entry still carries the repository-card marker.
+ */
+export function hasSkinPreview(skin: Pick<CatalogSkin, 'review' | 'marketScreenshots' | 'listScreenshot' | 'screenshots'>): boolean {
+  const hasMarketScreenshots = (skin.marketScreenshots?.length ?? 0) > 0
+  const hasScreenshots = hasMarketScreenshots || skin.listScreenshot !== undefined || skin.screenshots.length > 0
+  return hasScreenshots && (hasMarketScreenshots || skin.review?.preview !== 'repository-card')
+}
+
+export function compareSkinOrder(a: CatalogSkin, b: CatalogSkin, sortBy: 'stars' | 'latest'): number {
+  const aHasPreview = hasSkinPreview(a)
+  const bHasPreview = hasSkinPreview(b)
+  if (aHasPreview !== bHasPreview) return aHasPreview ? -1 : 1
+  return sortBy === 'latest'
+    ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt)
+    : b.githubStars - a.githubStars
+}
+
 interface PreviewMediaProps {
   skin: CatalogSkin
   src?: string
@@ -131,7 +151,8 @@ interface PreviewMediaProps {
 
 function PreviewMedia({ skin, src, alt, kind, loading }: PreviewMediaProps) {
   const [failed, setFailed] = useState(false)
-  const placeholder = skin.review?.preview === 'repository-card' || src === undefined || failed
+  const hasMarketScreenshots = (skin.marketScreenshots?.length ?? 0) > 0
+  const placeholder = (!hasMarketScreenshots && skin.review?.preview === 'repository-card') || src === undefined || failed
   if (placeholder) return <div className={css.previewPlaceholder} data-preview-kind={kind} role="img" aria-label={`${skin.name.zh} 暂无界面截图`}><MarkGithubIcon aria-hidden="true" /><strong>{skin.author}</strong><small>暂无界面截图</small></div>
   return <img src={src} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => setFailed(true)} />
 }
@@ -362,7 +383,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     if (!haystack.includes(query.trim().toLowerCase())) return false
     if (filter === 'installed') return runtimeFor(states, skin.id).installation !== 'missing'
     return true
-  }).sort((a, b) => sortBy === 'latest' ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt) : b.githubStars - a.githubStars), [skins, states, filter, query, sortBy])
+  }).sort((a, b) => compareSkinOrder(a, b, sortBy)), [skins, states, filter, query, sortBy])
   const visibleSkins = useMemo(() => {
     const visible = filtered.slice(0, visibleCount)
     const selectedSkin = filtered.find(skin => skin.id === selectedId)
@@ -381,7 +402,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const discoverySkins = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     return haystack.includes(homeQuery.trim().toLowerCase())
-  }).sort((a, b) => sortBy === 'latest' ? Date.parse(b.releaseUpdatedAt) - Date.parse(a.releaseUpdatedAt) : b.githubStars - a.githubStars), [homeQuery, skins, sortBy])
+  }).sort((a, b) => compareSkinOrder(a, b, sortBy)), [homeQuery, skins, sortBy])
   const visibleDiscoverySkins = useMemo(() => discoverySkins.slice(0, homeVisibleCount), [discoverySkins, homeVisibleCount])
   const installedRowSkins = installedSkins.length > installedSlots ? installedSkins.slice(0, Math.max(1, installedSlots - 1)) : installedSkins
   const installedOverflow = installedSkins.length > installedRowSkins.length
@@ -722,7 +743,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           </div>}
 
           <div className={css.aboutGrid}>
-            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。</p>}{manualOnly && <p className={css.notice}>该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。</p>}{selected.review?.preview === 'repository-card' && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{selected.marketScreenshots?.length && <p className={css.notice}>前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
+            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。</p>}{manualOnly && <p className={css.notice}>该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。</p>}{selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{selected.marketScreenshots?.length && <p className={css.notice}>前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
             <aside className={css.changelog}><h3>仓库健康</h3>{selected.health ? <><ol className={css.healthList}>{Object.entries(selected.health.checks).map(([key, value]) => <li key={key}><strong>{healthLabels[key as keyof typeof healthLabels]}</strong><span data-health={value}>{value === 'pass' ? '符合要求' : '建议完善'}</span></li>)}</ol>{selected.health.suggestions.map(suggestion => <p className={css.healthSuggestion} key={suggestion}>{suggestion}</p>)}</> : <p className={css.healthSuggestion}>等待下一次仓库健康扫描。</p>}<h3 className={css.collectionTitle}>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
           </div>
 
