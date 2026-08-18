@@ -556,8 +556,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       <Button variant="ghost" className={css.homeCardOpen} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
         <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
         <span className={css.homeCardCopy}>
-          <span className={css.homeCardTitleRow}><strong title={skin.description}>{skin.description}</strong>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</span>
-          <small><span title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</small>
+          <span className={css.homeCardTitleRow}><strong title={skin.description}>{skin.description}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
+          <small><span title={skin.repo.replace(/^https?:\/\/github\.com\//, '')}>{skin.repo.replace(/^https?:\/\/github\.com\//, '')}</span>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</small>
         </span>
       </Button>
       {actionCount > 0 && <div className={css.cardInlineActions} role="group" aria-label={`${skin.name.zh} 操作`}>

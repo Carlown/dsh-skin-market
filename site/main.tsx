@@ -35,8 +35,8 @@ function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => vo
     <button className="feed-card-open" aria-label={`${skin.name.zh} 界面预览`} onClick={onOpen}>
       <span className="feed-card-media"><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
       <span className="feed-card-copy">
-        <span className="feed-card-title"><strong title={skin.description}>{skin.description}</strong>{skin.review?.installation === 'manual-only' && <span className="status pending">手动安装</span>}</span>
-        <small><span title={repoLabel}>{repoLabel}</span><span><StarIcon size={12} /> {skin.starsSnapshot}</span></small>
+        <span className="feed-card-title"><strong title={skin.description}>{skin.description}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
+        <small><span title={repoLabel}>{repoLabel}</span>{skin.review?.installation === 'manual-only' && <span className="status pending">手动安装</span>}</small>
       </span>
     </button>
     <button className="card-install" onClick={onInstall}>安装</button>
