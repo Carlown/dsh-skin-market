@@ -9,10 +9,10 @@ package: dsh-skin-kamisato
 rowId: skin-kamisato
 category: theme
 tags:
-  - token-theme
+- token-theme
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:Danieltoraji/dsh-skin-kamisato#bf9902e49b42d213180de1a4b8b0dd4574a5ca66
   version: 1.0.0
@@ -20,8 +20,9 @@ install:
 compatibility:
   dsh: unverified
   platform:
-    - web
-screenshots: []
+  - web
+screenshots:
+- https://opengraph.githubassets.com/placeholder/danieltoraji.dsh-skin-kamisato
 review:
   compatibility: unverified
   preview: repository-card
@@ -35,15 +36,14 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
-    - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 103
 starsSnapshot: 0
-releaseUpdatedAt: 2026-08-16T13:55:09.178Z
-metadataUpdatedAt: 2026-08-18T15:44:30.878Z
-starsUpdatedAt: 2026-08-16T13:55:09.178Z
-updatedAt: 2026-08-18T15:44:30.878Z
-marketScreenshots: []
+releaseUpdatedAt: 2026-08-16 13:55:09.178000+00:00
+metadataUpdatedAt: 2026-08-18 15:44:30.878000+00:00
+starsUpdatedAt: 2026-08-16 13:55:09.178000+00:00
+updatedAt: 2026-08-18 15:44:30.878000+00:00

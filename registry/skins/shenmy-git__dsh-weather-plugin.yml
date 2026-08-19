@@ -3,17 +3,18 @@ name:
   zh: dsh-weather-plugin
   en: dsh-weather-plugin
 author: shenmy-git
-description: "DSH plugin: weather tool + immersive weather theming + FishLogo whale pet (theme/ambient/sound/HUD)"
+description: 'DSH plugin: weather tool + immersive weather theming + FishLogo whale
+  pet (theme/ambient/sound/HUD)'
 repo: https://github.com/shenmy-git/dsh-weather-plugin
 package: dsh-weather-plugin
 rowId: weather
 category: theme
 tags:
-  - wallpaper
-  - motion
-  - token-theme
+- wallpaper
+- motion
+- token-theme
 modes:
-  - dark
+- dark
 install:
   target: github:shenmy-git/dsh-weather-plugin#3f94f1569a0f9193a7ff5bb7bb8000b8e6b05a36
   version: 1.0.0
@@ -22,8 +23,9 @@ install:
 compatibility:
   dsh: ^0.1.0-rc.6
   platform:
-    - web
-screenshots: []
+  - web
+screenshots:
+- https://opengraph.githubassets.com/placeholder/shenmy-git.dsh-weather-plugin
 review:
   compatibility: verified
   preview: repository-card
@@ -37,15 +39,14 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
-    - 建议补全稳定的 package 名称、dsh.client Web 声明、row ID 和已构建客户端入口，以符合 dsh 插件要求并获得更顺畅的一键安装体验。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议补全稳定的 package 名称、dsh.client Web 声明、row ID 和已构建客户端入口，以符合 dsh 插件要求并获得更顺畅的一键安装体验。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 120
 starsSnapshot: 0
-releaseUpdatedAt: 2026-08-18T15:45:59.538Z
-metadataUpdatedAt: 2026-08-18T15:45:59.538Z
-starsUpdatedAt: 2026-08-16T13:57:34.783Z
-updatedAt: 2026-08-18T15:45:59.538Z
-marketScreenshots: []
+releaseUpdatedAt: 2026-08-18 15:45:59.538000+00:00
+metadataUpdatedAt: 2026-08-18 15:45:59.538000+00:00
+starsUpdatedAt: 2026-08-16 13:57:34.783000+00:00
+updatedAt: 2026-08-18 15:45:59.538000+00:00

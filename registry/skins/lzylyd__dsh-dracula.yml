@@ -9,11 +9,11 @@ package: dsh-dracula
 rowId: dracula-theme
 category: theme
 tags:
-  - token-theme
-  - light-dark
+- token-theme
+- light-dark
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:lzylyd/dsh-dracula#d03495118b21019a9e45f63044985faf6962e5f6
   version: 0.1.0
@@ -21,8 +21,9 @@ install:
 compatibility:
   dsh: ^0.1.0-rc.6
   platform:
-    - web
-screenshots: []
+  - web
+screenshots:
+- https://opengraph.githubassets.com/placeholder/lzylyd.dsh-dracula
 review:
   compatibility: verified
   preview: repository-card
@@ -36,15 +37,14 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
-    - 建议补全稳定的 package 名称、dsh.client Web 声明、row ID 和已构建客户端入口，以符合 dsh 插件要求并获得更顺畅的一键安装体验。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议补全稳定的 package 名称、dsh.client Web 声明、row ID 和已构建客户端入口，以符合 dsh 插件要求并获得更顺畅的一键安装体验。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 85
 starsSnapshot: 1
-releaseUpdatedAt: 2026-08-16T13:53:10.751Z
-metadataUpdatedAt: 2026-08-18T15:43:09.134Z
-starsUpdatedAt: 2026-08-16T13:53:10.751Z
-updatedAt: 2026-08-18T15:43:09.134Z
-marketScreenshots: []
+releaseUpdatedAt: 2026-08-16 13:53:10.751000+00:00
+metadataUpdatedAt: 2026-08-18 15:43:09.134000+00:00
+starsUpdatedAt: 2026-08-16 13:53:10.751000+00:00
+updatedAt: 2026-08-18 15:43:09.134000+00:00

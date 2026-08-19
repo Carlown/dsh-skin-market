@@ -9,14 +9,14 @@ package: dsh-theme-cyberpunk
 rowId: theme-cyberpunk
 category: theme
 tags:
-  - wallpaper
-  - retro
-  - motion
-  - token-theme
-  - light-dark
+- wallpaper
+- retro
+- motion
+- token-theme
+- light-dark
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:dlpufan/dsh-theme-cyberpunk#0bddb1507514e758f1f63668df2b0c90d8d20102
   version: 0.1.0
@@ -24,8 +24,9 @@ install:
 compatibility:
   dsh: unverified
   platform:
-    - web
-screenshots: []
+  - web
+screenshots:
+- https://opengraph.githubassets.com/placeholder/dlpufan.dsh-theme-cyberpunk
 review:
   compatibility: unverified
   preview: repository-card
@@ -39,15 +40,14 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
-    - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 63
 starsSnapshot: 2
-releaseUpdatedAt: 2026-08-16T13:50:20.382Z
-metadataUpdatedAt: 2026-08-18T15:41:29.736Z
-starsUpdatedAt: 2026-08-16T13:50:20.382Z
-updatedAt: 2026-08-18T15:41:29.736Z
-marketScreenshots: []
+releaseUpdatedAt: 2026-08-16 13:50:20.382000+00:00
+metadataUpdatedAt: 2026-08-18 15:41:29.736000+00:00
+starsUpdatedAt: 2026-08-16 13:50:20.382000+00:00
+updatedAt: 2026-08-18 15:41:29.736000+00:00

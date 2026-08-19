@@ -3,18 +3,20 @@ name:
   zh: dsh-task-console
   en: dsh-task-console
 author: He2way
-description: "DSH client plugin: a floating glass task console on the back of the page — live background jobs, subagents, session overview and workspace for the current session, with mouse-draggable cards."
+description: 'DSH client plugin: a floating glass task console on the back of the
+  page — live background jobs, subagents, session overview and workspace for the current
+  session, with mouse-draggable cards.'
 repo: https://github.com/He2way/dsh-task-console
 package: dsh-task-console
 rowId: task-console
 category: theme
 tags:
-  - glass
-  - motion
-  - token-theme
-  - light-dark
+- glass
+- motion
+- token-theme
+- light-dark
 modes:
-  - dark
+- dark
 install:
   target: github:He2way/dsh-task-console#a3f130852db0b7d86a819a22586b3f37029ae360
   version: 0.1.0
@@ -22,8 +24,9 @@ install:
 compatibility:
   dsh: unverified
   platform:
-    - web
-screenshots: []
+  - web
+screenshots:
+- https://opengraph.githubassets.com/placeholder/he2way.dsh-task-console
 review:
   compatibility: unverified
   preview: repository-card
@@ -37,15 +40,14 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
-    - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 107
 starsSnapshot: 0
-releaseUpdatedAt: 2026-08-16T13:55:53.334Z
-metadataUpdatedAt: 2026-08-18T15:44:54.477Z
-starsUpdatedAt: 2026-08-16T13:55:53.334Z
-updatedAt: 2026-08-18T15:44:54.477Z
-marketScreenshots: []
+releaseUpdatedAt: 2026-08-16 13:55:53.334000+00:00
+metadataUpdatedAt: 2026-08-18 15:44:54.477000+00:00
+starsUpdatedAt: 2026-08-16 13:55:53.334000+00:00
+updatedAt: 2026-08-18 15:44:54.477000+00:00

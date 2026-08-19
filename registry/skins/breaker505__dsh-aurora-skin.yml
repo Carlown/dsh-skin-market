@@ -3,17 +3,19 @@ name:
   zh: dsh-aurora-skin
   en: dsh-aurora-skin
 author: breaker505
-description: "Three hand-tuned skins for DeepSeek Harness (DSH): Aurora (deep navy + electric cyan + warm coral), Paper (cool white + deep teal), and Hologram (near-black + lime-cyan). Pure --dsw-alias-* tokens, no core patches."
+description: 'Three hand-tuned skins for DeepSeek Harness (DSH): Aurora (deep navy
+  + electric cyan + warm coral), Paper (cool white + deep teal), and Hologram (near-black
+  + lime-cyan). Pure --dsw-alias-* tokens, no core patches.'
 repo: https://github.com/breaker505/dsh-aurora-skin
 package: dsh-aurora-skin
 rowId: aurora-skin
 category: theme
 tags:
-  - token-theme
-  - light-dark
+- token-theme
+- light-dark
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:breaker505/dsh-aurora-skin#c594be6d1f505aa0f67ae6ea1d43ddddfc6993a4
   version: 0.1.0
@@ -21,8 +23,9 @@ install:
 compatibility:
   dsh: ^0.1.0-rc.6
   platform:
-    - web
-screenshots: []
+  - web
+screenshots:
+- https://opengraph.githubassets.com/placeholder/breaker505.dsh-aurora-skin
 review:
   compatibility: verified
   preview: repository-card
@@ -36,14 +39,13 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 171
 starsSnapshot: 0
-releaseUpdatedAt: 2026-08-18T15:44:13.078Z
-metadataUpdatedAt: 2026-08-18T15:44:13.078Z
-starsUpdatedAt: 2026-08-18T15:44:13.078Z
-updatedAt: 2026-08-18T15:44:13.078Z
-marketScreenshots: []
+releaseUpdatedAt: 2026-08-18 15:44:13.078000+00:00
+metadataUpdatedAt: 2026-08-18 15:44:13.078000+00:00
+starsUpdatedAt: 2026-08-18 15:44:13.078000+00:00
+updatedAt: 2026-08-18 15:44:13.078000+00:00

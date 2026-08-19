@@ -3,19 +3,20 @@ name:
   zh: dsh-image-theme
   en: dsh-image-theme
 author: Carpon39038
-description: "Warp-inspired image-to-theme plugin for DeepSeek Harness: upload a background, extract a palette, and apply a glass UI."
+description: 'Warp-inspired image-to-theme plugin for DeepSeek Harness: upload a background,
+  extract a palette, and apply a glass UI.'
 repo: https://github.com/Carpon39038/dsh-image-theme
-package: "@cabeta/dsh-image-theme"
+package: '@cabeta/dsh-image-theme'
 rowId: image-theme
 category: theme
 tags:
-  - glass
-  - motion
-  - token-theme
-  - light-dark
+- glass
+- motion
+- token-theme
+- light-dark
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:Carpon39038/dsh-image-theme#d522281fcdf81fb08984650800294b0058b89301
   version: 0.1.0
@@ -23,11 +24,12 @@ install:
 compatibility:
   dsh: 0.1.0-rc.5
   platform:
-    - web
-screenshots: []
+  - web
+screenshots:
+- https://opengraph.githubassets.com/placeholder/carpon39038.dsh-image-theme
 review:
   compatibility: verified
-  preview: verified
+  preview: repository-card
   installation: verified
 health:
   status: healthy
@@ -43,8 +45,7 @@ license:
   commercialUse: true
 featuredRank: 60
 starsSnapshot: 2
-releaseUpdatedAt: 2026-08-16T13:50:02.941Z
-metadataUpdatedAt: 2026-08-18T15:41:22.686Z
-starsUpdatedAt: 2026-08-16T13:50:02.941Z
-updatedAt: 2026-08-18T15:41:22.686Z
-marketScreenshots: []
+releaseUpdatedAt: 2026-08-16 13:50:02.941000+00:00
+metadataUpdatedAt: 2026-08-18 15:41:22.686000+00:00
+starsUpdatedAt: 2026-08-16 13:50:02.941000+00:00
+updatedAt: 2026-08-18 15:41:22.686000+00:00
