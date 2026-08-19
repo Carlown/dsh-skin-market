@@ -13,6 +13,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const registryDir = join(root, 'registry/skins')
 const outputDir = join(root, 'data/full-ingestion')
 const sourceUrl = 'https://awesome-dsh-plugin.com/plugins.json'
+const marketRepository = 'kingofsoysauce/dsh-skin-market'
 const githubSearchTerms = ['skin', 'theme', 'wallpaper', 'background']
 const appearanceName = /(?:skin|theme|wallpaper|background|transparent|liquid-glass|deep-whale|deepcel)/i
 const ignoredName = /(?:studio|manager|switcher|plugin-market|awesome)/i
@@ -36,6 +37,11 @@ function githubTarget(url) {
   let subpath = null
   if (parts[2] === 'tree' && parts.length >= 5) subpath = parts.slice(4).join('/')
   return { owner: parts[0], repo: parts[1], fullName: `${parts[0]}/${parts[1]}`, subpath, repository: `https://github.com/${parts[0]}/${parts[1]}` }
+}
+
+function isMarketRepository(url) {
+  const target = githubTarget(url)
+  return target?.fullName.toLowerCase() === marketRepository
 }
 
 async function headSha(target) {
@@ -401,6 +407,7 @@ async function main() {
   const existing = await existingRegistry()
   const githubDiscovered = [...await discoverGithubPlugins(), ...await cachedGithubPlugins()]
   const discovered = [...source.plugins.filter(plugin => {
+    if (isMarketRepository(plugin.url)) return false
     if (ignoredName.test(plugin.name) || irrelevantName.test(plugin.name)) return false
     return plugin.category === 'theme' || appearanceName.test(plugin.name)
   }), ...githubDiscovered]
@@ -408,14 +415,14 @@ async function main() {
   const selectedKeys = new Set()
   for (const plugin of discovered) {
     const target = githubTarget(plugin.url)
-    if (target === null || selectedKeys.has(targetKey(target))) continue
+    if (target === null || isMarketRepository(plugin.url) || selectedKeys.has(targetKey(target))) continue
     selected.push(plugin)
     selectedKeys.add(targetKey(target))
   }
   for (const item of existing) {
     const url = `${item.value.repo}${item.value.subpath ? `/tree/HEAD/${item.value.subpath}` : ''}`
     const target = githubTarget(url)
-    if (target === null || selectedKeys.has(targetKey(target))) continue
+    if (target === null || isMarketRepository(url) || selectedKeys.has(targetKey(target))) continue
     selected.push({
       owner: item.value.author,
       name: item.value.name.en,

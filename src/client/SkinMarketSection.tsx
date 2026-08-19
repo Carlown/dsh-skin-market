@@ -604,7 +604,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       <Button variant="ghost" className={`${css.homeCardOpen} dsh-skin-media-hover`} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
         <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
         <span className={css.homeCardCopy}>
-          <span className={css.homeCardTitleRow}><strong title={skin.name.zh}>{displayTitle(skin.name.zh)}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
+          <span className={css.homeCardTitleRow}><strong title={skin.name.zh}>{skin.name.zh}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
+          <span className={css.homeCardDescription} title={skin.description}>{displayTitle(skin.description)}</span>
           <small><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</small>
         </span>
       </Button>
@@ -722,7 +723,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
               <span className={`${css.skinCardPreview} dsh-skin-media-hover`}><PreviewMedia key={`${skin.id}:${skin.listScreenshot ?? skin.screenshots[0] ?? 'missing'}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" /></span>
               <span className={css.skinCardBody}>
-                <span className={css.cardTitle} title={skin.name.zh}>{displayTitle(skin.name.zh)}</span>
+                <span className={css.cardTitle}>{skin.name.zh}</span>
+                <span className={css.cardDescription} title={skin.description}>{displayTitle(skin.description)}</span>
                 <span className={css.cardMetaLine}>
                   <span className={css.cardMeta} title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span>
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
@@ -750,7 +752,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           <header className={css.detailHeader}>
             <div className={css.skinAvatar}><PreviewMedia key={`${selected.id}:${selected.listScreenshot ?? selected.screenshots[0] ?? 'missing'}:avatar`} skin={selected} src={selected.listScreenshot ?? selected.screenshots[0]} alt="" kind="avatar" /></div>
             <div className={css.titleBlock}>
-              <h2>{displayTitle(selected.name.zh)}</h2>
+              <h2>{selected.name.zh}</h2>
+              <p className={css.description} title={selected.description}>{displayTitle(selected.description)}</p>
               <p className={css.author}>{githubRepoLabel(selected.repo)}</p>
               <p className={css.version}>版本 {selected.install.version}<span aria-hidden="true"> · </span>{compatibilityUnverified ? 'DSH 兼容性待验证' : `兼容 DSH ${selected.compatibility.dsh}`}<Pill className={state.activation === 'active' ? `${css.status} ${css.statusActive}` : css.status}>{statusLabel(state)}</Pill></p>
             </div>

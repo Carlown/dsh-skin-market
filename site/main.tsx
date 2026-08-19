@@ -35,12 +35,13 @@ const GALLERY_INTERVAL_MS = 5600
 
 function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => void; onInstall: () => void }) {
   const repoLabel = githubRepoLabel(skin.repo)
-  const title = displayTitle(skin.name.zh)
+  const title = skin.name.zh
   return <article className="feed-card">
     <button className="feed-card-open dsh-skin-media-hover" aria-label={`${title} 界面预览`} onClick={onOpen}>
       <span className="feed-card-media"><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
       <span className="feed-card-copy">
-        <span className="feed-card-title"><strong title={skin.description}>{title}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
+        <span className="feed-card-title"><strong title={title}>{title}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
+        <span className="feed-card-description" title={skin.description}>{displayTitle(skin.description)}</span>
         <small><span title={repoLabel}>{repoLabel}</span>{skin.review?.installation === 'manual-only' && <span className="status pending">手动安装</span>}</small>
       </span>
     </button>
@@ -198,7 +199,7 @@ function App({ skins }: { skins: Skin[] }) {
         <div className="skin-list">
           {filtered.map(skin => <button className="skin-row" data-selected={skin.id === selected.id} aria-current={skin.id === selected.id ? 'true' : undefined} key={skin.id} onClick={() => { setSelectedId(skin.id); setShot(0) }}>
             <span className="skin-row-preview dsh-skin-media-hover"><PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="list" loading="lazy" /></span>
-            <span className="row-copy"><strong title={skin.name.zh}>{displayTitle(skin.name.zh)}</strong><small><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span><span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
+            <span className="row-copy"><strong title={skin.name.zh}>{skin.name.zh}</strong><span className="row-description" title={skin.description}>{displayTitle(skin.description)}</span><small><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span><span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
             <span className={skin.review?.installation === 'manual-only' ? 'status pending' : 'status'}>{skin.review?.installation === 'manual-only' ? '需手动安装' : '市场可安装'}</span>
           </button>)}
           {filtered.length === 0 && <p className="no-results">没有匹配的皮肤</p>}
@@ -209,7 +210,7 @@ function App({ skins }: { skins: Skin[] }) {
         <button className="mobile-back" onClick={() => setDetailOpen(false)}><ArrowLeft size={16} /> 返回发现</button>
         <header className="skin-head">
           <div className="avatar"><PreviewMedia key={`${selected.id}:avatar`} skin={selected} src={selected.listScreenshot ?? selected.screenshots[0]} alt="" kind="avatar" /></div>
-          <div className="skin-title"><div><h2>{displayTitle(selected.name.zh)}</h2><p className="repo-id">{githubRepoLabel(selected.repo)}</p></div><div className="meta"><span>版本 {selected.install.version}</span><span>DSH {selected.compatibility.dsh}</span><span className={verified ? 'verified' : 'unverified'}>{verified ? '兼容已验证' : '兼容待验证'}</span></div></div>
+          <div className="skin-title"><div><h2>{selected.name.zh}</h2><p className="skin-description" title={selected.description}>{displayTitle(selected.description)}</p><p className="repo-id">{githubRepoLabel(selected.repo)}</p></div><div className="meta"><span>版本 {selected.install.version}</span><span>DSH {selected.compatibility.dsh}</span><span className={verified ? 'verified' : 'unverified'}>{verified ? '兼容已验证' : '兼容待验证'}</span></div></div>
         </header>
 
         <div className="detail-actions">
@@ -255,7 +256,7 @@ function App({ skins }: { skins: Skin[] }) {
         <header><div><h2 id="install-dialog-title">{installDialog === 'market' ? '安装皮肤市场' : `安装 ${selected.name.zh}`}</h2><p>{installDialog === 'skin' && manualOnly ? '该皮肤需要 Agent 协助安装，请复制提示词。' : '任选一种，不用都执行。'}</p></div><button aria-label="关闭" onClick={() => setInstallDialog(null)}><X size={18} /></button></header>
         <div className="install-method-grid" data-single={installDialog === 'market' ? 'true' : 'false'}>
           {installDialog === 'skin' && <InstallGroup title="安装这个皮肤" prompt={skinPrompt(selected.repo, verified, selected.install.target)} command={manualOnly ? undefined : skinCommand(selected.install.target)} copyKey="skin" copied={copied} onCopy={copyPrompt} />}
-          <InstallGroup title={installDialog === 'skin' ? '皮肤市场安装' : undefined} prompt={MARKET_PROMPT} command={MARKET_CLI_COMMAND} copyKey="market" copied={copied} onCopy={copyPrompt} />
+          <InstallGroup title={installDialog === 'skin' ? '皮肤市场插件内安装' : undefined} prompt={MARKET_PROMPT} command={MARKET_CLI_COMMAND} copyKey="market" copied={copied} onCopy={copyPrompt} />
         </div>
       </section>
     </div>}
