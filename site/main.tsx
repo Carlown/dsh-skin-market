@@ -51,6 +51,13 @@ function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => vo
   </article>
 }
 
+function FeedHeader({ compact, skinCount, query, onQueryChange, interactive = true }: { compact: boolean; skinCount: number; query: string; onQueryChange: (value: string) => void; interactive?: boolean }) {
+  return <header className={`feed-header${compact ? ' feed-header-compact' : ''}`}>
+    <div><h1>发现皮肤</h1><p>{skinCount} 款社区皮肤，找到适合你的 DSH 外观</p></div>
+    <label className="search feed-search"><MagnifyingGlass size={18} /><input value={query} onChange={event => onQueryChange(event.currentTarget.value)} placeholder="搜索皮肤、作者或标签" tabIndex={interactive ? undefined : -1} /></label>
+  </header>
+}
+
 function App({ skins }: { skins: Skin[] }) {
   const [selectedId, setSelectedId] = useState(skins[0]?.id ?? '')
   const [query, setQuery] = useState('')
@@ -187,10 +194,8 @@ function App({ skins }: { skins: Skin[] }) {
     </header>
 
     <main className="feed-page">
-      <header className="feed-header" data-compact={feedCompact ? 'true' : undefined}>
-        <div><h1>发现皮肤</h1><p>{skins.length} 款社区皮肤，找到适合你的 DSH 外观</p></div>
-        <label className="search feed-search"><MagnifyingGlass size={18} /><input value={query} onChange={event => setQuery(event.currentTarget.value)} placeholder="搜索皮肤、作者或标签" /></label>
-      </header>
+      <FeedHeader compact={false} skinCount={skins.length} query={query} onQueryChange={setQuery} interactive={!feedCompact} />
+      {feedCompact && <FeedHeader compact skinCount={skins.length} query={query} onQueryChange={setQuery} />}
       <section className="feed-content" aria-labelledby="discover-title">
         <div className="feed-section-title"><div><h2 id="discover-title">{query.trim() === '' ? '发现更多' : '搜索结果'}</h2><span>{filtered.length} 个结果</span></div><button onClick={() => setSort(value => value === 'stars' ? 'latest' : 'stars')}>{sort === 'stars' ? 'Stars 优先' : '最近更新'}</button></div>
         {visibleSkins.length > 0 ? <div className="skin-grid">
