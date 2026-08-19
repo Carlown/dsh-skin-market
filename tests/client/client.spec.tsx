@@ -85,9 +85,9 @@ describe('client market', () => {
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: /第二皮肤 界面预览/ }))
     fireEvent.click(screen.getByRole('button', { name: '提交皮肤' }))
     expect(screen.getByRole('dialog', { name: '提交你的皮肤' })).toBeTruthy()
+    fireEvent.click(await screen.findByRole('button', { name: /第二皮肤 界面预览/ }))
     window.dispatchEvent(new Event('focus'))
 
     await waitFor(() => expect(catalogRequests).toBe(2))

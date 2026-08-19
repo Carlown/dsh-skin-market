@@ -20,7 +20,7 @@ import css from './SkinMarket.module.css'
 import './media-hover.module.css'
 import { compareCatalogOrder, hasCatalogPreview } from '../catalog-order.ts'
 import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
-import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt } from './submission.ts'
+import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt, REGISTRY_REPOSITORY } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import { displayTitle, githubRepoLabel } from '../display-title.ts'
 import type { CatalogSkin, InstalledClientPlugin, Operation, RuntimeSkin } from './types.ts'
@@ -644,6 +644,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
                 data-updating={marketUpdating ? 'true' : undefined}
                 onClick={() => { void updateMarket() }}
               ><span className={css.marketUpdateLabel}>{marketUpdating ? '更新中' : '更新'}</span></Button>}
+              <a className={css.nativeOutline} href={REGISTRY_REPOSITORY} target="_blank" rel="noreferrer"><MarkGithubIcon size={15} aria-hidden="true" /> GitHub</a>
               <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
             </div>
           </div>
@@ -682,24 +683,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         </header>
       <aside className={css.catalog} aria-label={t('catalog')}>
         <div className={css.catalogHeader}>
-          <Button className={`${css.browserHomeBack} ${css.nativeOutline}`} variant="outline" size="sm" icon={<IconChevronLeftOutline14 />} onClick={closeBrowser}>返回发现</Button>
-          <div className={css.catalogTitle}>
-            <div className={css.catalogTitleMain}>
-              <h2>{t('title')}</h2>
-              {marketUpdate?.updateAvailable === true && <Button
-                className={`${css.nativeOutline} ${css.marketUpdateButton}`}
-                variant="outline"
-                size="sm"
-                icon={marketUpdating ? <IconLoadingOutline16 /> : <IconDownloadOutline16 />}
-                aria-label={`更新皮肤市场到 ${marketUpdate.latestVersion}`}
-                title={`发现新版本 ${marketUpdate.latestVersion}`}
-                disabled={marketUpdating}
-                data-updating={marketUpdating ? 'true' : undefined}
-                onClick={() => { void updateMarket() }}
-              ><span className={css.marketUpdateLabel}>{marketUpdating ? '更新中' : '更新'}</span></Button>}
-            </div>
-            <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
-          </div>
           <Input value={query} onChange={event => setQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
           <div className={css.filterBar}>
             <div className={css.filters}>

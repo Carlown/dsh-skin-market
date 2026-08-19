@@ -59,6 +59,7 @@ function App({ skins }: { skins: Skin[] }) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [visibleCount, setVisibleCount] = useState(24)
+  const [feedCompact, setFeedCompact] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
   const [installDialog, setInstallDialog] = useState<'market' | 'skin' | null>(null)
   const detailRef = useRef<HTMLElement | null>(null)
@@ -87,6 +88,13 @@ function App({ skins }: { skins: Skin[] }) {
   }
 
   useEffect(() => { setVisibleCount(24) }, [query, sort])
+
+  useEffect(() => {
+    const updateFeedHeader = () => setFeedCompact(window.scrollY > 32)
+    updateFeedHeader()
+    window.addEventListener('scroll', updateFeedHeader, { passive: true })
+    return () => window.removeEventListener('scroll', updateFeedHeader)
+  }, [])
 
   useLayoutEffect(() => {
     if (detailRef.current !== null) detailRef.current.scrollTop = 0
@@ -172,7 +180,7 @@ function App({ skins }: { skins: Skin[] }) {
     </header>
 
     <main className="feed-page">
-      <header className="feed-header">
+      <header className="feed-header" data-compact={feedCompact ? 'true' : undefined}>
         <div><h1>发现皮肤</h1><p>{skins.length} 款社区皮肤，找到适合你的 DSH 外观</p></div>
         <label className="search feed-search"><MagnifyingGlass size={18} /><input value={query} onChange={event => setQuery(event.currentTarget.value)} placeholder="搜索皮肤、作者或标签" /></label>
       </header>
@@ -189,23 +197,6 @@ function App({ skins }: { skins: Skin[] }) {
       <button className="browser-mask" aria-hidden="true" tabIndex={-1} onClick={() => setDetailOpen(false)} />
       <section className="browser-panel" role="dialog" aria-modal="true" aria-label="皮肤详情">
         <header className="browser-titlebar"><span><strong>皮肤详情</strong><small>{githubRepoLabel(selected.repo)}</small></span><button className="button outline" onClick={() => setDetailOpen(false)}><X size={15} /> 关闭详情</button></header>
-        <aside className="catalog" aria-label="皮肤目录">
-        <div className="catalog-head">
-          <button className="mobile-back modal-home-back" onClick={() => setDetailOpen(false)}><ArrowLeft size={16} /> 返回发现</button>
-          <div><h2>浏览皮肤</h2><span>{skins.length} 款社区皮肤</span></div>
-          <label className="search"><MagnifyingGlass size={18} /><input value={query} onChange={event => setQuery(event.currentTarget.value)} placeholder="搜索皮肤、作者或标签" /></label>
-          <div className="catalog-tools"><span>{filtered.length} 个结果</span><button onClick={() => setSort(value => value === 'stars' ? 'latest' : 'stars')}>{sort === 'stars' ? 'Stars 优先' : '最近更新'}</button></div>
-        </div>
-        <div className="skin-list">
-          {filtered.map(skin => <button className="skin-row" data-selected={skin.id === selected.id} aria-current={skin.id === selected.id ? 'true' : undefined} key={skin.id} onClick={() => { setSelectedId(skin.id); setShot(0) }}>
-            <span className="skin-row-preview dsh-skin-media-hover"><PreviewMedia key={`${skin.id}:list`} skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt="" kind="list" loading="lazy" /></span>
-            <span className="row-copy"><strong title={skin.name.zh}>{skin.name.zh}</strong><span className="row-description" title={skin.description}>{displayTitle(skin.description)}</span><small><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span><span><StarIcon size={12} /> {skin.starsSnapshot}</span></small></span>
-            <span className={skin.review?.installation === 'manual-only' ? 'status pending' : 'status'}>{skin.review?.installation === 'manual-only' ? '需手动安装' : '市场可安装'}</span>
-          </button>)}
-          {filtered.length === 0 && <p className="no-results">没有匹配的皮肤</p>}
-        </div>
-      </aside>
-
         <section className="detail" ref={detailRef} aria-label="皮肤详情内容">
         <button className="mobile-back" onClick={() => setDetailOpen(false)}><ArrowLeft size={16} /> 返回发现</button>
         <header className="skin-head">

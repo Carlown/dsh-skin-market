@@ -44,6 +44,7 @@
 .homeTitleRow h2 { font-size: 20px; font-weight: 600; line-height: 28px; }
 .homeTitleRow p { margin-top: 2px; color: var(--dsw-alias-label-secondary); font-size: 12px; line-height: 18px; }
 .homeActions { display: flex; align-items: center; gap: 8px; }
+.homeActions a.nativeOutline { text-decoration: none; }
 .homeContent { display: grid; gap: 30px; padding: 24px 24px 38px; }
 .homeSection { min-width: 0; }
 .homeSectionTitle { display: flex; min-height: 28px; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
@@ -81,7 +82,7 @@
 .homeCardCopy { box-sizing: border-box; display: flex; width: 100%; min-width: 0; flex: 1; flex-direction: column; justify-content: space-between; gap: 6px; padding: 12px 14px 10px; }
 .homeCardTitleRow { display: flex; min-width: 0; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .homeCardTitleRow > strong { display: -webkit-box; min-width: 0; flex: 1; overflow: hidden; font-size: 13px; font-weight: 550; line-height: 19px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
-.homeCardDescription { display: -webkit-box; overflow: hidden; color: var(--dsw-alias-label-secondary); font-size: 11px; line-height: 17px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; }
+.homeCardDescription { display: -webkit-box; overflow: hidden; color: var(--dsw-alias-label-secondary); font-size: 11px; line-height: 17px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
 .homeCardCopy > small { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 8px; color: var(--dsw-alias-label-caption); font-size: 11px; line-height: 18px; }
 .homeCardCopy > small > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .feedMeta { display: inline-flex; flex: none; align-items: center; gap: 4px; white-space: nowrap; }
@@ -197,9 +198,6 @@
 .root .marketUpdateButton:hover,
 .root .marketUpdateButton:focus-visible,
 .root .marketUpdateButton[data-updating="true"] { width: 50px; }
-.root .marketUpdateButton:hover svg,
-.root .marketUpdateButton:focus-visible svg,
-.root .marketUpdateButton[data-updating="true"] svg { display: none; }
 .root .marketUpdateButton:hover .marketUpdateLabel,
 .root .marketUpdateButton:focus-visible .marketUpdateLabel,
 .root .marketUpdateButton[data-updating="true"] .marketUpdateLabel { display: inline; }
@@ -265,7 +263,7 @@
 .previewPlaceholder[data-preview-kind="list"] strong { font-size: 9px; line-height: 12px; }
 .previewPlaceholder[data-preview-kind="list"] small { display: none; }
 .skinCardBody { display: flex; min-width: 0; flex: 1; flex-direction: column; }
-.cardTitle { display: -webkit-box; overflow: hidden; font-size: 14px; font-weight: 400; line-height: 22px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+.cardTitle { display: -webkit-box; overflow: hidden; font-size: 14px; font-weight: 400; line-height: 22px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; }
 .cardDescription { display: -webkit-box; overflow: hidden; color: var(--dsw-alias-label-secondary); font-size: 11px; line-height: 17px; text-overflow: ellipsis; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1; }
 .cardMetaLine { display: flex; min-width: 0; align-items: center; gap: 8px; color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary)); font-size: 12px; line-height: 18px; }
 .cardMeta { min-width: 0; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
