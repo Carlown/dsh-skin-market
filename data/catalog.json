@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-19T04:41:54.179Z",
+  "generatedAt": "2026-08-19T06:01:17.896Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -70,6 +70,57 @@
       "metadataUpdatedAt": "2026-08-19T04:33:06.048Z",
       "starsUpdatedAt": "2026-08-19T04:33:06.048Z",
       "updatedAt": "2026-08-19T04:33:06.048Z"
+    },
+    {
+      "id": "wensincai.dsh-skin-rotator",
+      "name": {
+        "zh": "åŠ¨æ€èƒŒæ™¯è½®æ’­çš®è‚¤",
+        "en": "dsh-skin-rotator"
+      },
+      "author": "wensincai",
+      "description": "DSH Web åŠ¨æ€èƒŒæ™¯çš®è‚¤ï¼šæŠŠæœ¬åœ°å›¾ç‰‡ç›®å½•çš„å›¾ç‰‡æ¯ 5 åˆ†é’Ÿè½®æ’­ä¸€å¼ ä½œä¸ºå…¨å±èƒŒæ™¯ï¼Œ å åŠ å¯è°ƒé»‘è‰²è’™ç‰ˆï¼Œå¹¶è‡ªåŠ¨åˆ‡æ¢æš—è‰²ä¸»é¢˜ä¿è¯æ–‡å­—å¯è¯»ã€‚",
+      "repo": "https://github.com/wensincai/dsh-skin-rotator",
+      "package": "dsh-skin-rotator",
+      "rowId": "skin-rotator",
+      "category": "background",
+      "tags": [
+        "dynamic-background",
+        "wallpaper-rotation",
+        "local-images",
+        "dark-overlay"
+      ],
+      "modes": [
+        "dark"
+      ],
+      "install": {
+        "target": "github:wensincai/dsh-skin-rotator#a04cdc926dec980ef946731318d74d4e44167dac",
+        "version": "0.1.1",
+        "commit": "a04cdc926dec980ef946731318d74d4e44167dac"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/wensincai/dsh-skin-rotator/a04cdc926dec980ef946731318d74d4e44167dac/docs/screenshot.png"
+      ],
+      "review": {
+        "compatibility": "unverified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "MIT",
+        "commercialUse": true
+      },
+      "featuredRank": 0,
+      "starsSnapshot": 0,
+      "releaseUpdatedAt": "2026-08-19T04:08:02.180Z",
+      "metadataUpdatedAt": "2026-08-19T04:08:02.180Z",
+      "starsUpdatedAt": "2026-08-19T04:08:02.180Z",
+      "updatedAt": "2026-08-19T04:08:02.180Z"
     },
     {
       "id": "king-of-soy-sauce.liang-intensity",
