@@ -15,30 +15,28 @@
 
 ### 近期收录
 
-- 2026-08-18：[dsh-endfield-ui](https://github.com/rison114514/dsh-endfield-ui)（`0.5.0`）——终末地工业风 DSH Web 工作台主题，安装版本固定到 commit `7993d607`。
+- 2026-08-18：[dsh-endfield-ui](https://github.com/rison114514/dsh-endfield-ui)（`0.5.0`）——终末地工业风 DSH Web 工作台主题
 
-查看[近期收录日志](./docs/recently-added.md)
+- 更多请查看[收录日志](./docs/recently-added.md)
 
-<!-- DSH_SKIN_MARKET_AUTO_STATS:START -->
-当前在线目录收录 **201 款**社区皮肤。
 
-最近一次自动同步：2026-08-18。自动任务会同步 registry、catalog、项目 README 和近期收录日志。
-<!-- DSH_SKIN_MARKET_AUTO_STATS:END -->
+## 安装
 
-## 安装皮肤市场插件
+#### 方式一，命令安装：
 
-用命令安装：
+> 安装前请确保已关闭其他皮肤插件，避免冲突
 
 ```sh
 dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 ```
 
-> 安装前请确保已关闭其他皮肤插件，避免冲突；或者使用下面的提示词，让 DSH 先检查冲突再安装，更省心。
 
+
+#### 方式二，提示词安装：
 <details>
-<summary><strong>复制给 DSH：先检查冲突，再安装皮肤市场</strong></summary>
+<summary><strong>点击展开提示词</strong></summary>
 
-展开后复制下面的完整提示词：
+复制以下给 DSH 即可，会先检查冲突，再安装皮肤市场
 
 ```text
 请把 dsh-skin-market 插件安装到 DSH 的 web profile。不能先安装再检查，必须严格按以下顺序执行：
@@ -58,14 +56,14 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 
 </details>
 
-安装完成后，重启 DSH Web，打开「设置 → 皮肤市场」。
+---
 
 ### 安装失败时，可以让 DSH 自己排查
 
 皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态。
 
 <details>
-<summary><strong>复制安装失败排查提示词</strong></summary>
+<summary><strong>点击展开排查提示词</strong></summary>
 
 把完整原始报错填入后复制给你的 DSH Agent：
 
