@@ -203,32 +203,9 @@ npm run build
 
 ## 目录维护
 
-```bash
-npm run crawl:smoke
-npm run crawl:top-stars
-npm run crawl:full-ingest
-```
+公共仓库保留 registry Schema、目录生成和社区提交校验。候选发现、全量收录、实机截图补录和运营报告属于维护者内部流程，不随市场运行时发布；正式目录条目仍位于 `registry/skins/`，`data/catalog.json` 是生成文件。
 
-为没有仓库截图的皮肤生成实机截图时，先联网缓存固定 commit 的源码包，之后安装与截图阶段可离线重复运行：
-
-```bash
-npm run screenshots:prepare
-npm run screenshots:capture
-```
-
-当前脚本覆盖 `KinGao294/dsh-skin`、`tianyhjg-lab/dsh-font`、`bilbillm/deepseek-harness-angelina-themes` 与 `dancingmemory/dskin`，每个仓库补录首页、对话历史和设置或插件配置页，产物和校验报告写入 `.preview/skin-screenshots/`。脚本只在本地历史模板不存在时连接监听 `127.0.0.1` 的临时 mock，创建一条 `test` 历史；mock 固定返回零 usage。后续皮肤复制该隔离模板，只点“新会话”并从左侧历史重新打开 `test`，不会再次发送消息。报告会断言目标截图阶段 `messageSent: false`、`localMockRequests: 0`、`externalModelRequestSent: false`、`historyReopened: true` 和 `tokenSpend: 0`。`npm run screenshots:trial` 可在缓存缺失时自动下载后立即试跑；截图使用独立 DSH home，不修改日常 `web` profile。
-
-逐张确认是插件生效后的真实 DSH 界面，再显式提升到站点：
-
-```bash
-npm run screenshots:promote -- --skin kingao294.dsh-skin --yes-reviewed
-```
-
-提升后的 URL 写入条目的 `marketScreenshots`。构建目录时，详情轮播中的市场补录图固定排在前面，仓库自己的 `screenshots` 去重后保持原顺序接在后面；左侧列表和推荐卡片仍优先使用仓库原始第一张图作为封面，仓库没有图片时才使用市场实机图。后续同步不会覆盖补录图。维护者可向市场仓库提交 PR 删除或替换 `marketScreenshots`，也可以先把图片提交到上游仓库，再由市场 PR 移除补录版本。
-
-正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。全量任务会合并 Awesome DSH 与 GitHub `dsh-plugin` Topic 两个发现源；只有 `dsh.client`、但元数据不足以由市场安全注册的皮肤仍会展示，并提供仓库安装说明。具备稳定 package、Web client 声明、row ID 和已构建入口的纯前端皮肤可由市场自动注册，不要求额外提供 `dsh.bundle`。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
-
-全量任务会同时尝试抓取 `README.zh-CN.md`、`README.zh.md`、`README-zh.md`、`README_CN.md` 及 `docs/README.zh*.md` 等中文文档；如果仓库没有单独的中文描述，中文 README 的首段会作为目录描述的回退来源。定时同步还会刷新 README 的目录统计和[近期收录日志](./docs/recently-added.md)。
+市场截图会作为 `marketScreenshots` 与上游截图合并展示；公共构建只负责校验和合并，不包含截图采集或提升工具。
 
 ## 安全说明
 
