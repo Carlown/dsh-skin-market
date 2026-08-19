@@ -15,8 +15,7 @@
 
 ### 近期收录
 
-- 2026-08-18：[dsh-endfield-ui](https://github.com/rison114514/dsh-endfield-ui)（`0.5.0`）——终末地工业风 DSH Web 工作台主题
-
+- 2026-08-19：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)（`0.2.7`）——7 款皮肤一次收录：极光 Aurora、蓝色幻想、龙之继承者、初音未来、Minecraft、鲸吟、Windows XP
 - 更多请查看[收录日志](./docs/recently-added.md)
 
 
