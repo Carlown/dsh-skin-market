@@ -5,6 +5,17 @@
 安装版本固定到对应收录 commit；预览图使用 registry 中记录的仓库素材。收录市场不等于 DSH 官方、安全团队或市场对皮肤的安全背书；兼容性和素材授权状态请以皮肤仓库说明为准。
 
 
+## 2026-08-19 · DSH 皮肤全家桶
+
+DSH 皮肤全家桶：8 个皮肤家族 × 15 套明暗主题，内置设置页皮肤中心，基于官方 token 机制，一键切换、零源码改动。
+
+- GitHub：[smdk000/dsh-skin-family](https://github.com/smdk000/dsh-skin-family)
+- 收录版本：`0.1.0`
+- 固定 commit：`4e90a84f140eff12aa38e7ff4a9c8f7b69771cab`
+- 兼容性：DSH Web `0.1.0-rc.6`
+
+<img src="https://raw.githubusercontent.com/smdk000/dsh-skin-family/4e90a84f140eff12aa38e7ff4a9c8f7b69771cab/docs/preview-all.png" alt="DSH 皮肤全家桶 预览" width="60%">
+
 ## 2026-08-19 · 极光 Aurora
 
 极光皮肤：支持自定义背景图片（URL / 透明度 / 模糊）与极光渐变背景，半透明毛玻璃面板，浅色/深色两套调色板。
