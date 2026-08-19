@@ -9,14 +9,14 @@ package: dsh-skin
 rowId: skin
 category: theme
 tags:
-  - wallpaper
-  - glass
-  - retro
-  - token-theme
-  - light-dark
+- wallpaper
+- glass
+- retro
+- token-theme
+- light-dark
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:KinGao294/dsh-skin#0a571a27adcc5f780b7b72386c9c294243eec5b3
   version: 0.4.0
@@ -24,12 +24,13 @@ install:
 compatibility:
   dsh: ^0.1.0-rc.6
   platform:
-    - web
+  - web
 marketScreenshots:
-  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/home.png
-  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/conversation.png
-  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/settings.png
-screenshots: []
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/home.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/conversation.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/KinGao294__dsh-skin/65c79b09d4c5f23e72076ff6b6b6b26c883f935c/settings.png
+screenshots:
+- https://opengraph.githubassets.com/placeholder/kingao294.dsh-skin
 review:
   compatibility: verified
   preview: verified
@@ -43,13 +44,13 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 18
 starsSnapshot: 19
-releaseUpdatedAt: 2026-08-18T15:39:02.751Z
-metadataUpdatedAt: 2026-08-18T15:39:02.751Z
-starsUpdatedAt: 2026-08-18T15:39:02.751Z
-updatedAt: 2026-08-18T15:39:02.751Z
+releaseUpdatedAt: 2026-08-18 15:39:02.751000+00:00
+metadataUpdatedAt: 2026-08-18 15:39:02.751000+00:00
+starsUpdatedAt: 2026-08-18 15:39:02.751000+00:00
+updatedAt: 2026-08-18 15:39:02.751000+00:00

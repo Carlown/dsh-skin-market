@@ -9,13 +9,13 @@ package: dsh-claude-theme
 rowId: claude-theme
 category: theme
 tags:
-  - wallpaper
-  - retro
-  - token-theme
-  - light-dark
+- wallpaper
+- retro
+- token-theme
+- light-dark
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:chajiuqqq/dsh-claude-theme#976b65da11bd0e23d77aac9cbadd466fea51eb1b
   version: 1.0.0
@@ -23,9 +23,9 @@ install:
 compatibility:
   dsh: unverified
   platform:
-    - web
+  - web
 screenshots:
-  - https://opengraph.githubassets.com/976b65da11bd0e23d77aac9cbadd466fea51eb1b/chajiuqqq/dsh-claude-theme
+- https://opengraph.githubassets.com/placeholder/chajiuqqq.dsh-claude-theme
 review:
   compatibility: unverified
   preview: repository-card
@@ -39,14 +39,14 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
-    - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 61
 starsSnapshot: 2
-releaseUpdatedAt: 2026-08-16T13:50:06.363Z
-metadataUpdatedAt: 2026-08-18T15:41:24.209Z
-starsUpdatedAt: 2026-08-16T13:50:06.363Z
-updatedAt: 2026-08-18T15:41:24.209Z
+releaseUpdatedAt: 2026-08-16 13:50:06.363000+00:00
+metadataUpdatedAt: 2026-08-18 15:41:24.209000+00:00
+starsUpdatedAt: 2026-08-16 13:50:06.363000+00:00
+updatedAt: 2026-08-18 15:41:24.209000+00:00

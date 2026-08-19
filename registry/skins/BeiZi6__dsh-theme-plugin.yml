@@ -3,20 +3,21 @@ name:
   zh: dsh-theme-plugin
   en: dsh-theme-plugin
 author: BeiZi6
-description: DSH Web GUI 主题工作室：5 套内置预设 + 完全可自定义的浅/深配色（强调色、背景、前景、UI 与代码字体、半透明侧栏、对比度），即时热切换并持久化到 localStorage。
+description: DSH Web GUI 主题工作室：5 套内置预设 + 完全可自定义的浅/深配色（强调色、背景、前景、UI 与代码字体、半透明侧栏、对比度），即时热切换并持久化到
+  localStorage。
 repo: https://github.com/BeiZi6/dsh-theme-plugin
 package: dsh-theme-plugin
 rowId: theme-plugin
 category: theme
 tags:
-  - wallpaper
-  - glass
-  - retro
-  - token-theme
-  - light-dark
+- wallpaper
+- glass
+- retro
+- token-theme
+- light-dark
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:BeiZi6/dsh-theme-plugin#b3e7e143532c4b6df71da753d2336bb018949d2a
   version: 0.1.0
@@ -24,9 +25,9 @@ install:
 compatibility:
   dsh: ^0.1.0-rc.6
   platform:
-    - web
+  - web
 screenshots:
-  - https://opengraph.githubassets.com/b3e7e143532c4b6df71da753d2336bb018949d2a/BeiZi6/dsh-theme-plugin
+- https://opengraph.githubassets.com/placeholder/beizi6.dsh-theme-plugin
 review:
   compatibility: verified
   preview: repository-card
@@ -40,13 +41,13 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 26
-starsSnapshot: 3
-releaseUpdatedAt: 2026-08-16T12:16:08.600Z
-metadataUpdatedAt: 2026-08-18T15:41:16.860Z
-starsUpdatedAt: 2026-08-19T04:35:13.257Z
-updatedAt: 2026-08-19T04:35:13.257Z
+starsSnapshot: 2
+releaseUpdatedAt: 2026-08-16 12:16:08.600000+00:00
+metadataUpdatedAt: 2026-08-18 15:41:16.860000+00:00
+starsUpdatedAt: 2026-08-16 12:16:08.600000+00:00
+updatedAt: 2026-08-18 15:41:16.860000+00:00

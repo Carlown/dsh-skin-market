@@ -9,11 +9,11 @@ package: dsh-custom-theme-import
 rowId: custom-theme-import
 category: theme
 tags:
-  - retro
-  - token-theme
+- retro
+- token-theme
 modes:
-  - light
-  - dark
+- light
+- dark
 install:
   target: github:Juryorca/dsh-custom-theme-import#3a501cf063b288009cf62d2f9c04c3dd59a2e74f
   version: 0.1.0
@@ -21,9 +21,9 @@ install:
 compatibility:
   dsh: unverified
   platform:
-    - web
+  - web
 screenshots:
-  - https://opengraph.githubassets.com/3a501cf063b288009cf62d2f9c04c3dd59a2e74f/Juryorca/dsh-custom-theme-import
+- https://opengraph.githubassets.com/placeholder/juryorca.dsh-custom-theme-import
 review:
   compatibility: unverified
   preview: repository-card
@@ -37,14 +37,14 @@ health:
     installCommand: pass
     topic: pass
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
-    - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
+  - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+  - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 162
 starsSnapshot: 1
-releaseUpdatedAt: 2026-08-18T15:42:51.227Z
-metadataUpdatedAt: 2026-08-18T15:42:51.227Z
-starsUpdatedAt: 2026-08-18T15:42:51.227Z
-updatedAt: 2026-08-18T15:42:51.227Z
+releaseUpdatedAt: 2026-08-18 15:42:51.227000+00:00
+metadataUpdatedAt: 2026-08-18 15:42:51.227000+00:00
+starsUpdatedAt: 2026-08-18 15:42:51.227000+00:00
+updatedAt: 2026-08-18 15:42:51.227000+00:00

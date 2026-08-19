@@ -25,7 +25,8 @@ compatibility:
   dsh: unverified
   platform:
   - web
-screenshots: []
+screenshots:
+- https://opengraph.githubassets.com/placeholder/aks1st.ikun-theme-skin
 review:
   compatibility: unverified
   preview: verified
@@ -45,11 +46,11 @@ license:
   code: MIT
   commercialUse: true
 featuredRank: 33
-starsSnapshot: 5
+starsSnapshot: 3
 releaseUpdatedAt: 2026-08-16 12:50:27.463000+00:00
-metadataUpdatedAt: 2026-08-18 15:40:30.181000+00:00
-starsUpdatedAt: 2026-08-19 04:34:37.077000+00:00
-updatedAt: 2026-08-19 04:34:37.077000+00:00
+metadataUpdatedAt: 2026-08-19 08:56:52.443000+00:00
+starsUpdatedAt: 2026-08-18 15:40:30.181000+00:00
+updatedAt: 2026-08-19 08:56:52.443000+00:00
 marketScreenshots:
 - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/AKS1st__ikun-theme-skin/c0e59e61332a5e3317365848f73240308d9d9345/home.png
 - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/AKS1st__ikun-theme-skin/c0e59e61332a5e3317365848f73240308d9d9345/conversation.png
