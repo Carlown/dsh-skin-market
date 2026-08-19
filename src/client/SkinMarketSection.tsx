@@ -201,6 +201,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [marketUpdate, setMarketUpdate] = useState<MarketUpdateStatus | null>(null)
   const [marketUpdating, setMarketUpdating] = useState(false)
   const [showMarketUpdated, setShowMarketUpdated] = useState(false)
+  const [restartSkinId, setRestartSkinId] = useState<string | null>(null)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
   const skinListRef = useRef<HTMLDivElement | null>(null)
   const homeRef = useRef<HTMLElement | null>(null)
@@ -284,10 +285,11 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     }
   }, [])
 
-  const openRestartConfirm = useCallback(async () => {
+  const openRestartConfirm = useCallback(async (skinId?: string) => {
     setError(null)
     setRunningAgents(null)
     setRestartCheckFinished(false)
+    setRestartSkinId(skinId ?? selectedIdRef.current)
     setConfirmRestart(true)
     try {
       const state = await json<MarketStateResponse>('/dsh-skin-market/state', { cache: 'no-store' })
@@ -459,6 +461,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const runForSkin = useCallback(async (skinId: string, kind: MutationKind) => {
     const target = skins.find(skin => skin.id === skinId)
     if (target === undefined) return false
+    const targetState = runtimeFor(states, target.id)
     setError(null)
     setMutation({ skinId: target.id, kind })
     try {
@@ -470,7 +473,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         setBusy(operation)
         if (operation.phase === 'done') {
           setBusy(null)
-          let needsRestart = false
+          // Updating a skin that is already in use replaces its package on
+          // disk, but the loaded client module still belongs to the old
+          // package. Reuse the existing restart confirmation flow so the
+          // reviewed version is loaded by a fresh DSH process.
+          let needsRestart = kind === 'update'
+            && (targetState.activation === 'active' || targetState.activation === 'restart-required')
           if (kind === 'deactivate' || kind === 'uninstall') {
             await clientRuntime?.setActive(target.package, false)
           } else if (kind === 'activate' && clientRuntime !== undefined) {
@@ -484,7 +492,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             setStates(value => value.map(item => item.skinId === target.id
               ? { ...item, activation: 'restart-required' }
               : item))
-            await openRestartConfirm()
+            await openRestartConfirm(target.id)
           }
           return true
         }
@@ -499,7 +507,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     } finally {
       setMutation(null)
     }
-  }, [clientRuntime, openRestartConfirm, refresh, skins])
+  }, [clientRuntime, openRestartConfirm, refresh, skins, states])
 
   const run = useCallback(async (kind: MutationKind) => selected === undefined ? false : runForSkin(selected.id, kind), [runForSkin, selected])
 
@@ -514,12 +522,13 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   }, [activateSelected, run])
 
   const restartNow = useCallback(async () => {
-    if (selected === undefined) return
+    const skinId = restartSkinId ?? selectedIdRef.current
+    if (skinId === '') return
     setRestarting(true)
     setError(null)
     try {
       const accepted = await json<{ instanceId: string }>('/dsh-skin-market/restart', {
-        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ skinId: selected.id }),
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ skinId }),
       })
       const deadline = Date.now() + 90_000
       while (Date.now() < deadline) {
@@ -539,7 +548,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     } finally {
       setRestarting(false)
     }
-  }, [selected])
+  }, [restartSkinId])
 
   const chooseSkin = (id: string) => { userSelectedRef.current = true; selectedIdRef.current = id; setSelectedId(id); setShotIndex(0); setLightboxOpen(false); setError(null); setInstallCopied(null); setShowInstallOptions(false) }
   const select = (id: string) => { chooseSkin(id); setShowDetail(true) }

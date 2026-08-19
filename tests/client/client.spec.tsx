@@ -507,6 +507,26 @@ describe('client market', () => {
     expect(screen.getByRole('button', { name: '稍后' })).toBeTruthy()
   })
 
+  it('asks for restart after updating the active skin', async () => {
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/market-update')) return { ok: true, json: async () => ({ currentVersion: '0.1.26', latestVersion: '0.1.26', updateAvailable: false }) }
+      if (url.endsWith('/update') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'update-1' }) }
+      if (url.endsWith('/operations/update-1')) return { ok: true, json: async () => ({ id: 'update-1', phase: 'done' }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ runningAgentCount: 0, skins: [{ skinId: skin.id, installation: 'installed', activation: 'active', installedVersion: '1.0.0', updateAvailable: true }] }) }
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    fireEvent.click(await screen.findByRole('button', { name: '更新' }))
+
+    expect(await screen.findByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })).toBeTruthy()
+    expect(await screen.findByText('Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。')).toBeTruthy()
+    expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/update') && init?.method === 'POST')).toBe(true)
+  })
+
   it('disables restart when the Host reports a running Agent', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { runningAgentCount: 2, skins: [{ skinId: skin.id, installation: 'installed', activation: 'restart-required', installedVersion: '1.0.0', updateAvailable: false }] } })))
     render(<SkinMarketSection t={key => key} />)
