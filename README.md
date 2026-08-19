@@ -15,30 +15,28 @@
 
 ### 近期收录
 
-- 2026-08-18：[dsh-endfield-ui](https://github.com/rison114514/dsh-endfield-ui)（`0.5.0`）——终末地工业风 DSH Web 工作台主题，安装版本固定到 commit `7993d607`。
+- 2026-08-18：[dsh-endfield-ui](https://github.com/rison114514/dsh-endfield-ui)（`0.5.0`）——终末地工业风 DSH Web 工作台主题
 
-查看[近期收录日志](./docs/recently-added.md)
+- 更多请查看[收录日志](./docs/recently-added.md)
 
-<!-- DSH_SKIN_MARKET_AUTO_STATS:START -->
-当前在线目录收录 **201 款**社区皮肤。
 
-最近一次自动同步：2026-08-18。自动任务会同步 registry、catalog、项目 README 和近期收录日志。
-<!-- DSH_SKIN_MARKET_AUTO_STATS:END -->
+## 安装
 
-## 安装皮肤市场插件
+#### 方式一，命令安装：
 
-用命令安装：
+> 安装前请确保已关闭其他皮肤插件，避免冲突
 
 ```sh
 dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 ```
 
-> 安装前请确保已关闭其他皮肤插件，避免冲突；或者使用下面的提示词，让 DSH 先检查冲突再安装，更省心。
 
+
+#### 方式二，提示词安装：
 <details>
-<summary><strong>复制给 DSH：先检查冲突，再安装皮肤市场</strong></summary>
+<summary><strong>点击展开提示词</strong></summary>
 
-展开后复制下面的完整提示词：
+复制以下给 DSH 即可，会先检查冲突，再安装皮肤市场
 
 ```text
 请把 dsh-skin-market 插件安装到 DSH 的 web profile。不能先安装再检查，必须严格按以下顺序执行：
@@ -58,14 +56,14 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 
 </details>
 
-安装完成后，重启 DSH Web，打开「设置 → 皮肤市场」。
+---
 
 ### 安装失败时，可以让 DSH 自己排查
 
 皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态。
 
 <details>
-<summary><strong>复制安装失败排查提示词</strong></summary>
+<summary><strong>点击展开排查提示词</strong></summary>
 
 把完整原始报错填入后复制给你的 DSH Agent：
 
@@ -203,32 +201,9 @@ npm run build
 
 ## 目录维护
 
-```bash
-npm run crawl:smoke
-npm run crawl:top-stars
-npm run crawl:full-ingest
-```
+公共仓库保留 registry Schema、目录生成和社区提交校验。候选发现、全量收录、实机截图补录和运营报告属于维护者内部流程，不随市场运行时发布；正式目录条目仍位于 `registry/skins/`，`data/catalog.json` 是生成文件。
 
-为没有仓库截图的皮肤生成实机截图时，先联网缓存固定 commit 的源码包，之后安装与截图阶段可离线重复运行：
-
-```bash
-npm run screenshots:prepare
-npm run screenshots:capture
-```
-
-当前脚本覆盖 `KinGao294/dsh-skin`、`tianyhjg-lab/dsh-font`、`bilbillm/deepseek-harness-angelina-themes` 与 `dancingmemory/dskin`，每个仓库补录首页、对话历史和设置或插件配置页，产物和校验报告写入 `.preview/skin-screenshots/`。脚本只在本地历史模板不存在时连接监听 `127.0.0.1` 的临时 mock，创建一条 `test` 历史；mock 固定返回零 usage。后续皮肤复制该隔离模板，只点“新会话”并从左侧历史重新打开 `test`，不会再次发送消息。报告会断言目标截图阶段 `messageSent: false`、`localMockRequests: 0`、`externalModelRequestSent: false`、`historyReopened: true` 和 `tokenSpend: 0`。`npm run screenshots:trial` 可在缓存缺失时自动下载后立即试跑；截图使用独立 DSH home，不修改日常 `web` profile。
-
-逐张确认是插件生效后的真实 DSH 界面，再显式提升到站点：
-
-```bash
-npm run screenshots:promote -- --skin kingao294.dsh-skin --yes-reviewed
-```
-
-提升后的 URL 写入条目的 `marketScreenshots`。构建目录时，详情轮播中的市场补录图固定排在前面，仓库自己的 `screenshots` 去重后保持原顺序接在后面；左侧列表和推荐卡片仍优先使用仓库原始第一张图作为封面，仓库没有图片时才使用市场实机图。后续同步不会覆盖补录图。维护者可向市场仓库提交 PR 删除或替换 `marketScreenshots`，也可以先把图片提交到上游仓库，再由市场 PR 移除补录版本。
-
-正式目录条目位于 `registry/skins/`，Schema 位于 `registry/skin.schema.json`。全量任务会合并 Awesome DSH 与 GitHub `dsh-plugin` Topic 两个发现源；只有 `dsh.client`、但元数据不足以由市场安全注册的皮肤仍会展示，并提供仓库安装说明。具备稳定 package、Web client 声明、row ID 和已构建入口的纯前端皮肤可由市场自动注册，不要求额外提供 `dsh.bundle`。仓库的 GitHub Actions 会定期同步已收录仓库并为目录变化创建 PR。
-
-全量任务会同时尝试抓取 `README.zh-CN.md`、`README.zh.md`、`README-zh.md`、`README_CN.md` 及 `docs/README.zh*.md` 等中文文档；如果仓库没有单独的中文描述，中文 README 的首段会作为目录描述的回退来源。定时同步还会刷新 README 的目录统计和[近期收录日志](./docs/recently-added.md)。
+市场截图会作为 `marketScreenshots` 与上游截图合并展示；公共构建只负责校验和合并，不包含截图采集或提升工具。
 
 ## 安全说明
 
