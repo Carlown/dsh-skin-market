@@ -4,6 +4,98 @@
 
 安装版本固定到对应收录 commit；预览图使用 registry 中记录的仓库素材。收录市场不等于 DSH 官方、安全团队或市场对皮肤的安全背书；兼容性和素材授权状态请以皮肤仓库说明为准。
 
+
+## 2026-08-19 · 极光 Aurora
+
+极光皮肤：支持自定义背景图片（URL / 透明度 / 模糊）与极光渐变背景，半透明毛玻璃面板，浅色/深色两套调色板。
+
+- GitHub：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)
+- 收录版本：`0.2.7`
+- 固定 commit：`4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56`
+- 子目录：`packages/skins/aurora`
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/aurora/preview/dark.png" width="60%" alt="极光 Aurora 深色预览">
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/aurora/preview/light.png" width="60%" alt="极光 Aurora 浅色预览">
+
+## 2026-08-19 · 蓝色幻想 Blue Fantasy
+
+蓝色幻想皮肤：DreamSkin Codex 主题风格。
+
+- GitHub：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)
+- 收录版本：`0.2.7`
+- 固定 commit：`4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56`
+- 子目录：`packages/skins/blue-fantasy`
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/blue-fantasy/preview/dark.png" width="60%" alt="蓝色幻想 Blue Fantasy 深色预览">
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/blue-fantasy/preview/light.png" width="60%" alt="蓝色幻想 Blue Fantasy 浅色预览">
+
+## 2026-08-19 · 龙之继承者 Dragon Heir
+
+龙之继承者皮肤。
+
+- GitHub：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)
+- 收录版本：`0.2.7`
+- 固定 commit：`4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56`
+- 子目录：`packages/skins/dragon-heir`
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/dragon-heir/preview/dark.png" width="60%" alt="龙之继承者 Dragon Heir 深色预览">
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/dragon-heir/preview/light.png" width="60%" alt="龙之继承者 Dragon Heir 浅色预览">
+
+## 2026-08-19 · 初音未来 Miku
+
+初音未来皮肤：蓝紫粉渐变、毛玻璃面板、Miku 主题配色。
+
+- GitHub：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)
+- 收录版本：`0.2.7`
+- 固定 commit：`4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56`
+- 子目录：`packages/skins/miku`
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/miku/preview/dark.png" width="60%" alt="初音未来 Miku 深色预览">
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/miku/preview/light.png" width="60%" alt="初音未来 Miku 浅色预览">
+
+## 2026-08-19 · Minecraft
+
+Minecraft 主题皮肤。
+
+- GitHub：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)
+- 收录版本：`0.2.7`
+- 固定 commit：`4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56`
+- 子目录：`packages/skins/minecraft`
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/minecraft/preview/dark.png" width="60%" alt="Minecraft 深色预览">
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/minecraft/preview/light.png" width="60%" alt="Minecraft 浅色预览">
+
+## 2026-08-19 · 鲸吟 Whale Song
+
+鲸吟皮肤：深海鲸鱼女神氛围，无文字极简设计。
+
+- GitHub：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)
+- 收录版本：`0.2.7`
+- 固定 commit：`4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56`
+- 子目录：`packages/skins/whale-song`
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/whale-song/preview/dark.png" width="60%" alt="鲸吟 Whale Song 深色预览">
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/whale-song/preview/light.png" width="60%" alt="鲸吟 Whale Song 浅色预览">
+
+## 2026-08-19 · Windows XP
+
+Windows XP Luna 皮肤：蓝色渐变窗口、绿色开始按钮、银色任务栏。
+
+- GitHub：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)
+- 收录版本：`0.2.7`
+- 固定 commit：`4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56`
+- 子目录：`packages/skins/xp`
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/xp/preview/dark.png" width="60%" alt="Windows XP 深色预览">
+
+<img src="https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/xp/preview/light.png" width="60%" alt="Windows XP 浅色预览">
+
 <!-- DSH_SKIN_MARKET_AUTO_RECENT:START -->
 ## 自动同步更新
 

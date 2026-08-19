@@ -1,0 +1,43 @@
+id: captain1275.blue-fantasy
+name:
+  zh: 蓝色幻想
+  en: Blue Fantasy
+author: CAPTAIN1275
+description: 蓝色幻想皮肤：DreamSkin Codex 主题「DeepSeek-鲸鱼娘」风格。
+repo: https://github.com/CAPTAIN1275/dsh-ui-web
+subpath: packages/skins/blue-fantasy
+package: '@captain1275/dsh-client-ui-skin-blue-fantasy'
+rowId: ui-skin-blue-fantasy
+category: theme
+tags:
+- anime
+- wallpaper
+- token-theme
+modes:
+- light
+- dark
+install:
+  target: github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/blue-fantasy
+  version: 0.2.7
+  commit: 4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56
+  allowBuild: '@captain1275/dsh-client-ui-skin-blue-fantasy@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56'
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+  - web
+screenshots:
+- https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/blue-fantasy/preview/dark.png
+- https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/blue-fantasy/preview/light.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: Apache-2.0
+  commercialUse: true
+featuredRank: 969
+starsSnapshot: 31
+releaseUpdatedAt: '2026-08-19T11:43:01.210764Z'
+metadataUpdatedAt: '2026-08-19T11:43:01.210764Z'
+starsUpdatedAt: '2026-08-19T11:43:01.210764Z'
+updatedAt: '2026-08-19T11:43:01.210764Z'

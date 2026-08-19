@@ -1,0 +1,44 @@
+id: captain1275.aurora
+name:
+  zh: 极光 Aurora
+  en: Aurora
+author: CAPTAIN1275
+description: 极光皮肤：支持自定义背景图片（URL / 透明度 / 模糊）与极光渐变背景，半透明毛玻璃面板，浅色/深色两套调色板。
+repo: https://github.com/CAPTAIN1275/dsh-ui-web
+subpath: packages/skins/aurora
+package: '@captain1275/dsh-client-ui-skin-aurora'
+rowId: ui-skin-aurora
+category: theme
+tags:
+- glass
+- wallpaper
+- token-theme
+- light-dark
+modes:
+- light
+- dark
+install:
+  target: github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/aurora
+  version: 0.2.7
+  commit: 4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56
+  allowBuild: '@captain1275/dsh-client-ui-skin-aurora@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56'
+compatibility:
+  dsh: 0.1.0-rc.6
+  platform:
+  - web
+screenshots:
+- https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/aurora/preview/dark.png
+- https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/aurora/preview/light.png
+review:
+  compatibility: verified
+  preview: verified
+  installation: verified
+license:
+  code: Apache-2.0
+  commercialUse: true
+featuredRank: 969
+starsSnapshot: 31
+releaseUpdatedAt: '2026-08-19T11:43:01.210764Z'
+metadataUpdatedAt: '2026-08-19T11:43:01.210764Z'
+starsUpdatedAt: '2026-08-19T11:43:01.210764Z'
+updatedAt: '2026-08-19T11:43:01.210764Z'

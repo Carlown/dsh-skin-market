@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-19T10:39:05.358Z",
+  "generatedAt": "2026-08-19T11:44:06.487Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -10971,6 +10971,382 @@
       "metadataUpdatedAt": "2026-08-19T04:41:42.490Z",
       "starsUpdatedAt": "2026-08-19T04:41:42.490Z",
       "updatedAt": "2026-08-19T04:41:42.490Z"
+    },
+    {
+      "id": "captain1275.aurora",
+      "name": {
+        "zh": "极光 Aurora",
+        "en": "Aurora"
+      },
+      "author": "CAPTAIN1275",
+      "description": "极光皮肤：支持自定义背景图片（URL / 透明度 / 模糊）与极光渐变背景，半透明毛玻璃面板，浅色/深色两套调色板。",
+      "repo": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "subpath": "packages/skins/aurora",
+      "package": "@captain1275/dsh-client-ui-skin-aurora",
+      "rowId": "ui-skin-aurora",
+      "category": "theme",
+      "tags": [
+        "glass",
+        "wallpaper",
+        "token-theme",
+        "light-dark"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/aurora",
+        "version": "0.2.7",
+        "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
+        "allowBuild": "@captain1275/dsh-client-ui-skin-aurora@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/aurora/preview/dark.png",
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/aurora/preview/light.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "Apache-2.0",
+        "commercialUse": true
+      },
+      "featuredRank": 969,
+      "starsSnapshot": 31,
+      "releaseUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "metadataUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "starsUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "updatedAt": "2026-08-19T11:43:01.210764Z"
+    },
+    {
+      "id": "captain1275.blue-fantasy",
+      "name": {
+        "zh": "蓝色幻想",
+        "en": "Blue Fantasy"
+      },
+      "author": "CAPTAIN1275",
+      "description": "蓝色幻想皮肤：DreamSkin Codex 主题「DeepSeek-鲸鱼娘」风格。",
+      "repo": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "subpath": "packages/skins/blue-fantasy",
+      "package": "@captain1275/dsh-client-ui-skin-blue-fantasy",
+      "rowId": "ui-skin-blue-fantasy",
+      "category": "theme",
+      "tags": [
+        "anime",
+        "wallpaper",
+        "token-theme"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/blue-fantasy",
+        "version": "0.2.7",
+        "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
+        "allowBuild": "@captain1275/dsh-client-ui-skin-blue-fantasy@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/blue-fantasy/preview/dark.png",
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/blue-fantasy/preview/light.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "Apache-2.0",
+        "commercialUse": true
+      },
+      "featuredRank": 969,
+      "starsSnapshot": 31,
+      "releaseUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "metadataUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "starsUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "updatedAt": "2026-08-19T11:43:01.210764Z"
+    },
+    {
+      "id": "captain1275.dragon-heir",
+      "name": {
+        "zh": "龙之继承者",
+        "en": "Dragon Heir"
+      },
+      "author": "CAPTAIN1275",
+      "description": "龙之继承者皮肤。",
+      "repo": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "subpath": "packages/skins/dragon-heir",
+      "package": "@captain1275/dsh-client-ui-skin-dragon-heir",
+      "rowId": "ui-skin-dragon-heir",
+      "category": "theme",
+      "tags": [
+        "anime",
+        "token-theme"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/dragon-heir",
+        "version": "0.2.7",
+        "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
+        "allowBuild": "@captain1275/dsh-client-ui-skin-dragon-heir@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/dragon-heir/preview/dark.png",
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/dragon-heir/preview/light.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "Apache-2.0",
+        "commercialUse": true
+      },
+      "featuredRank": 969,
+      "starsSnapshot": 31,
+      "releaseUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "metadataUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "starsUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "updatedAt": "2026-08-19T11:43:01.210764Z"
+    },
+    {
+      "id": "captain1275.miku",
+      "name": {
+        "zh": "初音未来",
+        "en": "Miku"
+      },
+      "author": "CAPTAIN1275",
+      "description": "初音未来皮肤：蓝紫粉渐变、毛玻璃面板、Miku 主题配色。",
+      "repo": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "subpath": "packages/skins/miku",
+      "package": "@captain1275/dsh-client-ui-skin-miku",
+      "rowId": "ui-skin-captain-miku",
+      "category": "theme",
+      "tags": [
+        "anime",
+        "glass",
+        "token-theme"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/miku",
+        "version": "0.2.7",
+        "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
+        "allowBuild": "@captain1275/dsh-client-ui-skin-miku@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/miku/preview/dark.png",
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/miku/preview/light.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "Apache-2.0",
+        "commercialUse": true
+      },
+      "featuredRank": 969,
+      "starsSnapshot": 31,
+      "releaseUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "metadataUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "starsUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "updatedAt": "2026-08-19T11:43:01.210764Z"
+    },
+    {
+      "id": "captain1275.minecraft",
+      "name": {
+        "zh": "Minecraft",
+        "en": "Minecraft"
+      },
+      "author": "CAPTAIN1275",
+      "description": "Minecraft 主题皮肤。",
+      "repo": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "subpath": "packages/skins/minecraft",
+      "package": "@captain1275/dsh-client-ui-skin-minecraft",
+      "rowId": "ui-skin-minecraft",
+      "category": "theme",
+      "tags": [
+        "retro",
+        "token-theme"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/minecraft",
+        "version": "0.2.7",
+        "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
+        "allowBuild": "@captain1275/dsh-client-ui-skin-minecraft@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/minecraft/preview/dark.png",
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/minecraft/preview/light.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "Apache-2.0",
+        "commercialUse": true
+      },
+      "featuredRank": 969,
+      "starsSnapshot": 31,
+      "releaseUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "metadataUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "starsUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "updatedAt": "2026-08-19T11:43:01.210764Z"
+    },
+    {
+      "id": "captain1275.whale-song",
+      "name": {
+        "zh": "鲸吟",
+        "en": "Whale Song"
+      },
+      "author": "CAPTAIN1275",
+      "description": "鲸吟皮肤：深海鲸鱼女神氛围，无文字极简设计。",
+      "repo": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "subpath": "packages/skins/whale-song",
+      "package": "@captain1275/dsh-client-ui-skin-whale-song",
+      "rowId": "ui-skin-whale-song",
+      "category": "theme",
+      "tags": [
+        "glass",
+        "wallpaper",
+        "token-theme"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/whale-song",
+        "version": "0.2.7",
+        "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
+        "allowBuild": "@captain1275/dsh-client-ui-skin-whale-song@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/whale-song/preview/dark.png",
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/whale-song/preview/light.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "Apache-2.0",
+        "commercialUse": true
+      },
+      "featuredRank": 969,
+      "starsSnapshot": 31,
+      "releaseUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "metadataUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "starsUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "updatedAt": "2026-08-19T11:43:01.210764Z"
+    },
+    {
+      "id": "captain1275.xp",
+      "name": {
+        "zh": "Windows XP",
+        "en": "Windows XP"
+      },
+      "author": "CAPTAIN1275",
+      "description": "Windows XP Luna 皮肤：蓝色渐变窗口、绿色开始按钮、银色任务栏。",
+      "repo": "https://github.com/CAPTAIN1275/dsh-ui-web",
+      "subpath": "packages/skins/xp",
+      "package": "@captain1275/dsh-client-ui-skin-xp",
+      "rowId": "ui-skin-captain-xp",
+      "category": "theme",
+      "tags": [
+        "retro",
+        "token-theme"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/xp",
+        "version": "0.2.7",
+        "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
+        "allowBuild": "@captain1275/dsh-client-ui-skin-xp@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+      },
+      "compatibility": {
+        "dsh": "0.1.0-rc.6",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/xp/preview/dark.png",
+        "https://raw.githubusercontent.com/CAPTAIN1275/dsh-ui-web/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56/packages/skins/xp/preview/light.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "license": {
+        "code": "Apache-2.0",
+        "commercialUse": true
+      },
+      "featuredRank": 969,
+      "starsSnapshot": 31,
+      "releaseUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "metadataUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "starsUpdatedAt": "2026-08-19T11:43:01.210764Z",
+      "updatedAt": "2026-08-19T11:43:01.210764Z"
     },
     {
       "id": "wensincai.dsh-skin-rotator",
