@@ -13,7 +13,7 @@ export function sameOrigin(request: IncomingMessage): boolean {
   try { return new URL(origin).host === host } catch { return false }
 }
 
-export async function readSkinId(request: IncomingMessage, limit = 8192): Promise<string> {
+async function readJsonBody(request: IncomingMessage, limit: number): Promise<Record<string, unknown>> {
   if (!String(request.headers['content-type'] ?? '').toLowerCase().startsWith('application/json')) throw new Error('content-type must be application/json')
   const chunks: Buffer[] = []
   let size = 0
@@ -23,7 +23,22 @@ export async function readSkinId(request: IncomingMessage, limit = 8192): Promis
     if (size > limit) throw new Error('request body too large')
     chunks.push(buffer)
   }
-  const body = JSON.parse(Buffer.concat(chunks).toString('utf8')) as { skinId?: unknown }
+  const body = JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown
+  if (body === null || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid request body')
+  return body as Record<string, unknown>
+}
+
+export async function readSkinId(request: IncomingMessage, limit = 8192): Promise<string> {
+  const body = await readJsonBody(request, limit)
   if (typeof body.skinId !== 'string' || body.skinId.length > 128) throw new Error('invalid skinId')
   return body.skinId
+}
+
+export type RestartTarget = { kind: 'skin'; skinId: string } | { kind: 'market-update' }
+
+export async function readRestartTarget(request: IncomingMessage, limit = 8192): Promise<RestartTarget> {
+  const body = await readJsonBody(request, limit)
+  if (body.reason === 'market-update' && body.skinId === undefined) return { kind: 'market-update' }
+  if (typeof body.skinId === 'string' && body.skinId.length <= 128 && body.reason === undefined) return { kind: 'skin', skinId: body.skinId }
+  throw new Error('invalid restart target')
 }

@@ -15,6 +15,7 @@ export interface MarketUpdateStatus {
 export interface MarketUpdater {
   status(force?: boolean): Promise<MarketUpdateStatus>
   update(): Promise<MarketUpdateStatus>
+  readonly restartRequired: boolean
 }
 
 function packageVersion(): string {
@@ -65,6 +66,7 @@ export function createMarketUpdater(
   const cacheMs = options.cacheMs ?? 5 * 60 * 1000
   let cached: { checkedAt: number; status: MarketUpdateStatus } | null = null
   let updating = false
+  let restartRequired = false
 
   const status = async (force = false): Promise<MarketUpdateStatus> => {
     if (!force && cached !== null && Date.now() - cached.checkedAt < cacheMs) return cached.status
@@ -82,6 +84,7 @@ export function createMarketUpdater(
 
   return {
     status,
+    get restartRequired() { return restartRequired },
     async update() {
       if (updating) throw new Error('皮肤市场正在更新')
       updating = true
@@ -91,6 +94,7 @@ export function createMarketUpdater(
         const result = await runner(profile, ['add', MARKET_GITHUB_TARGET])
         if (result.exitCode !== 0 || result.timedOut) throw new Error(commandError(result))
         installedVersion = before.latestVersion
+        restartRequired = true
         const next = { currentVersion: installedVersion, latestVersion: installedVersion, updateAvailable: false }
         cached = { checkedAt: Date.now(), status: next }
         return next

@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import { randomUUID } from 'node:crypto'
 import { join } from 'node:path'
 import { CatalogStore, catalogWithStars } from './catalog.ts'
-import { readSkinId, sameOrigin, sendJson } from './http.ts'
+import { readRestartTarget, readSkinId, sameOrigin, sendJson } from './http.ts'
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts'
 import { installedClientPlugins } from './profile.ts'
 import type { PluginRunner } from './commands.ts'
@@ -151,12 +151,16 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
       if (!sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
       if (options.restart?.available !== true) return sendJson(response, 501, { error: 'restart is unavailable in this DSH host' })
       try {
-        const skinId = await readSkinId(request)
-        const skinState = lifecycle.states().find(item => item.skinId === skinId)
-        // Browser and Host loaders are separate. The browser can correctly
-        // require a restart while the Host half is already live, so accept
-        // either active representation for the selected installed skin.
-        if (!canRestartSkin(skinState)) return sendJson(response, 409, { error: '请先选择并使用此皮肤，再重新启动 DeepSeek Harness' })
+        const target = await readRestartTarget(request)
+        if (target.kind === 'market-update') {
+          if (!marketUpdater.restartRequired) return sendJson(response, 409, { error: '皮肤市场没有待应用的更新' })
+        } else {
+          const skinState = lifecycle.states().find(item => item.skinId === target.skinId)
+          // Browser and Host loaders are separate. The browser can correctly
+          // require a restart while the Host half is already live, so accept
+          // either active representation for the selected installed skin.
+          if (!canRestartSkin(skinState)) return sendJson(response, 409, { error: '请先选择并使用此皮肤，再重新启动 DeepSeek Harness' })
+        }
         await waitForRestartSafety(host)
         sendJson(response, 202, { restarting: true, instanceId })
         options.restart.schedule()

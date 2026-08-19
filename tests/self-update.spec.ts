@@ -14,8 +14,10 @@ describe('market self update', () => {
     const runner = vi.fn(async () => ({ exitCode: 0, stdout: '', stderr: '', timedOut: false }))
     const updater = createMarketUpdater('web', runner, { currentVersion: '0.1.15', fetch: fetchLatest, cacheMs: 0 })
 
+    expect(updater.restartRequired).toBe(false)
     await expect(updater.status()).resolves.toEqual({ currentVersion: '0.1.15', latestVersion: '0.1.16', updateAvailable: true })
     await expect(updater.update()).resolves.toEqual({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false })
+    expect(updater.restartRequired).toBe(true)
     expect(fetchLatest).toHaveBeenCalledWith(MARKET_PACKAGE_URL, expect.objectContaining({ headers: expect.objectContaining({ accept: 'application/json' }) }))
     expect(runner).toHaveBeenCalledWith('web', ['add', MARKET_GITHUB_TARGET])
     await expect(updater.status()).resolves.toEqual({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false })

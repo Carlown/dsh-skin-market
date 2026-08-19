@@ -9,6 +9,7 @@ export interface MarketUpdateStatus {
 export interface MarketUpdater {
     status(force?: boolean): Promise<MarketUpdateStatus>;
     update(): Promise<MarketUpdateStatus>;
+    readonly restartRequired: boolean;
 }
 export declare function compareVersions(left: string, right: string): number;
 export declare function createMarketUpdater(profile: string, runner: PluginRunner, options?: {
