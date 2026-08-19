@@ -32,6 +32,8 @@ interface Skin {
 }
 
 const GALLERY_INTERVAL_MS = 5600
+const FEED_COMPACT_ENTER_SCROLL = 72
+const FEED_COMPACT_EXIT_SCROLL = 16
 
 function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => void; onInstall: () => void }) {
   const repoLabel = githubRepoLabel(skin.repo)
@@ -90,7 +92,12 @@ function App({ skins }: { skins: Skin[] }) {
   useEffect(() => { setVisibleCount(24) }, [query, sort])
 
   useEffect(() => {
-    const updateFeedHeader = () => setFeedCompact(window.scrollY > 32)
+    const updateFeedHeader = () => {
+      const scrollY = window.scrollY
+      setFeedCompact(current => current
+        ? scrollY > FEED_COMPACT_EXIT_SCROLL
+        : scrollY > FEED_COMPACT_ENTER_SCROLL)
+    }
     updateFeedHeader()
     window.addEventListener('scroll', updateFeedHeader, { passive: true })
     return () => window.removeEventListener('scroll', updateFeedHeader)
