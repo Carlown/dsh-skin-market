@@ -127,6 +127,12 @@ describe('client market', () => {
     expect(await screen.findByRole('dialog', { name: '需要重启 DSH 应用皮肤市场更新' })).toBeTruthy()
     expect(screen.getByText(/皮肤市场新版本 0.1.16 将在重启后生效/)).toBeTruthy()
     expect(screen.getByRole('button', { name: '稍后' })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: '稍后' }))
+    expect(screen.getAllByText('皮肤市场已更新，待重启生效').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: '重启' }))
+    expect(screen.getByRole('dialog', { name: '需要重启 DSH 应用皮肤市场更新' })).toBeTruthy()
+    fireEvent.click(screen.getAllByRole('button', { name: '关闭提示' })[0])
+    expect(screen.queryByText('皮肤市场已更新，待重启生效')).toBeNull()
     await waitFor(() => expect(screen.queryByRole('button', { name: '更新皮肤市场到 0.1.16' })).toBeNull())
   })
 
@@ -608,6 +614,10 @@ describe('client market', () => {
 
     expect(await screen.findByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })).toBeTruthy()
     expect(await screen.findByText('Agent 状态检查已通过。但重启仍会关闭所有会话连接；即使回复已经停止显示，也请确认重要内容已保存，且没有即将开始的新任务。')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: '稍后' }))
+    expect(screen.getAllByText('测试皮肤 已更新，待重启生效').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: '重启' }))
+    expect(screen.getByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })).toBeTruthy()
     expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/update') && init?.method === 'POST')).toBe(true)
   })
 
@@ -724,7 +734,8 @@ describe('client market', () => {
 
     expect((await screen.findByRole('status')).textContent).toContain('正在下载“测试皮肤”')
     expect(screen.getByRole('status').textContent).toContain('已用时')
-    expect((await screen.findByRole('alert', {}, { timeout: 2_000 })).textContent).toContain('GitHub 插件下载超时')
+    await waitFor(() => expect(screen.getAllByRole('status').some(item => item.textContent?.includes('GitHub 插件下载超时'))).toBe(true), { timeout: 2_000 })
+    expect(screen.queryByRole('alert')).toBeNull()
   })
 
   it('shows available byte progress in one banner and cancels the download', async () => {

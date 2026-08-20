@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { SquaresFourIcon, TShirtIcon, XIcon } from '@phosphor-icons/react'
 import { MarkGithubIcon, StarIcon } from '@primer/octicons-react'
@@ -39,6 +39,12 @@ interface CatalogResponse {
 
 interface ListScrollAnchor { skinId: string | null; offset: number; scrollTop: number }
 type RestartTarget = { kind: 'skin'; skinId: string } | { kind: 'market-update' }
+
+interface PendingRestartNotice {
+  target: RestartTarget
+  startedAt: string
+  title: string
+}
 
 export function captureListScroll(list: HTMLElement | null): ListScrollAnchor | null {
   if (list === null) return null
@@ -129,22 +135,31 @@ interface OperationBannerProps {
   failed?: boolean
   className?: string
   onCancel?: () => void
+  onDismiss?: () => void
+  action?: ReactNode
 }
 
-function OperationBanner({ title, phase, startedAt, metadata, message, cancelable = false, terminal = false, failed = false, className, onCancel }: OperationBannerProps) {
+function OperationBanner({ title, phase, startedAt, metadata, message, cancelable = false, terminal = false, failed = false, className, onCancel, onDismiss, action }: OperationBannerProps) {
   const [now, setNow] = useState(Date.now())
   useEffect(() => {
     if (terminal) return
     const timer = window.setInterval(() => setNow(Date.now()), 1000)
     return () => window.clearInterval(timer)
   }, [startedAt, terminal])
-  const details = [...metadata, `已用时 ${elapsedLabel(startedAt, now)}`]
-  if (message !== undefined && message !== title) details.push(message)
+  const details = [...new Set([phase, ...metadata, `已用时 ${elapsedLabel(startedAt, now)}`].filter(item => item !== ''))]
+  const messageText = message !== undefined && message !== title && !details.includes(message) ? message : undefined
   return <div className={`${css.operation}${className === undefined ? '' : ` ${className}`}`} role="status" aria-live="polite" data-terminal={terminal ? 'true' : undefined} data-failed={failed ? 'true' : undefined}>
-    {terminal ? <IconRefreshOutline16 size={16} /> : <IconLoadingOutline16 size={16} />}
-    <strong>{title}</strong>
-    <span className={css.operationMeta}>{[phase, ...details].map(item => <small key={item}>· {item}</small>)}</span>
-    {cancelable && onCancel !== undefined && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={onCancel}>取消</Button>}
+    <div className={css.operationHeader}>
+      {terminal ? <IconRefreshOutline16 size={16} /> : <IconLoadingOutline16 size={16} />}
+      <strong>{title}</strong>
+      <span className={css.operationActions}>
+        {cancelable && onCancel !== undefined && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={onCancel}>取消</Button>}
+        {action}
+        {onDismiss !== undefined && <Button className={`${css.nativeOutline} ${css.operationDismiss}`} variant="outline" size="sm" icon={<XIcon size={14} />} aria-label="关闭提示" title="关闭提示" onClick={onDismiss} />}
+      </span>
+    </div>
+    <span className={css.operationMeta}>{details.map(item => <small key={item}>· {item}</small>)}</span>
+    {messageText !== undefined && <p className={css.operationMessage}>{messageText}</p>}
   </div>
 }
 
@@ -291,6 +306,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [marketOperation, setMarketOperation] = useState<MarketUpdateOperation | null>(null)
   const [marketUpdating, setMarketUpdating] = useState(false)
   const [restartTarget, setRestartTarget] = useState<RestartTarget | null>(null)
+  const [pendingRestart, setPendingRestart] = useState<PendingRestartNotice | null>(null)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
   const [homeCompact, setHomeCompact] = useState(false)
   const skinListRef = useRef<HTMLDivElement | null>(null)
@@ -298,6 +314,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const detailRef = useRef<HTMLElement | null>(null)
   const pendingScrollAnchor = useRef<ListScrollAnchor | null>(null)
   const marketUpdatePolls = useRef(new Set<string>())
+  const dismissedMarketOperationIds = useRef(new Set<string>())
   const skinsRef = useRef<CatalogSkin[]>([])
   const selectedIdRef = useRef('')
   const userSelectedRef = useRef(false)
@@ -345,9 +362,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       setStates(state.skins)
       setBusy(state.operation ?? null)
       if ('marketUpdateOperation' in state) {
-        setMarketOperation(state.marketUpdateOperation ?? null)
-        setMarketUpdating(state.marketUpdateOperation?.phase !== undefined
-          && !['done', 'failed', 'cancelled'].includes(state.marketUpdateOperation.phase))
+        const operation = state.marketUpdateOperation !== null && state.marketUpdateOperation !== undefined && !dismissedMarketOperationIds.current.has(state.marketUpdateOperation.id)
+          ? state.marketUpdateOperation
+          : null
+        setMarketOperation(operation)
+        setMarketUpdating(operation?.phase !== undefined
+          && !['done', 'failed', 'cancelled'].includes(operation.phase))
       }
       setInstalledClientPlugins(state.installedClientPlugins ?? [])
       setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
@@ -385,19 +405,25 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         if (operation.phase === 'done') {
           setMarketUpdating(false)
           if (operation.status !== undefined) setMarketUpdate(operation.status)
+          setMarketOperation(null)
+          setPendingRestart({ target: { kind: 'market-update' }, title: '皮肤市场已更新，待重启生效', startedAt: operation.finishedAt ?? new Date().toISOString() })
           await openRestartConfirm(undefined, 'market-update')
           return
         }
         if (operation.phase === 'failed' || operation.phase === 'cancelled') {
           setMarketUpdating(false)
-          if (operation.phase === 'failed') setError(operation.message ?? '皮肤市场更新失败')
+          setError(null)
           return
         }
         await new Promise(resolve => setTimeout(resolve, 600))
       }
     } catch (reason) {
       setMarketUpdating(false)
-      setError(reason instanceof Error ? reason.message : String(reason))
+      const message = reason instanceof Error ? reason.message : String(reason)
+      setMarketOperation(current => current === null
+        ? { id: `market-update-failed-${Date.now()}`, phase: 'failed', message, startedAt: new Date().toISOString() }
+        : { ...current, phase: 'failed', cancelable: false, message })
+      setError(null)
     } finally {
       marketUpdatePolls.current.delete(operationId)
     }
@@ -410,9 +436,10 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         setMarketUpdate(status)
       }
       if (status.operation !== undefined) {
-        setMarketOperation(status.operation)
-        setMarketUpdating(status.operation !== null && !['done', 'failed', 'cancelled'].includes(status.operation.phase))
-        if (status.operation !== null && !['done', 'failed', 'cancelled'].includes(status.operation.phase)) void waitForMarketUpdate(status.operation.id)
+        const operation = status.operation !== null && !dismissedMarketOperationIds.current.has(status.operation.id) ? status.operation : null
+        setMarketOperation(operation)
+        setMarketUpdating(operation !== null && !['done', 'failed', 'cancelled'].includes(operation.phase))
+        if (operation !== null && !['done', 'failed', 'cancelled'].includes(operation.phase)) void waitForMarketUpdate(operation.id)
       }
     } catch { /* update availability must never disturb catalog browsing */ }
   }, [waitForMarketUpdate])
@@ -429,11 +456,16 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         const status = result as MarketUpdateStatus
         setMarketUpdate(status)
         setMarketUpdating(false)
+        setPendingRestart({ target: { kind: 'market-update' }, title: '皮肤市场已更新，待重启生效', startedAt: new Date().toISOString() })
         await openRestartConfirm(undefined, 'market-update')
       } else throw new Error('皮肤市场服务未返回有效的更新任务')
     } catch (reason) {
       setMarketUpdating(false)
-      setError(reason instanceof Error ? reason.message : String(reason))
+      const message = reason instanceof Error ? reason.message : String(reason)
+      setMarketOperation(current => current === null
+        ? { id: `market-update-failed-${Date.now()}`, phase: 'failed', message, startedAt: new Date().toISOString() }
+        : { ...current, phase: 'failed', cancelable: false, message })
+      setError(null)
     }
   }, [openRestartConfirm, waitForMarketUpdate])
 
@@ -605,8 +637,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     try {
       await json<Operation>(`/dsh-skin-market/operations/${operationId}/cancel`, { method: 'POST' })
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason))
       await refresh().catch(() => undefined)
+      const message = reason instanceof Error ? reason.message : String(reason)
+      setBusy(current => current?.id === operationId
+        ? { ...current, phase: 'failed', cancelable: false, message }
+        : { ...busy, phase: 'failed', cancelable: false, message })
+      setError(null)
     }
   }, [busy, refresh])
 
@@ -618,7 +654,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       const cancelled = await json<MarketUpdateOperation>(`/dsh-skin-market/market-update/operations/${operation.id}/cancel`, { method: 'POST' })
       setMarketOperation(cancelled)
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason))
+      const message = reason instanceof Error ? reason.message : String(reason)
+      setMarketOperation(current => current?.id === operation.id ? { ...current, phase: 'failed', cancelable: false, message } : current)
+      setError(null)
     }
   }, [marketOperation])
 
@@ -664,6 +702,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             setStates(value => value.map(item => item.skinId === target.id
               ? { ...item, activation: 'restart-required' }
               : item))
+            setPendingRestart({ target: { kind: 'skin', skinId: target.id }, title: `${target.name.zh} ${kind === 'update' ? '已更新' : '已完成操作'}，待重启生效`, startedAt: new Date().toISOString() })
             await openRestartConfirm(target.id)
           }
           return true
@@ -673,13 +712,23 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           await refresh()
           return false
         }
-        if (operation.phase === 'failed') throw new Error(operation.message ?? '操作失败')
+        if (operation.phase === 'failed') {
+          // Keep terminal operation failures in the shared banner so the
+          // actionable error is visible where the progress was shown.
+          await refresh().catch(() => undefined)
+          setBusy(operation)
+          setError(null)
+          return false
+        }
         await new Promise(resolve => setTimeout(resolve, 600))
       }
     } catch (reason) {
-      setBusy(null)
       await refresh().catch(() => undefined)
-      setError(reason instanceof Error ? reason.message : String(reason))
+      const message = reason instanceof Error ? reason.message : String(reason)
+      setBusy(current => current === null || current.id === 'pending'
+        ? { id: `skin-operation-failed-${Date.now()}`, kind, skinId: target.id, phase: 'failed', startedAt: new Date().toISOString(), message }
+        : { ...current, phase: 'failed', cancelable: false, message })
+      setError(null)
       return false
     } finally {
       setMutation(null)
@@ -812,13 +861,15 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     phase={phases[busy.phase]}
     startedAt={busy.startedAt}
     metadata={operationMeta(busy)}
+    message={busy.message}
     terminal={busy.phase === 'done' || busy.phase === 'failed' || busy.phase === 'cancelled'}
     failed={busy.phase === 'failed'}
     cancelable={busy.cancelable === true}
     onCancel={() => { void cancelOperation() }}
+    onDismiss={busy.phase === 'failed' || busy.phase === 'cancelled' || busy.phase === 'done' ? () => setBusy(null) : undefined}
   />
 
-  const renderMarketOperationBanner = (className?: string) => marketOperation === null ? null : <OperationBanner
+  const renderMarketOperationBanner = (className?: string) => marketOperation === null || (marketOperation.phase === 'done' && pendingRestart !== null) ? null : <OperationBanner
     className={className}
     title={marketOperation.phase === 'failed' ? '皮肤市场更新失败' : marketOperation.phase === 'done' ? '皮肤市场更新完成' : '正在更新皮肤市场'}
     phase={marketUpdatePhases[marketOperation.phase]}
@@ -829,6 +880,18 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     failed={marketOperation.phase === 'failed'}
     cancelable={marketOperation.cancelable === true}
     onCancel={() => { void cancelMarketUpdate() }}
+    onDismiss={marketOperation.phase === 'failed' || marketOperation.phase === 'cancelled' || marketOperation.phase === 'done' ? () => { dismissedMarketOperationIds.current.add(marketOperation.id); setMarketOperation(null) } : undefined}
+  />
+
+  const renderPendingRestartBanner = (className?: string) => pendingRestart === null ? null : <OperationBanner
+    className={className}
+    title={pendingRestart.title}
+    phase="待重启生效"
+    startedAt={pendingRestart.startedAt}
+    metadata={[pendingRestart.target.kind === 'market-update' ? '皮肤市场更新已写入' : '更新包已写入当前 profile']}
+    terminal
+    action={<Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => void openRestartConfirm(pendingRestart.target.kind === 'skin' ? pendingRestart.target.skinId : undefined, pendingRestart.target.kind)}>重启</Button>}
+    onDismiss={() => setPendingRestart(null)}
   />
   const marketUpdateActive = marketOperation !== null && !['done', 'failed', 'cancelled'].includes(marketOperation.phase)
 
@@ -867,6 +930,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           <div className={css.homeSearchPlaceholder} aria-hidden="true" />
           {renderSkinOperationBanner(css.homeOperation)}
           {renderMarketOperationBanner(css.homeOperation)}
+          {renderPendingRestartBanner(css.homeOperation)}
         </header>
 
         <div className={css.homeContent}>
@@ -986,6 +1050,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
           {renderSkinOperationBanner()}
           {renderMarketOperationBanner()}
+          {renderPendingRestartBanner()}
           {error !== null && <div className={css.error} role="alert">{error}</div>}
 
           <div className={css.galleryGroup} data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPausedState(true)} onMouseLeave={() => setCarouselPausedState(false)} onFocusCapture={() => setCarouselPausedState(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPausedState(false) }}>
