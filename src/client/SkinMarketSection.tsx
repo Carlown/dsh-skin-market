@@ -88,10 +88,6 @@ const phases: Record<Operation['phase'], string> = {
   queued: '正在排队', resolving: '正在解析版本', downloading: '正在下载', installing: '正在写入插件', validating: '正在验证', activating: '正在切换', cancelling: '正在取消', cancelled: '已取消', done: '完成', failed: '操作失败',
 }
 
-const operationVerbs: Record<Operation['kind'], string> = {
-  install: '安装', activate: '启用', deactivate: '停用', pin: '设为常驻', unpin: '取消常驻', update: '更新', uninstall: '卸载',
-}
-
 function elapsedLabel(startedAt: string, now: number): string {
   const seconds = Math.max(0, Math.floor((now - Date.parse(startedAt)) / 1000))
   if (seconds < 60) return `${seconds} 秒`
@@ -106,7 +102,7 @@ function byteLabel(bytes: number): string {
 }
 
 function operationMeta(operation: Operation): string[] {
-  const details = [`${operationVerbs[operation.kind]}任务`]
+  const details: string[] = []
   if (operation.downloadedBytes !== undefined && operation.totalBytes !== undefined) {
     details.push(`${byteLabel(operation.downloadedBytes)} / ${byteLabel(operation.totalBytes)}`)
   } else if (operation.downloadedBytes !== undefined) {
@@ -120,13 +116,12 @@ const mutationLabels: Record<MutationKind, string> = {
   install: '安装中', activate: '使用中', deactivate: '停用中', pin: '设置常驻中', unpin: '取消常驻中', update: '更新中', uninstall: '卸载中',
 }
 
-const marketUpdatePhases: Record<MarketUpdateOperation['phase'], string> = {
-  queued: '正在排队', checking: '正在检查版本', downloading: '正在下载皮肤市场', installing: '正在写入皮肤市场', cancelling: '正在取消', cancelled: '已取消', done: '更新完成', failed: '更新失败',
+const marketOperationTitles: Record<MarketUpdateOperation['phase'], string> = {
+  queued: '正在排队更新皮肤市场', checking: '正在检查皮肤市场更新', downloading: '正在下载皮肤市场', installing: '正在写入皮肤市场', cancelling: '正在取消皮肤市场更新', cancelled: '皮肤市场更新已取消', done: '皮肤市场更新完成', failed: '皮肤市场更新失败',
 }
 
 interface OperationBannerProps {
   title: string
-  phase: string
   startedAt: string
   metadata: string[]
   message?: string
@@ -139,20 +134,20 @@ interface OperationBannerProps {
   action?: ReactNode
 }
 
-function OperationBanner({ title, phase, startedAt, metadata, message, cancelable = false, terminal = false, failed = false, className, onCancel, onDismiss, action }: OperationBannerProps) {
+function OperationBanner({ title, startedAt, metadata, message, cancelable = false, terminal = false, failed = false, className, onCancel, onDismiss, action }: OperationBannerProps) {
   const [now, setNow] = useState(Date.now())
   useEffect(() => {
     if (terminal) return
     const timer = window.setInterval(() => setNow(Date.now()), 1000)
     return () => window.clearInterval(timer)
   }, [startedAt, terminal])
-  const details = [...new Set([phase, ...metadata, `已用时 ${elapsedLabel(startedAt, now)}`].filter(item => item !== ''))]
+  const details = [...new Set([...metadata, ...(!terminal || failed ? [`已用时 ${elapsedLabel(startedAt, now)}`] : [])].filter(item => item !== ''))]
   const normalize = (value: string) => value.replace(/\s+/g, '')
   const normalizedMessage = message === undefined ? '' : normalize(message)
   const messageText = message !== undefined
     && message !== title
     && normalizedMessage !== ''
-    && !details.some(item => {
+    && ![title, ...details].some(item => {
       const normalizedItem = normalize(item)
       return normalizedItem === normalizedMessage || normalizedItem.includes(normalizedMessage) || normalizedMessage.includes(normalizedItem)
     })
@@ -866,7 +861,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const renderSkinOperationBanner = (className?: string) => busy === null ? null : <OperationBanner
     className={className}
     title={`${phases[busy.phase]}“${skins.find(skin => skin.id === busy.skinId)?.name.zh ?? busy.skinId}”`}
-    phase={phases[busy.phase]}
     startedAt={busy.startedAt}
     metadata={operationMeta(busy)}
     message={busy.message}
@@ -879,8 +873,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
   const renderMarketOperationBanner = (className?: string) => marketOperation === null || (marketOperation.phase === 'done' && pendingRestart !== null) ? null : <OperationBanner
     className={className}
-    title={marketOperation.phase === 'failed' ? '皮肤市场更新失败' : marketOperation.phase === 'done' ? '皮肤市场更新完成' : '正在更新皮肤市场'}
-    phase={marketUpdatePhases[marketOperation.phase]}
+    title={marketOperationTitles[marketOperation.phase]}
     startedAt={marketOperation.startedAt}
     metadata={[]}
     message={marketOperation.message}
@@ -894,9 +887,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const renderPendingRestartBanner = (className?: string) => pendingRestart === null ? null : <OperationBanner
     className={className}
     title={pendingRestart.title}
-    phase="待重启生效"
     startedAt={pendingRestart.startedAt}
-    metadata={[pendingRestart.target.kind === 'market-update' ? '皮肤市场更新已写入' : '更新包已写入当前 profile']}
+    metadata={[]}
     terminal
     action={<Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => void openRestartConfirm(pendingRestart.target.kind === 'skin' ? pendingRestart.target.skinId : undefined, pendingRestart.target.kind)}>重启</Button>}
     onDismiss={() => setPendingRestart(null)}

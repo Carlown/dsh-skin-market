@@ -153,9 +153,9 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     fireEvent.click(await screen.findByRole('button', { name: '更新皮肤市场到 0.1.16' }))
-    expect((await screen.findAllByText('正在更新皮肤市场')).length).toBe(2)
-    expect(document.querySelector('[class*="homeHeader"] [role="status"] strong')?.textContent).toBe('正在更新皮肤市场')
-    expect(document.querySelector('[class*="detail"] [role="status"] strong')?.textContent).toBe('正在更新皮肤市场')
+    expect((await screen.findAllByText('正在下载皮肤市场')).length).toBe(2)
+    expect(document.querySelector('[class*="homeHeader"] [role="status"] strong')?.textContent).toBe('正在下载皮肤市场')
+    expect(document.querySelector('[class*="detail"] [role="status"] strong')?.textContent).toBe('正在下载皮肤市场')
     expect(document.querySelector('[class*="homeHeader"] [role="status"]')?.textContent).not.toContain('正在下载皮肤市场更新包')
     expect(operationRequests).toBeGreaterThan(0)
   })
