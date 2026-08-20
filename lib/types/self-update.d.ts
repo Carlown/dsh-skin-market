@@ -6,9 +6,23 @@ export interface MarketUpdateStatus {
     latestVersion: string;
     updateAvailable: boolean;
 }
+export type MarketUpdatePhase = 'queued' | 'checking' | 'downloading' | 'installing' | 'cancelling' | 'cancelled' | 'done' | 'failed';
+export interface MarketUpdateOperation {
+    id: string;
+    phase: MarketUpdatePhase;
+    message?: string;
+    status?: MarketUpdateStatus;
+    cancelable?: boolean;
+    startedAt: string;
+    finishedAt?: string;
+}
 export interface MarketUpdater {
     status(force?: boolean): Promise<MarketUpdateStatus>;
     update(): Promise<MarketUpdateStatus>;
+    startUpdate(): MarketUpdateOperation;
+    operation(id: string): MarketUpdateOperation | null;
+    currentOperation(): MarketUpdateOperation | null;
+    cancel(id: string): MarketUpdateOperation;
     readonly restartRequired: boolean;
 }
 export declare function compareVersions(left: string, right: string): number;

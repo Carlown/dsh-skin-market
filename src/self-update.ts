@@ -1,4 +1,6 @@
-import { readFileSync } from 'node:fs'
+import { randomUUID } from 'node:crypto'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { commandError, type PluginRunner } from './commands.ts'
@@ -12,9 +14,25 @@ export interface MarketUpdateStatus {
   updateAvailable: boolean
 }
 
+export type MarketUpdatePhase = 'queued' | 'checking' | 'downloading' | 'installing' | 'cancelling' | 'cancelled' | 'done' | 'failed'
+
+export interface MarketUpdateOperation {
+  id: string
+  phase: MarketUpdatePhase
+  message?: string
+  status?: MarketUpdateStatus
+  cancelable?: boolean
+  startedAt: string
+  finishedAt?: string
+}
+
 export interface MarketUpdater {
   status(force?: boolean): Promise<MarketUpdateStatus>
   update(): Promise<MarketUpdateStatus>
+  startUpdate(): MarketUpdateOperation
+  operation(id: string): MarketUpdateOperation | null
+  currentOperation(): MarketUpdateOperation | null
+  cancel(id: string): MarketUpdateOperation
   readonly restartRequired: boolean
 }
 
@@ -67,6 +85,70 @@ export function createMarketUpdater(
   let cached: { checkedAt: number; status: MarketUpdateStatus } | null = null
   let updating = false
   let restartRequired = false
+  let activeOperation: string | null = null
+  const operations = new Map<string, MarketUpdateOperation>()
+  const abortControllers = new Map<string, AbortController>()
+
+  const setOperation = (operation: MarketUpdateOperation, patch: Partial<MarketUpdateOperation>): void => {
+    Object.assign(operation, patch)
+    operation.cancelable = !['done', 'failed', 'cancelled', 'cancelling'].includes(operation.phase)
+    if (operation.phase === 'done' || operation.phase === 'failed' || operation.phase === 'cancelled') {
+      operation.finishedAt = new Date().toISOString()
+      if (activeOperation === operation.id) activeOperation = null
+    }
+  }
+
+  const updateTarget = async (operation: MarketUpdateOperation, controller: AbortController): Promise<void> => {
+    try {
+      setOperation(operation, { phase: 'checking', message: '正在检查皮肤市场版本' })
+      const before = await status(true)
+      operation.status = before
+      if (!before.updateAvailable) {
+        setOperation(operation, { phase: 'done', message: '已经是最新版本', status: before })
+        return
+      }
+
+      const report = (chunk: string): void => {
+        if (operation.phase !== 'downloading' && operation.phase !== 'installing') return
+        if (chunk.trim() !== '') operation.message = operation.phase === 'downloading' ? '正在下载皮肤市场更新包' : '正在写入皮肤市场更新'
+      }
+      const run = async (args: readonly string[]) => {
+        const result = await runner(profile, args, {
+          signal: controller.signal,
+          onStdout: report,
+          onStderr: report,
+        })
+        if (result.exitCode !== 0 || result.timedOut || result.aborted) throw new Error(commandError(result))
+      }
+
+      // Resolve the GitHub package in an isolated temporary project first.
+      // The numeric value in .npmrc avoids pnpm 11 parsing dotted CLI config
+      // values as strings and failing inside its retry timer.
+      const directory = mkdtempSync(join(tmpdir(), 'dsh-market-self-update-'))
+      writeFileSync(join(directory, 'package.json'), '{"private":true}\n', 'utf8')
+      writeFileSync(join(directory, '.npmrc'), 'fetch-timeout=600000\n', 'utf8')
+      try {
+        setOperation(operation, { phase: 'downloading', message: '正在下载皮肤市场更新包' })
+        await run(['add', MARKET_GITHUB_TARGET, '--dir', directory, '--ignore-scripts', '--reporter=ndjson'])
+      } finally {
+        rmSync(directory, { recursive: true, force: true })
+      }
+      setOperation(operation, { phase: 'installing', message: '正在写入皮肤市场更新' })
+      await run(['add', MARKET_GITHUB_TARGET, '--prefer-offline', '--reporter=ndjson'])
+
+      installedVersion = before.latestVersion
+      restartRequired = true
+      const next = { currentVersion: installedVersion, latestVersion: installedVersion, updateAvailable: false }
+      cached = { checkedAt: Date.now(), status: next }
+      setOperation(operation, { phase: 'done', message: '更新完成，重启 DSH 后生效', status: next })
+    } catch (error) {
+      if (controller.signal.aborted) setOperation(operation, { phase: 'cancelled', message: '更新已取消' })
+      else setOperation(operation, { phase: 'failed', message: error instanceof Error ? error.message : String(error) })
+    } finally {
+      abortControllers.delete(operation.id)
+      updating = false
+    }
+  }
 
   const status = async (force = false): Promise<MarketUpdateStatus> => {
     if (!force && cached !== null && Date.now() - cached.checkedAt < cacheMs) return cached.status
@@ -82,25 +164,42 @@ export function createMarketUpdater(
     return next
   }
 
+  const startUpdate = (): MarketUpdateOperation => {
+    if (activeOperation !== null) return operations.get(activeOperation)!
+    const operation: MarketUpdateOperation = { id: randomUUID(), phase: 'queued', cancelable: true, startedAt: new Date().toISOString() }
+    operations.set(operation.id, operation)
+    activeOperation = operation.id
+    updating = true
+    const controller = new AbortController()
+    abortControllers.set(operation.id, controller)
+    void updateTarget(operation, controller)
+    const timer = setTimeout(() => operations.delete(operation.id), 30 * 60 * 1000)
+    timer.unref?.()
+    return operation
+  }
+
   return {
     status,
     get restartRequired() { return restartRequired },
     async update() {
       if (updating) throw new Error('皮肤市场正在更新')
-      updating = true
-      try {
-        const before = await status(true)
-        if (!before.updateAvailable) return before
-        const result = await runner(profile, ['add', MARKET_GITHUB_TARGET])
-        if (result.exitCode !== 0 || result.timedOut) throw new Error(commandError(result))
-        installedVersion = before.latestVersion
-        restartRequired = true
-        const next = { currentVersion: installedVersion, latestVersion: installedVersion, updateAvailable: false }
-        cached = { checkedAt: Date.now(), status: next }
-        return next
-      } finally {
-        updating = false
+      const operation = startUpdate()
+      while (operation.phase !== 'done' && operation.phase !== 'failed' && operation.phase !== 'cancelled') {
+        await new Promise(resolve => setTimeout(resolve, 10))
       }
+      if (operation.phase !== 'done' || operation.status === undefined) throw new Error(operation.message ?? '皮肤市场更新失败')
+      return operation.status
+    },
+    startUpdate,
+    operation(id) { return operations.get(id) ?? null },
+    currentOperation() { return activeOperation === null ? null : operations.get(activeOperation) ?? null },
+    cancel(id) {
+      const operation = operations.get(id)
+      if (operation === undefined) throw new Error('更新任务不存在')
+      if (operation.cancelable !== true) return operation
+      setOperation(operation, { phase: 'cancelling', message: '正在取消皮肤市场更新' })
+      abortControllers.get(id)?.abort()
+      return operation
     },
   }
 }

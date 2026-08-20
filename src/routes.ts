@@ -112,6 +112,7 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
         skins: lifecycle.states(),
         installedClientPlugins: installedClientPlugins(options.profileDir, lifecycle.catalog),
         operation: lifecycle.currentOperation(),
+        marketUpdateOperation: marketUpdater.currentOperation(),
         instanceId,
         restartAvailable: options.restart?.available === true,
         runningAgentCount: runningAgentCount(host),
@@ -125,10 +126,28 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
       }
       if (request.method === 'POST' && !sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
       try {
-        sendJson(response, 200, request.method === 'POST' ? await marketUpdater.update() : await marketUpdater.status())
+        if (request.method === 'POST') {
+          const operation = marketUpdater.startUpdate()
+          return sendJson(response, 202, { operationId: operation.id })
+        }
+        sendJson(response, 200, { ...(await marketUpdater.status()), operation: marketUpdater.currentOperation() })
       } catch (error) {
         sendJson(response, 502, { error: error instanceof Error ? error.message : String(error) })
       }
+    } }),
+    host.webServer.register({ kind: 'prefix', path: '/dsh-skin-market/market-update/operations', handler: (request, response) => {
+      const parts = new URL(request.url ?? '/', 'http://localhost').pathname.split('/').filter(Boolean)
+      const cancelling = parts.at(-1) === 'cancel'
+      const id = cancelling ? parts.at(-2) ?? '' : parts.at(-1) ?? ''
+      if (cancelling) {
+        if (!method(request, response, 'POST')) return
+        if (!sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
+        try { return sendJson(response, 202, marketUpdater.cancel(id)) } catch (error) { return sendJson(response, 409, { error: error instanceof Error ? error.message : String(error) }) }
+      }
+      if (!method(request, response, 'GET')) return
+      const operation = marketUpdater.operation(id)
+      if (operation === null) return sendJson(response, 404, { error: '更新任务不存在' })
+      sendJson(response, 200, operation)
     } }),
     // Prefix routes must not end in `/`: DSH matches descendants by appending
     // its own slash (`pathname.startsWith(`${prefix}/`)`). A trailing slash

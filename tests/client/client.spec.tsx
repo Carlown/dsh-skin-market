@@ -130,6 +130,29 @@ describe('client market', () => {
     await waitFor(() => expect(screen.queryByRole('button', { name: '更新皮肤市场到 0.1.16' })).toBeNull())
   })
 
+  it('uses the shared operation banner in the home header while the market updates', async () => {
+    let operationRequests = 0
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runningAgentCount: 0, marketUpdateOperation: null }) }
+      if (url.endsWith('/market-update') && init?.method === 'POST') return { ok: true, status: 202, json: async () => ({ operationId: 'market-update-1' }) }
+      if (url.endsWith('/market-update/operations/market-update-1')) {
+        operationRequests += 1
+        return { ok: true, json: async () => ({ id: 'market-update-1', phase: 'downloading', cancelable: true, startedAt: new Date().toISOString(), message: '正在下载皮肤市场更新包' }) }
+      }
+      if (url.endsWith('/market-update')) return { ok: true, json: async () => ({ currentVersion: '0.1.15', latestVersion: '0.1.16', updateAvailable: true, operation: null }) }
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '更新皮肤市场到 0.1.16' }))
+    expect((await screen.findAllByText('正在更新皮肤市场')).length).toBe(2)
+    expect(document.querySelector('[class*="homeHeader"] [role="status"] strong')?.textContent).toBe('正在更新皮肤市场')
+    expect(document.querySelector('[class*="detail"] [role="status"] strong')?.textContent).toBe('正在更新皮肤市场')
+    expect(operationRequests).toBeGreaterThan(0)
+  })
+
   it('turns an empty successful response into a useful Host update error', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected end of JSON input') } })))
     render(<SkinMarketSection t={key => key} />)

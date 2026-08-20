@@ -57,6 +57,7 @@ export function restoreListScroll(list: HTMLElement | null, anchor: ListScrollAn
 interface MarketStateResponse {
   skins: RuntimeSkin[]
   operation?: Operation | null
+  marketUpdateOperation?: MarketUpdateOperation | null
   installedClientPlugins?: InstalledClientPlugin[]
   runningAgentCount?: number
 }
@@ -65,6 +66,16 @@ interface MarketUpdateStatus {
   currentVersion: string
   latestVersion: string
   updateAvailable: boolean
+}
+
+interface MarketUpdateOperation {
+  id: string
+  phase: 'queued' | 'checking' | 'downloading' | 'installing' | 'cancelling' | 'cancelled' | 'done' | 'failed'
+  message?: string
+  status?: MarketUpdateStatus
+  cancelable?: boolean
+  startedAt: string
+  finishedAt?: string
 }
 
 const phases: Record<Operation['phase'], string> = {
@@ -88,7 +99,7 @@ function byteLabel(bytes: number): string {
   return `${(bytes / 1024 ** 3).toFixed(2)} GB`
 }
 
-function operationMeta(operation: Operation, now: number): string[] {
+function operationMeta(operation: Operation): string[] {
   const details = [`${operationVerbs[operation.kind]}任务`]
   if (operation.downloadedBytes !== undefined && operation.totalBytes !== undefined) {
     details.push(`${byteLabel(operation.downloadedBytes)} / ${byteLabel(operation.totalBytes)}`)
@@ -96,12 +107,45 @@ function operationMeta(operation: Operation, now: number): string[] {
     details.push(`已下载 ${byteLabel(operation.downloadedBytes)}`)
   }
   if (operation.bytesPerSecond !== undefined && operation.bytesPerSecond > 0) details.push(`${byteLabel(operation.bytesPerSecond)}/s`)
-  details.push(`已用时 ${elapsedLabel(operation.startedAt, now)}`)
   return details
 }
 
 const mutationLabels: Record<MutationKind, string> = {
   install: '安装中', activate: '使用中', deactivate: '停用中', pin: '设置常驻中', unpin: '取消常驻中', update: '更新中', uninstall: '卸载中',
+}
+
+const marketUpdatePhases: Record<MarketUpdateOperation['phase'], string> = {
+  queued: '正在排队', checking: '正在检查版本', downloading: '正在下载皮肤市场', installing: '正在写入皮肤市场', cancelling: '正在取消', cancelled: '已取消', done: '更新完成', failed: '更新失败',
+}
+
+interface OperationBannerProps {
+  title: string
+  phase: string
+  startedAt: string
+  metadata: string[]
+  message?: string
+  cancelable?: boolean
+  terminal?: boolean
+  failed?: boolean
+  className?: string
+  onCancel?: () => void
+}
+
+function OperationBanner({ title, phase, startedAt, metadata, message, cancelable = false, terminal = false, failed = false, className, onCancel }: OperationBannerProps) {
+  const [now, setNow] = useState(Date.now())
+  useEffect(() => {
+    if (terminal) return
+    const timer = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(timer)
+  }, [startedAt, terminal])
+  const details = [...metadata, `已用时 ${elapsedLabel(startedAt, now)}`]
+  if (message !== undefined && message !== title) details.push(message)
+  return <div className={`${css.operation}${className === undefined ? '' : ` ${className}`}`} role="status" aria-live="polite" data-terminal={terminal ? 'true' : undefined} data-failed={failed ? 'true' : undefined}>
+    {terminal ? <IconRefreshOutline16 size={16} /> : <IconLoadingOutline16 size={16} />}
+    <strong>{title}</strong>
+    <span className={css.operationMeta}>{[phase, ...details].map(item => <small key={item}>· {item}</small>)}</span>
+    {cancelable && onCancel !== undefined && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={onCancel}>取消</Button>}
+  </div>
 }
 
 const RELOAD_PARAM = 'dsh-skin-reload'
@@ -225,7 +269,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [carouselEpoch, setCarouselEpoch] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [busy, setBusy] = useState<Operation | null>(null)
-  const [operationClock, setOperationClock] = useState(Date.now())
   const [mutation, setMutation] = useState<{ skinId: string; kind: MutationKind } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [confirmUninstall, setConfirmUninstall] = useState(false)
@@ -245,6 +288,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [showInstallOptions, setShowInstallOptions] = useState(false)
   const [installCopied, setInstallCopied] = useState<string | null>(null)
   const [marketUpdate, setMarketUpdate] = useState<MarketUpdateStatus | null>(null)
+  const [marketOperation, setMarketOperation] = useState<MarketUpdateOperation | null>(null)
   const [marketUpdating, setMarketUpdating] = useState(false)
   const [restartTarget, setRestartTarget] = useState<RestartTarget | null>(null)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
@@ -253,6 +297,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const homeRef = useRef<HTMLElement | null>(null)
   const detailRef = useRef<HTMLElement | null>(null)
   const pendingScrollAnchor = useRef<ListScrollAnchor | null>(null)
+  const marketUpdatePolls = useRef(new Set<string>())
   const skinsRef = useRef<CatalogSkin[]>([])
   const selectedIdRef = useRef('')
   const userSelectedRef = useRef(false)
@@ -299,6 +344,11 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       void catalogCache.write(catalog.skins).catch(() => undefined)
       setStates(state.skins)
       setBusy(state.operation ?? null)
+      if ('marketUpdateOperation' in state) {
+        setMarketOperation(state.marketUpdateOperation ?? null)
+        setMarketUpdating(state.marketUpdateOperation?.phase !== undefined
+          && !['done', 'failed', 'cancelled'].includes(state.marketUpdateOperation.phase))
+      }
       setInstalledClientPlugins(state.installedClientPlugins ?? [])
       setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
     } finally {
@@ -308,15 +358,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       }
     }
   }, [acceptCatalog, catalogCache])
-
-  const checkMarketUpdate = useCallback(async () => {
-    try {
-      const status = await json<MarketUpdateStatus>('/dsh-skin-market/market-update')
-      if (typeof status.updateAvailable === 'boolean' && typeof status.currentVersion === 'string' && typeof status.latestVersion === 'string') {
-        setMarketUpdate(status)
-      }
-    } catch { /* update availability must never disturb catalog browsing */ }
-  }, [])
 
   const openRestartConfirm = useCallback(async (skinId?: string, kind: RestartTarget['kind'] = 'skin') => {
     setError(null)
@@ -334,19 +375,67 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     }
   }, [])
 
+  const waitForMarketUpdate = useCallback(async (operationId: string) => {
+    if (marketUpdatePolls.current.has(operationId)) return
+    marketUpdatePolls.current.add(operationId)
+    try {
+      for (;;) {
+        const operation = await json<MarketUpdateOperation>(`/dsh-skin-market/market-update/operations/${operationId}`)
+        setMarketOperation(operation)
+        if (operation.phase === 'done') {
+          setMarketUpdating(false)
+          if (operation.status !== undefined) setMarketUpdate(operation.status)
+          await openRestartConfirm(undefined, 'market-update')
+          return
+        }
+        if (operation.phase === 'failed' || operation.phase === 'cancelled') {
+          setMarketUpdating(false)
+          if (operation.phase === 'failed') setError(operation.message ?? '皮肤市场更新失败')
+          return
+        }
+        await new Promise(resolve => setTimeout(resolve, 600))
+      }
+    } catch (reason) {
+      setMarketUpdating(false)
+      setError(reason instanceof Error ? reason.message : String(reason))
+    } finally {
+      marketUpdatePolls.current.delete(operationId)
+    }
+  }, [openRestartConfirm])
+
+  const checkMarketUpdate = useCallback(async () => {
+    try {
+      const status = await json<MarketUpdateStatus & { operation?: MarketUpdateOperation | null }>('/dsh-skin-market/market-update')
+      if (typeof status.updateAvailable === 'boolean' && typeof status.currentVersion === 'string' && typeof status.latestVersion === 'string') {
+        setMarketUpdate(status)
+      }
+      if (status.operation !== undefined) {
+        setMarketOperation(status.operation)
+        setMarketUpdating(status.operation !== null && !['done', 'failed', 'cancelled'].includes(status.operation.phase))
+        if (status.operation !== null && !['done', 'failed', 'cancelled'].includes(status.operation.phase)) void waitForMarketUpdate(status.operation.id)
+      }
+    } catch { /* update availability must never disturb catalog browsing */ }
+  }, [waitForMarketUpdate])
+
   const updateMarket = useCallback(async () => {
     setError(null)
     setMarketUpdating(true)
     try {
-      const status = await json<MarketUpdateStatus>('/dsh-skin-market/market-update', { method: 'POST' })
-      setMarketUpdate(status)
-      await openRestartConfirm(undefined, 'market-update')
+      const result = await json<{ operationId?: string; currentVersion?: string; latestVersion?: string; updateAvailable?: boolean }>('/dsh-skin-market/market-update', { method: 'POST' })
+      if (typeof result.operationId === 'string') {
+        setMarketOperation({ id: result.operationId, phase: 'queued', cancelable: true, startedAt: new Date().toISOString() })
+        void waitForMarketUpdate(result.operationId)
+      } else if (typeof result.currentVersion === 'string' && typeof result.latestVersion === 'string' && typeof result.updateAvailable === 'boolean') {
+        const status = result as MarketUpdateStatus
+        setMarketUpdate(status)
+        setMarketUpdating(false)
+        await openRestartConfirm(undefined, 'market-update')
+      } else throw new Error('皮肤市场服务未返回有效的更新任务')
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason))
-    } finally {
       setMarketUpdating(false)
+      setError(reason instanceof Error ? reason.message : String(reason))
     }
-  }, [openRestartConfirm])
+  }, [openRestartConfirm, waitForMarketUpdate])
 
   useEffect(() => {
     let disposed = false
@@ -362,6 +451,10 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     return () => { disposed = true }
   }, [acceptCatalog, catalogCache, refresh])
   useEffect(() => { void checkMarketUpdate() }, [checkMarketUpdate])
+  useEffect(() => {
+    if (marketOperation === null || ['done', 'failed', 'cancelled'].includes(marketOperation.phase)) return
+    void waitForMarketUpdate(marketOperation.id)
+  }, [marketOperation?.id, marketOperation?.phase, waitForMarketUpdate])
   useEffect(() => {
     const timer = window.setInterval(() => {
       refresh(false).catch(() => undefined)
@@ -504,13 +597,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
   useEffect(() => { setVisibleCount(CATALOG_BATCH_SIZE) }, [filter, query, sortBy])
   useEffect(() => { setHomeVisibleCount(CATALOG_BATCH_SIZE) }, [homeQuery, sortBy])
-  useEffect(() => {
-    if (busy === null) return
-    setOperationClock(Date.now())
-    const timer = window.setInterval(() => setOperationClock(Date.now()), 1000)
-    return () => window.clearInterval(timer)
-  }, [busy?.id])
-
   const cancelOperation = useCallback(async () => {
     if (busy === null || busy.id === 'pending' || busy.cancelable !== true) return
     const operationId = busy.id
@@ -523,6 +609,18 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       await refresh().catch(() => undefined)
     }
   }, [busy, refresh])
+
+  const cancelMarketUpdate = useCallback(async () => {
+    const operation = marketOperation
+    if (operation === null || operation.cancelable !== true) return
+    setMarketOperation(current => current?.id === operation.id ? { ...current, phase: 'cancelling', cancelable: false, message: '正在取消皮肤市场更新' } : current)
+    try {
+      const cancelled = await json<MarketUpdateOperation>(`/dsh-skin-market/market-update/operations/${operation.id}/cancel`, { method: 'POST' })
+      setMarketOperation(cancelled)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason))
+    }
+  }, [marketOperation])
 
   const runForSkin = useCallback(async (skinId: string, kind: MutationKind) => {
     const target = skins.find(skin => skin.id === skinId)
@@ -708,6 +806,32 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     </article>
   }
 
+  const renderSkinOperationBanner = (className?: string) => busy === null ? null : <OperationBanner
+    className={className}
+    title={`${phases[busy.phase]}“${skins.find(skin => skin.id === busy.skinId)?.name.zh ?? busy.skinId}”`}
+    phase={phases[busy.phase]}
+    startedAt={busy.startedAt}
+    metadata={operationMeta(busy)}
+    terminal={busy.phase === 'done' || busy.phase === 'failed' || busy.phase === 'cancelled'}
+    failed={busy.phase === 'failed'}
+    cancelable={busy.cancelable === true}
+    onCancel={() => { void cancelOperation() }}
+  />
+
+  const renderMarketOperationBanner = (className?: string) => marketOperation === null ? null : <OperationBanner
+    className={className}
+    title={marketOperation.phase === 'failed' ? '皮肤市场更新失败' : marketOperation.phase === 'done' ? '皮肤市场更新完成' : '正在更新皮肤市场'}
+    phase={marketUpdatePhases[marketOperation.phase]}
+    startedAt={marketOperation.startedAt}
+    metadata={[]}
+    message={marketOperation.message}
+    terminal={marketOperation.phase === 'done' || marketOperation.phase === 'failed' || marketOperation.phase === 'cancelled'}
+    failed={marketOperation.phase === 'failed'}
+    cancelable={marketOperation.cancelable === true}
+    onCancel={() => { void cancelMarketUpdate() }}
+  />
+  const marketUpdateActive = marketOperation !== null && !['done', 'failed', 'cancelled'].includes(marketOperation.phase)
+
   return (
     <section className={css.root} data-dsh-skin-market data-detail={showDetail ? 'open' : 'closed'} data-browser-open={browserOpen ? 'true' : 'false'}>
       {settingsNavIconHost !== null && createPortal(<TShirtIcon size={16} weight="regular" aria-hidden="true" />, settingsNavIconHost)}
@@ -725,23 +849,24 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             <div><h2>{t('title')}</h2><p>{skins.length} 款社区皮肤</p></div>
             <div className={css.homeActions}>
               {marketUpdate?.updateAvailable === true && <Button
-                className={`${css.nativeOutline} ${css.marketUpdateButton}`}
+                className={`${css.nativeOutline} ${css.marketUpdateButton} ${css.homeUpdateAction}`}
                 variant="outline"
                 size="sm"
                 icon={marketUpdating ? <IconLoadingOutline16 /> : <IconDownloadOutline16 />}
                 aria-label={`更新皮肤市场到 ${marketUpdate.latestVersion}`}
                 title={`发现新版本 ${marketUpdate.latestVersion}`}
-                disabled={marketUpdating}
-                data-updating={marketUpdating ? 'true' : undefined}
+                disabled={marketUpdating || marketUpdateActive || busy !== null}
+                data-updating={marketUpdating || marketUpdateActive ? 'true' : undefined}
                 onClick={() => { void updateMarket() }}
               ><span className={css.marketUpdateLabel}>{marketUpdating ? '更新中' : '更新'}</span></Button>}
-              <a className={css.nativeOutline} href={REGISTRY_REPOSITORY} target="_blank" rel="noreferrer"><MarkGithubIcon size={15} aria-hidden="true" /> GitHub</a>
-              <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
+              <a className={`${css.nativeOutline} ${css.homeGithubAction}`} href={REGISTRY_REPOSITORY} target="_blank" rel="noreferrer"><MarkGithubIcon size={15} aria-hidden="true" /><span className={css.homeGithubLabel}>GitHub</span></a>
+              <Button className={`${css.nativeOutline} ${css.homeSubmitAction}`} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
             </div>
           </div>
           <Input className={css.homeSearch} value={homeQuery} onChange={event => setHomeQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
           <div className={css.homeSearchPlaceholder} aria-hidden="true" />
-          {busy !== null && <div className={`${css.operation} ${css.homeOperation}`} role="status"><IconLoadingOutline16 size={16} /> {phases[busy.phase]}</div>}
+          {renderSkinOperationBanner(css.homeOperation)}
+          {renderMarketOperationBanner(css.homeOperation)}
         </header>
 
         <div className={css.homeContent}>
@@ -859,12 +984,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
           {state.installation === 'installed' && state.activation === 'inactive' && !activationWarningAccepted && <p className={css.notice} role="note">首次启用提示：请先在设置 → 插件中停用其他皮肤、主题和外观插件，避免全局样式冲突。点击“使用”即表示已确认。</p>}
 
-          {busy !== null && <div className={css.operation} role="status" aria-live="polite">
-            <IconLoadingOutline16 size={16} />
-            <strong>{phases[busy.phase]}“{skins.find(skin => skin.id === busy.skinId)?.name.zh ?? busy.skinId}”</strong>
-            <span className={css.operationMeta}>{operationMeta(busy, operationClock).map(item => <small key={item}>· {item}</small>)}</span>
-            {busy.cancelable === true && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={() => void cancelOperation()}>取消</Button>}
-          </div>}
+          {renderSkinOperationBanner()}
+          {renderMarketOperationBanner()}
           {error !== null && <div className={css.error} role="alert">{error}</div>}
 
           <div className={css.galleryGroup} data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPausedState(true)} onMouseLeave={() => setCarouselPausedState(false)} onFocusCapture={() => setCarouselPausedState(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPausedState(false) }}>

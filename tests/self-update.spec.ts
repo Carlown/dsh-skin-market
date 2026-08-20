@@ -19,7 +19,9 @@ describe('market self update', () => {
     await expect(updater.update()).resolves.toEqual({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false })
     expect(updater.restartRequired).toBe(true)
     expect(fetchLatest).toHaveBeenCalledWith(MARKET_PACKAGE_URL, expect.objectContaining({ headers: expect.objectContaining({ accept: 'application/json' }) }))
-    expect(runner).toHaveBeenCalledWith('web', ['add', MARKET_GITHUB_TARGET])
+    expect(runner).toHaveBeenCalledTimes(2)
+    expect(runner).toHaveBeenNthCalledWith(1, 'web', expect.arrayContaining(['add', MARKET_GITHUB_TARGET, '--dir', expect.any(String), '--ignore-scripts', '--reporter=ndjson']), expect.objectContaining({ signal: expect.any(AbortSignal) }))
+    expect(runner).toHaveBeenNthCalledWith(2, 'web', ['add', MARKET_GITHUB_TARGET, '--prefer-offline', '--reporter=ndjson'], expect.objectContaining({ signal: expect.any(AbortSignal) }))
     await expect(updater.status()).resolves.toEqual({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false })
   })
 
