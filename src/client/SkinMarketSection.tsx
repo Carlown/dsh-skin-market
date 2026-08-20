@@ -78,6 +78,8 @@ const RELOAD_PARAM = 'dsh-skin-reload'
 const ACTIVATION_WARNING_KEY = 'dsh-skin-market:activation-warning-accepted'
 export const CATALOG_BATCH_SIZE = 20
 const GALLERY_INTERVAL_MS = 5600
+const HOME_COMPACT_ENTER_SCROLL = 72
+const HOME_COMPACT_EXIT_SCROLL = 16
 
 export function restartReloadUrl(href: string, instanceId: string): string {
   const url = new URL(href)
@@ -203,6 +205,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [marketUpdating, setMarketUpdating] = useState(false)
   const [restartTarget, setRestartTarget] = useState<RestartTarget | null>(null)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
+  const [homeCompact, setHomeCompact] = useState(false)
   const skinListRef = useRef<HTMLDivElement | null>(null)
   const homeRef = useRef<HTMLElement | null>(null)
   const detailRef = useRef<HTMLElement | null>(null)
@@ -634,11 +637,14 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       {settingsNavIconHost !== null && createPortal(<TShirtIcon size={16} weight="regular" aria-hidden="true" />, settingsNavIconHost)}
       <main className={css.home} hidden={browserOpen} ref={homeRef} onScroll={event => {
         const home = event.currentTarget
+        setHomeCompact(current => current
+          ? home.scrollTop > HOME_COMPACT_EXIT_SCROLL
+          : home.scrollTop > HOME_COMPACT_ENTER_SCROLL)
         if (discoverySkins.length > homeVisibleCount && home.scrollHeight - home.scrollTop - home.clientHeight < 560) {
           setHomeVisibleCount(value => Math.min(discoverySkins.length, value + CATALOG_BATCH_SIZE))
         }
       }}>
-        <header className={css.homeHeader}>
+        <header className={css.homeHeader} data-compact={homeCompact ? 'true' : undefined}>
           <div className={css.homeTitleRow}>
             <div><h2>{t('title')}</h2><p>{skins.length} 款社区皮肤</p></div>
             <div className={css.homeActions}>
@@ -657,7 +663,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
             </div>
           </div>
-          <Input value={homeQuery} onChange={event => setHomeQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
+          <Input className={css.homeSearch} value={homeQuery} onChange={event => setHomeQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
+          <div className={css.homeSearchPlaceholder} aria-hidden="true" />
+          {busy !== null && <div className={`${css.operation} ${css.homeOperation}`} role="status"><IconLoadingOutline16 size={16} /> {phases[busy.phase]}</div>}
         </header>
 
         <div className={css.homeContent}>

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type Ref } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { StarIcon } from '@primer/octicons-react'
@@ -32,8 +32,7 @@ interface Skin {
 }
 
 const GALLERY_INTERVAL_MS = 5600
-const FEED_COMPACT_ENTER_SCROLL = 72
-const FEED_COMPACT_EXIT_SCROLL = 16
+const FEED_COMPACT_EXIT_OFFSET = 16
 
 function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => void; onInstall: () => void }) {
   const repoLabel = githubRepoLabel(skin.repo)
@@ -51,11 +50,15 @@ function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => vo
   </article>
 }
 
-function FeedHeader({ compact, skinCount, query, onQueryChange, interactive = true }: { compact: boolean; skinCount: number; query: string; onQueryChange: (value: string) => void; interactive?: boolean }) {
-  return <header className={`feed-header${compact ? ' feed-header-compact' : ''}`}>
+function FeedHeader({ skinCount, headerRef, searchSlotRef }: { skinCount: number; headerRef?: Ref<HTMLElement>; searchSlotRef?: Ref<HTMLDivElement> }) {
+  return <header className="feed-header" ref={headerRef}>
     <div><h1>发现皮肤</h1><p>{skinCount} 款社区皮肤，找到适合你的 DSH 外观</p></div>
-    <label className="search feed-search"><MagnifyingGlass size={18} /><input value={query} onChange={event => onQueryChange(event.currentTarget.value)} placeholder="搜索皮肤、作者或标签" tabIndex={interactive ? undefined : -1} /></label>
+    <div className="feed-search-slot" ref={searchSlotRef} aria-hidden="true" />
   </header>
+}
+
+function SearchBox({ query, onQueryChange, style }: { query: string; onQueryChange: (value: string) => void; style?: CSSProperties }) {
+  return <label className="search site-search" style={style}><MagnifyingGlass size={18} /><input value={query} onChange={event => onQueryChange(event.currentTarget.value)} placeholder="搜索皮肤、作者或标签" aria-label="搜索皮肤、作者或标签" /></label>
 }
 
 function App({ skins }: { skins: Skin[] }) {
@@ -72,6 +75,13 @@ function App({ skins }: { skins: Skin[] }) {
   const [copied, setCopied] = useState<string | null>(null)
   const [installDialog, setInstallDialog] = useState<'market' | 'skin' | null>(null)
   const detailRef = useRef<HTMLElement | null>(null)
+  const feedHeaderRef = useRef<HTMLElement | null>(null)
+  const feedSearchSlotRef = useRef<HTMLDivElement | null>(null)
+  const pageShellRef = useRef<HTMLDivElement | null>(null)
+  const topbarRef = useRef<HTMLElement | null>(null)
+  const brandRef = useRef<HTMLAnchorElement | null>(null)
+  const topActionsRef = useRef<HTMLElement | null>(null)
+  const [searchStyle, setSearchStyle] = useState<CSSProperties | undefined>(undefined)
 
   const selected = skins.find(item => item.id === selectedId) ?? skins[0]
   const shotCount = selected?.screenshots.length ?? 0
@@ -100,15 +110,45 @@ function App({ skins }: { skins: Skin[] }) {
 
   useEffect(() => {
     const updateFeedHeader = () => {
-      const scrollY = window.scrollY
+      const headerTop = feedHeaderRef.current?.getBoundingClientRect().top
+      if (headerTop === undefined) return
       setFeedCompact(current => current
-        ? scrollY > FEED_COMPACT_EXIT_SCROLL
-        : scrollY > FEED_COMPACT_ENTER_SCROLL)
+        ? headerTop <= FEED_COMPACT_EXIT_OFFSET
+        : headerTop <= 0)
     }
     updateFeedHeader()
     window.addEventListener('scroll', updateFeedHeader, { passive: true })
     return () => window.removeEventListener('scroll', updateFeedHeader)
   }, [])
+
+  const updateSearchGeometry = useCallback(() => {
+    const shell = pageShellRef.current
+    const slot = feedSearchSlotRef.current
+    const topbar = topbarRef.current
+    const brand = brandRef.current
+    const actions = topActionsRef.current
+    if (shell === null || slot === null || topbar === null || brand === null || actions === null) return
+    const shellRect = shell.getBoundingClientRect()
+    const slotRect = slot.getBoundingClientRect()
+    if (!feedCompact) {
+      setSearchStyle({ position: 'absolute', zIndex: 1, visibility: 'visible', top: slotRect.top - shellRect.top, left: slotRect.left - shellRect.left, width: slotRect.width })
+      return
+    }
+    const topbarRect = topbar.getBoundingClientRect()
+    const brandRect = brand.getBoundingClientRect()
+    const actionsRect = actions.getBoundingClientRect()
+    const gap = window.matchMedia('(max-width: 820px)').matches ? 10 : 24
+    const availableLeft = brandRect.right + gap
+    const availableRight = actionsRect.left - gap
+    const width = Math.max(0, Math.min(520, availableRight - availableLeft))
+    setSearchStyle({ position: 'fixed', zIndex: 21, visibility: 'visible', top: topbarRect.top + (topbarRect.height - 38) / 2, left: availableRight - width, width, height: 38 })
+  }, [feedCompact])
+
+  useLayoutEffect(() => {
+    updateSearchGeometry()
+    window.addEventListener('resize', updateSearchGeometry)
+    return () => window.removeEventListener('resize', updateSearchGeometry)
+  }, [updateSearchGeometry])
 
   useLayoutEffect(() => {
     if (detailRef.current !== null) detailRef.current.scrollTop = 0
@@ -177,25 +217,24 @@ function App({ skins }: { skins: Skin[] }) {
   const verified = selected.review?.compatibility !== 'unverified'
   const manualOnly = selected.review?.installation === 'manual-only'
 
-  return <div className="page-shell" data-detail={detailOpen ? 'open' : 'closed'}>
-    <header className="topbar">
-      <a className="brand" href={import.meta.env.BASE_URL}>
+  return <div className="page-shell" ref={pageShellRef} data-detail={detailOpen ? 'open' : 'closed'}>
+    <header className="topbar" ref={topbarRef}>
+      <a className="brand" ref={brandRef} href={import.meta.env.BASE_URL}>
         <span className="brand-mark">DSH</span>
-        <span><strong>皮肤市场</strong><small>社区外观目录</small></span>
+        <span><strong>皮肤市场</strong><small>dsh-skin-market</small></span>
       </a>
-      <nav className="top-actions" aria-label="平台操作">
-        <a className="qr-share" href={MARKET_PUBLIC_URL} target="_blank" rel="noreferrer" aria-label="扫描二维码打开 DSH 皮肤市场">
-          <img src={`${import.meta.env.BASE_URL}market-qr.svg`} alt="DSH 皮肤市场二维码" />
-          <span><strong>扫码打开</strong><small>分享后也能访问</small></span>
-        </a>
+      <nav className="top-actions" ref={topActionsRef} aria-label="平台操作">
         <a className="button outline" href={MARKET_REPOSITORY} target="_blank" rel="noreferrer"><GithubLogo size={17} /> GitHub</a>
         <button className="button outline" onClick={() => { setCopied(null); setInstallDialog('market') }}>安装皮肤市场</button>
+        <a className="qr-share" href={MARKET_PUBLIC_URL} target="_blank" rel="noreferrer" aria-label="扫描二维码打开 DSH 皮肤市场">
+          <span><strong>扫码打开本页</strong></span>
+          <img src={`${import.meta.env.BASE_URL}market-qr.svg`} alt="DSH 皮肤市场二维码" />
+        </a>
       </nav>
     </header>
 
     <main className="feed-page">
-      <FeedHeader compact={false} skinCount={skins.length} query={query} onQueryChange={setQuery} interactive={!feedCompact} />
-      {feedCompact && <FeedHeader compact skinCount={skins.length} query={query} onQueryChange={setQuery} />}
+      <FeedHeader headerRef={feedHeaderRef} searchSlotRef={feedSearchSlotRef} skinCount={skins.length} />
       <section className="feed-content" aria-labelledby="discover-title">
         <div className="feed-section-title"><div><h2 id="discover-title">{query.trim() === '' ? '发现更多' : '搜索结果'}</h2><span>{filtered.length} 个结果</span></div><button onClick={() => setSort(value => value === 'stars' ? 'latest' : 'stars')}>{sort === 'stars' ? 'Stars 优先' : '最近更新'}</button></div>
         {visibleSkins.length > 0 ? <div className="skin-grid">
@@ -204,6 +243,8 @@ function App({ skins }: { skins: Skin[] }) {
         {visibleCount < filtered.length && <div className="feed-loading" aria-hidden="true"><span /><span /></div>}
       </section>
     </main>
+
+    <SearchBox query={query} onQueryChange={setQuery} style={searchStyle} />
 
     {detailOpen && <div className="browser-overlay" role="presentation">
       <button className="browser-mask" aria-hidden="true" tabIndex={-1} onClick={() => setDetailOpen(false)} />

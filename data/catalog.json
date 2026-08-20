@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-19T15:49:56.867Z",
+  "generatedAt": "2026-08-20T06:32:12.665Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -272,6 +272,76 @@
       "metadataUpdatedAt": "2026-08-18T15:42:53.218Z",
       "starsUpdatedAt": "2026-08-18T09:15:01.000Z",
       "updatedAt": "2026-08-18T15:42:53.218Z"
+    },
+    {
+      "id": "small-tailqwq.orca-link",
+      "name": {
+        "zh": "虎鲸链路",
+        "en": "ORCA LINK"
+      },
+      "author": "Small-tailqwq",
+      "description": "DSH Web 虎鲸链路皮肤：珍珠白机械舱、黑曜虎鲸操作员与电蓝链路信号，包含亮暗双场景、直角 UI、状态角色和动态定价信号。",
+      "repo": "https://github.com/Small-tailqwq/dsh-deep-whale",
+      "subpath": "orca-link",
+      "package": "@dsh-external/dsh-client-ui-skin-orca-link",
+      "rowId": "ui-skin-orca-link",
+      "category": "anime",
+      "tags": [
+        "orca",
+        "mechanical",
+        "monochrome",
+        "anime",
+        "blue"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:Small-tailqwq/dsh-deep-whale#3d904c8e04bbe0eafe148e74341d7c81dd94572e&path:orca-link",
+        "version": "0.0.1",
+        "commit": "3d904c8e04bbe0eafe148e74341d7c81dd94572e"
+      },
+      "compatibility": {
+        "dsh": "unverified",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/Small-tailqwq/dsh-deep-whale/3d904c8e04bbe0eafe148e74341d7c81dd94572e/orca-link/preview/light.png",
+        "https://raw.githubusercontent.com/Small-tailqwq/dsh-deep-whale/3d904c8e04bbe0eafe148e74341d7c81dd94572e/orca-link/preview/dark.png"
+      ],
+      "review": {
+        "compatibility": "unverified",
+        "preview": "verified",
+        "installation": "manual-only"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "improve",
+          "compatibility": "improve",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": [
+          "建议在 orca-link/README.md 中嵌入至少一张固定版本的 DSH Web 实机运行截图，方便用户直接确认皮肤效果。",
+          "建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。"
+        ]
+      },
+      "license": {
+        "code": "CC-BY-NC-SA-4.0",
+        "commercialUse": false,
+        "notice": "仅限非商业使用；详情页必须保留原仓库 NOTICE 署名链。"
+      },
+      "featuredRank": 3,
+      "starsSnapshot": 1448,
+      "releaseUpdatedAt": "2026-08-19T13:39:10Z",
+      "metadataUpdatedAt": "2026-08-19T15:02:45Z",
+      "starsUpdatedAt": "2026-08-19T15:02:45Z",
+      "updatedAt": "2026-08-19T15:02:45Z"
     },
     {
       "id": "zhijun-dai.catppuccin",

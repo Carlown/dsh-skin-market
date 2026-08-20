@@ -6,9 +6,17 @@ export interface CommandResult {
   stdout: string
   stderr: string
   timedOut: boolean
+  aborted?: boolean
 }
 
-export type PluginRunner = (profile: string, args: readonly string[]) => Promise<CommandResult>
+export interface CommandOptions {
+  signal?: AbortSignal
+  onStdout?: (chunk: string) => void
+  onStderr?: (chunk: string) => void
+}
+
+export type PluginRunner = (profile: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>
+const PLUGIN_COMMAND_TIMEOUT_MS = 10 * 60 * 1000
 
 function dshInvocation(): { file: string; prefix: string[]; cwd?: string } {
   const entry = process.argv[1]
@@ -19,7 +27,7 @@ function dshInvocation(): { file: string; prefix: string[]; cwd?: string } {
   return { file: 'dsh', prefix: [] }
 }
 
-export const runPluginCli: PluginRunner = (profile, args) => new Promise(resolvePromise => {
+export const runPluginCli: PluginRunner = (profile, args, options) => new Promise(resolvePromise => {
   const invocation = dshInvocation()
   const env: NodeJS.ProcessEnv = { ...process.env, CI: 'true' }
   if (process.platform !== 'win32') {
@@ -34,17 +42,43 @@ export const runPluginCli: PluginRunner = (profile, args) => new Promise(resolve
     env,
     shell: false,
     stdio: ['ignore', 'pipe', 'pipe'],
+    detached: process.platform !== 'win32',
   })
   let stdout = ''
   let stderr = ''
   let timedOut = false
-  child.stdout?.on('data', chunk => { stdout += String(chunk) })
-  child.stderr?.on('data', chunk => { stderr += String(chunk) })
-  const timer = setTimeout(() => { timedOut = true; child.kill('SIGKILL') }, 10 * 60 * 1000)
+  let aborted = options?.signal?.aborted === true
+  const kill = (signal: NodeJS.Signals): void => {
+    if (child.pid === undefined || child.exitCode !== null) return
+    try {
+      if (process.platform === 'win32') child.kill(signal)
+      else process.kill(-child.pid, signal)
+    } catch { /* the process may have exited between the checks */ }
+  }
+  child.stdout?.on('data', chunk => {
+    const value = String(chunk)
+    stdout += value
+    options?.onStdout?.(value)
+  })
+  child.stderr?.on('data', chunk => {
+    const value = String(chunk)
+    stderr += value
+    options?.onStderr?.(value)
+  })
+  const abort = (): void => {
+    aborted = true
+    kill('SIGTERM')
+    const forceTimer = setTimeout(() => kill('SIGKILL'), 3000)
+    forceTimer.unref?.()
+  }
+  options?.signal?.addEventListener('abort', abort, { once: true })
+  if (aborted) abort()
+  const timer = setTimeout(() => { timedOut = true; kill('SIGKILL') }, PLUGIN_COMMAND_TIMEOUT_MS)
   child.on('error', error => { stderr += error.message })
   child.on('close', exitCode => {
     clearTimeout(timer)
-    resolvePromise({ exitCode, stdout, stderr, timedOut })
+    options?.signal?.removeEventListener('abort', abort)
+    resolvePromise({ exitCode, stdout, stderr, timedOut, aborted })
   })
 })
 
@@ -57,18 +91,39 @@ export interface DesktopPnpmLike {
 }
 
 export function desktopRunner(service: DesktopPnpmLike, profileDir: string): PluginRunner {
-  return async (_profile, args) => {
-    const operation = service.runPlugin(args, profileDir)
+  return async (_profile, args, options) => {
+    const timeout = new AbortController()
+    let timedOut = false
+    const timer = setTimeout(() => { timedOut = true; timeout.abort() }, PLUGIN_COMMAND_TIMEOUT_MS)
+    const signal = options?.signal === undefined ? timeout.signal : AbortSignal.any([options.signal, timeout.signal])
+    const operation = service.runPlugin(args, profileDir, signal)
     let stdout = ''
     let stderr = ''
-    operation.stdout.on('data', chunk => { stdout += String(chunk) })
-    operation.stderr.on('data', chunk => { stderr += String(chunk) })
-    const result = await operation.done
-    return { exitCode: result.exitCode, stdout, stderr, timedOut: false }
+    operation.stdout.on('data', chunk => {
+      const value = String(chunk)
+      stdout += value
+      options?.onStdout?.(value)
+    })
+    operation.stderr.on('data', chunk => {
+      const value = String(chunk)
+      stderr += value
+      options?.onStderr?.(value)
+    })
+    try {
+      const result = await operation.done
+      return { exitCode: result.exitCode, stdout, stderr, timedOut, aborted: options?.signal?.aborted === true }
+    } finally {
+      clearTimeout(timer)
+    }
   }
 }
 
 export function commandError(result: CommandResult): string {
-  if (result.timedOut) return 'plugin command timed out'
-  return (result.stderr || result.stdout || `plugin command exited ${String(result.exitCode)}`).trim().slice(-800)
+  if (result.aborted) return '操作已取消'
+  if (result.timedOut) return '插件安装超过 10 分钟，已停止；请检查网络后重试'
+  const output = `${result.stdout}\n${result.stderr}`.trim()
+  if (/\[23\].*aborted due to timeout|TimeoutError: The operation was aborted due to timeout/is.test(output)) {
+    return 'GitHub 插件下载超时；安装包较大或当前网络较慢，请检查网络后重试'
+  }
+  return (output || `plugin command exited ${String(result.exitCode)}`).slice(-1600)
 }

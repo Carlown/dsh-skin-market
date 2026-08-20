@@ -3,8 +3,14 @@ export interface CommandResult {
     stdout: string;
     stderr: string;
     timedOut: boolean;
+    aborted?: boolean;
 }
-export type PluginRunner = (profile: string, args: readonly string[]) => Promise<CommandResult>;
+export interface CommandOptions {
+    signal?: AbortSignal;
+    onStdout?: (chunk: string) => void;
+    onStderr?: (chunk: string) => void;
+}
+export type PluginRunner = (profile: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>;
 export declare const runPluginCli: PluginRunner;
 export interface DesktopPnpmLike {
     runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal): {
