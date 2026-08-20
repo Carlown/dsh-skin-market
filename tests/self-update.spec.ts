@@ -20,7 +20,10 @@ describe('market self update', () => {
     expect(updater.restartRequired).toBe(true)
     expect(fetchLatest).toHaveBeenCalledWith(MARKET_PACKAGE_URL, expect.objectContaining({ headers: expect.objectContaining({ accept: 'application/json' }) }))
     expect(runner).toHaveBeenCalledTimes(1)
-    expect(runner).toHaveBeenCalledWith('web', ['add', MARKET_GITHUB_TARGET, '--prefer-offline', '--reporter=ndjson'], expect.objectContaining({ signal: expect.any(AbortSignal) }))
+    expect(runner).toHaveBeenCalledWith('web', ['add', MARKET_GITHUB_TARGET, '--prefer-offline', '--reporter=ndjson'], expect.objectContaining({
+      signal: expect.any(AbortSignal),
+      env: { 'npm_config_fetch-timeout': '600000' },
+    }))
     await expect(updater.status()).resolves.toEqual({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false })
   })
 

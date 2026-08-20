@@ -11,6 +11,7 @@ export interface CommandResult {
 
 export interface CommandOptions {
   signal?: AbortSignal
+  env?: NodeJS.ProcessEnv
   onStdout?: (chunk: string) => void
   onStderr?: (chunk: string) => void
 }
@@ -29,7 +30,7 @@ function dshInvocation(): { file: string; prefix: string[]; cwd?: string } {
 
 export const runPluginCli: PluginRunner = (profile, args, options) => new Promise(resolvePromise => {
   const invocation = dshInvocation()
-  const env: NodeJS.ProcessEnv = { ...process.env, CI: 'true' }
+  const env: NodeJS.ProcessEnv = { ...process.env, ...options?.env, CI: 'true' }
   if (process.platform !== 'win32') {
     const parts = (env.PATH ?? '').split(':').filter(Boolean)
     for (const value of ['/opt/homebrew/bin', '/usr/local/bin', join(process.env.HOME ?? '', '.local', 'bin')]) {
@@ -83,7 +84,7 @@ export const runPluginCli: PluginRunner = (profile, args, options) => new Promis
 })
 
 export interface DesktopPnpmLike {
-  runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal): {
+  runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal, env?: NodeJS.ProcessEnv): {
     stdout: NodeJS.ReadableStream
     stderr: NodeJS.ReadableStream
     done: Promise<{ exitCode: number | null }>
@@ -96,7 +97,7 @@ export function desktopRunner(service: DesktopPnpmLike, profileDir: string): Plu
     let timedOut = false
     const timer = setTimeout(() => { timedOut = true; timeout.abort() }, PLUGIN_COMMAND_TIMEOUT_MS)
     const signal = options?.signal === undefined ? timeout.signal : AbortSignal.any([options.signal, timeout.signal])
-    const operation = service.runPlugin(args, profileDir, signal)
+    const operation = service.runPlugin(args, profileDir, signal, options?.env)
     let stdout = ''
     let stderr = ''
     operation.stdout.on('data', chunk => {

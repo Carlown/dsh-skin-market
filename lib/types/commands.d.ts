@@ -7,13 +7,14 @@ export interface CommandResult {
 }
 export interface CommandOptions {
     signal?: AbortSignal;
+    env?: NodeJS.ProcessEnv;
     onStdout?: (chunk: string) => void;
     onStderr?: (chunk: string) => void;
 }
 export type PluginRunner = (profile: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>;
 export declare const runPluginCli: PluginRunner;
 export interface DesktopPnpmLike {
-    runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal): {
+    runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal, env?: NodeJS.ProcessEnv): {
         stdout: NodeJS.ReadableStream;
         stderr: NodeJS.ReadableStream;
         done: Promise<{

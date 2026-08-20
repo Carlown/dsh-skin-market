@@ -6,6 +6,7 @@ import { commandError, type PluginRunner } from './commands.ts'
 
 export const MARKET_GITHUB_TARGET = 'github:kingOfSoySauce/dsh-skin-market'
 export const MARKET_PACKAGE_URL = 'https://raw.githubusercontent.com/kingOfSoySauce/dsh-skin-market/main/package.json'
+const PNPM_FETCH_TIMEOUT_MS = 10 * 60 * 1000
 
 export interface MarketUpdateStatus {
   currentVersion: string
@@ -114,6 +115,11 @@ export function createMarketUpdater(
       const run = async (args: readonly string[]) => {
         const result = await runner(profile, args, {
           signal: controller.signal,
+          // pnpm's default 60s fetch timeout plus retries produces a misleading
+          // ~4 minute failure for a slow GitHub route. Keep self-update on the
+          // same 10 minute network budget as ordinary skin installs without
+          // writing a persistent .npmrc into the user's profile.
+          env: { 'npm_config_fetch-timeout': String(PNPM_FETCH_TIMEOUT_MS) },
           onStdout: report,
           onStderr: report,
         })
