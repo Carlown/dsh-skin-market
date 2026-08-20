@@ -145,10 +145,14 @@ describe('skin lifecycle', () => {
     lifecycle = new SkinLifecycle({ loader: { entries: () => entries.values() } }, { profile: 'test', profileDir: dir, runner })
     const skin = lifecycle.catalog[0]
 
-    expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
+    const install = await finished(lifecycle.begin('install', skin.id))
+    expect(install.phase).toBe('done')
     expect(lifecycle.states()[0]).toMatchObject({ installation: 'installed', activation: 'inactive' })
-    expect((await finished(lifecycle.begin('activate', skin.id))).phase).toBe('done')
+    expect(readMarketState(dir).activity?.[skin.id]?.installedAt).toBe(install.startedAt)
+    const activation = await finished(lifecycle.begin('activate', skin.id))
+    expect(activation.phase).toBe('done')
     expect(readMarketState(dir).activeSkinId).toBe(skin.id)
+    expect(readMarketState(dir).activity?.[skin.id]?.usedAt).toBe(activation.startedAt)
     expect(lifecycle.states()[0].activation).toBe('active')
 
     const second = lifecycle.catalog[1]

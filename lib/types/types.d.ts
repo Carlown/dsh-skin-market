@@ -77,6 +77,7 @@ export interface SkinRuntimeState {
     installedVersion: string | null;
     installedSpec: string | null;
     installedAt: string | null;
+    lastOperatedAt: string | null;
     updateAvailable: boolean;
     error?: string;
 }
@@ -107,6 +108,12 @@ export interface PersistedMarketState {
     activeSkinId: string | null;
     disabledSkinIds: string[];
     pinnedSkinIds?: string[];
+    activity?: Record<string, SkinActivity>;
+}
+export interface SkinActivity {
+    installedAt?: string;
+    updatedAt?: string;
+    usedAt?: string;
 }
 export interface LoaderEntry {
     options: {

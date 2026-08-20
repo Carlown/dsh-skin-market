@@ -213,7 +213,7 @@ async function json<T>(url: string, init?: RequestInit): Promise<T> {
 
 function runtimeFor(states: RuntimeSkin[], id: string): RuntimeSkin {
   return states.find(item => item.skinId === id) ?? {
-    skinId: id, installation: 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: null, installedAt: null, updateAvailable: false,
+    skinId: id, installation: 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: null, installedAt: null, lastOperatedAt: null, updateAvailable: false,
   }
 }
 
@@ -253,6 +253,18 @@ export function compareSkinOrder(a: CatalogSkin, b: CatalogSkin, sortBy: 'stars'
   return compareCatalogOrder(a, b, sortBy, skin => skin.githubStars, skin => skin.releaseUpdatedAt)
 }
 
+export function compareInstalledSkinOrder(a: CatalogSkin, b: CatalogSkin, states: RuntimeSkin[]): number {
+  const aState = runtimeFor(states, a.id)
+  const bState = runtimeFor(states, b.id)
+  const priority = (state: RuntimeSkin) => state.primary === true ? 0 : state.pinned === true ? 1 : 2
+  const priorityDifference = priority(aState) - priority(bState)
+  if (priorityDifference !== 0) return priorityDifference
+  const aTime = Date.parse(aState.lastOperatedAt ?? aState.installedAt ?? '')
+  const bTime = Date.parse(bState.lastOperatedAt ?? bState.installedAt ?? '')
+  const recentDifference = (Number.isFinite(bTime) ? bTime : 0) - (Number.isFinite(aTime) ? aTime : 0)
+  return recentDifference || a.name.zh.localeCompare(b.name.zh, 'zh-CN') || a.id.localeCompare(b.id)
+}
+
 interface PreviewMediaProps {
   skin: CatalogSkin
   src?: string
@@ -287,7 +299,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [query, setQuery] = useState('')
   const [homeQuery, setHomeQuery] = useState('')
   const [filter, setFilter] = useState<'all' | 'installed'>('all')
-  const [sortBy, setSortBy] = useState<'stars' | 'latest'>('stars')
+  const [sortBy, setSortBy] = useState<'stars' | 'latest'>('latest')
   const [visibleCount, setVisibleCount] = useState(CATALOG_BATCH_SIZE)
   const [homeVisibleCount, setHomeVisibleCount] = useState(CATALOG_BATCH_SIZE)
   const [installedSlots, setInstalledSlots] = useState(5)
@@ -574,7 +586,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     if (!haystack.includes(query.trim().toLowerCase())) return false
     if (filter === 'installed') return runtimeFor(states, skin.id).installation !== 'missing'
     return true
-  }).sort((a, b) => compareSkinOrder(a, b, sortBy)), [skins, states, filter, query, sortBy])
+  }).sort((a, b) => filter === 'installed' ? compareInstalledSkinOrder(a, b, states) : compareSkinOrder(a, b, sortBy)), [skins, states, filter, query, sortBy])
   const visibleSkins = useMemo(() => {
     const visible = filtered.slice(0, visibleCount)
     const selectedSkin = filtered.find(skin => skin.id === selectedId)
@@ -582,14 +594,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     return visible
   }, [filtered, selectedId, visibleCount])
 
-  const installedSkins = useMemo(() => skins.filter(skin => runtimeFor(states, skin.id).installation !== 'missing').sort((a, b) => {
-    const aState = runtimeFor(states, a.id)
-    const bState = runtimeFor(states, b.id)
-    if (aState.activation === 'active' && bState.activation !== 'active') return -1
-    if (bState.activation === 'active' && aState.activation !== 'active') return 1
-    const recent = Date.parse(bState.installedAt ?? '') - Date.parse(aState.installedAt ?? '')
-    return Number.isNaN(recent) || recent === 0 ? b.githubStars - a.githubStars : recent
-  }), [skins, states])
+  const installedSkins = useMemo(() => skins
+    .filter(skin => runtimeFor(states, skin.id).installation !== 'missing')
+    .sort((a, b) => compareInstalledSkinOrder(a, b, states)), [skins, states])
   const discoverySkins = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     return haystack.includes(homeQuery.trim().toLowerCase())
@@ -944,7 +951,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
         <div className={css.homeContent}>
           {homeQuery.trim() === '' && (loading || installedSkins.length > 0) && <section className={css.homeSection} aria-labelledby="installed-skins-title">
-            <div className={css.homeSectionTitle}><h3 id="installed-skins-title">已安装</h3><span>当前使用优先，其余按最近安装排序</span></div>
+            <div className={css.homeSectionTitle}><h3 id="installed-skins-title">已安装</h3><span>正在使用、常驻优先，其余按最近操作排序</span></div>
             {loading ? <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties} role="status" aria-label="正在加载已安装皮肤"><span className={css.srOnly}>正在加载已安装皮肤…</span>{Array.from({ length: installedSlots }, (_, index) => <article className={css.installedSkeletonCard} key={index} aria-hidden="true"><span /><span><i /><i /></span></article>)}</div> : <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties}>
               {installedRowSkins.map(skin => renderHomeCard(skin, 'installed'))}
               {installedOverflow && <Button variant="ghost" className={`${css.homeCard} ${css.installedMoreCard}`} onClick={() => openInstalledBrowser()}><SquaresFourIcon size={24} aria-hidden="true" /><strong>查看全部已安装</strong></Button>}

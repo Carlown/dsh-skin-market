@@ -15,7 +15,7 @@ vi.mock('@deepseek-ai/dsh-client-ui-primitives', () => {
   }
 })
 
-import { CATALOG_BATCH_SIZE, captureListScroll, compareSkinOrder, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
+import { CATALOG_BATCH_SIZE, captureListScroll, compareInstalledSkinOrder, compareSkinOrder, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
 import { createClientSkinRuntime, missingPrimitives, switchClientSkin } from '../../src/client/index.ts'
 import { createSkinInstallCommand, createSkinInstallPrompt } from '../../src/client/submission.ts'
 import type { CatalogSkin } from '../../src/client/types.ts'
@@ -54,6 +54,20 @@ describe('client market', () => {
       supplemented.id,
       noPreview.id,
     ])
+  })
+
+  it('orders installed skins by current use, pinned state, then latest operation', () => {
+    const current = { ...skin, id: 'current', name: { zh: '当前', en: 'Current' } }
+    const pinned = { ...skin, id: 'pinned', name: { zh: '常驻', en: 'Pinned' } }
+    const recent = { ...skin, id: 'recent', name: { zh: '最近', en: 'Recent' } }
+    const older = { ...skin, id: 'older', name: { zh: '较早', en: 'Older' } }
+    const states = [
+      { skinId: current.id, installation: 'installed' as const, activation: 'active' as const, primary: true, pinned: false, installedVersion: '1', updateAvailable: false, lastOperatedAt: '2026-08-01T00:00:00Z' },
+      { skinId: pinned.id, installation: 'installed' as const, activation: 'active' as const, primary: false, pinned: true, installedVersion: '1', updateAvailable: false, lastOperatedAt: '2026-08-04T00:00:00Z' },
+      { skinId: recent.id, installation: 'installed' as const, activation: 'inactive' as const, primary: false, pinned: false, installedVersion: '1', updateAvailable: false, lastOperatedAt: '2026-08-03T00:00:00Z' },
+      { skinId: older.id, installation: 'installed' as const, activation: 'inactive' as const, primary: false, pinned: false, installedVersion: '1', updateAvailable: false, lastOperatedAt: '2026-08-02T00:00:00Z' },
+    ]
+    expect([older, recent, pinned, current].sort((a, b) => compareInstalledSkinOrder(a, b, states)).map(item => item.id)).toEqual(['current', 'pinned', 'recent', 'older'])
   })
 
   it('restores the visible list anchor after background reordering', () => {
@@ -250,7 +264,7 @@ describe('client market', () => {
     expect(screen.queryByRole('dialog', { name: '皮肤详情' })).toBeNull()
   })
 
-  it('orders Installed by active then install time and opens the installed browser from the overflow card', async () => {
+  it('uses the same installed ordering on home and in the sidebar', async () => {
     const installedSkins = Array.from({ length: 6 }, (_, index) => ({
       ...skin,
       id: `test.installed-${index}`,
@@ -262,10 +276,13 @@ describe('client market', () => {
     const runtime = installedSkins.map((item, index) => ({
       skinId: item.id,
       installation: 'installed',
-      activation: index === 5 ? 'active' : 'inactive',
+      activation: index === 5 || index === 4 ? 'active' : 'inactive',
+      primary: index === 5,
+      pinned: index === 4,
       installedVersion: '1.0.0',
       updateAvailable: false,
       installedAt: `2026-08-${String(index + 1).padStart(2, '0')}T00:00:00Z`,
+      lastOperatedAt: `2026-08-${String(index + 1).padStart(2, '0')}T00:00:00Z`,
     }))
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
       ok: true,
@@ -287,6 +304,8 @@ describe('client market', () => {
     fireEvent.click(screen.getByRole('button', { name: '查看全部已安装' }))
     expect(await screen.findByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
     expect(screen.getByRole('heading', { name: '已装皮肤 5' })).toBeTruthy()
+    const sidebarCards = screen.getByRole('complementary', { name: 'catalog' }).querySelectorAll<HTMLButtonElement>('button[data-skin-id]')
+    expect([...sidebarCards].map(card => card.dataset.skinId)).toEqual(installedSkins.map(item => item.id).reverse())
   })
 
   it('shows installed skeletons while runtime state loads and hides the section when empty', async () => {
@@ -672,8 +691,9 @@ describe('client market', () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
     await screen.findByRole('heading', { name: '发现更多' })
-    fireEvent.click(screen.getByRole('button', { name: 'Stars' }))
     expect(screen.getByRole('button', { name: '最新' })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: '最新' }))
+    expect(screen.getByRole('button', { name: 'Stars' })).toBeTruthy()
   })
 
   it('shows Stars in list rows and marks the selected skin', async () => {

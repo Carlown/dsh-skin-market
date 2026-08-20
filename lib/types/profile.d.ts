@@ -1,4 +1,4 @@
-import type { InstalledClientPlugin, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts';
+import type { InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts';
 export declare function resolveProfileDir(profile: string, explicit?: string): string;
 export declare function manifestFile(profileDir: string): string;
 export declare function profilePatchFile(profileDir: string): string;
@@ -32,4 +32,4 @@ export declare function snapshotFile(file: string): FileSnapshot;
 export declare function restoreFile(file: string, snapshot: FileSnapshot): void;
 export declare function snapshotManifest(profileDir: string): FileSnapshot;
 export declare function restoreManifest(profileDir: string, snapshot: FileSnapshot): void;
-export declare function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean, pinnedSkinIds?: string[]): SkinRuntimeState;
+export declare function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean, pinnedSkinIds?: string[], activity?: SkinActivity): SkinRuntimeState;

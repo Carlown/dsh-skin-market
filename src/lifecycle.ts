@@ -107,6 +107,10 @@ function enabledSkinIds(state: PersistedMarketState): Set<string> {
   return new Set([...(state.activeSkinId === null ? [] : [state.activeSkinId]), ...pinnedSkinIds(state)])
 }
 
+function recordActivity(state: PersistedMarketState, skinId: string, kind: 'installedAt' | 'updatedAt' | 'usedAt', at: string): void {
+  state.activity = { ...state.activity, [skinId]: { ...state.activity?.[skinId], [kind]: at } }
+}
+
 // Keep this in an .npmrc file instead of passing `--config.fetchTimeout` on
 // the CLI. pnpm 11 currently leaves the dotted CLI value as a string, while
 // its retry timer requires a number and throws ERR_INVALID_ARG_TYPE.
@@ -221,7 +225,7 @@ export class SkinLifecycle {
     const state = readMarketState(this.options.profileDir)
     return this.catalog.map(skin => {
       const entries = this.entriesFor(skin)
-      return runtimeState(this.options.profileDir, skin, state.activeSkinId, entries.some(entry => entry.fiber !== undefined), entries.length > 0, pinnedSkinIds(state))
+      return runtimeState(this.options.profileDir, skin, state.activeSkinId, entries.some(entry => entry.fiber !== undefined), entries.length > 0, pinnedSkinIds(state), state.activity?.[skin.id])
     })
   }
 
@@ -349,6 +353,7 @@ export class SkinLifecycle {
       const state = readMarketState(this.options.profileDir)
       state.activeSkinId = state.activeSkinId === skin.id ? null : state.activeSkinId
       if (!state.disabledSkinIds.includes(skin.id)) state.disabledSkinIds.push(skin.id)
+      recordActivity(state, skin.id, 'installedAt', operation.startedAt)
       writeMarketState(this.options.profileDir, state)
       operation.message = 'installed; choose Use to activate'
     } catch (error) {
@@ -369,6 +374,7 @@ export class SkinLifecycle {
     this.update(operation, 'activating')
     const previous = readMarketState(this.options.profileDir)
     const next: PersistedMarketState = { ...previous, version: 1, activeSkinId: skin.id, pinnedSkinIds: pinnedSkinIds(previous) }
+    recordActivity(next, skin.id, 'usedAt', operation.startedAt)
     this.reconcileDisabledSkinIds(next)
     const enabled = enabledSkinIds(next)
     try {
@@ -469,6 +475,9 @@ export class SkinLifecycle {
       if (!validation.ok || validation.version !== skin.install.version) throw new Error(validation.reason ?? 'installed version did not change to the reviewed version')
       ensureSkinRegistration(this.options.profileDir, skin, !wasActive)
       await this.setEntryDisabled(skin, !wasActive)
+      const nextState = readMarketState(this.options.profileDir)
+      recordActivity(nextState, skin.id, 'updatedAt', operation.startedAt)
+      writeMarketState(this.options.profileDir, nextState)
       operation.message = wasActive ? 'updated and kept active' : 'updated and kept inactive'
     } catch (error) {
       restoreInstallFiles()
@@ -494,6 +503,7 @@ export class SkinLifecycle {
     next.disabledSkinIds = next.disabledSkinIds.filter(id => id !== skin.id)
     next.pinnedSkinIds = pinnedSkinIds(next).filter(id => id !== skin.id)
     if (next.activeSkinId === skin.id) next.activeSkinId = null
+    if (next.activity !== undefined) delete next.activity[skin.id]
     writeMarketState(this.options.profileDir, next)
     operation.message = 'skin uninstalled'
   }

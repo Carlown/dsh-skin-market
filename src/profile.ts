@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, statSync, unlinkSync, 
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { parse, stringify } from 'yaml'
-import type { InstalledClientPlugin, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
+import type { InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export function resolveProfileDir(profile: string, explicit?: string): string {
   if (explicit !== undefined) return explicit
@@ -36,6 +36,7 @@ export function readMarketState(profileDir: string): PersistedMarketState {
   const value = readJson<PersistedMarketState>(marketStateFile(profileDir), fallback)
   if (value.version !== 1 || !Array.isArray(value.disabledSkinIds)) return fallback
   if (value.pinnedSkinIds !== undefined && !Array.isArray(value.pinnedSkinIds)) delete value.pinnedSkinIds
+  if (value.activity !== undefined && (typeof value.activity !== 'object' || value.activity === null || Array.isArray(value.activity))) delete value.activity
   return value
 }
 
@@ -315,18 +316,25 @@ export function restoreFile(file: string, snapshot: FileSnapshot): void {
 export function snapshotManifest(profileDir: string): FileSnapshot { return snapshotFile(manifestFile(profileDir)) }
 export function restoreManifest(profileDir: string, snapshot: FileSnapshot): void { restoreFile(manifestFile(profileDir), snapshot) }
 
-export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean, pinnedSkinIds: string[] = []): SkinRuntimeState {
+function latestOperationAt(installedAt: string | null, activity?: SkinActivity): string | null {
+  const timestamps = [installedAt, activity?.installedAt, activity?.updatedAt, activity?.usedAt]
+    .filter((value): value is string => value !== undefined && value !== null && Number.isFinite(Date.parse(value)))
+  return timestamps.sort((a, b) => Date.parse(b) - Date.parse(a))[0] ?? null
+}
+
+export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean, pinnedSkinIds: string[] = [], activity?: SkinActivity): SkinRuntimeState {
   const dependencies = readDependencies(profileDir)
   const spec = dependencies[skin.package] ?? null
   const primary = activeSkinId === skin.id
   const pinned = pinnedSkinIds.includes(skin.id)
   if (spec === null) {
-    return { skinId: skin.id, installation: 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: null, installedSpec: null, installedAt: null, updateAvailable: false }
+    return { skinId: skin.id, installation: 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: null, installedSpec: null, installedAt: null, lastOperatedAt: null, updateAvailable: false }
   }
   const installedAt = packageInstalledAt(profileDir, skin.package)
+  const lastOperatedAt = latestOperationAt(installedAt, activity)
   const validation = validateInstalledSkin(profileDir, skin)
   if (!validation.ok) {
-    return { skinId: skin.id, installation: 'broken', activation: 'inactive', primary, pinned, installedVersion: null, installedSpec: spec, installedAt, updateAvailable: false, error: validation.reason }
+    return { skinId: skin.id, installation: 'broken', activation: 'inactive', primary, pinned, installedVersion: null, installedSpec: spec, installedAt, lastOperatedAt, updateAvailable: false, error: validation.reason }
   }
   const active = primary || pinned
   const activation = active ? (loaderFound ? (loaderLive ? 'active' : 'restart-required') : 'restart-required') : 'inactive'
@@ -340,6 +348,7 @@ export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: 
     installedVersion: validation.version ?? null,
     installedSpec: spec,
     installedAt,
+    lastOperatedAt,
     updateAvailable,
   }
 }

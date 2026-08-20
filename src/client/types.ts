@@ -43,6 +43,7 @@ export interface RuntimeSkin {
   pinned?: boolean
   installedVersion: string | null
   installedAt?: string | null
+  lastOperatedAt?: string | null
   updateAvailable: boolean
   error?: string
 }
