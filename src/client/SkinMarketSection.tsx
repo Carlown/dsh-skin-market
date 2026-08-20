@@ -363,12 +363,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       acceptCatalog(catalog.skins, state.skins)
       void catalogCache.write(catalog.skins).catch(() => undefined)
       setStates(state.skins)
-      setBusy(state.operation ?? null)
+      setBusy(current => current?.phase === 'failed' && state.operation == null ? current : state.operation ?? null)
       if ('marketUpdateOperation' in state) {
         const operation = state.marketUpdateOperation !== null && state.marketUpdateOperation !== undefined && !dismissedMarketOperationIds.current.has(state.marketUpdateOperation.id)
           ? state.marketUpdateOperation
           : null
-        setMarketOperation(operation)
+        setMarketOperation(current => current?.phase === 'failed' && operation === null ? current : operation)
         setMarketUpdating(operation?.phase !== undefined
           && !['done', 'failed', 'cancelled'].includes(operation.phase))
       }
@@ -440,7 +440,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       }
       if (status.operation !== undefined) {
         const operation = status.operation !== null && !dismissedMarketOperationIds.current.has(status.operation.id) ? status.operation : null
-        setMarketOperation(operation)
+        setMarketOperation(current => current?.phase === 'failed' && operation === null ? current : operation)
         setMarketUpdating(operation !== null && !['done', 'failed', 'cancelled'].includes(operation.phase))
         if (operation !== null && !['done', 'failed', 'cancelled'].includes(operation.phase)) void waitForMarketUpdate(operation.id)
       }

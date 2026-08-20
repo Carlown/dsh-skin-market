@@ -737,6 +737,8 @@ describe('client market', () => {
     expect(screen.getByRole('status').textContent).toContain('已用时')
     await waitFor(() => expect(screen.getAllByRole('status').some(item => item.textContent?.includes('GitHub 插件下载超时'))).toBe(true), { timeout: 2_000 })
     expect(screen.queryByRole('alert')).toBeNull()
+    window.dispatchEvent(new Event('focus'))
+    await waitFor(() => expect(screen.getAllByRole('status').some(item => item.textContent?.includes('GitHub 插件下载超时'))).toBe(true))
   })
 
   it('shows available byte progress in one banner and cancels the download', async () => {
