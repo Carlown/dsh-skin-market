@@ -178,16 +178,20 @@ describe('skin lifecycle', () => {
     expect(readFileSync(join(dir, 'cordis.patch.yml'), 'utf8')).not.toContain(`id: ${skin.rowId}`)
   })
 
-  it('pre-approves an exact build artifact and restores the workspace after a failed install', async () => {
+  it('pre-approves an exact build artifact and restores profile metadata after a failed install', async () => {
     const dir = fixture()
+    const originalLockfile = 'lockfileVersion: "9.0"\n\nimporters:\n  .: {}\n'
+    atomicWriteText(join(dir, 'pnpm-lock.yaml'), originalLockfile)
     let calls = 0
     const runner: PluginRunner = async () => {
       calls += 1
       if (calls === 1) {
         expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain('dskin@https://codeload.github.com/dancingmemory/dskin/tar.gz/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed')
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { ghost: 'broken' } })
+        atomicWriteText(join(dir, 'pnpm-lock.yaml'), 'lockfile changed by failed add\n')
         return { ...success(), exitCode: 1, stderr: 'network failed' }
       }
+      atomicWriteText(join(dir, 'pnpm-lock.yaml'), 'lockfile changed by repair install\n')
       return success()
     }
     const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner })
@@ -196,5 +200,6 @@ describe('skin lifecycle', () => {
     expect(operation.phase).toBe('failed')
     expect(readDependencies(dir)).toEqual({})
     expect(existsSync(join(dir, 'pnpm-workspace.yaml'))).toBe(false)
+    expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).toBe(originalLockfile)
   })
 })

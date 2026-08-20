@@ -1,3 +1,4 @@
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import { describe, expect, it } from 'vitest'
 import { canRestartSkin, mountRoutes, runningAgentCount, waitForRestartSafety, type AgentLike, type WebServerService } from '../src/routes.ts'
 import type { LoaderEntry } from '../src/types.ts'
@@ -47,6 +48,40 @@ describe('market routes', () => {
     expect(routes).not.toContainEqual({ kind: 'prefix', path: '/dsh-skin-market/operations/' })
     expect(routes).not.toContainEqual({ kind: 'exact', path: '/dsh-skin-market/catalog/refresh' })
     expect(routes).toContainEqual({ kind: 'exact', path: '/dsh-skin-market/market-update' })
+    dispose()
+  })
+
+  it('exposes a pending market update restart in Host state', async () => {
+    const handlers = new Map<string, (request: IncomingMessage, response: ServerResponse) => void | Promise<void>>()
+    const webServer: WebServerService = {
+      register(route) {
+        handlers.set(route.path, route.handler)
+        return () => undefined
+      },
+    }
+    const marketUpdater = {
+      restartRequired: true,
+      status: async () => ({ currentVersion: '0.1.29', latestVersion: '0.1.29', updateAvailable: false }),
+      update: async () => ({ currentVersion: '0.1.29', latestVersion: '0.1.29', updateAvailable: false }),
+    }
+    const dispose = mountRoutes({
+      webServer,
+      agents: { list: () => [] },
+      loader: { entries: (): Iterable<LoaderEntry> => [] },
+    }, {
+      profile: 'test',
+      profileDir: '/tmp/dsh-skin-market-route-test-missing-profile',
+      runner: async () => ({ exitCode: 0, stdout: '', stderr: '', timedOut: false }),
+      marketUpdater,
+    })
+
+    const response = {
+      writeHead: (_status: number, _headers: Record<string, string>) => undefined,
+      end: (body: string) => {
+        expect(JSON.parse(body)).toMatchObject({ marketUpdateRestartRequired: true })
+      },
+    } as unknown as ServerResponse
+    await handlers.get('/dsh-skin-market/state')?.({ method: 'GET', headers: {} } as IncomingMessage, response)
     dispose()
   })
 })

@@ -13,6 +13,7 @@ export function resolveProfileDir(profile: string, explicit?: string): string {
 export function manifestFile(profileDir: string): string { return join(profileDir, 'package.json') }
 export function profilePatchFile(profileDir: string): string { return join(profileDir, 'cordis.patch.yml') }
 export function pnpmWorkspaceFile(profileDir: string): string { return join(profileDir, 'pnpm-workspace.yaml') }
+export function pnpmLockfile(profileDir: string): string { return join(profileDir, 'pnpm-lock.yaml') }
 export function marketStateFile(profileDir: string): string { return join(profileDir, '.dsh-skin-market', 'state.json') }
 
 export function readJson<T>(file: string, fallback: T): T {

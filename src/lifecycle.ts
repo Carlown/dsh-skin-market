@@ -5,6 +5,7 @@ import { loadCatalog } from './catalog.ts'
 import {
   ensureBuildAllowed,
   ensureSkinRegistration,
+  pnpmLockfile,
   pnpmWorkspaceFile,
   profilePatchFile,
   readDependencies,
@@ -201,6 +202,13 @@ export class SkinLifecycle {
     const snapshot = snapshotManifest(this.options.profileDir)
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
+    const lockfileSnapshot = snapshotFile(pnpmLockfile(this.options.profileDir))
+    const restoreInstallFiles = (): void => {
+      restoreManifest(this.options.profileDir, snapshot)
+      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
+      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
+      restoreFile(pnpmLockfile(this.options.profileDir), lockfileSnapshot)
+    }
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
@@ -216,10 +224,11 @@ export class SkinLifecycle {
       writeMarketState(this.options.profileDir, state)
       operation.message = 'installed; choose Use to activate'
     } catch (error) {
-      restoreManifest(this.options.profileDir, snapshot)
-      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
-      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
+      restoreInstallFiles()
       try { await this.run(['install']) } catch { /* retain the original failure */ }
+      // The repair install may rewrite pnpm-lock.yaml while it restores node_modules.
+      // Keep the profile metadata byte-for-byte identical to its pre-operation state.
+      restoreInstallFiles()
       throw error
     }
   }
@@ -263,6 +272,13 @@ export class SkinLifecycle {
     const snapshot = snapshotManifest(this.options.profileDir)
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
+    const lockfileSnapshot = snapshotFile(pnpmLockfile(this.options.profileDir))
+    const restoreInstallFiles = (): void => {
+      restoreManifest(this.options.profileDir, snapshot)
+      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
+      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
+      restoreFile(pnpmLockfile(this.options.profileDir), lockfileSnapshot)
+    }
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
@@ -276,10 +292,11 @@ export class SkinLifecycle {
       else await this.deactivate(operation)
       operation.message = wasActive ? 'updated and kept active' : 'updated and kept inactive'
     } catch (error) {
-      restoreManifest(this.options.profileDir, snapshot)
-      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
-      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
+      restoreInstallFiles()
       try { await this.run(['install']) } catch { /* retain original failure */ }
+      // The repair install may rewrite pnpm-lock.yaml while it restores node_modules.
+      // Keep the profile metadata byte-for-byte identical to its pre-operation state.
+      restoreInstallFiles()
       throw error
     }
   }

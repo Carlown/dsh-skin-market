@@ -110,15 +110,20 @@ describe('client market', () => {
   })
 
   it('shows a compact self-update action only when GitHub has a newer market version', async () => {
+    let restartRequired = false
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runningAgentCount: 0 }) }
-      if (url.endsWith('/market-update') && init?.method === 'POST') return { ok: true, json: async () => ({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runningAgentCount: 0, marketUpdateRestartRequired: restartRequired }) }
+      if (url.endsWith('/market-update') && init?.method === 'POST') {
+        restartRequired = true
+        return { ok: true, json: async () => ({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false }) }
+      }
+      if (url.endsWith('/market-update') && restartRequired) return { ok: true, json: async () => ({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false }) }
       if (url.endsWith('/market-update')) return { ok: true, json: async () => ({ currentVersion: '0.1.15', latestVersion: '0.1.16', updateAvailable: true }) }
       throw new Error(`Unexpected request: ${url}`)
     })
     vi.stubGlobal('fetch', fetchMock)
-    render(<SkinMarketSection t={key => key} />)
+    const view = render(<SkinMarketSection t={key => key} />)
 
     const update = await screen.findByRole('button', { name: '更新皮肤市场到 0.1.16' })
     expect(update.textContent).toBe('更新')
@@ -128,6 +133,12 @@ describe('client market', () => {
     expect(screen.getByText(/皮肤市场新版本 0.1.16 将在重启后生效/)).toBeTruthy()
     expect(screen.getByRole('button', { name: '稍后' })).toBeTruthy()
     await waitFor(() => expect(screen.queryByRole('button', { name: '更新皮肤市场到 0.1.16' })).toBeNull())
+
+    // A self-update can remount the browser client before the user confirms
+    // the restart. The Host-side pending flag must restore the prompt.
+    view.unmount()
+    render(<SkinMarketSection t={key => key} />)
+    expect(await screen.findByRole('dialog', { name: '需要重启 DSH 应用皮肤市场更新' })).toBeTruthy()
   })
 
   it('turns an empty successful response into a useful Host update error', async () => {
