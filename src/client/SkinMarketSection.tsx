@@ -66,6 +66,7 @@ interface MarketStateResponse {
   marketUpdateOperation?: MarketUpdateOperation | null
   installedClientPlugins?: InstalledClientPlugin[]
   runningAgentCount?: number
+  marketUpdateRestartRequired?: boolean
 }
 
 interface MarketUpdateStatus {
@@ -395,6 +396,14 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       }
       setInstalledClientPlugins(state.installedClientPlugins ?? [])
       setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
+      if (state.marketUpdateRestartRequired === true) {
+        // Updating the market package can cause DSH to remount this client
+        // entry. Keep the restart prompt recoverable from Host state instead
+        // of relying on the previous React tree's local state.
+        setRestartTarget({ kind: 'market-update' })
+        setRestartCheckFinished(true)
+        setConfirmRestart(true)
+      }
     } finally {
       if (showLoading) {
         setLoading(false)

@@ -115,6 +115,7 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
         marketUpdateOperation: marketUpdater.currentOperation(),
         instanceId,
         restartAvailable: options.restart?.available === true,
+        marketUpdateRestartRequired: marketUpdater.restartRequired,
         runningAgentCount: runningAgentCount(host),
       })
     } }),
