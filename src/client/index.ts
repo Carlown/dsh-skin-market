@@ -26,8 +26,11 @@ export interface ClientSkinRuntime {
   setActive(packageName: string, active: boolean): Promise<boolean>
 }
 
-export async function switchClientSkin(runtime: ClientSkinRuntime, packageNames: string[], target: string): Promise<boolean> {
-  for (const packageName of packageNames) await runtime.setActive(packageName, false)
+export async function switchClientSkin(runtime: ClientSkinRuntime, packageNames: string[], target: string, preserved: Iterable<string> = []): Promise<boolean> {
+  const keep = new Set([...preserved, target])
+  for (const packageName of packageNames) {
+    if (!keep.has(packageName)) await runtime.setActive(packageName, false)
+  }
   return runtime.setActive(target, true)
 }
 

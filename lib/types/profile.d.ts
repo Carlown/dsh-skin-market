@@ -3,6 +3,7 @@ export declare function resolveProfileDir(profile: string, explicit?: string): s
 export declare function manifestFile(profileDir: string): string;
 export declare function profilePatchFile(profileDir: string): string;
 export declare function pnpmWorkspaceFile(profileDir: string): string;
+export declare function pnpmLockfile(profileDir: string): string;
 export declare function marketStateFile(profileDir: string): string;
 export declare function readJson<T>(file: string, fallback: T): T;
 export declare function atomicWriteJson(file: string, value: unknown): void;
@@ -31,4 +32,4 @@ export declare function snapshotFile(file: string): FileSnapshot;
 export declare function restoreFile(file: string, snapshot: FileSnapshot): void;
 export declare function snapshotManifest(profileDir: string): FileSnapshot;
 export declare function restoreManifest(profileDir: string, snapshot: FileSnapshot): void;
-export declare function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean): SkinRuntimeState;
+export declare function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean, pinnedSkinIds?: string[]): SkinRuntimeState;

@@ -24,7 +24,7 @@ describe('emergency skin reset', () => {
       atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${skin.rowId}\n      name: ${JSON.stringify(skin.package)}\n`)
     }
     atomicWriteText(profilePatchFile(dir), '- insert:\n    - id: keep\n      name: unrelated-plugin\n')
-    writeMarketState(dir, { version: 1, activeSkinId: skins[0].id, disabledSkinIds: [] })
+    writeMarketState(dir, { version: 1, activeSkinId: skins[0].id, disabledSkinIds: [], pinnedSkinIds: [skins[1].id] })
 
     const result = resetManagedSkins(dir)
 
@@ -35,6 +35,7 @@ describe('emergency skin reset', () => {
     const patch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string; disabled?: boolean }>
     expect(patch.filter(operation => skins.some(skin => skin.rowId === operation.id))).toEqual(skins.map(skin => ({ id: skin.rowId, disabled: true })))
     expect(readMarketState(dir).activeSkinId).toBeNull()
+    expect(readMarketState(dir).pinnedSkinIds).toEqual([])
   })
 
   it('rolls every file back when a registration conflicts', () => {

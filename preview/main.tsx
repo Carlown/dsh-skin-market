@@ -4,13 +4,14 @@ import type { Root } from 'react-dom/client'
 import { TShirtIcon } from '@phosphor-icons/react'
 import { IconAgentPresetOutline16, IconDataOutline16, IconPersonalizationOutline16, IconSettingsOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { SkinMarketSection } from '../src/client/SkinMarketSection.tsx'
+import type { RuntimeSkin } from '../src/client/types.ts'
 import catalog from '../data/catalog.json'
 import './preview.css'
 
 const skins = catalog.skins.map(skin => ({ ...skin, githubStars: skin.starsSnapshot, starsStale: false, recommendations: catalog.skins.filter(item => item.id !== skin.id).map(item => item.id) }))
-const runtime = new Map(skins.map((skin, index) => [skin.id, index === 0
-  ? { skinId: skin.id, installation: 'installed', activation: 'active', installedVersion: skin.install.version, updateAvailable: true }
-  : { skinId: skin.id, installation: index === 1 ? 'installed' : 'missing', activation: 'inactive', installedVersion: index === 1 ? skin.install.version : null, updateAvailable: index === 1 }]))
+const runtime = new Map<string, RuntimeSkin>(skins.map((skin, index) => [skin.id, index === 0
+  ? { skinId: skin.id, installation: 'installed', activation: 'active', primary: true, pinned: false, installedVersion: skin.install.version, updateAvailable: true }
+  : { skinId: skin.id, installation: index === 1 ? 'installed' : 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: index === 1 ? skin.install.version : null, updateAvailable: index === 1 }]))
 const operations = new Map<string, { id: string; phase: string; message?: string }>()
 
 declare global {
@@ -27,9 +28,13 @@ window.fetch = async (input, init) => {
   const id = crypto.randomUUID()
   const state = runtime.get(skinId)!
   if (kind === 'install') runtime.set(skinId, { ...state, installation: 'installed', installedVersion: skins.find(skin => skin.id === skinId)?.install.version ?? null })
-  if (kind === 'activate') for (const [key, value] of runtime) runtime.set(key, { ...value, activation: key === skinId ? 'active' : 'inactive' })
-  if (kind === 'deactivate') runtime.set(skinId, { ...state, activation: 'inactive' })
-  if (kind === 'uninstall') runtime.set(skinId, { ...state, installation: 'missing', activation: 'inactive', installedVersion: null })
+  if (kind === 'activate') {
+    for (const [key, value] of runtime) runtime.set(key, { ...value, primary: key === skinId, activation: key === skinId || value.pinned ? 'active' : 'inactive' })
+  }
+  if (kind === 'deactivate') runtime.set(skinId, { ...state, activation: 'inactive', primary: false, pinned: false })
+  if (kind === 'pin') runtime.set(skinId, { ...state, pinned: true })
+  if (kind === 'unpin') runtime.set(skinId, { ...state, pinned: false, activation: state.primary ? 'active' : 'inactive' })
+  if (kind === 'uninstall') runtime.set(skinId, { ...state, installation: 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: null })
   operations.set(id, { id, phase: 'done' })
   return new Response(JSON.stringify({ operationId: id }), { status: 202 })
 }

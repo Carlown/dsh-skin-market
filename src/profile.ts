@@ -13,6 +13,7 @@ export function resolveProfileDir(profile: string, explicit?: string): string {
 export function manifestFile(profileDir: string): string { return join(profileDir, 'package.json') }
 export function profilePatchFile(profileDir: string): string { return join(profileDir, 'cordis.patch.yml') }
 export function pnpmWorkspaceFile(profileDir: string): string { return join(profileDir, 'pnpm-workspace.yaml') }
+export function pnpmLockfile(profileDir: string): string { return join(profileDir, 'pnpm-lock.yaml') }
 export function marketStateFile(profileDir: string): string { return join(profileDir, '.dsh-skin-market', 'state.json') }
 
 export function readJson<T>(file: string, fallback: T): T {
@@ -34,6 +35,7 @@ export function readMarketState(profileDir: string): PersistedMarketState {
   const fallback: PersistedMarketState = { version: 1, activeSkinId: null, disabledSkinIds: [] }
   const value = readJson<PersistedMarketState>(marketStateFile(profileDir), fallback)
   if (value.version !== 1 || !Array.isArray(value.disabledSkinIds)) return fallback
+  if (value.pinnedSkinIds !== undefined && !Array.isArray(value.pinnedSkinIds)) delete value.pinnedSkinIds
   return value
 }
 
@@ -313,24 +315,28 @@ export function restoreFile(file: string, snapshot: FileSnapshot): void {
 export function snapshotManifest(profileDir: string): FileSnapshot { return snapshotFile(manifestFile(profileDir)) }
 export function restoreManifest(profileDir: string, snapshot: FileSnapshot): void { restoreFile(manifestFile(profileDir), snapshot) }
 
-export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean): SkinRuntimeState {
+export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: string | null, loaderLive: boolean, loaderFound: boolean, pinnedSkinIds: string[] = []): SkinRuntimeState {
   const dependencies = readDependencies(profileDir)
   const spec = dependencies[skin.package] ?? null
+  const primary = activeSkinId === skin.id
+  const pinned = pinnedSkinIds.includes(skin.id)
   if (spec === null) {
-    return { skinId: skin.id, installation: 'missing', activation: 'inactive', installedVersion: null, installedSpec: null, installedAt: null, updateAvailable: false }
+    return { skinId: skin.id, installation: 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: null, installedSpec: null, installedAt: null, updateAvailable: false }
   }
   const installedAt = packageInstalledAt(profileDir, skin.package)
   const validation = validateInstalledSkin(profileDir, skin)
   if (!validation.ok) {
-    return { skinId: skin.id, installation: 'broken', activation: 'inactive', installedVersion: null, installedSpec: spec, installedAt, updateAvailable: false, error: validation.reason }
+    return { skinId: skin.id, installation: 'broken', activation: 'inactive', primary, pinned, installedVersion: null, installedSpec: spec, installedAt, updateAvailable: false, error: validation.reason }
   }
-  const active = activeSkinId === skin.id
+  const active = primary || pinned
   const activation = active ? (loaderFound ? (loaderLive ? 'active' : 'restart-required') : 'restart-required') : 'inactive'
   const updateAvailable = validation.version !== skin.install.version || !spec.includes(skin.install.commit)
   return {
     skinId: skin.id,
     installation: 'installed',
     activation,
+    primary,
+    pinned,
     installedVersion: validation.version ?? null,
     installedSpec: spec,
     installedAt,

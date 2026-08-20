@@ -58,6 +58,8 @@ export interface SkinRuntimeState {
   skinId: string
   installation: InstallationState
   activation: ActivationState
+  primary: boolean
+  pinned: boolean
   installedVersion: string | null
   installedSpec: string | null
   installedAt: string | null
@@ -73,8 +75,8 @@ export interface InstalledClientPlugin {
   registered: boolean
 }
 
-export type OperationKind = 'install' | 'activate' | 'deactivate' | 'update' | 'uninstall'
-export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'validating' | 'activating' | 'done' | 'failed'
+export type OperationKind = 'install' | 'activate' | 'deactivate' | 'pin' | 'unpin' | 'update' | 'uninstall'
+export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'installing' | 'validating' | 'activating' | 'cancelling' | 'cancelled' | 'done' | 'failed'
 
 export interface Operation {
   id: string
@@ -82,6 +84,10 @@ export interface Operation {
   skinId: string
   phase: OperationPhase
   message?: string
+  cancelable?: boolean
+  downloadedBytes?: number
+  totalBytes?: number
+  bytesPerSecond?: number
   startedAt: string
   finishedAt?: string
 }
@@ -90,6 +96,7 @@ export interface PersistedMarketState {
   version: 1
   activeSkinId: string | null
   disabledSkinIds: string[]
+  pinnedSkinIds?: string[]
 }
 
 export interface LoaderEntry {

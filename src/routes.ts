@@ -135,8 +135,19 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
     // here would therefore only match a double-slash URL and let normal
     // operation polling fall through to index.html.
     host.webServer.register({ kind: 'prefix', path: '/dsh-skin-market/operations', handler: (request, response) => {
+      const parts = new URL(request.url ?? '/', 'http://localhost').pathname.split('/').filter(Boolean)
+      const cancelling = parts.at(-1) === 'cancel'
+      const id = cancelling ? parts.at(-2) ?? '' : parts.at(-1) ?? ''
+      if (cancelling) {
+        if (!method(request, response, 'POST')) return
+        if (!sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
+        try {
+          return sendJson(response, 202, lifecycle.cancel(id))
+        } catch (error) {
+          return sendJson(response, 409, { error: error instanceof Error ? error.message : String(error) })
+        }
+      }
       if (!method(request, response, 'GET')) return
-      const id = new URL(request.url ?? '/', 'http://localhost').pathname.split('/').pop() ?? ''
       const operation = lifecycle.operations.get(id)
       if (operation === undefined) return sendJson(response, 404, { error: 'operation not found' })
       sendJson(response, 200, operation)
@@ -144,6 +155,8 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/install', handler: mutation('install') }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/activate', handler: mutation('activate') }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/deactivate', handler: mutation('deactivate') }),
+    host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/pin', handler: mutation('pin') }),
+    host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/unpin', handler: mutation('unpin') }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/update', handler: mutation('update') }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/uninstall', handler: mutation('uninstall') }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/restart', handler: async (request, response) => {

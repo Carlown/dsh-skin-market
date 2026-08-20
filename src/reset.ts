@@ -28,6 +28,7 @@ export function resetManagedSkins(profileDir: string, catalog: SkinEntry[] = loa
     for (const skin of installed) ensureSkinRegistration(profileDir, skin, true)
     const state = readMarketState(profileDir)
     state.activeSkinId = null
+    state.pinnedSkinIds = []
     state.disabledSkinIds = [...new Set([...state.disabledSkinIds, ...installed.map(skin => skin.id)])]
     writeMarketState(profileDir, state)
     return {

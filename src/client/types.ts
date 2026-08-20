@@ -39,6 +39,8 @@ export interface RuntimeSkin {
   skinId: string
   installation: 'missing' | 'installed' | 'updating' | 'broken'
   activation: 'inactive' | 'active' | 'switching' | 'restart-required'
+  primary?: boolean
+  pinned?: boolean
   installedVersion: string | null
   installedAt?: string | null
   updateAvailable: boolean
@@ -55,6 +57,14 @@ export interface InstalledClientPlugin {
 
 export interface Operation {
   id: string
-  phase: 'queued' | 'resolving' | 'downloading' | 'validating' | 'activating' | 'done' | 'failed'
+  kind: 'install' | 'activate' | 'deactivate' | 'pin' | 'unpin' | 'update' | 'uninstall'
+  skinId: string
+  phase: 'queued' | 'resolving' | 'downloading' | 'installing' | 'validating' | 'activating' | 'cancelling' | 'cancelled' | 'done' | 'failed'
   message?: string
+  cancelable?: boolean
+  downloadedBytes?: number
+  totalBytes?: number
+  bytesPerSecond?: number
+  startedAt: string
+  finishedAt?: string
 }

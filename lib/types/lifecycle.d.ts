@@ -23,6 +23,7 @@ export declare class SkinLifecycle {
     private readonly options;
     readonly operations: Map<string, Operation>;
     private activeOperation;
+    private readonly abortControllers;
     private catalogEntries;
     private skinById;
     private disposeEvent?;
@@ -34,16 +35,21 @@ export declare class SkinLifecycle {
     skin(id: string): SkinEntry;
     private entriesFor;
     private setEntryDisabled;
+    private reconcileDisabledSkinIds;
     replay(): Promise<void>;
     states(): SkinRuntimeState[];
     currentOperation(): Operation | null;
     begin(kind: OperationKind, skinId: string): Operation;
     private update;
+    cancel(id: string): Operation;
     private execute;
     private run;
+    private prefetch;
     private install;
     private activate;
     private deactivate;
+    private pin;
+    private unpin;
     private updateSkin;
     private uninstall;
 }

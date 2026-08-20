@@ -31,7 +31,7 @@ export interface SkinMarketSectionProps {
   catalogCache?: CatalogCache
 }
 
-type MutationKind = 'install' | 'activate' | 'deactivate' | 'update' | 'uninstall'
+type MutationKind = 'install' | 'activate' | 'deactivate' | 'pin' | 'unpin' | 'update' | 'uninstall'
 
 interface CatalogResponse {
   skins: CatalogSkin[]
@@ -56,6 +56,7 @@ export function restoreListScroll(list: HTMLElement | null, anchor: ListScrollAn
 
 interface MarketStateResponse {
   skins: RuntimeSkin[]
+  operation?: Operation | null
   installedClientPlugins?: InstalledClientPlugin[]
   runningAgentCount?: number
 }
@@ -67,15 +68,45 @@ interface MarketUpdateStatus {
 }
 
 const phases: Record<Operation['phase'], string> = {
-  queued: '正在排队…', resolving: '正在解析版本…', downloading: '正在安装…', validating: '正在验证…', activating: '正在切换…', done: '完成', failed: '操作失败',
+  queued: '正在排队', resolving: '正在解析版本', downloading: '正在下载', installing: '正在写入插件', validating: '正在验证', activating: '正在切换', cancelling: '正在取消', cancelled: '已取消', done: '完成', failed: '操作失败',
+}
+
+const operationVerbs: Record<Operation['kind'], string> = {
+  install: '安装', activate: '启用', deactivate: '停用', pin: '设为常驻', unpin: '取消常驻', update: '更新', uninstall: '卸载',
+}
+
+function elapsedLabel(startedAt: string, now: number): string {
+  const seconds = Math.max(0, Math.floor((now - Date.parse(startedAt)) / 1000))
+  if (seconds < 60) return `${seconds} 秒`
+  return `${Math.floor(seconds / 60)} 分 ${seconds % 60} 秒`
+}
+
+function byteLabel(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`
+  if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`
+  return `${(bytes / 1024 ** 3).toFixed(2)} GB`
+}
+
+function operationMeta(operation: Operation, now: number): string[] {
+  const details = [`${operationVerbs[operation.kind]}任务`]
+  if (operation.downloadedBytes !== undefined && operation.totalBytes !== undefined) {
+    details.push(`${byteLabel(operation.downloadedBytes)} / ${byteLabel(operation.totalBytes)}`)
+  } else if (operation.downloadedBytes !== undefined) {
+    details.push(`已下载 ${byteLabel(operation.downloadedBytes)}`)
+  }
+  if (operation.bytesPerSecond !== undefined && operation.bytesPerSecond > 0) details.push(`${byteLabel(operation.bytesPerSecond)}/s`)
+  details.push(`已用时 ${elapsedLabel(operation.startedAt, now)}`)
+  return details
 }
 
 const mutationLabels: Record<MutationKind, string> = {
-  install: '安装中', activate: '使用中', deactivate: '停用中', update: '更新中', uninstall: '卸载中',
+  install: '安装中', activate: '使用中', deactivate: '停用中', pin: '设置常驻中', unpin: '取消常驻中', update: '更新中', uninstall: '卸载中',
 }
 
 const RELOAD_PARAM = 'dsh-skin-reload'
 const ACTIVATION_WARNING_KEY = 'dsh-skin-market:activation-warning-accepted'
+const RESET_HELP_URL = `${REGISTRY_REPOSITORY}#页面异常时重置皮肤`
 export const CATALOG_BATCH_SIZE = 20
 const GALLERY_INTERVAL_MS = 5600
 const HOME_COMPACT_ENTER_SCROLL = 72
@@ -111,14 +142,24 @@ async function json<T>(url: string, init?: RequestInit): Promise<T> {
 
 function runtimeFor(states: RuntimeSkin[], id: string): RuntimeSkin {
   return states.find(item => item.skinId === id) ?? {
-    skinId: id, installation: 'missing', activation: 'inactive', installedVersion: null, installedAt: null, updateAvailable: false,
+    skinId: id, installation: 'missing', activation: 'inactive', primary: false, pinned: false, installedVersion: null, installedAt: null, updateAvailable: false,
   }
 }
 
 function statusLabel(state: RuntimeSkin): string {
   if (state.installation === 'broken') return '安装异常'
+  if (state.pinned && state.activation === 'active') return '常驻'
   if (state.activation === 'active') return '正在使用'
   if (state.activation === 'restart-required') return '需要重启'
+  if (state.installation === 'installed') return '已安装'
+  return '未安装'
+}
+
+function compactStatusLabel(state: RuntimeSkin): string {
+  if (state.pinned && state.activation === 'active') return '常驻'
+  if (state.activation === 'active') return '使用中'
+  if (state.activation === 'restart-required') return '待重启'
+  if (state.installation === 'broken') return '安装异常'
   if (state.installation === 'installed') return '已安装'
   return '未安装'
 }
@@ -184,9 +225,11 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [carouselEpoch, setCarouselEpoch] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [busy, setBusy] = useState<Operation | null>(null)
+  const [operationClock, setOperationClock] = useState(Date.now())
   const [mutation, setMutation] = useState<{ skinId: string; kind: MutationKind } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [confirmUninstall, setConfirmUninstall] = useState(false)
+  const [confirmPin, setConfirmPin] = useState(false)
   const [activationWarningAccepted, setActivationWarningAccepted] = useState(() => {
     try { return window.localStorage.getItem(ACTIVATION_WARNING_KEY) === 'true' } catch { return false }
   })
@@ -225,7 +268,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     skinsRef.current = nextSkins
     setSkins(nextSkins)
     setSelectedId(value => {
-      const active = runtimeStates.find(item => item.activation === 'active')
+      const active = runtimeStates.find(item => item.primary) ?? runtimeStates.find(item => item.activation === 'active')
       const activeId = active !== undefined && nextSkins.some(skin => skin.id === active.skinId) ? active.skinId : null
       const next = !userSelectedRef.current && activeId !== null
         ? activeId
@@ -255,6 +298,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       acceptCatalog(catalog.skins, state.skins)
       void catalogCache.write(catalog.skins).catch(() => undefined)
       setStates(state.skins)
+      setBusy(state.operation ?? null)
       setInstalledClientPlugins(state.installedClientPlugins ?? [])
       setRunningAgents(typeof state.runningAgentCount === 'number' && Number.isInteger(state.runningAgentCount) ? state.runningAgentCount : null)
     } finally {
@@ -460,6 +504,25 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
   useEffect(() => { setVisibleCount(CATALOG_BATCH_SIZE) }, [filter, query, sortBy])
   useEffect(() => { setHomeVisibleCount(CATALOG_BATCH_SIZE) }, [homeQuery, sortBy])
+  useEffect(() => {
+    if (busy === null) return
+    setOperationClock(Date.now())
+    const timer = window.setInterval(() => setOperationClock(Date.now()), 1000)
+    return () => window.clearInterval(timer)
+  }, [busy?.id])
+
+  const cancelOperation = useCallback(async () => {
+    if (busy === null || busy.id === 'pending' || busy.cancelable !== true) return
+    const operationId = busy.id
+    setError(null)
+    setBusy(current => current?.id === operationId ? { ...current, phase: 'cancelling', cancelable: false } : current)
+    try {
+      await json<Operation>(`/dsh-skin-market/operations/${operationId}/cancel`, { method: 'POST' })
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason))
+      await refresh().catch(() => undefined)
+    }
+  }, [busy, refresh])
 
   const runForSkin = useCallback(async (skinId: string, kind: MutationKind) => {
     const target = skins.find(skin => skin.id === skinId)
@@ -467,6 +530,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     const targetState = runtimeFor(states, target.id)
     setError(null)
     setMutation({ skinId: target.id, kind })
+    setBusy({ id: 'pending', kind, skinId: target.id, phase: 'queued', startedAt: new Date().toISOString() })
     try {
       const result = await json<{ operationId: string }>(`/dsh-skin-market/${kind}`, {
         method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ skinId: target.id }),
@@ -484,10 +548,17 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             && (targetState.activation === 'active' || targetState.activation === 'restart-required')
           if (kind === 'deactivate' || kind === 'uninstall') {
             await clientRuntime?.setActive(target.package, false)
+          } else if (kind === 'unpin' && targetState.primary !== true) {
+            await clientRuntime?.setActive(target.package, false)
+          } else if (kind === 'pin' && clientRuntime !== undefined) {
+            needsRestart = !(await clientRuntime.setActive(target.package, true))
+            restoreMarketStyleOrder()
           } else if (kind === 'activate' && clientRuntime !== undefined) {
-            // Match uninstall-then-use semantics: wait for every old skin to
-            // finish disposing before loading the selected skin.
-            needsRestart = !(await switchClientSkin(clientRuntime, skins.map(skin => skin.package), target.package))
+            const pinnedPackages = states
+              .filter(item => item.pinned)
+              .map(item => skins.find(skin => skin.id === item.skinId)?.package)
+              .filter((packageName): packageName is string => packageName !== undefined)
+            needsRestart = !(await switchClientSkin(clientRuntime, skins.map(skin => skin.package), target.package, pinnedPackages))
             restoreMarketStyleOrder()
           }
           await refresh()
@@ -498,6 +569,11 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             await openRestartConfirm(target.id)
           }
           return true
+        }
+        if (operation.phase === 'cancelled') {
+          setBusy(null)
+          await refresh()
+          return false
         }
         if (operation.phase === 'failed') throw new Error(operation.message ?? '操作失败')
         await new Promise(resolve => setTimeout(resolve, 600))
@@ -605,7 +681,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     const stateText = itemState.installation === 'broken'
       ? '安装异常'
       : itemState.activation === 'active'
-        ? '使用中'
+        ? compactStatusLabel(itemState)
         : itemState.activation === 'restart-required'
           ? '待重启'
           : itemState.installation === 'installed'
@@ -618,7 +694,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         <span className={css.homeCardCopy}>
           <span className={css.homeCardTitleRow}><strong title={skin.name.zh}>{skin.name.zh}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
           <span className={css.homeCardDescription} title={skin.description}>{displayTitle(skin.description)}</span>
-          <small><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</small>
+          <small className={css.homeCardFooter}><span title={githubRepoLabel(skin.repo)}>{githubRepoLabel(skin.repo)}</span>{stateText !== null && <span className={itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.installation === 'broken' ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{stateText}</span>}</small>
         </span>
       </Button>
       {actionCount > 0 && <div className={css.cardInlineActions} role="group" aria-label={`${skin.name.zh} 操作`}>
@@ -730,7 +806,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
                 </span>
               </span>
-              <span className={mutationLabel !== null ? `${css.cardStatus} ${css.cardStatusUpdate}` : itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.activation === 'active' ? '使用中' : itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : statusLabel(itemState))}</span>
+              <span className={mutationLabel !== null ? `${css.cardStatus} ${css.cardStatusUpdate}` : itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.activation === 'active' ? compactStatusLabel(itemState) : itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : compactStatusLabel(itemState))}</span>
             </Button>
           })}
           {!catalogLoading && visibleCount < filtered.length && <div className={css.loadMoreHint} aria-hidden="true"><span /><span /></div>}
@@ -767,9 +843,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
                 {manualOnly && <Button className={css.nativeOutline} variant="outline" size="sm" icon={<MarkGithubIcon size={16} />} disabled={busy !== null} title="前往 GitHub 查看维护者提供的手动安装方式" onClick={() => window.open(selected.repo, '_blank', 'noopener,noreferrer')}>查看安装说明</Button>}
               </>}
               {state.installation === 'installed' && state.activation === 'inactive' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={activateSelected}>使用</Button>}
+              {state.installation === 'installed' && state.activation === 'inactive' && <Button className={`${css.nativeOutline} ${css.pinAction}`} variant="outline" size="sm" aria-pressed="false" title="在不替换当前主皮肤的情况下启用并常驻，适合宠物、音效等可叠加插件；多个皮肤可能发生冲突" disabled={busy !== null} onClick={() => setConfirmPin(true)}>常驻使用</Button>}
               {state.activation === 'restart-required' && <Button className={css.nativePrimary} variant="primary" size="sm" disabled={busy !== null} onClick={() => void openRestartConfirm()}>重启以应用</Button>}
               {state.activation === 'active' && <Button className={css.nativeOutline} variant="outline" size="sm" disabled={busy !== null} onClick={() => void run('deactivate')}>停用</Button>}
-              {state.updateAvailable && <Button className={`${state.activation === 'active' ? css.nativePrimary : css.nativeOutline} ${css.compactActionIcon}`} variant={state.activation === 'active' ? 'primary' : 'outline'} size="sm" icon={<IconRefreshOutline16 />} disabled={busy !== null} onClick={() => void run('update')}>更新</Button>}
+              {state.activation === 'active' && <Button className={`${css.nativeOutline} ${css.pinAction}`} variant="outline" size="sm" aria-pressed={state.pinned === true} title={state.pinned ? '取消后，如果它不是当前主皮肤，将立即停用；以后切换皮肤时也不会再保留' : '切换其他皮肤时仍保持启用，适合宠物、音效等可叠加插件；多个皮肤可能发生冲突'} disabled={busy !== null} onClick={() => state.pinned ? void run('unpin') : setConfirmPin(true)}>{state.pinned ? '取消常驻' : '常驻使用'}</Button>}
+              {state.activation === 'restart-required' && state.pinned && <Button className={`${css.nativeOutline} ${css.pinAction}`} variant="outline" size="sm" aria-pressed="true" title="取消常驻并撤销待重启的启用状态" disabled={busy !== null} onClick={() => void run('unpin')}>取消常驻</Button>}
+              {state.updateAvailable && <Button className={`${state.activation === 'active' && !state.pinned ? css.nativePrimary : css.nativeOutline} ${css.compactActionIcon}`} variant={state.activation === 'active' && !state.pinned ? 'primary' : 'outline'} size="sm" icon={<IconRefreshOutline16 />} disabled={busy !== null} onClick={() => void run('update')}>更新</Button>}
               {state.installation !== 'missing' && <Button className={`${css.nativeOutline} ${css.iconOnlyButton} ${css.compactActionIcon}`} variant="outline" size="sm" icon={<IconTrashOutline16 />} aria-label="卸载" title="卸载" disabled={busy !== null} onClick={() => setConfirmUninstall(true)} />}
               <span className={css.actionDivider} aria-hidden="true" />
               <span className={css.repoMeta}>
@@ -780,7 +859,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
           {state.installation === 'installed' && state.activation === 'inactive' && !activationWarningAccepted && <p className={css.notice} role="note">首次启用提示：请先在设置 → 插件中停用其他皮肤、主题和外观插件，避免全局样式冲突。点击“使用”即表示已确认。</p>}
 
-          {busy !== null && <div className={css.operation} role="status"><IconLoadingOutline16 size={16} /> {phases[busy.phase]}</div>}
+          {busy !== null && <div className={css.operation} role="status" aria-live="polite">
+            <IconLoadingOutline16 size={16} />
+            <strong>{phases[busy.phase]}“{skins.find(skin => skin.id === busy.skinId)?.name.zh ?? busy.skinId}”</strong>
+            <span className={css.operationMeta}>{operationMeta(busy, operationClock).map(item => <small key={item}>· {item}</small>)}</span>
+            {busy.cancelable === true && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={() => void cancelOperation()}>取消</Button>}
+          </div>}
           {error !== null && <div className={css.error} role="alert">{error}</div>}
 
           <div className={css.galleryGroup} data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPausedState(true)} onMouseLeave={() => setCarouselPausedState(false)} onFocusCapture={() => setCarouselPausedState(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPausedState(false) }}>
@@ -815,6 +899,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       </section>, document.body)}
 
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />
+      <Modal open={confirmPin} onClose={() => setConfirmPin(false)} title="常驻使用此皮肤" closeLabel="关闭" description="开启后，切换其他皮肤时不会自动停用此皮肤。适合宠物、音效等可叠加插件；多个皮肤可能同时修改样式、页面结构或功能，相关冲突风险由用户自行承担。" footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmPin(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmPin(false); void run('pin') }}>确认常驻</Button></>}><p className={css.pinWarning}>如果发生冲突或页面无法操作，请停止 DSH，然后查看 <a href={RESET_HELP_URL} target="_blank" rel="noreferrer">页面异常时重置皮肤</a> 中的修复命令。</p></Modal>
       <Modal
         open={showInstallOptions}
         onClose={() => setShowInstallOptions(false)}

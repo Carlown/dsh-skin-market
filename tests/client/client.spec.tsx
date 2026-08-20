@@ -169,12 +169,12 @@ describe('client market', () => {
     await expect(runtime.setActive('missing-package', false)).resolves.toBe(false)
   })
 
-  it('fully disables every client skin before enabling the selected one', async () => {
+  it('disables non-preserved client skins before enabling the selected one', async () => {
     const calls: string[] = []
     const runtime = { setActive: vi.fn(async (name: string, active: boolean) => { calls.push(`${name}:${active}`); return true }) }
 
-    await expect(switchClientSkin(runtime, ['old-skin', 'new-skin'], 'new-skin')).resolves.toBe(true)
-    expect(calls).toEqual(['old-skin:false', 'new-skin:false', 'new-skin:true'])
+    await expect(switchClientSkin(runtime, ['old-skin', 'pinned-skin', 'new-skin'], 'new-skin', ['pinned-skin'])).resolves.toBe(true)
+    expect(calls).toEqual(['old-skin:false', 'new-skin:true'])
   })
 
   it('guards missing native primitives', () => {
@@ -347,6 +347,12 @@ describe('client market', () => {
     expect(screen.getByRole('button', { name: '测试皮肤 界面预览' })).toBeTruthy()
     expect(screen.getAllByRole('button', { name: '使用' })).toHaveLength(2)
     expect(screen.getAllByRole('button', { name: '更新' })).toHaveLength(2)
+    await openSkinCard()
+    const use = screen.getByRole('button', { name: '使用' })
+    const pin = screen.getByRole('button', { name: '常驻使用' })
+    expect(use.getAttribute('variant')).toBe('primary')
+    expect(pin.getAttribute('variant')).toBe('outline')
+    expect(use.compareDocumentPosition(pin) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it('exposes Stop on active installed cards', async () => {
@@ -363,6 +369,60 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     expect(await screen.findAllByRole('button', { name: '停用' })).toHaveLength(2)
+  })
+
+  it('explains the conflict risk before pinning an active skin', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{
+        skinId: skin.id,
+        installation: 'installed',
+        activation: 'active',
+        primary: true,
+        pinned: false,
+        installedVersion: '1.0.0',
+        updateAvailable: false,
+      }] },
+    })))
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    const pin = await screen.findByRole('button', { name: '常驻使用' })
+    expect(pin.getAttribute('title')).toContain('宠物、音效')
+    fireEvent.click(pin)
+    const dialog = screen.getByRole('dialog', { name: '常驻使用此皮肤' })
+    expect(dialog.textContent).toContain('冲突风险由用户自行承担')
+    const help = screen.getByRole('link', { name: '页面异常时重置皮肤' })
+    expect(help.getAttribute('href')).toBe('https://github.com/kingOfSoySauce/dsh-skin-market#页面异常时重置皮肤')
+    expect(screen.getByRole('button', { name: '确认常驻' })).toBeTruthy()
+  })
+
+  it('shows an active cancel action for a pinned skin', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [{
+        skinId: skin.id,
+        installation: 'installed',
+        activation: 'active',
+        primary: false,
+        pinned: true,
+        installedVersion: '1.0.0',
+        updateAvailable: true,
+      }] },
+    })))
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    const stop = await screen.findByRole('button', { name: '停用' })
+    const unpin = screen.getByRole('button', { name: '取消常驻' })
+    const update = screen.getByRole('button', { name: '更新' })
+    expect(screen.getAllByText('常驻').length).toBeGreaterThanOrEqual(3)
+    expect(unpin.getAttribute('aria-pressed')).toBe('true')
+    expect(stop.getAttribute('variant')).toBe('outline')
+    expect(unpin.getAttribute('variant')).toBe('outline')
+    expect(update.getAttribute('variant')).toBe('outline')
+    expect(stop.compareDocumentPosition(unpin) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(unpin.compareDocumentPosition(update) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it('shows the cached catalog before background revalidation finishes', async () => {
@@ -618,6 +678,60 @@ describe('client market', () => {
     expect(otherMethods.getAttribute('variant')).toBe('outline')
     fireEvent.click(automatic)
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览.*安装中/ })).toBeTruthy()
+  })
+
+  it('names the skin and elapsed stage in the operation banner, then shows failures promptly', async () => {
+    let operationRequests = 0
+    vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-progress' }) }
+      if (url.endsWith('/operations/install-progress')) {
+        operationRequests += 1
+        return { ok: true, json: async () => operationRequests === 1
+          ? { id: 'install-progress', kind: 'install', skinId: skin.id, phase: 'downloading', startedAt: new Date().toISOString() }
+          : { id: 'install-progress', kind: 'install', skinId: skin.id, phase: 'failed', startedAt: new Date().toISOString(), message: 'GitHub 插件下载超时' } }
+      }
+      throw new Error(`Unexpected request: ${url}`)
+    }))
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
+
+    expect((await screen.findByRole('status')).textContent).toContain('正在下载“测试皮肤”')
+    expect(screen.getByRole('status').textContent).toContain('已用时')
+    expect((await screen.findByRole('alert', {}, { timeout: 2_000 })).textContent).toContain('GitHub 插件下载超时')
+  })
+
+  it('shows available byte progress in one banner and cancels the download', async () => {
+    let cancelled = false
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-cancel' }) }
+      if (url.endsWith('/operations/install-cancel/cancel') && init?.method === 'POST') {
+        cancelled = true
+        return { ok: true, json: async () => ({ id: 'install-cancel', phase: 'cancelling' }) }
+      }
+      if (url.endsWith('/operations/install-cancel')) return { ok: true, json: async () => cancelled
+        ? { id: 'install-cancel', kind: 'install', skinId: skin.id, phase: 'cancelled', startedAt: new Date().toISOString() }
+        : { id: 'install-cancel', kind: 'install', skinId: skin.id, phase: 'downloading', startedAt: new Date().toISOString(), cancelable: true, downloadedBytes: 1024 ** 2, totalBytes: 2 * 1024 ** 2, bytesPerSecond: 512 * 1024 } }
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
+
+    const banner = await screen.findByRole('status')
+    expect(banner.textContent).toContain('1.0 MB / 2.0 MB')
+    expect(banner.textContent).toContain('512.0 KB/s')
+    fireEvent.click(screen.getByRole('button', { name: '取消' }))
+    await waitFor(() => expect(cancelled).toBe(true))
+    await waitFor(() => expect(screen.queryByRole('status')).toBeNull(), { timeout: 2_000 })
+    expect(screen.queryByRole('alert')).toBeNull()
   })
 
   it('activates a verified skin after installation completes', async () => {

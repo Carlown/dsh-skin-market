@@ -15,7 +15,7 @@ function fixture() {
 
 async function finished(operation: Operation): Promise<Operation> {
   for (let index = 0; index < 200; index++) {
-    if (operation.phase === 'done' || operation.phase === 'failed') return operation
+    if (operation.phase === 'done' || operation.phase === 'failed' || operation.phase === 'cancelled') return operation
     await new Promise(resolve => setTimeout(resolve, 5))
   }
   throw new Error('operation did not finish')
@@ -31,6 +31,28 @@ function writeBundlePackage(dir: string, skin: { package: string; rowId: string;
 }
 
 describe('skin lifecycle', () => {
+  it('cancels a prefetch without mutating the live profile', async () => {
+    const dir = fixture()
+    let commandArgs: readonly string[] = []
+    const runner: PluginRunner = async (_profile, args, options) => {
+      commandArgs = args
+      return await new Promise(resolve => {
+        options?.signal?.addEventListener('abort', () => resolve({ ...success(), exitCode: null, aborted: true }), { once: true })
+      })
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner })
+    const skin = lifecycle.catalog[0]
+    const operation = lifecycle.begin('install', skin.id)
+    for (let index = 0; index < 100 && operation.phase !== 'downloading'; index++) await new Promise(resolve => setTimeout(resolve, 5))
+
+    expect(operation).toMatchObject({ phase: 'downloading', cancelable: true })
+    expect(commandArgs).toContain('--reporter=ndjson')
+    lifecycle.cancel(operation.id)
+
+    expect(await finished(operation)).toMatchObject({ phase: 'cancelled', cancelable: false, message: '操作已取消' })
+    expect(readDependencies(dir)).toEqual({})
+  })
+
   it('can replace its installable catalog without restarting the market plugin', async () => {
     const dir = fixture()
     const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
@@ -147,6 +169,103 @@ describe('skin lifecycle', () => {
     expect(readDependencies(dir)[skin.package]).toBeUndefined()
   })
 
+  it('keeps pinned skins enabled across switches and replay, then disables a secondary skin when unpinned', async () => {
+    const dir = fixture()
+    let lifecycle!: SkinLifecycle
+    const entries = new Map<string, LoaderEntry>()
+    const updates: string[] = []
+    const runner: PluginRunner = async (_profile, args) => {
+      const skin = lifecycle.catalog.find(item => args.includes(item.install.target) || args.includes(item.package))
+      if (args[0] === 'add' && skin !== undefined) {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { ...readDependencies(dir), [skin.package]: skin.install.target } })
+        writeBundlePackage(dir, skin)
+        entries.set(skin.rowId, {
+          options: { id: skin.rowId, name: skin.rowId, disabled: true },
+          update: async function (value) {
+            updates.push(`${skin.rowId}:${String(value.disabled)}`)
+            this.options.disabled = value.disabled
+            this.fiber = value.disabled ? undefined : {}
+          },
+        })
+      }
+      return success()
+    }
+    lifecycle = new SkinLifecycle({ loader: { entries: () => entries.values() } }, { profile: 'test', profileDir: dir, runner })
+    const first = lifecycle.catalog[0]
+    const second = lifecycle.catalog[1]
+
+    await finished(lifecycle.begin('install', first.id))
+    await finished(lifecycle.begin('activate', first.id))
+    await finished(lifecycle.begin('pin', first.id))
+    await finished(lifecycle.begin('install', second.id))
+    updates.length = 0
+    await finished(lifecycle.begin('activate', second.id))
+
+    expect(updates).toEqual([`${second.rowId}:null`])
+    expect(readMarketState(dir)).toMatchObject({ activeSkinId: second.id, pinnedSkinIds: [first.id] })
+    expect(lifecycle.states().find(state => state.skinId === first.id)).toMatchObject({ activation: 'active', primary: false, pinned: true })
+    expect(lifecycle.states().find(state => state.skinId === second.id)).toMatchObject({ activation: 'active', primary: true, pinned: false })
+
+    updates.length = 0
+    await lifecycle.replay()
+    expect(updates).toEqual([])
+    await finished(lifecycle.begin('unpin', first.id))
+    expect(updates).toEqual([`${first.rowId}:true`])
+    expect(readMarketState(dir).pinnedSkinIds).toEqual([])
+    expect(lifecycle.states().find(state => state.skinId === first.id)?.activation).toBe('inactive')
+    expect(lifecycle.states().find(state => state.skinId === second.id)?.activation).toBe('active')
+  })
+
+  it('keeps the current skin enabled when its pin is removed', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const skin = probe.catalog[0]
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    writeBundlePackage(dir, skin)
+    const entry: LoaderEntry = {
+      options: { id: skin.rowId, name: skin.rowId },
+      fiber: {},
+      update: async value => { entry.options.disabled = value.disabled },
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [entry] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+
+    await finished(lifecycle.begin('activate', skin.id))
+    await finished(lifecycle.begin('pin', skin.id))
+    await finished(lifecycle.begin('unpin', skin.id))
+
+    expect(readMarketState(dir)).toMatchObject({ activeSkinId: skin.id, pinnedSkinIds: [] })
+    expect(lifecycle.states()[0]).toMatchObject({ activation: 'active', primary: true, pinned: false })
+    expect(entry.options.disabled).not.toBe(true)
+  })
+
+  it('enables an installed inactive skin as pinned without replacing the current primary skin', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const primary = probe.catalog[0]
+    const pinned = probe.catalog[1]
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [primary.package]: primary.install.target, [pinned.package]: pinned.install.target } })
+    writeBundlePackage(dir, primary)
+    writeBundlePackage(dir, pinned)
+    const entries = [primary, pinned].map(skin => {
+      const entry: LoaderEntry = {
+        options: { id: skin.rowId, name: skin.rowId, disabled: true },
+        update: async value => {
+          entry.options.disabled = value.disabled
+          entry.fiber = value.disabled ? undefined : {}
+        },
+      }
+      return entry
+    })
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => entries } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+
+    await finished(lifecycle.begin('activate', primary.id))
+    await finished(lifecycle.begin('pin', pinned.id))
+
+    expect(readMarketState(dir)).toMatchObject({ activeSkinId: primary.id, pinnedSkinIds: [pinned.id] })
+    expect(lifecycle.states().find(state => state.skinId === primary.id)).toMatchObject({ activation: 'active', primary: true, pinned: false })
+    expect(lifecycle.states().find(state => state.skinId === pinned.id)).toMatchObject({ activation: 'active', primary: false, pinned: true })
+  })
+
   it('installs and registers a client-only skin without an upstream bundle patch', async () => {
     const dir = fixture()
     let lifecycle!: SkinLifecycle
@@ -181,9 +300,16 @@ describe('skin lifecycle', () => {
   it('pre-approves an exact build artifact and restores the workspace after a failed install', async () => {
     const dir = fixture()
     let calls = 0
-    const runner: PluginRunner = async () => {
+    const runner: PluginRunner = async (_profile, args) => {
       calls += 1
       if (calls === 1) {
+        expect(args).not.toContain('--config.fetchTimeout=600000')
+        expect(args).toContain('--dir')
+        expect(existsSync(join(dir, 'pnpm-workspace.yaml'))).toBe(false)
+        return success()
+      }
+      if (calls === 2) {
+        expect(args).toContain('--prefer-offline')
         expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain('dskin@https://codeload.github.com/dancingmemory/dskin/tar.gz/f24cf34bd21d23845a8b9bdaf3dbf46d01a952ed')
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { ghost: 'broken' } })
         return { ...success(), exitCode: 1, stderr: 'network failed' }
