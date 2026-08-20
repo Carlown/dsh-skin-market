@@ -3,6 +3,7 @@ export declare function resolveProfileDir(profile: string, explicit?: string): s
 export declare function manifestFile(profileDir: string): string;
 export declare function profilePatchFile(profileDir: string): string;
 export declare function pnpmWorkspaceFile(profileDir: string): string;
+export declare function pnpmLockfile(profileDir: string): string;
 export declare function marketStateFile(profileDir: string): string;
 export declare function readJson<T>(file: string, fallback: T): T;
 export declare function atomicWriteJson(file: string, value: unknown): void;
