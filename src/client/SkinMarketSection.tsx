@@ -166,7 +166,7 @@ function OperationBanner({ title, phase, startedAt, metadata, message, cancelabl
     <span className={css.operationActions}>
       {cancelable && onCancel !== undefined && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={onCancel}>取消</Button>}
       {action}
-      {onDismiss !== undefined && <Button className={`${css.nativeOutline} ${css.operationDismiss}`} variant="outline" size="sm" icon={<XIcon size={14} />} aria-label="关闭提示" title="关闭提示" onClick={onDismiss} />}
+      {onDismiss !== undefined && <Button className={css.operationDismiss} variant="ghost" size="sm" icon={<XIcon size={14} />} aria-label="关闭提示" title="关闭提示" onClick={onDismiss} />}
     </span>
   </div>
 }
@@ -898,7 +898,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     startedAt={pendingRestart.startedAt}
     metadata={[pendingRestart.target.kind === 'market-update' ? '皮肤市场更新已写入' : '更新包已写入当前 profile']}
     terminal
-    action={<Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => void openRestartConfirm(pendingRestart.target.kind === 'skin' ? pendingRestart.target.skinId : undefined, pendingRestart.target.kind)}>重启</Button>}
+    action={<Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => void openRestartConfirm(pendingRestart.target.kind === 'skin' ? pendingRestart.target.skinId : undefined, pendingRestart.target.kind)}>重启</Button>}
     onDismiss={() => setPendingRestart(null)}
   />
   const marketUpdateActive = marketOperation !== null && !['done', 'failed', 'cancelled'].includes(marketOperation.phase)
