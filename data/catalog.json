@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-20T10:03:12.747Z",
+  "generatedAt": "2026-08-20T10:54:46.409Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -11695,9 +11695,9 @@
         "dark"
       ],
       "install": {
-        "target": "github:wensincai/dsh-skin-rotator#a04cdc926dec980ef946731318d74d4e44167dac",
+        "target": "github:wensincai/dsh-skin-rotator#1f91b08cb59c3b1f5e47db7f071bcde36f89d9ea",
         "version": "0.1.1",
-        "commit": "a04cdc926dec980ef946731318d74d4e44167dac"
+        "commit": "1f91b08cb59c3b1f5e47db7f071bcde36f89d9ea"
       },
       "compatibility": {
         "dsh": "0.1.0-rc.6",
@@ -11707,7 +11707,7 @@
       },
       "screenshots": [
         "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/wensincai__dsh-skin-rotator/a04cdc926dec980ef946731318d74d4e44167dac/65c31dda24b5.png",
-        "https://raw.githubusercontent.com/wensincai/dsh-skin-rotator/a04cdc926dec980ef946731318d74d4e44167dac/docs/screenshot.png"
+        "https://raw.githubusercontent.com/wensincai/dsh-skin-rotator/1f91b08cb59c3b1f5e47db7f071bcde36f89d9ea/docs/screenshot.png"
       ],
       "review": {
         "compatibility": "unverified",
@@ -11727,7 +11727,7 @@
       "marketScreenshots": [
         "https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/wensincai__dsh-skin-rotator/a04cdc926dec980ef946731318d74d4e44167dac/65c31dda24b5.png"
       ],
-      "listScreenshot": "https://raw.githubusercontent.com/wensincai/dsh-skin-rotator/a04cdc926dec980ef946731318d74d4e44167dac/docs/screenshot.png"
+      "listScreenshot": "https://raw.githubusercontent.com/wensincai/dsh-skin-rotator/1f91b08cb59c3b1f5e47db7f071bcde36f89d9ea/docs/screenshot.png"
     },
     {
       "id": "elysia395.dsh-wallpaper-engine",
