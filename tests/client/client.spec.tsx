@@ -317,6 +317,8 @@ describe('client market', () => {
     expect(screen.getByRole('heading', { name: '已装皮肤 5' })).toBeTruthy()
     const sidebarCards = screen.getByRole('complementary', { name: 'catalog' }).querySelectorAll<HTMLButtonElement>('button[data-skin-id]')
     expect([...sidebarCards].map(card => card.dataset.skinId)).toEqual(installedSkins.map(item => item.id).reverse())
+    fireEvent.click(screen.getByRole('button', { name: '全部' }))
+    expect(screen.getByRole('button', { name: 'Stars' })).toBeTruthy()
   })
 
   it('shows installed skeletons while runtime state loads and hides the section when empty', async () => {
@@ -702,9 +704,9 @@ describe('client market', () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
     await screen.findByRole('heading', { name: '发现更多' })
-    expect(screen.getByRole('button', { name: '最新' })).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', { name: '最新' }))
     expect(screen.getByRole('button', { name: 'Stars' })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Stars' }))
+    expect(screen.getByRole('button', { name: '最新' })).toBeTruthy()
   })
 
   it('shows Stars in list rows and marks the selected skin', async () => {

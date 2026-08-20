@@ -300,7 +300,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [query, setQuery] = useState('')
   const [homeQuery, setHomeQuery] = useState('')
   const [filter, setFilter] = useState<'all' | 'installed'>('all')
-  const [sortBy, setSortBy] = useState<'stars' | 'latest'>('latest')
+  const [sortBy, setSortBy] = useState<'stars' | 'latest'>('stars')
   const [visibleCount, setVisibleCount] = useState(CATALOG_BATCH_SIZE)
   const [homeVisibleCount, setHomeVisibleCount] = useState(CATALOG_BATCH_SIZE)
   const [installedSlots, setInstalledSlots] = useState(5)
@@ -993,7 +993,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           <Input value={query} onChange={event => setQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
           <div className={css.filterBar}>
             <div className={css.filters}>
-              <Pill className={css.filterPill} data-active={filter === 'all' ? 'true' : undefined} aria-pressed={filter === 'all'} onClick={() => setFilter('all')}>全部</Pill>
+              <Pill className={css.filterPill} data-active={filter === 'all' ? 'true' : undefined} aria-pressed={filter === 'all'} onClick={() => { setFilter('all'); setSortBy('stars') }}>全部</Pill>
               <Pill className={css.filterPill} data-active={filter === 'installed' ? 'true' : undefined} aria-pressed={filter === 'installed'} onClick={() => setFilter('installed')}>已安装</Pill>
             </div>
             <Button className={css.sortButton} variant="ghost" size="sm" onClick={() => setSortBy(value => value === 'stars' ? 'latest' : 'stars')}>
