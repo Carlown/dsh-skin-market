@@ -80,19 +80,14 @@ class PnpmProgressTracker {
   }
 
   private publish(operation: Operation): void {
-    // A GitHub codeload response commonly has no Content-Length. In that
-    // case an aggregate byte count would omit the largest artifact and look
-    // more precise than it is, so expose bytes only when every fetch is known.
-    if (this.fetches.size === 0 || this.unknownSizes.size > 0) {
-      delete operation.downloadedBytes
-      delete operation.totalBytes
-      delete operation.bytesPerSecond
-      return
-    }
+    if (this.fetches.size === 0) return
+    const totalKnown = this.unknownSizes.size === 0
     const total = [...this.fetches.values()].reduce((sum, item) => sum + (item.size ?? 0), 0)
     const downloaded = [...this.fetches.values()].reduce((sum, item) => sum + Math.min(item.downloaded, item.size ?? item.downloaded), 0)
-    operation.totalBytes = total
-    operation.downloadedBytes = downloaded
+    if (downloaded > 0) operation.downloadedBytes = downloaded
+    else delete operation.downloadedBytes
+    if (totalKnown) operation.totalBytes = total
+    else delete operation.totalBytes
     const now = Date.now()
     this.samples.push({ at: now, bytes: downloaded })
     this.samples = this.samples.filter(sample => now - sample.at <= 5000)

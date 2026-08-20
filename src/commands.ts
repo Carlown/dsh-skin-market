@@ -17,6 +17,16 @@ export interface CommandOptions {
 }
 
 export type PluginRunner = (profile: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>
+function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined {
+  if (options?.env === undefined) return undefined
+  const env = { ...options.env }
+  // pnpm 11 reads numeric config values from pnpm_config_* snake-case vars.
+  // Keep accepting the earlier npm-style key so older callers get the fix too.
+  const legacyFetchTimeout = env['npm_config-fetch-timeout']
+  if (env.pnpm_config_fetch_timeout === undefined && legacyFetchTimeout !== undefined) env.pnpm_config_fetch_timeout = legacyFetchTimeout
+  return env
+}
+
 const PLUGIN_COMMAND_TIMEOUT_MS = 10 * 60 * 1000
 
 function dshInvocation(): { file: string; prefix: string[]; cwd?: string } {
@@ -30,7 +40,7 @@ function dshInvocation(): { file: string; prefix: string[]; cwd?: string } {
 
 export const runPluginCli: PluginRunner = (profile, args, options) => new Promise(resolvePromise => {
   const invocation = dshInvocation()
-  const env: NodeJS.ProcessEnv = { ...process.env, ...options?.env, CI: 'true' }
+  const env: NodeJS.ProcessEnv = { ...process.env, ...normalizedEnvironment(options), CI: 'true' }
   if (process.platform !== 'win32') {
     const parts = (env.PATH ?? '').split(':').filter(Boolean)
     for (const value of ['/opt/homebrew/bin', '/usr/local/bin', join(process.env.HOME ?? '', '.local', 'bin')]) {
@@ -97,7 +107,7 @@ export function desktopRunner(service: DesktopPnpmLike, profileDir: string): Plu
     let timedOut = false
     const timer = setTimeout(() => { timedOut = true; timeout.abort() }, PLUGIN_COMMAND_TIMEOUT_MS)
     const signal = options?.signal === undefined ? timeout.signal : AbortSignal.any([options.signal, timeout.signal])
-    const operation = service.runPlugin(args, profileDir, signal, options?.env)
+    const operation = service.runPlugin(args, profileDir, signal, normalizedEnvironment(options))
     let stdout = ''
     let stderr = ''
     operation.stdout.on('data', chunk => {

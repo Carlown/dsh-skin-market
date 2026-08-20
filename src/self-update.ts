@@ -22,8 +22,72 @@ export interface MarketUpdateOperation {
   message?: string
   status?: MarketUpdateStatus
   cancelable?: boolean
+  downloadedBytes?: number
+  totalBytes?: number
+  bytesPerSecond?: number
   startedAt: string
   finishedAt?: string
+}
+
+interface FetchProgress { size?: number; downloaded: number }
+
+class MarketProgressTracker {
+  private buffer = ''
+  private readonly fetches = new Map<string, FetchProgress>()
+  private readonly unknownSizes = new Set<string>()
+  private samples: Array<{ at: number; bytes: number }> = []
+
+  push(chunk: string, operation: MarketUpdateOperation): void {
+    this.buffer += chunk
+    const lines = this.buffer.split(/\r?\n/)
+    this.buffer = lines.pop() ?? ''
+    for (const line of lines) this.consume(line, operation)
+  }
+
+  private consume(line: string, operation: MarketUpdateOperation): void {
+    let event: Record<string, unknown>
+    try { event = JSON.parse(line) as Record<string, unknown> } catch { return }
+    const packageId = typeof event.packageId === 'string' ? event.packageId : undefined
+    if (packageId === undefined) return
+    if (event.name === 'pnpm:fetching-progress' && event.status === 'started') {
+      const size = typeof event.size === 'number' && Number.isFinite(event.size) ? event.size : undefined
+      this.fetches.set(packageId, { size, downloaded: 0 })
+      if (size === undefined) this.unknownSizes.add(packageId)
+      this.publish(operation)
+      return
+    }
+    if (event.name === 'pnpm:fetching-progress' && event.status === 'in_progress' && typeof event.downloaded === 'number') {
+      const current = this.fetches.get(packageId) ?? { downloaded: 0 }
+      current.downloaded = Math.max(current.downloaded, event.downloaded)
+      this.fetches.set(packageId, current)
+      this.publish(operation)
+      return
+    }
+    if (event.name === 'pnpm:progress' && event.status === 'fetched') {
+      const current = this.fetches.get(packageId)
+      if (current?.size !== undefined) current.downloaded = current.size
+      this.publish(operation)
+    }
+  }
+
+  private publish(operation: MarketUpdateOperation): void {
+    if (this.fetches.size === 0) return
+    const totalKnown = this.unknownSizes.size === 0
+    const total = [...this.fetches.values()].reduce((sum, item) => sum + (item.size ?? 0), 0)
+    const downloaded = [...this.fetches.values()].reduce((sum, item) => sum + Math.min(item.downloaded, item.size ?? item.downloaded), 0)
+    if (downloaded > 0) operation.downloadedBytes = downloaded
+    else delete operation.downloadedBytes
+    if (totalKnown) operation.totalBytes = total
+    else delete operation.totalBytes
+    const now = Date.now()
+    this.samples.push({ at: now, bytes: downloaded })
+    this.samples = this.samples.filter(sample => now - sample.at <= 5000)
+    const first = this.samples[0]
+    const last = this.samples.at(-1)
+    if (first !== undefined && last !== undefined && last.at > first.at && last.bytes > first.bytes) {
+      operation.bytesPerSecond = Math.round((last.bytes - first.bytes) * 1000 / (last.at - first.at))
+    }
+  }
 }
 
 export interface MarketUpdater {
@@ -108,8 +172,10 @@ export function createMarketUpdater(
         return
       }
 
+      const tracker = new MarketProgressTracker()
       const report = (chunk: string): void => {
         if (operation.phase !== 'downloading' && operation.phase !== 'installing') return
+        tracker.push(chunk, operation)
         if (chunk.trim() !== '') operation.message = operation.phase === 'downloading' ? '正在下载皮肤市场更新包' : '正在写入皮肤市场更新'
       }
       const run = async (args: readonly string[]) => {

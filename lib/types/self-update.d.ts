@@ -13,6 +13,9 @@ export interface MarketUpdateOperation {
     message?: string;
     status?: MarketUpdateStatus;
     cancelable?: boolean;
+    downloadedBytes?: number;
+    totalBytes?: number;
+    bytesPerSecond?: number;
     startedAt: string;
     finishedAt?: string;
 }

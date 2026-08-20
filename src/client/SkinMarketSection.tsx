@@ -80,6 +80,9 @@ interface MarketUpdateOperation {
   message?: string
   status?: MarketUpdateStatus
   cancelable?: boolean
+  downloadedBytes?: number
+  totalBytes?: number
+  bytesPerSecond?: number
   startedAt: string
   finishedAt?: string
 }
@@ -101,7 +104,13 @@ function byteLabel(bytes: number): string {
   return `${(bytes / 1024 ** 3).toFixed(2)} GB`
 }
 
-function operationMeta(operation: Operation): string[] {
+interface ProgressMetadata {
+  downloadedBytes?: number
+  totalBytes?: number
+  bytesPerSecond?: number
+}
+
+function operationMeta(operation: ProgressMetadata): string[] {
   const details: string[] = []
   if (operation.downloadedBytes !== undefined && operation.totalBytes !== undefined) {
     details.push(`${byteLabel(operation.downloadedBytes)} / ${byteLabel(operation.totalBytes)}`)
@@ -875,7 +884,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     className={className}
     title={marketOperationTitles[marketOperation.phase]}
     startedAt={marketOperation.startedAt}
-    metadata={[]}
+    metadata={operationMeta(marketOperation)}
     message={marketOperation.message}
     terminal={marketOperation.phase === 'done' || marketOperation.phase === 'failed' || marketOperation.phase === 'cancelled'}
     failed={marketOperation.phase === 'failed'}
