@@ -2,6 +2,10 @@
   "name": "dsh-skin-market",
   "version": "0.1.29",
   "description": "Native skin marketplace and lifecycle manager for DeepSeek Harness",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kingOfSoySauce/dsh-skin-market.git"
+  },
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
