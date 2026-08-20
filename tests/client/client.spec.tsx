@@ -156,6 +156,7 @@ describe('client market', () => {
     expect((await screen.findAllByText('正在更新皮肤市场')).length).toBe(2)
     expect(document.querySelector('[class*="homeHeader"] [role="status"] strong')?.textContent).toBe('正在更新皮肤市场')
     expect(document.querySelector('[class*="detail"] [role="status"] strong')?.textContent).toBe('正在更新皮肤市场')
+    expect(document.querySelector('[class*="homeHeader"] [role="status"]')?.textContent).not.toContain('正在下载皮肤市场更新包')
     expect(operationRequests).toBeGreaterThan(0)
   })
 

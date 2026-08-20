@@ -59,7 +59,7 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 
 ### 安装失败时，可以让 DSH 自己排查
 
-皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态。
+> 皮肤市场的安装、更新和卸载会调用 DSH 的 profile 插件管理器；当前 DSH 使用 `pnpm` 管理 profile 依赖。如果出现 `pnpm is not recognized`、`package manifest missing` 或 `allowBuilds` 相关报错，不必手动猜测 profile 状态。
 
 <details>
 <summary><strong>点击展开排查提示词</strong></summary>
@@ -80,11 +80,106 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 
 </details>
 
-当前面向 DSH Web `0.1.0-rc.6`。目录中的安装目标固定到收录时的完整 commit。
+## 更新本插件
+
+#### 方式一，页面更新（推荐）：
+
+在「设置 → 皮肤市场」标题右侧点击“更新”，完成后会提醒重启 DSH Web。
+
+#### 方式二，命令更新：
+
+```bash
+dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
+```
+> 完成后需手动重启 DSH
+
+#### 方式三，提示词更新：
+<details>
+<summary><strong>点击展开提示词</strong></summary>
+
+复制以下内容给 DSH Agent：
+
+```text
+请把已安装在 DSH Web profile 的 dsh-skin-market 更新到 GitHub 最新版本。
+
+请严格按以下顺序执行：
+1. 确认当前使用的是 web profile，并读取其 package.json，确认已安装 dsh-skin-market；不要先卸载，也不要修改其他皮肤。
+2. 执行：
+
+dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
+
+3. 更新后重新读取 web profile 的 package.json，确认 dsh-skin-market 依赖和 bundle 注册仍然存在。
+4. 告诉我更新前后版本，并提醒我确认没有 Agent 正在运行后重启 DSH Web。不要替我更新或卸载任何社区皮肤。
+```
+
+</details>
+
+## 收录你的皮肤
+
+如果你开发了 DSH 皮肤，先准备一个公开的 GitHub 仓库，再复制下面整段提示词给你的 Agent。把 `<你的皮肤仓库地址>` 换成真实地址即可。
+
+这不是终端命令，而是交给 Agent 的任务说明：
+
+<details>
+<summary><strong>点击展开提示词</strong></summary>
+
+复制以下整段提示词给你的 Agent：
+
+```text
+请把我的 DSH 皮肤提交到 DSH 皮肤市场。
+
+皮肤仓库：<你的皮肤仓库地址>
+目标目录仓库：https://github.com/kingOfSoySauce/dsh-skin-market
+目录路径：registry/skins
+
+请自主完成以下工作：
+1. 只用只读方式检查皮肤仓库；识别单包或 monorepo 子包，读取 package.json、DSH bundle/client 声明、cordis.patch.yml、README、许可证、真实预览图和 release/tag。
+2. 确认它确实是可安装的 DSH Web 皮肤，不要仅凭仓库名、README 文案或 dsh-plugin topic 判定。
+3. 解析准备收录版本对应的完整 40 位 commit SHA。安装目标必须固定到该 SHA，禁止使用 main、master、HEAD 或其他可变分支。
+4. 不要猜测皮肤名、包名、rowId、许可证、兼容版本或素材授权。缺少关键信息时先列出缺项，不要创建虚假条目。
+5. 预览图只选择仓库内真实截图，使用固定 commit 的 GitHub raw HTTPS 地址；不要使用 SVG、data URI、第三方图床或带追踪参数的 URL。
+6. fork 或 clone 目标目录仓库并新建分支；按照 registry/skin.schema.json，在 registry/skins 下只新增一个独立 YAML。不要修改或提交生成的 data/catalog.json，也不要覆盖已有条目。
+7. 在目标目录仓库根目录运行 npm run registry:check 和相关测试。这个检查只验证 registry，不会改写生成文件。不得安装到我的真实 DSH profile，不得读取 .env、凭据、聊天记录或工作区外的私密文件。
+8. 检查 git diff --name-only，确认变更只包含 registry/skins/<条目文件>.yml；提交变更并向目标目录仓库创建 PR。PR 标题使用“feat(registry): add <皮肤名>”，正文列出仓库、子包、版本、commit、许可证、预览来源、兼容性、自动检查结果和仍需人工确认的风险。
+9. 创建 PR 后返回 PR 链接；如果没有 GitHub 权限或需要登录，只准备好分支、commit 和可复制的 PR 内容，并明确告诉我下一步。
+
+收录不等于安全认证。不要声称该皮肤已被 DSH 官方、安全团队或市场背书。
+```
+
+</details>
+
+皮肤市场里的「提交皮肤」也可以根据仓库地址生成这段提示词。
+
+`registry/skins/` 是社区提交的唯一事实来源，每个皮肤一个 YAML 文件。`data/catalog.json` 是生成文件，不需要在社区 PR 中维护；PR 合并到 `main` 后会由仓库自动重生成。这样新增皮肤之间不会因为共同编辑一个目录文件而反复冲突。
+
+## 收录要求
 
 皮肤市场同时支持带 `dsh.bundle` 的完整插件和只有 `dsh.client` 的纯前端皮肤。对于后者，市场会在安装后自动、幂等地写入该皮肤已审核的 `rowId` 和 package 注册项；卸载时一并移除。维护者不必为了进入市场而额外复制一份 `cordis.patch.yml`，但仍须在 package 或 README 中提供明确的 row ID 和 DSH 兼容范围。
 
+- 必须是公开、可安装的 DSH Web 皮肤仓库或 monorepo 子包
+- 安装来源必须固定到完整 40 位 commit SHA
+- 必须提供明确的 package、row ID、许可证和兼容范围
+- 预览图必须是仓库中的真实界面截图
+- Topic、仓库名称和 Stars 只用于发现与排序，不代表安全审核或官方背书
+
+## 仓库健康建议
+
+市场在同步已收录仓库时会检查三项便于用户理解和安装的基础规范，并在皮肤详情页展示结果：
+
+- README 是否展示仓库内、可固定到版本的真实界面截图
+- README 或 package 元数据是否明确声明支持的 DSH Web 版本范围
+- package 名称、`dsh.client` Web 声明、row ID 和已构建客户端入口是否满足市场的一键安装要求
+
+检查结果用于给维护者提供改进建议，不代表安全认证。暂未满足某项规范时，页面会说明如何完善，而不会把仓库描述为“不可用”。
+
+“兼容性待验证”和“市场能否安装”是两个独立维度：
+
+- 兼容性表示维护者是否明确声明并验证了支持的 DSH Web 版本；缺少声明时会提示风险，但不会单独阻止市场安装。
+- 市场安装表示目录是否具备固定安装目标、package、`dsh.client` Web 声明、row ID 和可解析的已构建客户端入口。符合这些条件时，市场会调用 DSH 的 `plugin add` 命令完成安装；不要求插件仓库自行实现名为 `add` 的命令。
+
 ## 兼容性验证
+
+当前面向 DSH Web `0.1.0-rc.6`。目录中的安装目标固定到收录时的完整 commit。
 
 截至 2026-08-17，npm 的 DSH `latest` 与 `next` 均为 `0.1.0-rc.6`。本项目使用重新安装的该版本完成了以下验证：
 
@@ -108,59 +203,7 @@ dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'
 - 验证成功的目录会缓存到当前 profile；离线、超时或远程数据不合法时自动回退到缓存，再回退到插件内置目录
 - 每日抓取任务在完整测试通过后直接部署在线目录，同时继续创建 registry PR 留下可审查记录
 
-## 收录你的皮肤
 
-如果你开发了 DSH 皮肤，先准备一个公开的 GitHub 仓库，再复制下面整段提示词给你的 Agent。把 `<你的皮肤仓库地址>` 换成真实地址即可。
-
-这不是终端命令，而是交给 Agent 的任务说明：
-
-```text
-请把我的 DSH 皮肤提交到 DSH 皮肤市场。
-
-皮肤仓库：<你的皮肤仓库地址>
-目标目录仓库：https://github.com/kingOfSoySauce/dsh-skin-market
-目录路径：registry/skins
-
-请自主完成以下工作：
-1. 只用只读方式检查皮肤仓库；识别单包或 monorepo 子包，读取 package.json、DSH bundle/client 声明、cordis.patch.yml、README、许可证、真实预览图和 release/tag。
-2. 确认它确实是可安装的 DSH Web 皮肤，不要仅凭仓库名、README 文案或 dsh-plugin topic 判定。
-3. 解析准备收录版本对应的完整 40 位 commit SHA。安装目标必须固定到该 SHA，禁止使用 main、master、HEAD 或其他可变分支。
-4. 不要猜测皮肤名、包名、rowId、许可证、兼容版本或素材授权。缺少关键信息时先列出缺项，不要创建虚假条目。
-5. 预览图只选择仓库内真实截图，使用固定 commit 的 GitHub raw HTTPS 地址；不要使用 SVG、data URI、第三方图床或带追踪参数的 URL。
-6. fork 或 clone 目标目录仓库并新建分支；按照 registry/skin.schema.json，在 registry/skins 下只新增一个独立 YAML。不要修改或提交生成的 data/catalog.json，也不要覆盖已有条目。
-7. 在目标目录仓库根目录运行 npm run registry:check 和相关测试。这个检查只验证 registry，不会改写生成文件。不得安装到我的真实 DSH profile，不得读取 .env、凭据、聊天记录或工作区外的私密文件。
-8. 检查 git diff --name-only，确认变更只包含 registry/skins/<条目文件>.yml；提交变更并向目标目录仓库创建 PR。PR 标题使用“feat(registry): add <皮肤名>”，正文列出仓库、子包、版本、commit、许可证、预览来源、兼容性、自动检查结果和仍需人工确认的风险。
-9. 创建 PR 后返回 PR 链接；如果没有 GitHub 权限或需要登录，只准备好分支、commit 和可复制的 PR 内容，并明确告诉我下一步。
-
-收录不等于安全认证。不要声称该皮肤已被 DSH 官方、安全团队或市场背书。
-```
-
-皮肤市场里的「提交皮肤」也可以根据仓库地址生成这段提示词。
-
-`registry/skins/` 是社区提交的唯一事实来源，每个皮肤一个 YAML 文件。`data/catalog.json` 是生成文件，不需要在社区 PR 中维护；PR 合并到 `main` 后会由仓库自动重生成。这样新增皮肤之间不会因为共同编辑一个目录文件而反复冲突。
-
-## 收录要求
-
-- 必须是公开、可安装的 DSH Web 皮肤仓库或 monorepo 子包
-- 安装来源必须固定到完整 40 位 commit SHA
-- 必须提供明确的 package、row ID、许可证和兼容范围
-- 预览图必须是仓库中的真实界面截图
-- Topic、仓库名称和 Stars 只用于发现与排序，不代表安全审核或官方背书
-
-## 仓库健康建议
-
-市场在同步已收录仓库时会检查三项便于用户理解和安装的基础规范，并在皮肤详情页展示结果：
-
-- README 是否展示仓库内、可固定到版本的真实界面截图
-- README 或 package 元数据是否明确声明支持的 DSH Web 版本范围
-- package 名称、`dsh.client` Web 声明、row ID 和已构建客户端入口是否满足市场的一键安装要求
-
-检查结果用于给维护者提供改进建议，不代表安全认证。暂未满足某项规范时，页面会说明如何完善，而不会把仓库描述为“不可用”。
-
-“兼容性待验证”和“市场能否安装”是两个独立维度：
-
-- 兼容性表示维护者是否明确声明并验证了支持的 DSH Web 版本；缺少声明时会提示风险，但不会单独阻止市场安装。
-- 市场安装表示目录是否具备固定安装目标、package、`dsh.client` Web 声明、row ID 和可解析的已构建客户端入口。符合这些条件时，市场会调用 DSH 的 `plugin add` 命令完成安装；不要求插件仓库自行实现名为 `add` 的命令。
 
 ## 本地开发
 

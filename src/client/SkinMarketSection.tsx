@@ -147,19 +147,27 @@ function OperationBanner({ title, phase, startedAt, metadata, message, cancelabl
     return () => window.clearInterval(timer)
   }, [startedAt, terminal])
   const details = [...new Set([phase, ...metadata, `已用时 ${elapsedLabel(startedAt, now)}`].filter(item => item !== ''))]
-  const messageText = message !== undefined && message !== title && !details.includes(message) ? message : undefined
+  const normalize = (value: string) => value.replace(/\s+/g, '')
+  const normalizedMessage = message === undefined ? '' : normalize(message)
+  const messageText = message !== undefined
+    && message !== title
+    && normalizedMessage !== ''
+    && !details.some(item => {
+      const normalizedItem = normalize(item)
+      return normalizedItem === normalizedMessage || normalizedItem.includes(normalizedMessage) || normalizedMessage.includes(normalizedItem)
+    })
+    ? message
+    : undefined
   return <div className={`${css.operation}${className === undefined ? '' : ` ${className}`}`} role="status" aria-live="polite" data-terminal={terminal ? 'true' : undefined} data-failed={failed ? 'true' : undefined}>
-    <div className={css.operationHeader}>
-      {terminal ? <IconRefreshOutline16 size={16} /> : <IconLoadingOutline16 size={16} />}
-      <strong>{title}</strong>
-      <span className={css.operationActions}>
-        {cancelable && onCancel !== undefined && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={onCancel}>取消</Button>}
-        {action}
-        {onDismiss !== undefined && <Button className={`${css.nativeOutline} ${css.operationDismiss}`} variant="outline" size="sm" icon={<XIcon size={14} />} aria-label="关闭提示" title="关闭提示" onClick={onDismiss} />}
-      </span>
-    </div>
+    {terminal ? <IconRefreshOutline16 size={16} /> : <IconLoadingOutline16 size={16} />}
+    <strong>{title}</strong>
     <span className={css.operationMeta}>{details.map(item => <small key={item}>· {item}</small>)}</span>
-    {messageText !== undefined && <p className={css.operationMessage}>{messageText}</p>}
+    {messageText !== undefined && <span className={css.operationMessage}>· {messageText}</span>}
+    <span className={css.operationActions}>
+      {cancelable && onCancel !== undefined && <Button className={`${css.nativeOutline} ${css.operationCancel}`} variant="outline" size="sm" onClick={onCancel}>取消</Button>}
+      {action}
+      {onDismiss !== undefined && <Button className={`${css.nativeOutline} ${css.operationDismiss}`} variant="outline" size="sm" icon={<XIcon size={14} />} aria-label="关闭提示" title="关闭提示" onClick={onDismiss} />}
+    </span>
   </div>
 }
 
