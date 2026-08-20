@@ -66,11 +66,11 @@
   padding: 0;
   overflow: hidden;
   border-radius: 14px;
-  transition: width 140ms ease;
+  transition: width 140ms ease, padding 140ms ease;
 }
 .homeGithubLabel { display: none; white-space: nowrap; }
 .homeGithubAction:hover,
-.homeGithubAction:focus-visible { width: 78px; }
+.homeGithubAction:focus-visible { width: 78px; padding-inline: 10px; }
 .homeGithubAction:hover .homeGithubLabel,
 .homeGithubAction:focus-visible .homeGithubLabel { display: inline; }
 .homeContent { display: grid; gap: 30px; padding: 24px 24px 38px; }
@@ -221,12 +221,12 @@
   padding: 0;
   overflow: hidden;
   border-radius: 14px;
-  transition: width 140ms ease;
+  transition: width 140ms ease, padding 140ms ease;
 }
 .marketUpdateLabel { display: none; white-space: nowrap; }
 .root .marketUpdateButton:hover,
-.root .marketUpdateButton:focus-visible,
-.root .marketUpdateButton[data-updating="true"] { width: 50px; }
+.root .marketUpdateButton:focus-visible { width: 68px; padding-inline: 10px; }
+.root .marketUpdateButton[data-updating="true"] { width: 78px; padding-inline: 10px; }
 .root .marketUpdateButton:hover .marketUpdateLabel,
 .root .marketUpdateButton:focus-visible .marketUpdateLabel,
 .root .marketUpdateButton[data-updating="true"] .marketUpdateLabel { display: inline; }
