@@ -1,6 +1,6 @@
 export const MARKET_REPOSITORY = 'https://github.com/kingOfSoySauce/dsh-skin-market'
 export const MARKET_PUBLIC_URL = 'https://kingofsoysauce.github.io/dsh-skin-market/'
-export const MARKET_CLI_COMMAND = "dsh plugin --profile web add 'github:kingOfSoySauce/dsh-skin-market'"
+export const MARKET_CLI_COMMAND = "dsh plugin --profile web add 'dsh-skin-market@latest'"
 export const CLI_INSTALL_WARNING = '安装前请确保已关闭其他皮肤插件，避免全局样式冲突；也可以复制提示词，让 Agent 先检查冲突再安装。'
 
 export const MARKET_PROMPT = `请把 dsh-skin-market 安装到 DSH 的 web profile。不能先安装再检查，必须严格按以下顺序执行：

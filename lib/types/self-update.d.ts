@@ -1,6 +1,6 @@
 import { type PluginRunner } from './commands.ts';
-export declare const MARKET_GITHUB_TARGET = "github:kingOfSoySauce/dsh-skin-market";
-export declare const MARKET_PACKAGE_URL = "https://raw.githubusercontent.com/kingOfSoySauce/dsh-skin-market/main/package.json";
+export declare const MARKET_NPM_PACKAGE = "dsh-skin-market";
+export declare const MARKET_NPM_METADATA_URL = "https://registry.npmjs.org/dsh-skin-market";
 export interface MarketUpdateStatus {
     currentVersion: string;
     latestVersion: string;

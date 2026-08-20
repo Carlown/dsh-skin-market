@@ -4,8 +4,8 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { commandError, type PluginRunner } from './commands.ts'
 
-export const MARKET_GITHUB_TARGET = 'github:kingOfSoySauce/dsh-skin-market'
-export const MARKET_PACKAGE_URL = 'https://raw.githubusercontent.com/kingOfSoySauce/dsh-skin-market/main/package.json'
+export const MARKET_NPM_PACKAGE = 'dsh-skin-market'
+export const MARKET_NPM_METADATA_URL = `https://registry.npmjs.org/${MARKET_NPM_PACKAGE}`
 const PNPM_FETCH_TIMEOUT_MS = 10 * 60 * 1000
 
 export interface MarketUpdateStatus {
@@ -30,6 +30,12 @@ export interface MarketUpdateOperation {
 }
 
 interface FetchProgress { size?: number; downloaded: number }
+
+interface MarketRelease {
+  version: string
+  gitHead: string
+  tarball: string
+}
 
 class MarketProgressTracker {
   private buffer = ''
@@ -146,7 +152,8 @@ export function createMarketUpdater(
   const fetchLatest = options.fetch ?? fetch
   let installedVersion = options.currentVersion ?? packageVersion()
   const cacheMs = options.cacheMs ?? 5 * 60 * 1000
-  let cached: { checkedAt: number; status: MarketUpdateStatus } | null = null
+  let cached: { checkedAt: number; status: MarketUpdateStatus; release: MarketRelease } | null = null
+  let latestRelease: MarketRelease | null = null
   let updating = false
   let restartRequired = false
   let activeOperation: string | null = null
@@ -181,11 +188,12 @@ export function createMarketUpdater(
       const run = async (args: readonly string[]) => {
         const result = await runner(profile, args, {
           signal: controller.signal,
-          // pnpm's default 60s fetch timeout plus retries produces a misleading
-          // ~4 minute failure for a slow GitHub route. Keep self-update on the
-          // same 10 minute network budget as ordinary skin installs without
-          // writing a persistent .npmrc into the user's profile.
-          env: { 'npm_config_fetch-timeout': String(PNPM_FETCH_TIMEOUT_MS) },
+          // Keep self-update on the same 10 minute network budget as ordinary
+          // skin installs without writing a persistent .npmrc into the user's
+          // profile. The update target is the immutable npm package version,
+          // so repository-only assets such as market screenshots are not
+          // included in the downloaded package.
+          env: { pnpm_config_fetch_timeout: String(PNPM_FETCH_TIMEOUT_MS) },
           onStdout: report,
           onStderr: report,
         })
@@ -193,15 +201,16 @@ export function createMarketUpdater(
       }
 
       // Run one profile update only. A temporary prefetch followed by a
-      // second `pnpm add` still makes GitHub targets resolve/fetch twice and
-      // can leave the UI in "installing" for two full network operations.
+      // second `pnpm add` would duplicate registry resolution and can leave
+      // the UI in "installing" for two full network operations.
       setOperation(operation, { phase: 'downloading', message: '正在下载皮肤市场更新包' })
-      await run(['add', MARKET_GITHUB_TARGET, '--prefer-offline', '--reporter=ndjson'])
+      if (latestRelease === null) throw new Error('npm 未返回可验证的市场构件')
+      await run(['add', `${MARKET_NPM_PACKAGE}@${latestRelease.version}`, '--prefer-offline', '--reporter=ndjson'])
 
       installedVersion = before.latestVersion
       restartRequired = true
       const next = { currentVersion: installedVersion, latestVersion: installedVersion, updateAvailable: false }
-      cached = { checkedAt: Date.now(), status: next }
+      cached = { checkedAt: Date.now(), status: next, release: latestRelease }
       setOperation(operation, { phase: 'done', message: '更新完成，重启 DSH 后生效', status: next })
     } catch (error) {
       if (controller.signal.aborted) setOperation(operation, { phase: 'cancelled', message: '更新已取消' })
@@ -214,15 +223,34 @@ export function createMarketUpdater(
 
   const status = async (force = false): Promise<MarketUpdateStatus> => {
     if (!force && cached !== null && Date.now() - cached.checkedAt < cacheMs) return cached.status
-    const response = await fetchLatest(MARKET_PACKAGE_URL, {
+    const requestOptions = {
       headers: { accept: 'application/json', 'user-agent': `dsh-skin-market/${installedVersion}` },
       signal: AbortSignal.timeout(10_000),
-    })
-    if (!response.ok) throw new Error(`GitHub 版本检查失败（HTTP ${response.status}）`)
-    const value = await response.json() as { version?: unknown }
-    if (typeof value.version !== 'string' || semverParts(value.version) === null) throw new Error('GitHub package.json 版本号无效')
-    const next = { currentVersion: installedVersion, latestVersion: value.version, updateAvailable: compareVersions(value.version, installedVersion) > 0 }
-    cached = { checkedAt: Date.now(), status: next }
+    }
+    const response = await fetchLatest(MARKET_NPM_METADATA_URL, requestOptions)
+    if (!response.ok) throw new Error(`npm 版本检查失败（HTTP ${response.status}）`)
+    const value = await response.json() as {
+      'dist-tags'?: unknown
+      versions?: unknown
+    }
+    const tags = value['dist-tags']
+    const latestVersion = tags !== null && typeof tags === 'object' ? (tags as Record<string, unknown>).latest : undefined
+    if (typeof latestVersion !== 'string' || semverParts(latestVersion) === null) throw new Error('npm 未返回有效的市场 latest 版本')
+    const versions = value.versions
+    if (versions === null || typeof versions !== 'object') throw new Error('npm 未返回有效的市场版本列表')
+    const releaseValue = (versions as Record<string, unknown>)[latestVersion]
+    if (releaseValue === null || typeof releaseValue !== 'object') throw new Error('npm 未返回有效的市场 latest 构件')
+    const releaseRecord = releaseValue as Record<string, unknown>
+    const gitHead = releaseRecord.gitHead
+    const dist = releaseRecord.dist
+    const tarball = dist !== null && typeof dist === 'object' ? (dist as Record<string, unknown>).tarball : undefined
+    if (typeof gitHead !== 'string' || !/^[0-9a-f]{40}$/i.test(gitHead) || typeof tarball !== 'string' || !tarball.startsWith('https://registry.npmjs.org/')) {
+      throw new Error('npm 市场构件缺少可验证的版本来源或下载地址')
+    }
+    const release: MarketRelease = { version: latestVersion, gitHead: gitHead.toLowerCase(), tarball }
+    const next = { currentVersion: installedVersion, latestVersion: release.version, updateAvailable: compareVersions(release.version, installedVersion) > 0 }
+    latestRelease = release
+    cached = { checkedAt: Date.now(), status: next, release }
     return next
   }
 

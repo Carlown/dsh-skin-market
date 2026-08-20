@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { compareVersions, createMarketUpdater, MARKET_GITHUB_TARGET, MARKET_PACKAGE_URL } from '../src/self-update.ts'
+import { compareVersions, createMarketUpdater, MARKET_NPM_METADATA_URL, MARKET_NPM_PACKAGE } from '../src/self-update.ts'
 
 describe('market self update', () => {
   it('compares stable and prerelease semantic versions', () => {
@@ -9,8 +9,21 @@ describe('market self update', () => {
     expect(compareVersions('0.1.15', '0.1.15')).toBe(0)
   })
 
-  it('only installs when GitHub has a newer version and hides the update afterwards', async () => {
-    const fetchLatest = vi.fn(async () => ({ ok: true, json: async () => ({ version: '0.1.16' }) })) as unknown as typeof fetch
+  it('only installs when npm has a newer immutable package and hides the update afterwards', async () => {
+    const commit = 'a'.repeat(40)
+    const fetchLatest = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        'dist-tags': { latest: '0.1.16' },
+        versions: {
+          '0.1.16': {
+            version: '0.1.16',
+            gitHead: commit,
+            dist: { tarball: 'https://registry.npmjs.org/dsh-skin-market/-/dsh-skin-market-0.1.16.tgz' },
+          },
+        },
+      }),
+    })) as unknown as typeof fetch
     const runner = vi.fn(async () => ({ exitCode: 0, stdout: '', stderr: '', timedOut: false }))
     const updater = createMarketUpdater('web', runner, { currentVersion: '0.1.15', fetch: fetchLatest, cacheMs: 0 })
 
@@ -18,11 +31,11 @@ describe('market self update', () => {
     await expect(updater.status()).resolves.toEqual({ currentVersion: '0.1.15', latestVersion: '0.1.16', updateAvailable: true })
     await expect(updater.update()).resolves.toEqual({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false })
     expect(updater.restartRequired).toBe(true)
-    expect(fetchLatest).toHaveBeenCalledWith(MARKET_PACKAGE_URL, expect.objectContaining({ headers: expect.objectContaining({ accept: 'application/json' }) }))
+    expect(fetchLatest).toHaveBeenCalledWith(MARKET_NPM_METADATA_URL, expect.objectContaining({ headers: expect.objectContaining({ accept: 'application/json' }) }))
     expect(runner).toHaveBeenCalledTimes(1)
-    expect(runner).toHaveBeenCalledWith('web', ['add', MARKET_GITHUB_TARGET, '--prefer-offline', '--reporter=ndjson'], expect.objectContaining({
+    expect(runner).toHaveBeenCalledWith('web', ['add', `${MARKET_NPM_PACKAGE}@0.1.16`, '--prefer-offline', '--reporter=ndjson'], expect.objectContaining({
       signal: expect.any(AbortSignal),
-      env: { 'npm_config_fetch-timeout': '600000' },
+      env: { pnpm_config_fetch_timeout: '600000' },
     }))
     await expect(updater.status()).resolves.toEqual({ currentVersion: '0.1.16', latestVersion: '0.1.16', updateAvailable: false })
   })
@@ -31,7 +44,19 @@ describe('market self update', () => {
     const runner = vi.fn(async () => ({ exitCode: 0, stdout: '', stderr: '', timedOut: false }))
     const updater = createMarketUpdater('web', runner, {
       currentVersion: '0.1.15',
-      fetch: vi.fn(async () => ({ ok: true, json: async () => ({ version: '0.1.15' }) })) as unknown as typeof fetch,
+      fetch: vi.fn(async () => ({
+        ok: true,
+        json: async () => ({
+          'dist-tags': { latest: '0.1.15' },
+          versions: {
+            '0.1.15': {
+              version: '0.1.15',
+              gitHead: 'b'.repeat(40),
+              dist: { tarball: 'https://registry.npmjs.org/dsh-skin-market/-/dsh-skin-market-0.1.15.tgz' },
+            },
+          },
+        }),
+      })) as unknown as typeof fetch,
       cacheMs: 0,
     })
 
