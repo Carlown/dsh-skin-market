@@ -873,31 +873,37 @@ describe('client market', () => {
     expect(screen.getByRole('img', { name: '测试皮肤 暂无界面截图' })).toBeTruthy()
   })
 
-  it('labels supplemental market captures and exposes the maintainer removal path', async () => {
-    const supplemented = { ...skin, marketScreenshots: ['https://example.com/market-home.png'] }
+  it('labels market-only captures when the repository has no usable screenshot', async () => {
+    const supplemented = {
+      ...skin,
+      screenshots: [],
+      review: { compatibility: 'verified' as const, preview: 'repository-card' as const, installation: 'verified' as const },
+      marketScreenshots: ['https://example.com/market-home.png'],
+    }
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [supplemented] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
 
     await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
-    expect(screen.getByText('前 1 张截图由市场在隔离 DSH 中实机补录；仓库截图按原顺序排在后面。维护者可向目录仓库提交 PR 删除或替换补录图。')).toBeTruthy()
+    expect(screen.getByText('当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。')).toBeTruthy()
   })
 
-  it('uses the upstream cover in list cards while opening market captures first in detail', async () => {
+  it('uses the upstream screenshot when it is usable, without rendering market captures', async () => {
     const market = 'https://example.com/market-home.png'
     const upstreamCover = 'https://example.com/upstream-cover.png'
     const supplemented = {
       ...skin,
       listScreenshot: upstreamCover,
       marketScreenshots: [market],
-      screenshots: [market, upstreamCover],
-      review: { compatibility: 'verified' as const, preview: 'repository-card' as const, installation: 'verified' as const },
+      screenshots: [upstreamCover],
+      review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'verified' as const },
     }
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [supplemented] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
 
     await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
     expect(document.querySelector(`img[src="${upstreamCover}"]`)).toBeTruthy()
-    expect(screen.getByAltText('测试皮肤 大图预览').getAttribute('src')).toBe(market)
+    expect(screen.getByAltText('测试皮肤 大图预览').getAttribute('src')).toBe(upstreamCover)
+    expect(screen.queryByText('当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。')).toBeNull()
   })
 
   it('sends verified client-only skins to their manual installation guide', async () => {

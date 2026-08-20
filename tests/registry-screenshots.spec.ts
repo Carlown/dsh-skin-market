@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mergeScreenshots } from '../scripts/registry-screenshots.mjs'
+import { displayScreenshots, mergeScreenshots } from '../scripts/registry-screenshots.mjs'
 
 describe('registry screenshot merge', () => {
   it('prepends market captures and preserves upstream order', () => {
@@ -20,5 +20,12 @@ describe('registry screenshot merge', () => {
       'https://market.example/home.png',
     ])
     expect(mergeScreenshots([], [repositoryCard])).toEqual([repositoryCard])
+  })
+
+  it('uses upstream screenshots instead of market captures when source is usable', () => {
+    expect(displayScreenshots(
+      ['https://pages.example/market.png'],
+      ['https://raw.example/original.png'],
+    )).toEqual(['https://raw.example/original.png'])
   })
 })

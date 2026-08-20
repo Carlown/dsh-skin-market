@@ -5,11 +5,45 @@ export interface PreviewableCatalogEntry {
   screenshots: string[]
 }
 
+function isRepositoryPreviewUrl(url: string): boolean {
+  return url.includes('opengraph.githubassets.com/')
+    || url.includes('repository-images.githubusercontent.com/')
+    || url.includes('dshfind.com/api/card')
+}
+
+export function usesMarketScreenshots(entry: PreviewableCatalogEntry): boolean {
+  const market = entry.marketScreenshots ?? []
+  const upstream = entry.screenshots
+  const hasUsableUpstream = entry.review?.preview !== 'repository-card'
+    && upstream.some(url => !isRepositoryPreviewUrl(url))
+  return market.length > 0 && !hasUsableUpstream
+}
+
+/**
+ * Returns the URLs that should actually be rendered. Market captures are
+ * intentionally kept separate from the source-of-truth repository screenshots.
+ */
+export function getCatalogScreenshotUrls(entry: PreviewableCatalogEntry): string[] {
+  const market = entry.marketScreenshots ?? []
+  const upstream = entry.screenshots
+  const usableUpstream = entry.review?.preview === 'repository-card'
+    ? []
+    : upstream.filter(url => !isRepositoryPreviewUrl(url))
+  if (usableUpstream.length > 0) return [...new Set(usableUpstream)]
+  if (market.length > 0) return [...new Set(market)]
+  return [...new Set([...market, ...upstream])]
+}
+
+export function getCatalogListScreenshot(entry: PreviewableCatalogEntry): string | undefined {
+  return getCatalogScreenshotUrls(entry)[0] ?? entry.listScreenshot
+}
+
 /** Keep entries with real UI imagery ahead of repository-only placeholders. */
 export function hasCatalogPreview(entry: PreviewableCatalogEntry): boolean {
   const hasMarketScreenshots = (entry.marketScreenshots?.length ?? 0) > 0
-  const hasScreenshots = hasMarketScreenshots || entry.listScreenshot !== undefined || entry.screenshots.length > 0
-  return hasScreenshots && (hasMarketScreenshots || entry.review?.preview !== 'repository-card')
+  const hasUsableUpstream = entry.review?.preview !== 'repository-card'
+    && entry.screenshots.some(url => !isRepositoryPreviewUrl(url))
+  return hasUsableUpstream || hasMarketScreenshots
 }
 
 export function compareCatalogOrder<T extends PreviewableCatalogEntry>(

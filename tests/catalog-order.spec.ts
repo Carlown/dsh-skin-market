@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { comparePublicCatalogOrder, shouldRenderPublicPreview, type PublicCatalogEntry } from '../site/catalog-order.ts'
+import { getCatalogListScreenshot, getCatalogScreenshotUrls, usesMarketScreenshots } from '../src/catalog-order.ts'
 
 const previewed = {
   review: { preview: 'verified' as const },
@@ -50,5 +51,25 @@ describe('public catalog order', () => {
       supplemented,
       placeholder,
     ])
+  })
+
+  it('uses upstream screenshots instead of market captures when the source is usable', () => {
+    const entry = {
+      ...previewed,
+      marketScreenshots: ['https://pages.example/market.png'],
+    }
+    expect(getCatalogScreenshotUrls(entry)).toEqual(['preview.png'])
+    expect(usesMarketScreenshots(entry)).toBe(false)
+  })
+
+  it('uses market captures only when upstream screenshots are unavailable', () => {
+    const entry = {
+      ...previewed,
+      review: { preview: 'repository-card' as const },
+      marketScreenshots: ['https://pages.example/market.png'],
+      screenshots: ['https://opengraph.githubassets.com/commit/owner/repo'],
+    }
+    expect(getCatalogScreenshotUrls(entry)).toEqual(['https://pages.example/market.png'])
+    expect(usesMarketScreenshots(entry)).toBe(true)
   })
 })

@@ -4,6 +4,7 @@ import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass, X } from '@phospho
 import { StarIcon } from '@primer/octicons-react'
 import { fetchLiveCatalogWithFallback, REMOTE_CATALOG_URL } from './catalog.ts'
 import { comparePublicCatalogOrder, shouldRenderPublicPreview } from './catalog-order.ts'
+import { getCatalogListScreenshot, getCatalogScreenshotUrls, usesMarketScreenshots } from '../src/catalog-order.ts'
 import { CLI_INSTALL_WARNING, MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinCommand, skinPrompt } from './prompts.ts'
 import { displayTitle, githubRepoLabel } from '../src/display-title.ts'
 import './site.css'
@@ -39,7 +40,7 @@ function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => vo
   const title = skin.name.zh
   return <article className="feed-card">
     <button className="feed-card-open dsh-skin-media-hover" aria-label={`${title} 界面预览`} onClick={onOpen}>
-      <span className="feed-card-media"><PreviewMedia skin={skin} src={skin.listScreenshot ?? skin.screenshots[0]} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
+      <span className="feed-card-media"><PreviewMedia skin={skin} src={getCatalogListScreenshot(skin)} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
       <span className="feed-card-copy">
         <span className="feed-card-title"><strong title={title}>{title}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
         <span className="feed-card-description" title={skin.description}>{displayTitle(skin.description)}</span>
@@ -84,7 +85,8 @@ function App({ skins }: { skins: Skin[] }) {
   const [searchStyle, setSearchStyle] = useState<CSSProperties | undefined>(undefined)
 
   const selected = skins.find(item => item.id === selectedId) ?? skins[0]
-  const shotCount = selected?.screenshots.length ?? 0
+  const selectedScreenshots = selected === undefined ? [] : getCatalogScreenshotUrls(selected)
+  const shotCount = selectedScreenshots.length
   const filtered = useMemo(() => skins.filter(skin => {
     const text = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     return text.includes(query.trim().toLowerCase())
@@ -253,7 +255,7 @@ function App({ skins }: { skins: Skin[] }) {
         <section className="detail" ref={detailRef} aria-label="皮肤详情内容">
         <button className="mobile-back" onClick={() => setDetailOpen(false)}><ArrowLeft size={16} /> 返回发现</button>
         <header className="skin-head">
-          <div className="avatar"><PreviewMedia key={`${selected.id}:avatar`} skin={selected} src={selected.listScreenshot ?? selected.screenshots[0]} alt="" kind="avatar" /></div>
+          <div className="avatar"><PreviewMedia key={`${selected.id}:${getCatalogListScreenshot(selected) ?? 'missing'}:avatar`} skin={selected} src={getCatalogListScreenshot(selected)} alt="" kind="avatar" /></div>
           <div className="skin-title"><div><h2>{selected.name.zh}</h2><p className="skin-description" title={selected.description}>{displayTitle(selected.description)}</p><p className="repo-id">{githubRepoLabel(selected.repo)}</p></div><div className="meta"><span>版本 {selected.install.version}</span><span>DSH {selected.compatibility.dsh}</span><span className={verified ? 'verified' : 'unverified'}>{verified ? '兼容已验证' : '兼容待验证'}</span></div></div>
         </header>
 
@@ -265,16 +267,16 @@ function App({ skins }: { skins: Skin[] }) {
 
         {!verified && <p className="notice">兼容性待验证，安装前请先确认。</p>}
         {selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className="notice">该仓库暂无可识别的皮肤截图，页面使用本地占位卡，不会加载 GitHub 仓库图片。</p>}
-        {selected.marketScreenshots?.length && <p className="notice">前 {selected.marketScreenshots.length} 张截图由市场在隔离 DSH 中实机补录，仓库自己的截图会按原顺序接在后面。维护者可向目录仓库提交 PR 删除或替换这些补录图。</p>}
+        {usesMarketScreenshots(selected) && <p className="notice">当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。</p>}
 
         <div className="gallery-group" data-paused={galleryPaused ? 'true' : 'false'} onMouseEnter={() => setCarouselPaused(true)} onMouseLeave={() => setCarouselPaused(false)} onFocusCapture={() => setCarouselPaused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setCarouselPaused(false) }}>
           <div className="gallery">
             <button className="gallery-open dsh-skin-media-hover" aria-label={`全屏查看 ${selected.name.zh} 截图 ${shot + 1}`} onClick={() => setLightboxOpen(true)}>
-              <PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:gallery`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 界面预览`} kind="gallery" />
+              <PreviewMedia key={`${selected.id}:${selectedScreenshots[shot] ?? 'missing'}:gallery`} skin={selected} src={selectedScreenshots[shot]} alt={`${selected.name.zh} 界面预览`} kind="gallery" />
             </button>
             {shotCount > 1 && <><button className="gallery-nav gallery-prev" aria-label="上一张截图" onClick={() => moveShot(-1)}><ArrowLeft size={18} /></button><button className="gallery-nav gallery-next" aria-label="下一张截图" onClick={() => moveShot(1)}><ArrowLeft size={18} /></button></>}
           </div>
-          {selected.screenshots.length > 1 && <div className="thumbs" aria-label="截图选择">{selected.screenshots.map((image, index) => <button className="dsh-skin-media-hover" key={image} data-selected={index === shot} onClick={() => { setShot(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={image} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shot && <span className="thumb-progress" key={`${selected.id}:${shot}:${carouselEpoch}`} aria-hidden="true" />}</button>)}</div>}
+          {selectedScreenshots.length > 1 && <div className="thumbs" aria-label="截图选择">{selectedScreenshots.map((image, index) => <button className="dsh-skin-media-hover" key={image} data-selected={index === shot} onClick={() => { setShot(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={image} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shot && <span className="thumb-progress" key={`${selected.id}:${shot}:${carouselEpoch}`} aria-hidden="true" />}</button>)}</div>}
         </div>
 
         <div className="information">
@@ -289,10 +291,10 @@ function App({ skins }: { skins: Skin[] }) {
 
     {lightboxOpen && <section className="lightbox" role="dialog" aria-modal="true" aria-label={`${selected.name.zh} 全屏截图查看`}>
       <button className="lightbox-close" aria-label="关闭全屏查看" onClick={() => setLightboxOpen(false)}><X size={20} /></button>
-      {selected.screenshots.length > 1 && <button className="lightbox-nav lightbox-prev" aria-label="上一张截图" onClick={() => moveShot(-1)}><ArrowLeft size={26} /></button>}
-      <button className="lightbox-stage" aria-label="退出全屏查看" onClick={() => setLightboxOpen(false)}><PreviewMedia key={`${selected.id}:${selected.screenshots[shot] ?? selected.screenshots[0] ?? 'missing'}:lightbox`} skin={selected} src={selected.screenshots[shot] ?? selected.screenshots[0]} alt={`${selected.name.zh} 全屏截图 ${shot + 1}`} kind="gallery" /></button>
-      {selected.screenshots.length > 1 && <button className="lightbox-nav lightbox-next" aria-label="下一张截图" onClick={() => moveShot(1)}><ArrowLeft size={26} /></button>}
-      {selected.screenshots.length > 1 && <div className="lightbox-thumbs" aria-label="全屏截图选择">{selected.screenshots.map((image, index) => <button className="dsh-skin-media-hover" key={image} data-selected={index === shot} aria-label={`查看截图 ${index + 1}`} onClick={() => setShot(index)}><PreviewMedia skin={selected} src={image} alt="" kind="thumbnail" loading="lazy" /></button>)}</div>}
+      {selectedScreenshots.length > 1 && <button className="lightbox-nav lightbox-prev" aria-label="上一张截图" onClick={() => moveShot(-1)}><ArrowLeft size={26} /></button>}
+      <button className="lightbox-stage" aria-label="退出全屏查看" onClick={() => setLightboxOpen(false)}><PreviewMedia key={`${selected.id}:${selectedScreenshots[shot] ?? 'missing'}:lightbox`} skin={selected} src={selectedScreenshots[shot]} alt={`${selected.name.zh} 全屏截图 ${shot + 1}`} kind="gallery" /></button>
+      {selectedScreenshots.length > 1 && <button className="lightbox-nav lightbox-next" aria-label="下一张截图" onClick={() => moveShot(1)}><ArrowLeft size={26} /></button>}
+      {selectedScreenshots.length > 1 && <div className="lightbox-thumbs" aria-label="全屏截图选择">{selectedScreenshots.map((image, index) => <button className="dsh-skin-media-hover" key={image} data-selected={index === shot} aria-label={`查看截图 ${index + 1}`} onClick={() => setShot(index)}><PreviewMedia skin={selected} src={image} alt="" kind="thumbnail" loading="lazy" /></button>)}</div>}
     </section>}
 
     {installDialog !== null && <div className="install-dialog-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setInstallDialog(null) }}>

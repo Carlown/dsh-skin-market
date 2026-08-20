@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv from 'ajv/dist/2020.js'
 import { parse } from 'yaml'
-import { mergeScreenshots } from './registry-screenshots.mjs'
+import { displayScreenshots } from './registry-screenshots.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const checkOnly = process.argv.includes('--check')
@@ -24,9 +24,10 @@ for (const file of files) {
   const expected = `github:${repo}#${skin.install.commit}${skin.subpath ? `&path:${skin.subpath}` : ''}`
   if (skin.install.target !== expected) throw new Error(`${file}: install.target must equal ${expected}`)
   const marketScreenshots = skin.marketScreenshots ?? []
-  const screenshots = mergeScreenshots(marketScreenshots, skin.screenshots)
-  if (screenshots.length === 0) throw new Error(`${file}: at least one market or upstream screenshot is required`)
-  const listScreenshot = skin.listScreenshot ?? (marketScreenshots.length > 0 ? skin.screenshots[0] : undefined)
+  const screenshots = [...new Set(skin.screenshots)]
+  const display = displayScreenshots(marketScreenshots, screenshots)
+  if (display.length === 0) throw new Error(`${file}: at least one market or upstream screenshot is required`)
+  const listScreenshot = skin.listScreenshot ?? (marketScreenshots.length > 0 ? display[0] : undefined)
   skins.push({ ...skin, ...(listScreenshot ? { listScreenshot } : {}), screenshots })
 }
 
