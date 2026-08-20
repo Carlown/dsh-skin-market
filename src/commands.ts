@@ -17,7 +17,7 @@ export interface CommandOptions {
 }
 
 export type PluginRunner = (profile: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>
-function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined {
+export function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined {
   if (options?.env === undefined) return undefined
   const env = { ...options.env }
   // pnpm 11 reads numeric config values from pnpm_config_* snake-case vars.

@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { commandError } from '../src/commands.ts'
+import { commandError, normalizedEnvironment } from '../src/commands.ts'
 
 describe('plugin command errors', () => {
+  it('normalizes the pnpm 11 fetch timeout environment key', () => {
+    expect(normalizedEnvironment({ env: { 'npm_config-fetch-timeout': '600000' } }))
+      .toMatchObject({ pnpm_config_fetch_timeout: '600000' })
+  })
+
   it('keeps a GitHub fetch timeout from being hidden by generic build advice', () => {
     const message = commandError({
       exitCode: 1,
