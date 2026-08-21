@@ -27,7 +27,7 @@ for (const file of files) {
   const marketScreenshots = skin.marketScreenshots ?? []
   const screenshots = [...new Set(skin.screenshots)]
   const display = displayScreenshots(marketScreenshots, screenshots)
-  if (display.length === 0) throw new Error(`${file}: at least one market or upstream screenshot is required`)
+  if (display.length === 0) console.warn(`${file}: no displayable screenshot; keeping the entry without media`)
   const listScreenshot = skin.listScreenshot ?? (marketScreenshots.length > 0 ? display[0] : undefined)
   const media = mediaForSources(display, listScreenshot ?? display[0])
   skins.push({ ...skin, ...(listScreenshot ? { listScreenshot } : {}), screenshots, ...(media ? { media } : {}) })
