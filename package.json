@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-market",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "Native skin marketplace and lifecycle manager for DeepSeek Harness",
   "repository": {
     "type": "git",
