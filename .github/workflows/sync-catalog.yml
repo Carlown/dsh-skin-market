@@ -7,6 +7,7 @@ on:
       - 'registry/skins/**'
       - 'registry/skin.schema.json'
       - 'scripts/build-registry.mjs'
+      - 'scripts/media.mjs'
       - 'package.json'
       - 'package-lock.json'
   workflow_dispatch:

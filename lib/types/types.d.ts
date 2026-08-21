@@ -26,6 +26,7 @@ export interface SkinEntry {
     marketScreenshots?: string[];
     listScreenshot?: string;
     screenshots: string[];
+    media?: CatalogMedia;
     review?: {
         compatibility: 'verified' | 'unverified';
         preview: 'verified' | 'repository-card';
@@ -43,6 +44,14 @@ export interface SkinEntry {
     metadataUpdatedAt: string;
     starsUpdatedAt: string;
     updatedAt: string;
+}
+export interface CatalogImageMedia {
+    preview: string;
+    full: string;
+}
+export interface CatalogMedia {
+    list?: CatalogImageMedia;
+    screenshots: Array<CatalogImageMedia | null>;
 }
 export interface SkinHealth {
     status: 'healthy' | 'improvements';

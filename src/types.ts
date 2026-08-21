@@ -15,6 +15,7 @@ export interface SkinEntry {
   marketScreenshots?: string[]
   listScreenshot?: string
   screenshots: string[]
+  media?: CatalogMedia
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
   health?: SkinHealth
   license: { code: string; commercialUse: boolean; notice?: string }
@@ -24,6 +25,16 @@ export interface SkinEntry {
   metadataUpdatedAt: string
   starsUpdatedAt: string
   updatedAt: string
+}
+
+export interface CatalogImageMedia {
+  preview: string
+  full: string
+}
+
+export interface CatalogMedia {
+  list?: CatalogImageMedia
+  screenshots: Array<CatalogImageMedia | null>
 }
 
 export interface SkinHealth {

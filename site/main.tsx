@@ -2,9 +2,12 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { createRoot } from 'react-dom/client'
 import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { StarIcon } from '@primer/octicons-react'
-import { fetchLiveCatalogWithFallback, REMOTE_CATALOG_URL } from './catalog.ts'
+import { fetchLiveCatalog, fetchLiveCatalogWithFallback, REMOTE_CATALOG_URL } from './catalog.ts'
 import { comparePublicCatalogOrder, shouldRenderPublicPreview } from './catalog-order.ts'
 import { getCatalogListScreenshot, getCatalogScreenshotUrls, usesMarketScreenshots } from '../src/catalog-order.ts'
+import { generatedMediaFor, generatedMediaUrl, hasGeneratedMediaBase, setGeneratedMediaSources } from '../src/media-preview.ts'
+import { useLazyMedia } from '../src/media-visibility.ts'
+import type { CatalogMedia } from '../src/types.ts'
 import { CLI_INSTALL_WARNING, MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinCommand, skinPrompt } from './prompts.ts'
 import { displayTitle, githubRepoLabel } from '../src/display-title.ts'
 import './site.css'
@@ -24,6 +27,7 @@ interface Skin {
   marketScreenshots?: string[]
   listScreenshot?: string
   screenshots: string[]
+  media?: CatalogMedia
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
   health?: { status: 'healthy' | 'improvements'; checks: { readmeScreenshots: 'pass' | 'improve'; compatibility: 'pass' | 'improve'; installation: 'pass' | 'improve'; installCommand?: 'pass' | 'improve'; topic?: 'pass' | 'improve' }; suggestions: string[] }
   license: { code: string; commercialUse: boolean; notice?: string }
@@ -56,6 +60,13 @@ function FeedHeader({ skinCount, headerRef, searchSlotRef }: { skinCount: number
     <div><h1>发现皮肤</h1><p>{skinCount} 款社区皮肤，找到适合你的 DSH 外观</p></div>
     <div className="feed-search-slot" ref={searchSlotRef} aria-hidden="true" />
   </header>
+}
+
+function GalleryPreloads({ skin, screenshots }: { skin: Skin; screenshots: string[] }) {
+  return <>{screenshots.map((source, index) => {
+    const media = generatedMediaFor(skin, source, 'gallery')
+    return media === undefined ? null : <link key={`${source}:${index}`} rel="preload" as="image" href={generatedMediaUrl(media.full)} />
+  })}</>
 }
 
 function SearchBox({ query, onQueryChange, style }: { query: string; onQueryChange: (value: string) => void; style?: CSSProperties }) {
@@ -220,6 +231,7 @@ function App({ skins }: { skins: Skin[] }) {
   const manualOnly = selected.review?.installation === 'manual-only'
 
   return <div className="page-shell" ref={pageShellRef} data-detail={detailOpen ? 'open' : 'closed'}>
+    {detailOpen && <GalleryPreloads skin={selected} screenshots={selectedScreenshots} />}
     <header className="topbar" ref={topbarRef}>
       <a className="brand" ref={brandRef} href={import.meta.env.BASE_URL}>
         <span className="brand-mark">DSH</span>
@@ -321,18 +333,38 @@ function InstallGroup({ title, prompt, command, copyKey, copied, onCopy }: { tit
 
 function Site() {
   const [catalog, setCatalog] = useState<{ skins?: Skin[]; error?: string }>({})
+  const [mediaReady, setMediaReady] = useState(() => !hasGeneratedMediaBase())
 
   useEffect(() => {
     const controller = new AbortController()
     const fallbackUrl = `${import.meta.env.BASE_URL}catalog.json`
-    void fetchLiveCatalogWithFallback<Skin>(REMOTE_CATALOG_URL, fallbackUrl, (input, init) => fetch(input, { ...init, signal: controller.signal }))
-      .then(skins => setCatalog({ skins }))
+    const useLocalPreviewCatalog = new URLSearchParams(window.location.search).get('dsh-media') === '1'
+    const fetchCatalog = (input: string, init: RequestInit) => fetch(input, { ...init, signal: controller.signal })
+    const catalogRequest = useLocalPreviewCatalog
+      ? fetchLiveCatalog<Skin>(fallbackUrl, fetchCatalog)
+      : fetchLiveCatalogWithFallback<Skin>(REMOTE_CATALOG_URL, fallbackUrl, fetchCatalog)
+    const localMediaRequest = hasGeneratedMediaBase()
+      ? fetch(`${import.meta.env.BASE_URL}skin-media/v1/manifest.json`, { cache: 'no-store', signal: controller.signal })
+        .then(async response => {
+          if (!response.ok) return []
+          const value = await response.json()
+          return typeof value === 'object' && value !== null ? Object.keys(value) : []
+        })
+        .catch(() => [])
+      : Promise.resolve(undefined)
+    void Promise.all([catalogRequest, localMediaRequest])
+      .then(([skins, mediaSources]) => {
+        if (mediaSources !== undefined) setGeneratedMediaSources(mediaSources)
+        setMediaReady(true)
+        setCatalog({ skins })
+      })
       .catch(error => {
         if (!controller.signal.aborted) setCatalog({ error: error instanceof Error ? error.message : String(error) })
       })
     return () => controller.abort()
   }, [])
 
+  if (!mediaReady) return <main className="empty-page">正在准备本地图片预览…</main>
   if (catalog.error !== undefined) {
     return <main className="empty-page">目录加载失败：{catalog.error}。请刷新页面重试。</main>
   }
@@ -342,10 +374,22 @@ function Site() {
 
 function PreviewMedia({ skin, src, alt, kind, loading }: { skin: Skin; src?: string; alt: string; kind: 'list' | 'avatar' | 'gallery' | 'thumbnail' | 'recommendation' | 'card'; loading?: 'eager' | 'lazy' }) {
   const [failed, setFailed] = useState(false)
+  const [previewFailed, setPreviewFailed] = useState(false)
+  const [fullFailed, setFullFailed] = useState(false)
+  const lazyMedia = useLazyMedia(loading)
   if (!shouldRenderPublicPreview(skin, src, failed)) {
     return <div className="preview-placeholder" data-preview-kind={kind} role="img" aria-label={`${skin.name.zh} 暂无界面截图`}><GithubLogo size={kind === 'list' ? 16 : 24} aria-hidden="true" /><strong>{skin.author}</strong><small>暂无界面截图</small></div>
   }
-  return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
+  if (!lazyMedia.visible) return <span ref={lazyMedia.ref} className="media-lazy-placeholder" role="img" aria-label={alt} />
+  const media = generatedMediaFor(skin, src, kind)
+  if (media === undefined) return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
+  const showFull = kind === 'gallery'
+  if (showFull) {
+    if (fullFailed) return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
+    return <img src={generatedMediaUrl(media.full)} alt={alt} loading={loading === 'lazy' ? 'lazy' : 'eager'} decoding="async" onError={() => setFullFailed(true)} />
+  }
+  const imageSource = previewFailed ? src : generatedMediaUrl(media.preview)
+  return <img src={imageSource} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => { if (previewFailed) setFailed(true); else setPreviewFailed(true) }} />
 }
 
 createRoot(document.getElementById('root')!).render(<Site />)

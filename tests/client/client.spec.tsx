@@ -906,6 +906,32 @@ describe('client market', () => {
     expect(screen.queryByText('当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。')).toBeNull()
   })
 
+  it('uses catalog WebP media by default and keeps the original-image fallback available', async () => {
+    const preview = 'https://cdn.example.com/preview.webp'
+    const full = 'https://cdn.example.com/full.webp'
+    const layered = {
+      ...skin,
+      media: { list: { preview, full }, screenshots: [{ preview, full }] },
+    }
+    const fetchMock = vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [layered] } : { skins: [] } }))
+    vi.stubGlobal('fetch', fetchMock)
+
+    window.history.replaceState({}, '', '/')
+    render(<SkinMarketSection t={key => key} />)
+    expect((await screen.findByRole('img', { name: '测试皮肤 界面预览' })).getAttribute('src')).toBe(preview)
+    fireEvent.click(await screen.findByRole('button', { name: /测试皮肤 界面预览/ }))
+    const fullImage = await waitFor(() => document.querySelector(`img[src="${full}"]`))
+    expect(fullImage).toBeTruthy()
+    expect(fullImage?.parentElement?.querySelector(`img[src="${preview}"]`)).toBeNull()
+
+    cleanup()
+    window.history.replaceState({}, '', '/?dsh-media=0')
+    render(<SkinMarketSection t={key => key} />)
+    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+    expect(document.querySelector(`img[src="${preview}"]`)).toBeNull()
+    window.history.replaceState({}, '', '/')
+  })
+
   it('sends verified client-only skins to their manual installation guide', async () => {
     const manual = { ...skin, review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'manual-only' as const } }
     const open = vi.fn()

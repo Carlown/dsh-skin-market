@@ -19,6 +19,8 @@ import {
 import css from './SkinMarket.module.css'
 import './media-hover.module.css'
 import { compareCatalogOrder, getCatalogListScreenshot, getCatalogScreenshotUrls, hasCatalogPreview, usesMarketScreenshots } from '../catalog-order.ts'
+import { generatedMediaFor, generatedMediaUrl } from '../media-preview.ts'
+import { useLazyMedia } from '../media-visibility.ts'
 import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt, REGISTRY_REPOSITORY } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
@@ -276,9 +278,28 @@ interface PreviewMediaProps {
 
 function PreviewMedia({ skin, src, alt, kind, loading }: PreviewMediaProps) {
   const [failed, setFailed] = useState(false)
+  const [previewFailed, setPreviewFailed] = useState(false)
+  const [fullFailed, setFullFailed] = useState(false)
+  const lazyMedia = useLazyMedia(loading)
   const placeholder = !hasCatalogPreview(skin) || src === undefined || failed
   if (placeholder) return <div className={css.previewPlaceholder} data-preview-kind={kind} role="img" aria-label={`${skin.name.zh} 暂无界面截图`}><MarkGithubIcon aria-hidden="true" /><strong>{skin.author}</strong><small>暂无界面截图</small></div>
-  return <img src={src} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => setFailed(true)} />
+  if (!lazyMedia.visible) return <span ref={lazyMedia.ref} className={css.mediaLazyPlaceholder} role="img" aria-label={alt} />
+  const media = generatedMediaFor(skin, src, kind)
+  if (media === undefined) return <img src={src} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => setFailed(true)} />
+  const showFull = kind === 'hero'
+  if (showFull) {
+    if (fullFailed) return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
+    return <img src={generatedMediaUrl(media.full)} alt={alt} loading={loading === 'lazy' ? 'lazy' : 'eager'} decoding="async" onError={() => setFullFailed(true)} />
+  }
+  const imageSource = previewFailed ? src : generatedMediaUrl(media.preview)
+  return <img src={imageSource} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => { if (previewFailed) setFailed(true); else setPreviewFailed(true) }} />
+}
+
+function GalleryPreloads({ skin, screenshots }: { skin: CatalogSkin; screenshots: string[] }) {
+  return <>{screenshots.map((source, index) => {
+    const media = generatedMediaFor(skin, source, 'hero')
+    return media === undefined ? null : <link key={`${source}:${index}`} rel="preload" as="image" href={generatedMediaUrl(media.full)} />
+  })}</>
 }
 
 const healthLabels = {
@@ -922,6 +943,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
   return (
     <section className={css.root} data-dsh-skin-market data-detail={showDetail ? 'open' : 'closed'} data-browser-open={browserOpen ? 'true' : 'false'}>
+      {browserOpen && selected !== undefined && <GalleryPreloads skin={selected} screenshots={selectedScreenshots} />}
       {settingsNavIconHost !== null && createPortal(<TShirtIcon size={16} weight="regular" aria-hidden="true" />, settingsNavIconHost)}
       <main className={css.home} hidden={browserOpen} ref={homeRef} onScroll={event => {
         const home = event.currentTarget

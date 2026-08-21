@@ -230,6 +230,23 @@ DSH_SKIN_MARKET_LOCAL_CATALOG=1 dsh web
 
 本地条目验证完成后，再删除该环境变量运行 DSH，确认远程目录行为没有被改变。
 
+### 本地验证生成的 WebP
+
+WebP 是独立的市场静态资源，catalog 中的 `media` 字段会让插件和在线页默认直接请求 GitHub Pages 上的 preview/full；没有对应 WebP 或请求失败时，继续使用原始 PNG/JPG。需要重新生成资源时，先安装 `cwebp`（macOS 可用 `brew install webp`），然后运行：
+
+```bash
+npm run registry
+npm run media:build
+```
+
+本地调试默认也请求线上 WebP。只有需要关闭 WebP 对比原图时，才在地址后追加：
+
+```text
+?dsh-media=0
+```
+
+对应仓库图片更新后，媒体脚本会重新下载并更新同一内容键；图片资源先发布到 ops 和 public market，插件代码可以单独发布。
+
 常用检查命令：
 
 ```bash

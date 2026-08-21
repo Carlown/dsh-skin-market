@@ -7,6 +7,8 @@ on:
       - 'registry/skin.schema.json'
       - 'data/catalog.json'
       - 'scripts/build-registry.mjs'
+      - 'scripts/media.mjs'
+      - 'scripts/build-media.mjs'
       - 'src/client/submission.ts'
       - 'tests/submission.spec.ts'
       - 'package.json'

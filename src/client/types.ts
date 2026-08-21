@@ -13,6 +13,7 @@ export interface CatalogSkin {
   marketScreenshots?: string[]
   listScreenshot?: string
   screenshots: string[]
+  media?: CatalogMedia
   review?: { compatibility: 'verified' | 'unverified'; preview: 'verified' | 'repository-card'; installation: 'verified' | 'manual-only' }
   health?: {
     status: 'healthy' | 'improvements'
@@ -33,6 +34,16 @@ export interface CatalogSkin {
   releaseUpdatedAt: string
   metadataUpdatedAt: string
   updatedAt: string
+}
+
+export interface CatalogImageMedia {
+  preview: string
+  full: string
+}
+
+export interface CatalogMedia {
+  list?: CatalogImageMedia
+  screenshots: Array<CatalogImageMedia | null>
 }
 
 export interface RuntimeSkin {

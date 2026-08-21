@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import Ajv from 'ajv/dist/2020.js'
 import { parse } from 'yaml'
 import { displayScreenshots } from './registry-screenshots.mjs'
+import { mediaForSources } from './media.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const checkOnly = process.argv.includes('--check')
@@ -28,7 +29,8 @@ for (const file of files) {
   const display = displayScreenshots(marketScreenshots, screenshots)
   if (display.length === 0) throw new Error(`${file}: at least one market or upstream screenshot is required`)
   const listScreenshot = skin.listScreenshot ?? (marketScreenshots.length > 0 ? display[0] : undefined)
-  skins.push({ ...skin, ...(listScreenshot ? { listScreenshot } : {}), screenshots })
+  const media = mediaForSources(display, listScreenshot ?? display[0])
+  skins.push({ ...skin, ...(listScreenshot ? { listScreenshot } : {}), screenshots, ...(media ? { media } : {}) })
 }
 
 const ids = new Set()
