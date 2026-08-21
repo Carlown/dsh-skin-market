@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-21T03:06:00.915Z",
+  "generatedAt": "2026-08-21T03:25:25.476Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -81,7 +81,7 @@
         "en": "Liang Intensity Skin"
       },
       "author": "kingOfSoySauce",
-      "description": "自适应推理等级滑块皮肤，将当前模型可用档位映射到 0–30 视觉强度，并同步人物、背景和界面配色。",
+      "description": "优化插件大小，大幅提高安装速度，去除多余文件",
       "repo": "https://github.com/kingOfSoySauce/dsh-liang-skin",
       "package": "dsh-client-liang-intensity-skin",
       "rowId": "liang-intensity-skin",
@@ -96,9 +96,9 @@
         "dark"
       ],
       "install": {
-        "target": "github:kingOfSoySauce/dsh-liang-skin#d2d605a0bdc6eb132924097ceb238b7fb06a833f",
+        "target": "github:kingOfSoySauce/dsh-liang-skin#976fcbf9b4a91b79f14b90c16cbe0d3f553c2bd3",
         "version": "0.1.7",
-        "commit": "d2d605a0bdc6eb132924097ceb238b7fb06a833f"
+        "commit": "976fcbf9b4a91b79f14b90c16cbe0d3f553c2bd3"
       },
       "compatibility": {
         "dsh": "0.1.0-rc.6",
@@ -107,7 +107,7 @@
         ]
       },
       "screenshots": [
-        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/d2d605a0bdc6eb132924097ceb238b7fb06a833f/docs/preview.png"
+        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/976fcbf9b4a91b79f14b90c16cbe0d3f553c2bd3/docs/preview.png"
       ],
       "review": {
         "compatibility": "verified",
