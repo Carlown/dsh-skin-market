@@ -5,6 +5,22 @@
 安装版本固定到对应收录 commit；预览图使用 registry 中记录的仓库素材。收录市场不等于 DSH 官方、安全团队或市场对皮肤的安全背书；兼容性和素材授权状态请以皮肤仓库说明为准。
 
 
+## 2026-08-21 · 芙宁娜主题 Furina Theme
+
+芙宁娜主题皮肤：水蓝 × 藏青 × 冰白 × 神之眼金色板，微信/QQ 式聊天气泡，双形态焦点模式，壁纸亮度自适应与液态流动动效。
+
+- GitHub：[UniverFV/dsh-Furina-theme](https://github.com/UniverFV/dsh-Furina-theme)
+- 收录版本：`0.1.0`
+- 固定 commit：`b2d8d2014f3a6c354322a4a9c551bccabead26c6`
+- 兼容性：DSH Web `>= 0.1.0-rc.8`
+- 模式：`light` / `dark`
+
+<img src="https://raw.githubusercontent.com/UniverFV/dsh-Furina-theme/b2d8d2014f3a6c354322a4a9c551bccabead26c6/docs/preview/display3.png" width="60%" alt="芙宁娜主题 Furina Theme 预览一">
+
+<img src="https://raw.githubusercontent.com/UniverFV/dsh-Furina-theme/b2d8d2014f3a6c354322a4a9c551bccabead26c6/docs/preview/display4.png" width="60%" alt="芙宁娜主题 Furina Theme 预览二">
+
+<img src="https://raw.githubusercontent.com/UniverFV/dsh-Furina-theme/b2d8d2014f3a6c354322a4a9c551bccabead26c6/docs/preview/display5.png" width="60%" alt="芙宁娜主题 Furina Theme 预览三">
+
 ## 2026-08-19 · DSH 皮肤全家桶
 
 DSH 皮肤全家桶：8 个皮肤家族 × 15 套明暗主题，内置设置页皮肤中心，基于官方 token 机制，一键切换、零源码改动。

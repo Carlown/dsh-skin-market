@@ -15,7 +15,7 @@
 
 ### 近期收录
 
-- 2026-08-19：[CAPTAIN1275/dsh-ui-web](https://github.com/CAPTAIN1275/dsh-ui-web)（`0.2.7`）——7 款皮肤一次收录：极光 Aurora、蓝色幻想、龙之继承者、初音未来、Minecraft、鲸吟、Windows XP
+- 2026-08-21：[UniverFV/dsh-Furina-theme](https://github.com/UniverFV/dsh-Furina-theme)（`0.1.0`）——芙宁娜主题 Furina Theme
 - 更多请查看[收录日志](./docs/recently-added.md)
 
 
