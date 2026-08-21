@@ -237,7 +237,10 @@ npm run registry
 npm test
 npm run typecheck
 npm run build
+npm run release -- 0.1.31 --dry-run
 ```
+
+正式发布时去掉 `--dry-run`；脚本会校验工作区、同步 npm 版本、提交并推送 Git tag，再发布 npm。需要同时创建 GitHub Release 时追加 `--github-release`。
 
 完整的本地安装和回滚验证步骤见 [TESTING.md](./TESTING.md)。
 

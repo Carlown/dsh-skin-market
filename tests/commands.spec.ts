@@ -1,5 +1,20 @@
 import { describe, expect, it } from 'vitest'
-import { commandError, normalizedEnvironment } from '../src/commands.ts'
+import { cmdCommandLine, commandError, normalizedEnvironment, quoteCmdArg } from '../src/commands.ts'
+
+describe('Windows command shim quoting', () => {
+  it('quotes cmd metacharacters as one argument', () => {
+    const target = 'github:owner/repo#' + 'a'.repeat(40) + '&path:sub'
+    expect(quoteCmdArg(target)).toBe(`"${target}"`)
+    expect(cmdCommandLine(['dsh', 'plugin', '--profile', 'web', 'add', target]))
+      .toContain(`"${target}"`)
+  })
+
+  it('quotes spaces and embedded double quotes without changing plain tokens', () => {
+    expect(quoteCmdArg('C:\\Program Files\\DSH\\runtime.tgz')).toBe('"C:\\Program Files\\DSH\\runtime.tgz"')
+    expect(quoteCmdArg('plain-token')).toBe('plain-token')
+    expect(quoteCmdArg('value"with"quotes')).toBe('"value""with""quotes"')
+  })
+})
 
 describe('plugin command errors', () => {
   it('normalizes the pnpm 11 fetch timeout environment key', () => {

@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process'
+import { spawn, type ChildProcess, type SpawnOptions } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
 
 export interface CommandResult {
@@ -28,14 +28,48 @@ export function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessE
 }
 
 const PLUGIN_COMMAND_TIMEOUT_MS = 10 * 60 * 1000
+export const winCmdShim = process.platform === 'win32'
 
-function dshInvocation(): { file: string; prefix: string[]; cwd?: string } {
+function dshInvocation(): { file: string; prefix: string[]; cwd?: string; viaShell: boolean } {
   const entry = process.argv[1]
   if (entry !== undefined && /[\\/](?:bin\.(?:js|ts)|dsh)$/.test(entry)) {
     const absolute = resolve(entry)
-    return { file: process.execPath, prefix: [...process.execArgv, absolute], cwd: dirname(absolute) }
+    return { file: process.execPath, prefix: [...process.execArgv, absolute], cwd: dirname(absolute), viaShell: false }
   }
-  return { file: 'dsh', prefix: [] }
+  return { file: 'dsh', prefix: [], viaShell: winCmdShim }
+}
+
+/** Characters that cmd.exe reinterprets when it reparses a command line. */
+const CMD_METACHARS = /[\s"&|<>^()%!]/
+
+/** Quote one argv token before passing it through cmd.exe. */
+export function quoteCmdArg(arg: string): string {
+  if (!CMD_METACHARS.test(arg)) return arg
+  return `"${arg.replace(/"/g, '""')}"`
+}
+
+/** Build the command line used by the explicit Windows cmd.exe bridge. */
+export function cmdCommandLine(argv: readonly string[]): string {
+  return argv.map(quoteCmdArg).join(' ')
+}
+
+type SpawnShimOptions = SpawnOptions & { viaShell?: boolean }
+
+/**
+ * Start a command without Node's shell:true + argv re-serialization. Windows
+ * command shims still need cmd.exe, so use an explicit, quoted /c boundary.
+ */
+function spawnShim(file: string, args: readonly string[], options: SpawnShimOptions): ChildProcess {
+  const { viaShell = false, ...spawnOptions } = options
+  if (!viaShell || process.platform !== 'win32') {
+    return spawn(file, [...args], { ...spawnOptions, shell: false })
+  }
+  const commandLine = cmdCommandLine([file, ...args])
+  return spawn(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', `"${commandLine}"`], {
+    ...spawnOptions,
+    shell: false,
+    windowsVerbatimArguments: true,
+  })
 }
 
 export const runPluginCli: PluginRunner = (profile, args, options) => new Promise(resolvePromise => {
@@ -48,12 +82,12 @@ export const runPluginCli: PluginRunner = (profile, args, options) => new Promis
     }
     env.PATH = parts.join(':')
   }
-  const child = spawn(invocation.file, [...invocation.prefix, 'plugin', '--profile', profile, ...args], {
+  const child = spawnShim(invocation.file, [...invocation.prefix, 'plugin', '--profile', profile, ...args], {
     cwd: invocation.cwd,
     env,
-    shell: false,
     stdio: ['ignore', 'pipe', 'pipe'],
     detached: process.platform !== 'win32',
+    viaShell: invocation.viaShell,
   })
   let stdout = ''
   let stderr = ''

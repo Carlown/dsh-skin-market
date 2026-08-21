@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-20T17:19:07.743Z",
+  "generatedAt": "2026-08-21T03:06:00.915Z",
   "skins": [
     {
       "id": "d-dev0101.open-sea-skin",
@@ -96,9 +96,9 @@
         "dark"
       ],
       "install": {
-        "target": "github:kingOfSoySauce/dsh-liang-skin#f65bf387a4a3e3f4680dd6bb63e7f30d20455543",
-        "version": "0.1.6",
-        "commit": "f65bf387a4a3e3f4680dd6bb63e7f30d20455543"
+        "target": "github:kingOfSoySauce/dsh-liang-skin#d2d605a0bdc6eb132924097ceb238b7fb06a833f",
+        "version": "0.1.7",
+        "commit": "d2d605a0bdc6eb132924097ceb238b7fb06a833f"
       },
       "compatibility": {
         "dsh": "0.1.0-rc.6",
@@ -107,8 +107,7 @@
         ]
       },
       "screenshots": [
-        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/f65bf387a4a3e3f4680dd6bb63e7f30d20455543/docs/preview.png",
-        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/f65bf387a4a3e3f4680dd6bb63e7f30d20455543/docs/demo.gif"
+        "https://raw.githubusercontent.com/kingOfSoySauce/dsh-liang-skin/d2d605a0bdc6eb132924097ceb238b7fb06a833f/docs/preview.png"
       ],
       "review": {
         "compatibility": "verified",

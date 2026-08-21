@@ -13,6 +13,11 @@ export interface CommandOptions {
 }
 export type PluginRunner = (profile: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>;
 export declare function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined;
+export declare const winCmdShim: boolean;
+/** Quote one argv token before passing it through cmd.exe. */
+export declare function quoteCmdArg(arg: string): string;
+/** Build the command line used by the explicit Windows cmd.exe bridge. */
+export declare function cmdCommandLine(argv: readonly string[]): string;
 export declare const runPluginCli: PluginRunner;
 export interface DesktopPnpmLike {
     runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal, env?: NodeJS.ProcessEnv): {
