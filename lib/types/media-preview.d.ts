@@ -9,10 +9,11 @@ export interface GeneratedMediaEntry extends PreviewableCatalogEntry {
         screenshots: Array<GeneratedImageMedia | null>;
     };
 }
+export declare function hasGeneratedMediaBase(): boolean;
+export declare function setGeneratedMediaSources(sources: Iterable<string> | undefined): void;
 export declare function generatedMediaEnabled(): boolean;
 /**
- * Local testing can point the generated filenames at a local static server:
- * ?dsh-media=1&dsh-media-base=http%3A%2F%2F127.0.0.1%3A4173%2Fskin-media%2Fv1%2F
+ * An explicit base is available only for testing an alternate media host.
  */
 export declare function generatedMediaUrl(url: string): string;
 export declare function generatedMediaFor(entry: GeneratedMediaEntry, source: string | undefined, kind: 'list' | 'avatar' | 'hero' | 'gallery' | 'thumbnail' | 'recommendation' | 'card'): GeneratedImageMedia | undefined;
