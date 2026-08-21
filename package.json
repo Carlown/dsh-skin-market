@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-market",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "Native skin marketplace and lifecycle manager for DeepSeek Harness",
   "repository": {
     "type": "git",
@@ -10,7 +10,7 @@
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
   "bin": {
-    "dsh-skin-market-reset": "./lib/reset-cli.js"
+    "dsh-skin-market-reset": "lib/reset-cli.js"
   },
   "license": "MIT",
   "scripts": {
