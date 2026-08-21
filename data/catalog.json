@@ -1,7 +1,97 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-21T09:17:51.946Z",
+  "generatedAt": "2026-08-21T14:47:58.423Z",
   "skins": [
+    {
+      "id": "univerfv.dsh-furina-theme",
+      "name": {
+        "zh": "芙宁娜主题",
+        "en": "Furina Theme"
+      },
+      "author": "UniverFV",
+      "description": "芙宁娜主题皮肤：水蓝 × 藏青 × 冰白 × 神之眼金色板，微信/QQ 式聊天气泡，双形态焦点模式（非输入时壁纸清晰、输入时自动雾化），壁纸亮度自适应与液态流动动效。",
+      "repo": "https://github.com/UniverFV/dsh-Furina-theme",
+      "package": "dsh-furina-theme",
+      "rowId": "furina-theme",
+      "category": "theme",
+      "tags": [
+        "furina",
+        "genshin",
+        "wallpaper",
+        "glass",
+        "liquid",
+        "motion",
+        "light-dark"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "install": {
+        "target": "github:UniverFV/dsh-Furina-theme#b2d8d2014f3a6c354322a4a9c551bccabead26c6",
+        "version": "0.1.0",
+        "commit": "b2d8d2014f3a6c354322a4a9c551bccabead26c6"
+      },
+      "compatibility": {
+        "dsh": ">=0.1.0-rc.8",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/UniverFV/dsh-Furina-theme/b2d8d2014f3a6c354322a4a9c551bccabead26c6/docs/preview/display3.png",
+        "https://raw.githubusercontent.com/UniverFV/dsh-Furina-theme/b2d8d2014f3a6c354322a4a9c551bccabead26c6/docs/preview/display4.png",
+        "https://raw.githubusercontent.com/UniverFV/dsh-Furina-theme/b2d8d2014f3a6c354322a4a9c551bccabead26c6/docs/preview/display5.png"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "manual-only"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "pass",
+          "compatibility": "pass",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "improve"
+        },
+        "suggestions": [
+          "仓库创建后请添加 dsh-plugin GitHub topic，便于市场与社区发现"
+        ]
+      },
+      "license": {
+        "code": "MIT",
+        "commercialUse": true
+      },
+      "featuredRank": 0,
+      "starsSnapshot": 0,
+      "releaseUpdatedAt": "2026-08-21T12:00:00.000Z",
+      "metadataUpdatedAt": "2026-08-21T12:00:00.000Z",
+      "starsUpdatedAt": "2026-08-21T12:00:00.000Z",
+      "updatedAt": "2026-08-21T12:00:00.000Z",
+      "media": {
+        "list": {
+          "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/39f6cec4d9a3abdf8e18145aa09f1952.preview.webp",
+          "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/39f6cec4d9a3abdf8e18145aa09f1952.full.webp"
+        },
+        "screenshots": [
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/39f6cec4d9a3abdf8e18145aa09f1952.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/39f6cec4d9a3abdf8e18145aa09f1952.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/0a083e4fd44820346ec2d82273ef8436.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/0a083e4fd44820346ec2d82273ef8436.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/a5a2ee5b7b407d096a9295f058e0f587.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/a5a2ee5b7b407d096a9295f058e0f587.full.webp"
+          }
+        ]
+      }
+    },
     {
       "id": "d-dev0101.open-sea-skin",
       "name": {
