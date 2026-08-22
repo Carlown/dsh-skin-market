@@ -9,3 +9,4 @@ export interface BuildApprovalSkin {
  * Keep the catalog value and the key written to pnpm-workspace.yaml aligned.
  */
 export declare function effectiveBuildApprovalKey(skin: BuildApprovalSkin): string | undefined;
+export declare function buildApprovalKeyForTarget(skin: BuildApprovalSkin, target: string): string | undefined;

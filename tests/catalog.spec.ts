@@ -83,4 +83,16 @@ describe('catalog', () => {
     duplicate.skins.push(structuredClone(duplicate.skins[0]))
     expect(() => validateCatalog(duplicate)).toThrow('duplicate id')
   })
+
+  it('requires npm metadata to match the reviewed package and repository', () => {
+    const catalog = loadCatalog()
+    const invalid = structuredClone(catalog)
+    invalid.skins[0]!.install.npm = {
+      name: 'wrong-package',
+      version: invalid.skins[0]!.install.version,
+      integrity: 'sha512-abc',
+      repository: invalid.skins[0]!.repo,
+    }
+    expect(() => validateCatalog(invalid)).toThrow('invalid npm package name')
+  })
 })

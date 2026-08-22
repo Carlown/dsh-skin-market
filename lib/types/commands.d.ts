@@ -12,6 +12,7 @@ export interface CommandOptions {
     onStdout?: (chunk: string) => void;
     onStderr?: (chunk: string) => void;
 }
+export type CommandExecutor = (file: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>;
 export interface PluginInstallRequest {
     packageName: string;
     packageVersion: string;
@@ -21,6 +22,7 @@ export interface PluginInstallRequest {
 export interface PluginRunner {
     (profile: string, args: readonly string[], options?: CommandOptions): Promise<CommandResult>;
     hostKind?: MarketHostKind;
+    ensurePnpm?: (options?: CommandOptions) => Promise<void>;
     installPlugin?: (profile: string, request: PluginInstallRequest, options?: CommandOptions) => Promise<CommandResult>;
 }
 export declare function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined;
@@ -29,6 +31,8 @@ export declare const winCmdShim: boolean;
 export declare function quoteCmdArg(arg: string): string;
 /** Build the command line used by the explicit Windows cmd.exe bridge. */
 export declare function cmdCommandLine(argv: readonly string[]): string;
+export declare function createPnpmProvisioner(execute?: CommandExecutor): (options?: CommandOptions) => Promise<void>;
+export declare const ensurePnpmAvailable: (options?: CommandOptions) => Promise<void>;
 export declare const runPluginCli: PluginRunner;
 export interface DesktopPnpmLike {
     runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal): {

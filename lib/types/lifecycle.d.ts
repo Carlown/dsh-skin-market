@@ -50,6 +50,7 @@ export declare class SkinLifecycle {
     private execute;
     private run;
     private installPackage;
+    private assertRuntimeLoaderConflicts;
     private prefetch;
     private install;
     private activate;

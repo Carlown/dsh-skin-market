@@ -1,5 +1,5 @@
 import { effectiveBuildApprovalKey } from './build-approval.ts';
-import type { InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts';
+import type { InstallConflict, InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts';
 export declare function resolveProfileDir(profile: string, explicit?: string): string;
 export declare function manifestFile(profileDir: string): string;
 export declare function profilePatchFile(profileDir: string): string;
@@ -23,6 +23,18 @@ export declare function validateInstalledSkin(profileDir: string, skin: SkinEntr
 };
 export declare function installedSpecMatches(skin: SkinEntry, spec: string | null | undefined): boolean;
 export { effectiveBuildApprovalKey };
+export interface LoaderIdentity {
+    id?: string;
+    name?: string;
+    packageName?: string;
+}
+export declare class InstallConflictError extends Error {
+    readonly conflicts: InstallConflict[];
+    constructor(conflicts: InstallConflict[]);
+}
+export declare function packageLoaderIdentities(profileDir: string, packageName: string): LoaderIdentity[];
+export declare function installedLoaderIdentities(profileDir: string, excludePackage?: string): LoaderIdentity[];
+export declare function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry): void;
 export declare function ensureBuildAllowed(profileDir: string, key: string): void;
 export declare function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled?: boolean): void;
 export declare function removeSkinRegistration(profileDir: string, skin: SkinEntry): void;

@@ -13,6 +13,14 @@ export type DesktopInstallCapability =
       reason: string
     }
 
+export interface NpmInstallSource {
+  name: string
+  version: string
+  integrity: string
+  repository: string
+  gitHead?: string
+}
+
 export interface CatalogSkin {
   id: string
   name: { zh: string; en: string }
@@ -24,7 +32,7 @@ export interface CatalogSkin {
   rowId: string
   tags: string[]
   modes: string[]
-  install: { target: string; version: string; commit: string; allowBuild?: string; desktop?: DesktopInstallCapability }
+  install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability }
   compatibility: { dsh: string; platform: string[] }
   marketScreenshots?: string[]
   listScreenshot?: string
@@ -94,10 +102,11 @@ export interface Operation {
   totalBytes?: number
   bytesPerSecond?: number
   failure?: {
-    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'command'
+    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'conflict' | 'command'
     message: string
     packageName?: string
     action?: 'retry' | 'approve-build'
+    conflicts?: Array<{ kind: 'package' | 'repository' | 'row' | 'loader'; incoming: string; existing: string; identifiers: string[] }>
   }
   startedAt: string
   finishedAt?: string

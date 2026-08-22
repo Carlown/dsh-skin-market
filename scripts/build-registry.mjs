@@ -24,6 +24,14 @@ for (const file of files) {
   const repo = skin.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
   const expected = `github:${repo}#${skin.install.commit}${skin.subpath ? `&path:${skin.subpath}` : ''}`
   if (skin.install.target !== expected) throw new Error(`${file}: install.target must equal ${expected}`)
+  const npm = skin.install.npm
+  if (npm !== undefined) {
+    const npmRepo = npm.repository.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
+    if (npm.name !== skin.package) throw new Error(`${file}: install.npm.name must equal ${skin.package}`)
+    if (npm.version !== skin.install.version) throw new Error(`${file}: install.npm.version must equal install.version`)
+    if (npmRepo !== repo) throw new Error(`${file}: install.npm.repository must equal repo`)
+    if (npm.gitHead !== undefined && npm.gitHead.toLowerCase() !== skin.install.commit.toLowerCase()) throw new Error(`${file}: install.npm.gitHead must equal install.commit`)
+  }
   if (skin.subpath !== undefined && skin.install.allowBuild !== undefined && !skin.install.allowBuild.endsWith(`#path:${skin.subpath}`)) {
     throw new Error(`${file}: install.allowBuild must end with #path:${skin.subpath}`)
   }

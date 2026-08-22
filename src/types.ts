@@ -13,6 +13,14 @@ export type DesktopInstallCapability =
       reason: string
     }
 
+export interface NpmInstallSource {
+  name: string
+  version: string
+  integrity: string
+  repository: string
+  gitHead?: string
+}
+
 export interface SkinEntry {
   id: string
   name: { zh: string; en: string }
@@ -25,7 +33,7 @@ export interface SkinEntry {
   category: string
   tags: string[]
   modes: Array<'light' | 'dark'>
-  install: { target: string; version: string; commit: string; allowBuild?: string; desktop?: DesktopInstallCapability }
+  install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability }
   compatibility: { dsh: string; platform: string[] }
   marketScreenshots?: string[]
   listScreenshot?: string
@@ -102,15 +110,25 @@ export interface InstalledClientPlugin {
   registered: boolean
 }
 
+export type InstallConflictKind = 'package' | 'repository' | 'row' | 'loader'
+
+export interface InstallConflict {
+  kind: InstallConflictKind
+  incoming: string
+  existing: string
+  identifiers: string[]
+}
+
 export type OperationKind = 'install' | 'activate' | 'deactivate' | 'pin' | 'unpin' | 'update' | 'uninstall'
 export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'installing' | 'validating' | 'activating' | 'cancelling' | 'cancelled' | 'done' | 'failed'
 export type OperationRetryAction = 'retry' | 'approve-build'
 
 export interface OperationFailure {
-  kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'command'
+  kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'conflict' | 'command'
   message: string
   packageName?: string
   action?: OperationRetryAction
+  conflicts?: InstallConflict[]
 }
 
 export interface Operation {

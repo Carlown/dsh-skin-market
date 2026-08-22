@@ -190,6 +190,7 @@ export function createMarketUpdater(
         if (chunk.trim() !== '') operation.message = operation.phase === 'downloading' ? '正在下载皮肤市场更新包' : '正在写入皮肤市场更新'
       }
       const run = async (args: readonly string[]) => {
+        await runner.ensurePnpm?.({ signal: controller.signal })
         await runPnpmWithRecovery(args, {
           attempt: (attemptArgs, attemptOptions) => runner(profile, attemptArgs, {
             signal: controller.signal,

@@ -9,6 +9,13 @@ export type DesktopInstallCapability = {
     mode: 'manual-only';
     reason: string;
 };
+export interface NpmInstallSource {
+    name: string;
+    version: string;
+    integrity: string;
+    repository: string;
+    gitHead?: string;
+}
 export interface SkinEntry {
     id: string;
     name: {
@@ -29,6 +36,7 @@ export interface SkinEntry {
         version: string;
         commit: string;
         allowBuild?: string;
+        npm?: NpmInstallSource;
         desktop?: DesktopInstallCapability;
     };
     compatibility: {
@@ -109,14 +117,22 @@ export interface InstalledClientPlugin {
     rowIds: string[];
     registered: boolean;
 }
+export type InstallConflictKind = 'package' | 'repository' | 'row' | 'loader';
+export interface InstallConflict {
+    kind: InstallConflictKind;
+    incoming: string;
+    existing: string;
+    identifiers: string[];
+}
 export type OperationKind = 'install' | 'activate' | 'deactivate' | 'pin' | 'unpin' | 'update' | 'uninstall';
 export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'installing' | 'validating' | 'activating' | 'cancelling' | 'cancelled' | 'done' | 'failed';
 export type OperationRetryAction = 'retry' | 'approve-build';
 export interface OperationFailure {
-    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'command';
+    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'conflict' | 'command';
     message: string;
     packageName?: string;
     action?: OperationRetryAction;
+    conflicts?: InstallConflict[];
 }
 export interface Operation {
     id: string;

@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { SkinLifecycle } from '../src/lifecycle.ts'
-import { atomicWriteJson, atomicWriteText, readDependencies, readMarketState } from '../src/profile.ts'
+import { atomicWriteJson, atomicWriteText, profilePatchFile, readDependencies, readMarketState } from '../src/profile.ts'
 import type { CommandResult, PluginInstallRequest, PluginRunner } from '../src/commands.ts'
 import type { LoaderEntry, Operation } from '../src/types.ts'
 
@@ -222,6 +222,35 @@ describe('skin lifecycle', () => {
 
     expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
     expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain(`${allowBuild}#path:packages/dsh-web-ui-all`)
+  })
+
+  it('installs the curated npm source before the GitHub fallback and saves it exactly', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const integrity = 'sha512-abc'
+    const skin = {
+      ...base,
+      id: 'npm-priority.skin',
+      install: { ...base.install, npm: { name: base.package, version: base.install.version, integrity, repository: base.repo } },
+    }
+    const calls: string[][] = []
+    const runner: PluginRunner = async (_profile, args) => {
+      calls.push([...args])
+      if (args[0] === 'add' && !args.includes('--dir')) {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.version } })
+        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+        mkdirSync(packageDir, { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, repository: { type: 'git', url: `git+${skin.repo}.git` }, dsh: { client: { platform: 'web' } } })
+        atomicWriteText(join(dir, 'pnpm-lock.yaml'), `lockfileVersion: '9.0'\npackages:\n  '${skin.package}@${skin.install.version}':\n    resolution:\n      integrity: ${integrity}\n`)
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
+    expect(calls.find(args => args[0] === 'add' && args.includes('--dir'))).toContain(`${skin.package}@${skin.install.version}`)
+    expect(calls.find(args => args[0] === 'add' && !args.includes('--dir'))).toEqual(['add', `${skin.package}@${skin.install.version}`, '--prefer-offline', '--save-exact', '--reporter=ndjson'])
   })
 
   it('requires explicit approval for an unknown exact build key and retries with that key', async () => {
@@ -495,6 +524,25 @@ describe('skin lifecycle', () => {
 
     expect(operation.phase).toBe('failed')
     expect(operation.message).toContain('does not match the reviewed source/version')
+  })
+
+  it('blocks a duplicate loader before touching the live profile', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const skin = firstInstallable(probe)
+    atomicWriteText(profilePatchFile(dir), `- insert:\n    - id: ${skin.rowId}\n      name: another-plugin\n`)
+    let liveAdd = 0
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'add' && !args.includes('--dir')) liveAdd += 1
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation).toMatchObject({ phase: 'failed', failure: { kind: 'conflict' } })
+    expect(liveAdd).toBe(0)
+    expect(readDependencies(dir)).toEqual({})
   })
 
   it('pre-approves an exact build artifact and restores profile metadata after a failed install', async () => {

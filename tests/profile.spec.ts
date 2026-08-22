@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { effectiveBuildApprovalKey } from '../src/build-approval.ts'
-import { atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, installedClientPlugins, installedSpecMatches, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
+import { assertNoLoaderConflicts, atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, InstallConflictError, installedClientPlugins, installedSpecMatches, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 function fixture() { return mkdtempSync(join(tmpdir(), 'skin-profile-')) }
@@ -41,6 +41,35 @@ describe('profile state', () => {
     expect(validateInstalledSkin(dir, skin).ok).toBe(true)
     expect(runtimeState(dir, skin, skin.id, true, true)).toMatchObject({ installation: 'installed', activation: 'active', updateAvailable: false })
     expect(runtimeState(dir, skin, null, false, true)).toMatchObject({ installation: 'installed', activation: 'inactive' })
+  })
+
+  it('validates the reviewed npm repository and lockfile integrity', () => {
+    const dir = fixture()
+    const base = loadCatalog().skins[0]
+    const integrity = 'sha512-abc'
+    const skin = {
+      ...base,
+      install: { ...base.install, npm: { name: base.package, version: base.install.version, integrity, repository: base.repo } },
+    }
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.version } })
+    atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, repository: { type: 'git', url: `git+${skin.repo}.git` }, dsh: { client: { platform: 'web' } } })
+    atomicWriteText(join(dir, 'pnpm-lock.yaml'), `lockfileVersion: '9.0'\npackages:\n  '${skin.package}@${skin.install.version}':\n    resolution:\n      integrity: ${integrity}\n`)
+
+    expect(validateInstalledSkin(dir, skin)).toMatchObject({ ok: true, version: skin.install.version })
+    atomicWriteText(join(dir, 'pnpm-lock.yaml'), `lockfileVersion: '9.0'\npackages:\n  '${skin.package}@${skin.install.version}':\n    resolution:\n      integrity: sha512-other\n`)
+    expect(validateInstalledSkin(dir, skin)).toMatchObject({ ok: false, reason: expect.stringContaining('integrity mismatch') })
+  })
+
+  it('detects a duplicate loader row before market registration', () => {
+    const dir = fixture()
+    const skin = loadCatalog().skins[0]
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { another: 'github:example/another#commit' } })
+    atomicWriteText(profilePatchFile(dir), `- insert:\n    - id: ${skin.rowId}\n      name: another\n`)
+
+    expect(() => assertNoLoaderConflicts(dir, skin)).toThrow(InstallConflictError)
+    expect(() => assertNoLoaderConflicts(dir, skin)).toThrow(skin.rowId)
   })
 
   it('overrides a bundle-owned loader row without duplicating the composed entry', () => {

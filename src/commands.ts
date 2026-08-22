@@ -17,6 +17,8 @@ export interface CommandOptions {
   onStderr?: (chunk: string) => void
 }
 
+export type CommandExecutor = (file: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>
+
 export interface PluginInstallRequest {
   packageName: string
   packageVersion: string
@@ -27,6 +29,7 @@ export interface PluginInstallRequest {
 export interface PluginRunner {
   (profile: string, args: readonly string[], options?: CommandOptions): Promise<CommandResult>
   hostKind?: MarketHostKind
+  ensurePnpm?: (options?: CommandOptions) => Promise<void>
   installPlugin?: (profile: string, request: PluginInstallRequest, options?: CommandOptions) => Promise<CommandResult>
 }
 export function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined {
@@ -84,6 +87,100 @@ function spawnShim(file: string, args: readonly string[], options: SpawnShimOpti
   })
 }
 
+const PROVISION_COMMAND_TIMEOUT_MS = 120_000
+
+function commandEnvironment(options?: CommandOptions): NodeJS.ProcessEnv {
+  const env: NodeJS.ProcessEnv = { ...process.env, ...normalizedEnvironment(options), CI: 'true' }
+  if (process.platform !== 'win32') {
+    const parts = (env.PATH ?? '').split(':').filter(Boolean)
+    for (const value of ['/opt/homebrew/bin', '/usr/local/bin', join(process.env.HOME ?? '', '.local', 'bin')]) {
+      if (value !== '' && !parts.includes(value)) parts.push(value)
+    }
+    env.PATH = parts.join(':')
+  }
+  return env
+}
+
+const runCommand: CommandExecutor = (file, args, options) => new Promise(resolvePromise => {
+  const child = spawnShim(file, args, {
+    env: commandEnvironment(options),
+    stdio: ['ignore', 'pipe', 'pipe'],
+    detached: process.platform !== 'win32',
+    viaShell: winCmdShim,
+  })
+  let stdout = ''
+  let stderr = ''
+  let timedOut = false
+  let aborted = options?.signal?.aborted === true
+  const kill = (signal: NodeJS.Signals): void => {
+    if (child.pid === undefined || child.exitCode !== null) return
+    try {
+      if (process.platform === 'win32') child.kill(signal)
+      else process.kill(-child.pid, signal)
+    } catch { /* the process may have exited between the checks */ }
+  }
+  child.stdout?.on('data', chunk => { const value = String(chunk); stdout += value; options?.onStdout?.(value) })
+  child.stderr?.on('data', chunk => { const value = String(chunk); stderr += value; options?.onStderr?.(value) })
+  const abort = (): void => { aborted = true; kill('SIGTERM') }
+  options?.signal?.addEventListener('abort', abort, { once: true })
+  if (aborted) abort()
+  const timer = setTimeout(() => { timedOut = true; kill('SIGKILL') }, PROVISION_COMMAND_TIMEOUT_MS)
+  child.on('error', error => { stderr += error.message })
+  child.on('close', exitCode => {
+    clearTimeout(timer)
+    options?.signal?.removeEventListener('abort', abort)
+    resolvePromise({ exitCode, stdout, stderr, timedOut, aborted })
+  })
+})
+
+function addPath(env: NodeJS.ProcessEnv, directory: string): NodeJS.ProcessEnv {
+  if (directory === '') return env
+  const separator = process.platform === 'win32' ? ';' : ':'
+  const parts = (env.PATH ?? '').split(separator).filter(Boolean)
+  if (!parts.includes(directory)) parts.unshift(directory)
+  return { ...env, PATH: parts.join(separator) }
+}
+
+function commandOutput(result: CommandResult): string {
+  return `${result.stdout}\n${result.stderr}`.trim().slice(-800)
+}
+
+export function createPnpmProvisioner(execute: CommandExecutor = runCommand): (options?: CommandOptions) => Promise<void> {
+  let ready: Promise<void> | null = null
+  return async (options?: CommandOptions): Promise<void> => {
+    if (ready !== null) return ready
+    ready = (async () => {
+      let env = commandEnvironment(options)
+      const probe = async (): Promise<CommandResult> => execute('pnpm', ['--version'], { signal: options?.signal, env })
+      if ((await probe()).exitCode === 0) return
+
+      const corepack = await execute('corepack', ['enable', 'pnpm'], { signal: options?.signal, env })
+      if ((await probe()).exitCode === 0) return
+
+      const npmInstall = await execute('npm', ['install', '--global', 'pnpm'], { signal: options?.signal, env })
+      const prefix = await execute('npm', ['prefix', '--global'], { signal: options?.signal, env })
+      if (prefix.exitCode === 0) {
+        const globalPrefix = prefix.stdout.trim().split(/\r?\n/).at(-1)?.trim() ?? ''
+        env = addPath(env, process.platform === 'win32' ? globalPrefix : join(globalPrefix, 'bin'))
+      }
+      if ((await probe()).exitCode === 0) return
+
+      const details = [commandOutput(corepack), commandOutput(npmInstall), commandOutput(prefix)]
+        .filter(Boolean)
+        .join('\n')
+      throw new Error(`未找到 pnpm，已尝试 Corepack 和 npm 自动安装；请先安装 Node.js/npm 后重试${details ? `\n${details}` : ''}`)
+    })()
+    try {
+      await ready
+    } catch (error) {
+      ready = null
+      throw error
+    }
+  }
+}
+
+export const ensurePnpmAvailable = createPnpmProvisioner()
+
 export const runPluginCli: PluginRunner = (profile, args, options) => new Promise(resolvePromise => {
   const invocation = dshInvocation()
   const env: NodeJS.ProcessEnv = { ...process.env, ...normalizedEnvironment(options), CI: 'true' }
@@ -138,6 +235,7 @@ export const runPluginCli: PluginRunner = (profile, args, options) => new Promis
     resolvePromise({ exitCode, stdout, stderr, timedOut, aborted })
   })
 })
+runPluginCli.ensurePnpm = ensurePnpmAvailable
 
 export interface DesktopPnpmLike {
   runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal): {

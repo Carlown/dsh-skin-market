@@ -2,9 +2,10 @@ import { randomUUID } from 'node:crypto'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { effectiveBuildApprovalKey } from './build-approval.ts'
+import { buildApprovalKeyForTarget, effectiveBuildApprovalKey } from './build-approval.ts'
 import type { PluginInstallRequest, PluginRunner } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
+import { discoverMonorepoTarget, isNpmInstallTarget, preferredInstallTarget } from './install-resolution.ts'
 import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
 import {
   ensureBuildAllowed,
@@ -16,6 +17,8 @@ import {
   readDependencies,
   readMarketState,
   readProfileBundles,
+  assertNoLoaderConflicts,
+  InstallConflictError,
   removeSkinRegistration,
   restoreFile,
   restoreManifest,
@@ -332,6 +335,9 @@ export class SkinLifecycle {
           operation.failure = operationFailure
           if (failure.buildKey !== undefined) this.pendingBuildKeys.set(operation.id, failure.buildKey)
         }
+        if (error instanceof InstallConflictError) {
+          operation.failure = { kind: 'conflict', message: error.message, conflicts: error.conflicts }
+        }
         this.update(operation, 'failed', errorMessage(error))
       }
     } finally {
@@ -348,6 +354,8 @@ export class SkinLifecycle {
   private async run(args: readonly string[], operation?: Operation): Promise<void> {
     const controller = operation === undefined ? undefined : this.abortControllers.get(operation.id)
     if (controller?.signal.aborted === true) throw new Error('操作已取消')
+    const ensurePnpm = this.options.runner.ensurePnpm
+    if (ensurePnpm !== undefined) await ensurePnpm({ signal: controller?.signal })
     const tracker = operation === undefined ? undefined : new PnpmProgressTracker()
     await runPnpmWithRecovery(args, {
       attempt: async (attemptArgs, attemptOptions) => {
@@ -394,23 +402,53 @@ export class SkinLifecycle {
       return
     }
 
-    await this.prefetch(skin.install.target, operation)
+    const target = await this.prefetch(skin, operation)
+    assertNoLoaderConflicts(this.options.profileDir, skin)
+    this.assertRuntimeLoaderConflicts(skin)
     this.update(operation, 'installing')
-    const buildApprovalKey = effectiveBuildApprovalKey(skin)
+    const buildApprovalKey = buildApprovalKeyForTarget(skin, target) ?? effectiveBuildApprovalKey(skin)
     if (buildApprovalKey !== undefined) ensureBuildAllowed(this.options.profileDir, buildApprovalKey)
-    await this.run(['add', skin.install.target, '--prefer-offline'], operation)
+    await this.run(['add', target, '--prefer-offline', ...(isNpmInstallTarget(skin, target) ? ['--save-exact'] : [])], operation)
   }
 
-  private async prefetch(target: string, operation: Operation): Promise<void> {
+  private assertRuntimeLoaderConflicts(skin: SkinEntry): void {
+    const conflicts = []
+    for (const entry of this.host.loader.entries()) {
+      const id = entry.options.id
+      const name = entry.options.name
+      if (id !== skin.rowId && name !== skin.package && !(id === skin.rowId && (name === undefined || name === skin.rowId))) continue
+      if (name === skin.package || (id === skin.rowId && (name === undefined || name === skin.rowId))) continue
+      conflicts.push({
+        kind: 'loader' as const,
+        incoming: skin.package,
+        existing: name ?? id ?? 'unknown loader',
+        identifiers: [id, name].filter((value): value is string => value !== undefined),
+      })
+    }
+    if (conflicts.length > 0) throw new InstallConflictError(conflicts)
+  }
+
+  private async prefetch(skin: SkinEntry, operation: Operation): Promise<string> {
     // Resolve and download into an unwatched temporary project first. pnpm's
     // content-addressed store makes the real profile add reuse these files.
     // This prevents a large GitHub download from modifying the live profile
     // early and causing DSH Web to reload before the operation can finish.
-    const directory = mkdtempSync(join(tmpdir(), 'dsh-skin-market-download-'))
-    writeFileSync(join(directory, 'package.json'), '{"private":true}\n', 'utf8')
-    writeFileSync(join(directory, '.npmrc'), PNPM_FETCH_CONFIG, 'utf8')
+    let target = preferredInstallTarget(skin)
+    let directory = mkdtempSync(join(tmpdir(), 'dsh-skin-market-download-'))
     try {
+      writeFileSync(join(directory, 'package.json'), '{"private":true}\n', 'utf8')
+      writeFileSync(join(directory, '.npmrc'), PNPM_FETCH_CONFIG, 'utf8')
       await this.run(['add', target, '--dir', directory, '--ignore-scripts'], operation)
+      const redirected = discoverMonorepoTarget(directory, skin, target)
+      if (redirected !== null) {
+        target = redirected
+        rmSync(directory, { recursive: true, force: true })
+        directory = mkdtempSync(join(tmpdir(), 'dsh-skin-market-download-'))
+        writeFileSync(join(directory, 'package.json'), '{"private":true}\n', 'utf8')
+        writeFileSync(join(directory, '.npmrc'), PNPM_FETCH_CONFIG, 'utf8')
+        await this.run(['add', target, '--dir', directory, '--ignore-scripts'], operation)
+      }
+      return target
     } finally {
       rmSync(directory, { recursive: true, force: true })
     }
@@ -454,6 +492,7 @@ export class SkinLifecycle {
       if (!installedSpecMatches(skin, readDependencies(this.options.profileDir)[skin.package])) {
         throw new Error(`installed package ${skin.package} does not match the reviewed source/version ${skin.install.target}`)
       }
+      assertNoLoaderConflicts(this.options.profileDir, skin)
       ensureSkinRegistration(this.options.profileDir, skin)
       const state = readMarketState(this.options.profileDir)
       state.activeSkinId = state.activeSkinId === skin.id ? null : state.activeSkinId
@@ -580,6 +619,7 @@ export class SkinLifecycle {
       if (validation.version !== skin.install.version || !installedSpecMatches(skin, readDependencies(this.options.profileDir)[skin.package])) {
         throw new Error(`installed package did not change to the reviewed source/version ${skin.install.target}`)
       }
+      assertNoLoaderConflicts(this.options.profileDir, skin)
       ensureSkinRegistration(this.options.profileDir, skin, !wasActive)
       await this.setEntryDisabled(skin, !wasActive)
       const nextState = readMarketState(this.options.profileDir)

@@ -3,7 +3,7 @@ import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { parse, stringify } from 'yaml'
 import { effectiveBuildApprovalKey } from './build-approval.ts'
-import type { InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
+import type { InstallConflict, InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export function resolveProfileDir(profile: string, explicit?: string): string {
   if (explicit !== undefined) return explicit
@@ -86,6 +86,52 @@ export function packageManifest(profileDir: string, packageName: string): Record
   return readJson<Record<string, unknown> | null>(file, null)
 }
 
+function repositoryIdentity(value: unknown): string | null {
+  const raw = typeof value === 'string'
+    ? value
+    : isRecord(value) && typeof value.url === 'string' ? value.url : null
+  if (raw === null) return null
+  return raw
+    .trim()
+    .replace(/^git\+/, '')
+    .replace(/^git@github\.com:/, '')
+    .replace(/^ssh:\/\/git@github\.com\//, '')
+    .replace(/^https:\/\/github\.com\//, '')
+    .replace(/\.git$/, '')
+    .replace(/\/$/, '')
+}
+
+function npmLockfileIntegrity(profileDir: string, packageName: string, version: string): string | null {
+  const file = pnpmLockfile(profileDir)
+  if (!existsSync(file)) return null
+  let value: unknown
+  try { value = parse(readFileSync(file, 'utf8')) as unknown } catch { return null }
+  if (!isRecord(value) || !isRecord(value.packages)) return null
+  const packages = value.packages as Record<string, unknown>
+  const prefix = `${packageName}@${version}`
+  for (const [key, entry] of Object.entries(packages)) {
+    if (!(key === prefix || key.startsWith(`${prefix}(`) || key.startsWith(`/${prefix}/`))) continue
+    if (!isRecord(entry) || !isRecord(entry.resolution) || typeof entry.resolution.integrity !== 'string') continue
+    return entry.resolution.integrity
+  }
+  return null
+}
+
+function validateInstalledNpmSource(profileDir: string, skin: SkinEntry, manifest: Record<string, unknown>): string | null {
+  const npm = skin.install.npm
+  if (npm === undefined) return null
+  const repository = repositoryIdentity(manifest.repository)
+  const expectedRepository = repositoryIdentity(npm.repository)
+  if (repository === null || repository !== expectedRepository) {
+    return `installed npm package ${skin.package} repository mismatch; expected ${npm.repository}`
+  }
+  const integrity = npmLockfileIntegrity(profileDir, npm.name, npm.version)
+  if (integrity !== npm.integrity) {
+    return `installed npm package ${skin.package} integrity mismatch; expected the reviewed npm artifact`
+  }
+  return null
+}
+
 export function validateInstalledSkin(profileDir: string, skin: SkinEntry): { ok: boolean; reason?: string; version?: string } {
   const manifest = packageManifest(profileDir, skin.package)
   if (manifest === null) return {
@@ -114,11 +160,14 @@ export function validateInstalledSkin(profileDir: string, skin: SkinEntry): { ok
   } catch (error) {
     return { ok: false, reason: error instanceof Error ? error.message : String(error) }
   }
+  const npmError = validateInstalledNpmSource(profileDir, skin, manifest)
+  if (npmError !== null) return { ok: false, reason: npmError }
   return { ok: true, version }
 }
 
 export function installedSpecMatches(skin: SkinEntry, spec: string | null | undefined): boolean {
   if (typeof spec !== 'string' || spec.length === 0) return false
+  if (skin.install.npm !== undefined) return spec.includes(skin.install.npm.version)
   return skin.install.desktop?.mode === 'managed'
     ? spec.includes(skin.install.commit) || spec.includes(skin.install.desktop.packageVersion)
     : spec.includes(skin.install.commit)
@@ -128,6 +177,19 @@ export { effectiveBuildApprovalKey }
 
 interface PatchOperation { insert?: unknown[]; [key: string]: unknown }
 interface PatchRow { id?: unknown; name?: unknown; disabled?: unknown; [key: string]: unknown }
+
+export interface LoaderIdentity {
+  id?: string
+  name?: string
+  packageName?: string
+}
+
+export class InstallConflictError extends Error {
+  constructor(readonly conflicts: InstallConflict[]) {
+    super(`发现插件安装冲突：${conflicts.map(conflict => `${conflict.kind} ${conflict.incoming} 与 ${conflict.existing} 冲突`).join('；')}`)
+    this.name = 'InstallConflictError'
+  }
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -143,6 +205,59 @@ function patchOperations(profileDir: string): PatchOperation[] {
 
 function writePatchOperations(profileDir: string, operations: PatchOperation[]): void {
   atomicWriteText(profilePatchFile(profileDir), stringify(operations, { lineWidth: 0 }))
+}
+
+function collectLoaderIdentities(value: unknown, rows: LoaderIdentity[] = [], packageName?: string): LoaderIdentity[] {
+  if (!isRecord(value)) return rows
+  const record = value as PatchRow
+  const id = typeof record.id === 'string' ? record.id : undefined
+  const name = typeof record.name === 'string' ? record.name : undefined
+  if (id !== undefined || name !== undefined) rows.push({ id, name, packageName: packageName ?? name })
+  if (Array.isArray(record.insert)) {
+    for (const child of record.insert) collectLoaderIdentities(child, rows, packageName ?? name)
+  }
+  return rows
+}
+
+export function packageLoaderIdentities(profileDir: string, packageName: string): LoaderIdentity[] {
+  const bundle = bundlePatchOperations(profileDir, packageName)
+  return bundle === null ? [] : bundle.flatMap(operation => collectLoaderIdentities(operation, [], packageName))
+}
+
+export function installedLoaderIdentities(profileDir: string, excludePackage?: string): LoaderIdentity[] {
+  const rows = patchOperations(profileDir).flatMap(operation => collectLoaderIdentities(operation))
+  for (const packageName of Object.keys(readDependencies(profileDir))) {
+    if (packageName === excludePackage) continue
+    rows.push(...packageLoaderIdentities(profileDir, packageName))
+  }
+  return rows
+}
+
+function identityValues(identity: LoaderIdentity): string[] {
+  return [identity.id, identity.name].filter((value): value is string => value !== undefined && value !== '')
+}
+
+export function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry): void {
+  const incoming = packageLoaderIdentities(profileDir, skin.package)
+  incoming.push({ id: skin.rowId, name: skin.package, packageName: skin.package })
+  const existing = installedLoaderIdentities(profileDir, skin.package).filter(identity =>
+    !(identity.id === skin.rowId && (identity.packageName === undefined || identity.packageName === skin.package)),
+  )
+  const conflicts: InstallConflict[] = []
+  for (const incomingRow of incoming) {
+    for (const existingRow of existing) {
+      const identifiers = identityValues(incomingRow).filter(value => identityValues(existingRow).includes(value))
+      if (identifiers.length === 0) continue
+      conflicts.push({
+        kind: incomingRow.name === skin.package && existingRow.name !== skin.package ? 'package' : 'loader',
+        incoming: incomingRow.packageName ?? skin.package,
+        existing: existingRow.packageName ?? existingRow.name ?? existingRow.id ?? 'unknown loader',
+        identifiers: [...new Set(identifiers)],
+      })
+    }
+  }
+  const unique = conflicts.filter((conflict, index) => conflicts.findIndex(item => JSON.stringify(item) === JSON.stringify(conflict)) === index)
+  if (unique.length > 0) throw new InstallConflictError(unique)
 }
 
 function bundlePatchOperations(profileDir: string, packageName: string): PatchOperation[] | null {
