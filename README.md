@@ -26,7 +26,7 @@
 > 安装前请确保已关闭其他皮肤插件，避免冲突
 
 ```sh
-dsh plugin --profile web add 'dsh-skin-market@latest'
+dsh plugin --profile web add "dsh-skin-market@latest"
 ```
 
 
@@ -45,7 +45,7 @@ dsh plugin --profile web add 'dsh-skin-market@latest'
 3. 如果发现已启用的皮肤插件，列出它们并停在安装前，提醒我先停用以避免冲突；未经我确认不得修改任何 profile 文件，也不得执行安装。
 4. 如果没有冲突，明确说“未检测到已启用的皮肤插件”，然后直接执行：
 
-dsh plugin --profile web add 'dsh-skin-market@latest'
+dsh plugin --profile web add "dsh-skin-market@latest"
 
 5. 安装后读取 web profile 的 package.json，确认 dependencies 和 dsh.profile.bundles 中都有 dsh-skin-market；缺失则报告安装或注册失败。
 6. 告诉我如何重启 DSH Web，并确认重启后可从“设置 → 皮肤市场”打开。不要替我安装任何皮肤。
@@ -89,7 +89,7 @@ dsh plugin --profile web add 'dsh-skin-market@latest'
 #### 方式二，命令更新：
 
 ```bash
-dsh plugin --profile web add 'dsh-skin-market@latest'
+dsh plugin --profile web add "dsh-skin-market@latest"
 ```
 > 完成后需手动重启 DSH
 
@@ -106,7 +106,7 @@ dsh plugin --profile web add 'dsh-skin-market@latest'
 1. 确认当前使用的是 web profile，并读取其 package.json，确认已安装 dsh-skin-market；不要先卸载，也不要修改其他皮肤。
 2. 执行：
 
-dsh plugin --profile web add 'dsh-skin-market@latest'
+dsh plugin --profile web add "dsh-skin-market@latest"
 
 3. 更新后重新读取 web profile 的 package.json，确认 dsh-skin-market 依赖和 bundle 注册仍然存在。
 4. 告诉我更新前后版本，并提醒我确认没有 Agent 正在运行后重启 DSH Web。不要替我更新或卸载任何社区皮肤。

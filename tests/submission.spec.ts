@@ -47,6 +47,6 @@ describe('agent-assisted skin submission', () => {
     expect(prompt).toContain('停在安装前')
     expect(prompt).toContain('未经我确认不得修改任何 profile 文件，也不得执行安装')
     expect(prompt.indexOf('安装前只读检查')).toBeLessThan(prompt.indexOf('然后执行上面的固定安装命令'))
-    expect(createSkinInstallCommand(skin)).toBe(`dsh plugin --profile web add '${skin.install.target}'`)
+    expect(createSkinInstallCommand(skin)).toBe(`dsh plugin --profile web add "${skin.install.target}"`)
   })
 })

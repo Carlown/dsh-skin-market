@@ -32,6 +32,6 @@ describe('static catalog prompts', () => {
     const target = `github:example/dsh-skin#${'a'.repeat(40)}`
     const command = skinCommand(target)
 
-    expect(command).toBe(`dsh plugin --profile web add '${target}'`)
+    expect(command).toBe(`dsh plugin --profile web add "${target}"`)
   })
 })

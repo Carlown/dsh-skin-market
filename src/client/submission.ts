@@ -1,3 +1,5 @@
+import { createDshPluginAddCommand } from '../install-command.ts'
+
 export const REGISTRY_REPOSITORY = 'https://github.com/kingOfSoySauce/dsh-skin-market'
 export const REGISTRY_PATH = 'registry/skins'
 export const CLI_INSTALL_WARNING = '安装前请确保已关闭其他皮肤插件，避免全局样式冲突；也可以复制提示词，让 Agent 先检查冲突再安装。'
@@ -50,6 +52,6 @@ export function createSkinInstallPrompt(skin: CatalogSkin): string {
 }
 
 export function createSkinInstallCommand(skin: CatalogSkin): string {
-  return `dsh plugin --profile web add '${skin.install.target}'`
+  return createDshPluginAddCommand(skin.install.target)
 }
 import type { CatalogSkin } from './types.ts'

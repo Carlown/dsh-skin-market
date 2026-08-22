@@ -1,6 +1,8 @@
+import { createDshPluginAddCommand } from '../src/install-command.ts'
+
 export const MARKET_REPOSITORY = 'https://github.com/kingOfSoySauce/dsh-skin-market'
 export const MARKET_PUBLIC_URL = 'https://kingofsoysauce.github.io/dsh-skin-market/'
-export const MARKET_CLI_COMMAND = "dsh plugin --profile web add 'dsh-skin-market@latest'"
+export const MARKET_CLI_COMMAND = createDshPluginAddCommand('dsh-skin-market@latest')
 export const CLI_INSTALL_WARNING = '安装前请确保已关闭其他皮肤插件，避免全局样式冲突；也可以复制提示词，让 Agent 先检查冲突再安装。'
 
 export const MARKET_PROMPT = `请把 dsh-skin-market 安装到 DSH 的 web profile。不能先安装再检查，必须严格按以下顺序执行：
@@ -20,7 +22,7 @@ export function skinPrompt(repository: string, compatibilityVerified = true, ins
   const compatibilityStep = compatibilityVerified
     ? ''
     : '\n1. 维护者尚未声明可验证的 DSH 兼容范围。先只读检查仓库，确认它兼容当前 DSH Web 版本并核对安装方式；先告诉我结论和风险，等待我确认后再安装，不要直接安装。\n'
-  return `请安装这个 DSH Web 皮肤：${repository}\n- 固定安装目标：${target}\n- 安装命令：dsh plugin --profile web add '${target}'\n${compatibilityStep}
+  return `请安装这个 DSH Web 皮肤：${repository}\n- 固定安装目标：${target}\n- 安装命令：${createDshPluginAddCommand(target)}\n${compatibilityStep}
 必须先检查冲突再安装：
 1. 只读检查 web profile 的 package.json（dependencies 与 dsh.profile.bundles）、profile 的 cordis.patch.yml 和 $DSH_HOME/cordis.patch.yml（如有）。
 2. 从当前启用的 bundles 中识别其他皮肤、主题或外观插件；排除 @deepseek-ai/dsh-base、@deepseek-ai/dsh-web-app、dsh-skin-market 和本次目标仓库或 package。读取候选 package.json 的名称、描述、dsh.client/dsh.bundle 声明，必要时再读 README。
@@ -31,5 +33,5 @@ export function skinPrompt(repository: string, compatibilityVerified = true, ins
 }
 
 export function skinCommand(installTarget: string): string {
-  return `dsh plugin --profile web add '${installTarget}'`
+  return createDshPluginAddCommand(installTarget)
 }

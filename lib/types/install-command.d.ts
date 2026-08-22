@@ -1,0 +1,7 @@
+/**
+ * Format a DSH plugin install command for cmd.exe, PowerShell, and POSIX
+ * shells. Single quotes are literal characters in cmd.exe, while double
+ * quotes protect the `&path:` separator in the copied command.
+ */
+export declare function quoteInstallTarget(target: string): string;
+export declare function createDshPluginAddCommand(target: string, profile?: string): string;
