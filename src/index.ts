@@ -26,7 +26,7 @@ export function apply(ctx: Context, config?: Config): void {
       const profileDir = resolveProfileDir(profile)
       const appExit = ctx.get('appExit') as ((code: number) => void) | undefined
       const restart = appExit === undefined ? undefined : createCliRestartScheduler(appExit)
-      host.effect(() => mountRoutes(host, { profile, profileDir, runner: runPluginCli, restart }), 'dsh-skin-market: routes')
+      host.effect(() => mountRoutes(host, { profile, profileDir, runner: runPluginCli, hostKind: 'dsh', restart }), 'dsh-skin-market: routes')
       return
     }
     hostContext.inject(['desktopPnpm'], desktopContext => {
@@ -34,7 +34,7 @@ export function apply(ctx: Context, config?: Config): void {
       const service = (desktopContext as unknown as { desktopPnpm: DesktopPnpmLike }).desktopPnpm
       const desktopHost = desktopContext as unknown as EffectHost
       desktopHost.effect(
-        () => mountRoutes(host, { profile: current.name, profileDir: current.dir, runner: desktopRunner(service, current.dir) }),
+        () => mountRoutes(host, { profile: current.name, profileDir: current.dir, runner: desktopRunner(service, current.dir), hostKind: 'desktop' }),
         'dsh-skin-market: desktop routes',
       )
     })

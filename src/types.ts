@@ -1,3 +1,18 @@
+export type MarketHostKind = 'dsh' | 'desktop'
+
+export type DesktopInstallCapability =
+  | {
+      mode: 'managed'
+      registry: 'npm'
+      packageName: string
+      packageVersion: string
+      integrity?: string
+    }
+  | {
+      mode: 'manual-only'
+      reason: string
+    }
+
 export interface SkinEntry {
   id: string
   name: { zh: string; en: string }
@@ -10,7 +25,7 @@ export interface SkinEntry {
   category: string
   tags: string[]
   modes: Array<'light' | 'dark'>
-  install: { target: string; version: string; commit: string; allowBuild?: string }
+  install: { target: string; version: string; commit: string; allowBuild?: string; desktop?: DesktopInstallCapability }
   compatibility: { dsh: string; platform: string[] }
   marketScreenshots?: string[]
   listScreenshot?: string

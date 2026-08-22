@@ -1,5 +1,6 @@
 import { spawn, type ChildProcess, type SpawnOptions } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
+import type { MarketHostKind } from './types.ts'
 
 export interface CommandResult {
   exitCode: number | null
@@ -16,7 +17,18 @@ export interface CommandOptions {
   onStderr?: (chunk: string) => void
 }
 
-export type PluginRunner = (profile: string, args: readonly string[], options?: CommandOptions) => Promise<CommandResult>
+export interface PluginInstallRequest {
+  packageName: string
+  packageVersion: string
+  receiptId: string
+  pnpmOptions?: readonly string[]
+}
+
+export interface PluginRunner {
+  (profile: string, args: readonly string[], options?: CommandOptions): Promise<CommandResult>
+  hostKind?: MarketHostKind
+  installPlugin?: (profile: string, request: PluginInstallRequest, options?: CommandOptions) => Promise<CommandResult>
+}
 export function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined {
   if (options?.env === undefined) return undefined
   const env = { ...options.env }
@@ -128,39 +140,111 @@ export const runPluginCli: PluginRunner = (profile, args, options) => new Promis
 })
 
 export interface DesktopPnpmLike {
-  runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal, env?: NodeJS.ProcessEnv): {
+  runPlugin(args: readonly string[], invokingDir: string, signal?: AbortSignal): {
     stdout: NodeJS.ReadableStream
     stderr: NodeJS.ReadableStream
-    done: Promise<{ exitCode: number | null }>
+    done: Promise<{ exitCode: number | null; signal: NodeJS.Signals | null }>
+    cancel(): void
+  }
+  installPlugin(request: {
+    pnpmOptions?: readonly string[]
+    invokingDir: string
+    recovery: { packageName: string; packageVersion: string; receiptId: string }
+    signal?: AbortSignal
+  }): Promise<{
+    stdout: NodeJS.ReadableStream
+    stderr: NodeJS.ReadableStream
+    done: Promise<{ exitCode: number | null; signal: NodeJS.Signals | null }>
+    cancel(): void
+  }>
+}
+
+interface DesktopOperation {
+  stdout: NodeJS.ReadableStream
+  stderr: NodeJS.ReadableStream
+  done: Promise<{ exitCode: number | null; signal: NodeJS.Signals | null }>
+  cancel(): void
+}
+
+async function collectDesktopOperation(
+  operation: DesktopOperation,
+  signal: AbortSignal,
+  timeoutSignal: AbortSignal,
+  options?: CommandOptions,
+): Promise<CommandResult> {
+  let stdout = ''
+  let stderr = ''
+  operation.stdout.on('data', chunk => {
+    const value = String(chunk)
+    stdout += value
+    options?.onStdout?.(value)
+  })
+  operation.stderr.on('data', chunk => {
+    const value = String(chunk)
+    stderr += value
+    options?.onStderr?.(value)
+  })
+  const cancel = (): void => operation.cancel()
+  signal.addEventListener('abort', cancel, { once: true })
+  if (signal.aborted) cancel()
+  try {
+    const result = await operation.done
+    return {
+      exitCode: result.signal === null ? result.exitCode : null,
+      stdout,
+      stderr,
+      timedOut: timeoutSignal.aborted,
+      aborted: options?.signal?.aborted === true,
+    }
+  } catch (error) {
+    stderr += error instanceof Error ? error.message : String(error)
+    return {
+      exitCode: null,
+      stdout,
+      stderr,
+      timedOut: timeoutSignal.aborted,
+      aborted: options?.signal?.aborted === true,
+    }
+  } finally {
+    signal.removeEventListener('abort', cancel)
+  }
+}
+
+async function runDesktopOperation(
+  start: (signal: AbortSignal) => DesktopOperation | Promise<DesktopOperation>,
+  options?: CommandOptions,
+): Promise<CommandResult> {
+  const timeout = new AbortController()
+  const timer = setTimeout(() => timeout.abort(), PLUGIN_COMMAND_TIMEOUT_MS)
+  const signal = options?.signal === undefined ? timeout.signal : AbortSignal.any([options.signal, timeout.signal])
+  try {
+    const operation = await start(signal)
+    return await collectDesktopOperation(operation, signal, timeout.signal, options)
+  } finally {
+    clearTimeout(timer)
   }
 }
 
 export function desktopRunner(service: DesktopPnpmLike, profileDir: string): PluginRunner {
-  return async (_profile, args, options) => {
-    const timeout = new AbortController()
-    let timedOut = false
-    const timer = setTimeout(() => { timedOut = true; timeout.abort() }, PLUGIN_COMMAND_TIMEOUT_MS)
-    const signal = options?.signal === undefined ? timeout.signal : AbortSignal.any([options.signal, timeout.signal])
-    const operation = service.runPlugin(args, profileDir, signal, normalizedEnvironment(options))
-    let stdout = ''
-    let stderr = ''
-    operation.stdout.on('data', chunk => {
-      const value = String(chunk)
-      stdout += value
-      options?.onStdout?.(value)
-    })
-    operation.stderr.on('data', chunk => {
-      const value = String(chunk)
-      stderr += value
-      options?.onStderr?.(value)
-    })
-    try {
-      const result = await operation.done
-      return { exitCode: result.exitCode, stdout, stderr, timedOut, aborted: options?.signal?.aborted === true }
-    } finally {
-      clearTimeout(timer)
-    }
-  }
+  const runner: PluginRunner = (_profile, args, options) => runDesktopOperation(
+    signal => service.runPlugin(args, profileDir, signal),
+    options,
+  )
+  runner.hostKind = 'desktop'
+  runner.installPlugin = (_profile, request, options) => runDesktopOperation(
+    signal => service.installPlugin({
+      pnpmOptions: request.pnpmOptions,
+      invokingDir: profileDir,
+      recovery: {
+        packageName: request.packageName,
+        packageVersion: request.packageVersion,
+        receiptId: request.receiptId,
+      },
+      signal,
+    }),
+    options,
+  )
+  return runner
 }
 
 export function commandError(result: CommandResult): string {

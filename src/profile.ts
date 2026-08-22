@@ -338,7 +338,10 @@ export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: 
   }
   const active = primary || pinned
   const activation = active ? (loaderFound ? (loaderLive ? 'active' : 'restart-required') : 'restart-required') : 'inactive'
-  const updateAvailable = validation.version !== skin.install.version || !spec.includes(skin.install.commit)
+  const pinnedSpecMatches = skin.install.desktop?.mode === 'managed'
+    ? spec.includes(skin.install.commit) || spec.includes(skin.install.desktop.packageVersion)
+    : spec.includes(skin.install.commit)
+  const updateAvailable = validation.version !== skin.install.version || !pinnedSpecMatches
   return {
     skinId: skin.id,
     installation: 'installed',

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { PluginRunner } from './commands.ts'
+import type { PluginInstallRequest, PluginRunner } from './commands.ts'
 import { commandError } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
 import {
@@ -23,7 +23,7 @@ import {
   validateInstalledSkin,
   writeMarketState,
 } from './profile.ts'
-import type { LoaderEntry, Operation, OperationKind, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
+import type { DesktopInstallCapability, LoaderEntry, MarketHostKind, Operation, OperationKind, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export interface LifecycleHost {
   loader: { entries(): Iterable<LoaderEntry> }
@@ -34,9 +34,17 @@ export interface LifecycleOptions {
   profile: string
   profileDir: string
   runner: PluginRunner
+  hostKind?: MarketHostKind
 }
 
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error) }
+
+export function desktopInstallError(capability: DesktopInstallCapability | undefined): string {
+  if (capability?.mode === 'manual-only') {
+    return `Desktop 当前不支持该皮肤的一键安装（${capability.reason}），请查看仓库安装说明`
+  }
+  return 'Desktop 当前仅支持已验证 npm 精确版本的一键安装，请查看仓库安装说明'
+}
 
 interface FetchProgress { size?: number; downloaded: number }
 
@@ -130,6 +138,8 @@ export class SkinLifecycle {
   }
 
   get catalog(): SkinEntry[] { return this.catalogEntries }
+
+  private get hostKind(): MarketHostKind { return this.options.hostKind ?? this.options.runner.hostKind ?? 'dsh' }
 
   async replaceCatalog(catalog: SkinEntry[]): Promise<void> {
     this.catalogEntries = catalog
@@ -235,8 +245,13 @@ export class SkinLifecycle {
 
   begin(kind: OperationKind, skinId: string): Operation {
     const skin = this.skin(skinId)
-    if ((kind === 'install' || kind === 'update') && skin.review?.installation === 'manual-only') {
-      throw new Error('该皮肤尚未满足市场自动安装所需信息，请查看仓库安装说明')
+    if (kind === 'install' || kind === 'update') {
+      if (this.hostKind === 'desktop' && skin.install.desktop?.mode !== 'managed') {
+        throw new Error(desktopInstallError(skin.install.desktop))
+      }
+      if (this.hostKind !== 'desktop' && skin.review?.installation === 'manual-only') {
+        throw new Error('该皮肤尚未满足市场自动安装所需信息，请查看仓库安装说明')
+      }
     }
     if (this.activeOperation !== null) throw new Error('another skin operation is already running')
     const operation: Operation = {
@@ -302,6 +317,39 @@ export class SkinLifecycle {
     if (result.exitCode !== 0 || result.timedOut) throw new Error(commandError(result))
   }
 
+  private async installPackage(skin: SkinEntry, operation: Operation): Promise<void> {
+    if (this.hostKind === 'desktop') {
+      const capability = skin.install.desktop
+      if (capability?.mode !== 'managed') throw new Error(desktopInstallError(capability))
+      if (capability.packageName !== skin.package || capability.packageVersion !== skin.install.version) {
+        throw new Error('Desktop 安装元数据与皮肤固定版本不一致，请等待市场重新抓取')
+      }
+      const installPlugin = this.options.runner.installPlugin
+      if (installPlugin === undefined) throw new Error('当前 Desktop 未提供受支持的插件安装服务')
+      this.update(operation, 'installing')
+      const controller = this.abortControllers.get(operation.id)
+      const tracker = new PnpmProgressTracker()
+      const request: PluginInstallRequest = {
+        packageName: capability.packageName,
+        packageVersion: capability.packageVersion,
+        receiptId: randomUUID(),
+        pnpmOptions: ['--prefer-offline', '--reporter=ndjson'],
+      }
+      const result = await installPlugin(this.options.profile, request, {
+        signal: controller?.signal,
+        onStdout: chunk => tracker.push(chunk, operation),
+        onStderr: chunk => tracker.push(chunk, operation),
+      })
+      if (result.exitCode !== 0 || result.timedOut) throw new Error(commandError(result))
+      return
+    }
+
+    await this.prefetch(skin.install.target, operation)
+    this.update(operation, 'installing')
+    if (skin.install.allowBuild !== undefined) ensureBuildAllowed(this.options.profileDir, skin.install.allowBuild)
+    await this.run(['add', skin.install.target, '--prefer-offline'], operation)
+  }
+
   private async prefetch(target: string, operation: Operation): Promise<void> {
     // Resolve and download into an unwatched temporary project first. pnpm's
     // content-addressed store makes the real profile add reuse these files.
@@ -342,10 +390,7 @@ export class SkinLifecycle {
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
-      await this.prefetch(skin.install.target, operation)
-      this.update(operation, 'installing')
-      if (skin.install.allowBuild !== undefined) ensureBuildAllowed(this.options.profileDir, skin.install.allowBuild)
-      await this.run(['add', skin.install.target, '--prefer-offline'], operation)
+      await this.installPackage(skin, operation)
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
@@ -466,10 +511,7 @@ export class SkinLifecycle {
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
-      await this.prefetch(skin.install.target, operation)
-      this.update(operation, 'installing')
-      if (skin.install.allowBuild !== undefined) ensureBuildAllowed(this.options.profileDir, skin.install.allowBuild)
-      await this.run(['add', skin.install.target, '--prefer-offline'], operation)
+      await this.installPackage(skin, operation)
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok || validation.version !== skin.install.version) throw new Error(validation.reason ?? 'installed version did not change to the reviewed version')

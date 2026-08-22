@@ -1,3 +1,18 @@
+export type MarketHostKind = 'dsh' | 'desktop'
+
+export type DesktopInstallCapability =
+  | {
+      mode: 'managed'
+      registry: 'npm'
+      packageName: string
+      packageVersion: string
+      integrity?: string
+    }
+  | {
+      mode: 'manual-only'
+      reason: string
+    }
+
 export interface CatalogSkin {
   id: string
   name: { zh: string; en: string }
@@ -8,7 +23,7 @@ export interface CatalogSkin {
   rowId: string
   tags: string[]
   modes: string[]
-  install: { target: string; version: string; commit: string; allowBuild?: string }
+  install: { target: string; version: string; commit: string; allowBuild?: string; desktop?: DesktopInstallCapability }
   compatibility: { dsh: string; platform: string[] }
   marketScreenshots?: string[]
   listScreenshot?: string

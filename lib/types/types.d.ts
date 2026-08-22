@@ -1,3 +1,14 @@
+export type MarketHostKind = 'dsh' | 'desktop';
+export type DesktopInstallCapability = {
+    mode: 'managed';
+    registry: 'npm';
+    packageName: string;
+    packageVersion: string;
+    integrity?: string;
+} | {
+    mode: 'manual-only';
+    reason: string;
+};
 export interface SkinEntry {
     id: string;
     name: {
@@ -18,6 +29,7 @@ export interface SkinEntry {
         version: string;
         commit: string;
         allowBuild?: string;
+        desktop?: DesktopInstallCapability;
     };
     compatibility: {
         dsh: string;

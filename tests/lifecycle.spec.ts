@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { SkinLifecycle } from '../src/lifecycle.ts'
 import { atomicWriteJson, atomicWriteText, readDependencies, readMarketState } from '../src/profile.ts'
-import type { CommandResult, PluginRunner } from '../src/commands.ts'
+import type { CommandResult, PluginInstallRequest, PluginRunner } from '../src/commands.ts'
 import type { LoaderEntry, Operation } from '../src/types.ts'
 
 function fixture() {
@@ -22,6 +22,18 @@ async function finished(operation: Operation): Promise<Operation> {
 }
 
 function success(): CommandResult { return { exitCode: 0, stdout: '', stderr: '', timedOut: false } }
+
+function firstInstallable(lifecycle: SkinLifecycle) {
+  const skin = lifecycle.catalog.find(item => item.review?.installation !== 'manual-only')
+  if (skin === undefined) throw new Error('fixture catalog has no installable skin')
+  return skin
+}
+
+function anotherInstallable(lifecycle: SkinLifecycle, excludedId: string) {
+  const skin = lifecycle.catalog.find(item => item.id !== excludedId && item.review?.installation !== 'manual-only')
+  if (skin === undefined) throw new Error('fixture catalog has only one installable skin')
+  return skin
+}
 
 function writeBundlePackage(dir: string, skin: { package: string; rowId: string; install: { version: string } }): void {
   const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
@@ -41,7 +53,7 @@ describe('skin lifecycle', () => {
       })
     }
     const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner })
-    const skin = lifecycle.catalog[0]
+    const skin = firstInstallable(lifecycle)
     const operation = lifecycle.begin('install', skin.id)
     for (let index = 0; index < 100 && operation.phase !== 'downloading'; index++) await new Promise(resolve => setTimeout(resolve, 5))
 
@@ -76,10 +88,51 @@ describe('skin lifecycle', () => {
     expect(() => lifecycle.begin('install', unverifiedInstallable.id)).not.toThrow()
   })
 
+  it('uses Desktop installPlugin for managed npm skins and blocks manual-only skins', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog[0]
+    const managed = {
+      ...base,
+      id: 'desktop.managed',
+      install: {
+        ...base.install,
+        desktop: { mode: 'managed' as const, registry: 'npm' as const, packageName: base.package, packageVersion: base.install.version },
+      },
+    }
+    const manual = {
+      ...base,
+      id: 'desktop.manual',
+      install: { ...base.install, desktop: { mode: 'manual-only' as const, reason: 'npm-package-not-found' } },
+    }
+    const calls: { run: readonly string[][]; install: PluginInstallRequest[] } = { run: [], install: [] }
+    const runner: PluginRunner = Object.assign(
+      async (_profile: string, args: readonly string[]) => { calls.run.push(args); return success() },
+      {
+        installPlugin: async (_profile: string, request: PluginInstallRequest) => {
+          calls.install.push(request)
+          atomicWriteJson(join(dir, 'package.json'), { dependencies: { [managed.package]: `${managed.package}@${managed.install.version}` } })
+          writeBundlePackage(dir, managed)
+          return success()
+        },
+      },
+    )
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner, hostKind: 'desktop' }, [managed, manual])
+
+    expect(() => lifecycle.begin('install', manual.id)).toThrow('Desktop 当前不支持该皮肤的一键安装')
+    const operation = await finished(lifecycle.begin('install', managed.id))
+
+    expect(operation).toMatchObject({ phase: 'done', message: 'installed; choose Use to activate' })
+    expect(calls.run).toEqual([])
+    expect(calls.install).toHaveLength(1)
+    expect(calls.install[0]).toMatchObject({ packageName: managed.package, packageVersion: managed.install.version })
+    expect(readDependencies(dir)[managed.package]).toContain(managed.install.version)
+  })
+
   it('reconciles an already installed package instead of failing the install action', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
-    const skin = probe.catalog[0]
+    const skin = firstInstallable(probe)
     atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
     writeBundlePackage(dir, skin)
     let calls = 0
@@ -88,7 +141,7 @@ describe('skin lifecycle', () => {
     const operation = await finished(lifecycle.begin('install', skin.id))
     expect(operation).toMatchObject({ phase: 'done', message: 'skin was already installed; market state reconciled' })
     expect(calls).toBe(0)
-    expect(lifecycle.states()[0].installation).toBe('installed')
+    expect(lifecycle.states().find(state => state.skinId === skin.id)?.installation).toBe('installed')
   })
 
   it('adopts a manually bundled skin as active and can deactivate it without uninstalling', async () => {
@@ -118,7 +171,7 @@ describe('skin lifecycle', () => {
     expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', skin.package, 'dsh-skin-market'])
 
     expect((await finished(lifecycle.begin('deactivate', skin.id))).phase).toBe('done')
-    expect(lifecycle.states()[0]).toMatchObject({ installation: 'installed', activation: 'inactive' })
+    expect(lifecycle.states().find(state => state.skinId === skin.id)).toMatchObject({ installation: 'installed', activation: 'inactive' })
     expect(readDependencies(dir)[skin.package]).toBeDefined()
   })
 
@@ -143,19 +196,19 @@ describe('skin lifecycle', () => {
       return success()
     }
     lifecycle = new SkinLifecycle({ loader: { entries: () => entries.values() } }, { profile: 'test', profileDir: dir, runner })
-    const skin = lifecycle.catalog[0]
+    const skin = firstInstallable(lifecycle)
 
     const install = await finished(lifecycle.begin('install', skin.id))
     expect(install.phase).toBe('done')
-    expect(lifecycle.states()[0]).toMatchObject({ installation: 'installed', activation: 'inactive' })
+    expect(lifecycle.states().find(state => state.skinId === skin.id)).toMatchObject({ installation: 'installed', activation: 'inactive' })
     expect(readMarketState(dir).activity?.[skin.id]?.installedAt).toBe(install.startedAt)
     const activation = await finished(lifecycle.begin('activate', skin.id))
     expect(activation.phase).toBe('done')
     expect(readMarketState(dir).activeSkinId).toBe(skin.id)
     expect(readMarketState(dir).activity?.[skin.id]?.usedAt).toBe(activation.startedAt)
-    expect(lifecycle.states()[0].activation).toBe('active')
+    expect(lifecycle.states().find(state => state.skinId === skin.id)?.activation).toBe('active')
 
-    const second = lifecycle.catalog[1]
+    const second = anotherInstallable(lifecycle, skin.id)
     expect((await finished(lifecycle.begin('install', second.id))).phase).toBe('done')
     updates.length = 0
     expect((await finished(lifecycle.begin('activate', second.id))).phase).toBe('done')
@@ -195,8 +248,8 @@ describe('skin lifecycle', () => {
       return success()
     }
     lifecycle = new SkinLifecycle({ loader: { entries: () => entries.values() } }, { profile: 'test', profileDir: dir, runner })
-    const first = lifecycle.catalog[0]
-    const second = lifecycle.catalog[1]
+    const first = firstInstallable(lifecycle)
+    const second = anotherInstallable(lifecycle, first.id)
 
     await finished(lifecycle.begin('install', first.id))
     await finished(lifecycle.begin('activate', first.id))
@@ -223,7 +276,7 @@ describe('skin lifecycle', () => {
   it('keeps the current skin enabled when its pin is removed', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
-    const skin = probe.catalog[0]
+    const skin = firstInstallable(probe)
     atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
     writeBundlePackage(dir, skin)
     const entry: LoaderEntry = {
@@ -238,15 +291,15 @@ describe('skin lifecycle', () => {
     await finished(lifecycle.begin('unpin', skin.id))
 
     expect(readMarketState(dir)).toMatchObject({ activeSkinId: skin.id, pinnedSkinIds: [] })
-    expect(lifecycle.states()[0]).toMatchObject({ activation: 'active', primary: true, pinned: false })
+    expect(lifecycle.states().find(state => state.skinId === skin.id)).toMatchObject({ activation: 'active', primary: true, pinned: false })
     expect(entry.options.disabled).not.toBe(true)
   })
 
   it('enables an installed inactive skin as pinned without replacing the current primary skin', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
-    const primary = probe.catalog[0]
-    const pinned = probe.catalog[1]
+    const primary = firstInstallable(probe)
+    const pinned = anotherInstallable(probe, primary.id)
     atomicWriteJson(join(dir, 'package.json'), { dependencies: { [primary.package]: primary.install.target, [pinned.package]: pinned.install.target } })
     writeBundlePackage(dir, primary)
     writeBundlePackage(dir, pinned)

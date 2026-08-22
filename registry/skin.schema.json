@@ -29,7 +29,32 @@
         "target": { "type": "string", "pattern": "^github:[^#]+#[0-9a-f]{40}(?:&path:[A-Za-z0-9._/-]+)?$" },
         "version": { "type": "string", "minLength": 1 },
         "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-        "allowBuild": { "type": "string", "minLength": 1 }
+        "allowBuild": { "type": "string", "minLength": 1 },
+        "desktop": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["mode", "registry", "packageName", "packageVersion"],
+              "properties": {
+                "mode": { "const": "managed" },
+                "registry": { "const": "npm" },
+                "packageName": { "type": "string", "minLength": 1 },
+                "packageVersion": { "type": "string", "minLength": 1 },
+                "integrity": { "type": "string", "minLength": 1 }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["mode", "reason"],
+              "properties": {
+                "mode": { "const": "manual-only" },
+                "reason": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        }
       }
     },
     "compatibility": {

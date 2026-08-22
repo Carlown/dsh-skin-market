@@ -6,7 +6,7 @@ import { readRestartTarget, readSkinId, sameOrigin, sendJson } from './http.ts'
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts'
 import { installedClientPlugins } from './profile.ts'
 import type { PluginRunner } from './commands.ts'
-import type { OperationKind } from './types.ts'
+import type { MarketHostKind, OperationKind } from './types.ts'
 import type { RestartScheduler } from './restart.ts'
 import { createMarketUpdater, type MarketUpdater } from './self-update.ts'
 
@@ -30,7 +30,7 @@ export interface SkinMarketHost extends LifecycleHost {
   agents: AgentRegistryLike
 }
 
-export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; restart?: RestartScheduler; catalogStore?: CatalogStore; marketUpdater?: MarketUpdater }
+export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; hostKind?: MarketHostKind; restart?: RestartScheduler; catalogStore?: CatalogStore; marketUpdater?: MarketUpdater }
 
 export function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean {
   return state?.installation === 'installed'
@@ -63,7 +63,8 @@ function method(request: IncomingMessage, response: ServerResponse, expected: st
 export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => void {
   const catalogStore = options.catalogStore ?? new CatalogStore(options.profileDir)
   const initialCatalog = catalogStore.snapshot().catalog
-  const lifecycle = new SkinLifecycle(host, options, initialCatalog.skins)
+  const hostKind = options.hostKind ?? options.runner.hostKind ?? 'dsh'
+  const lifecycle = new SkinLifecycle(host, { ...options, hostKind }, initialCatalog.skins)
   lifecycle.start()
   let lifecycleCatalogGeneratedAt = initialCatalog.generatedAt
   const instanceId = randomUUID()
@@ -109,6 +110,7 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/state', handler: (request, response) => {
       if (!method(request, response, 'GET')) return
       sendJson(response, 200, {
+        hostKind,
         skins: lifecycle.states(),
         installedClientPlugins: installedClientPlugins(options.profileDir, lifecycle.catalog),
         operation: lifecycle.currentOperation(),

@@ -25,7 +25,7 @@ import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt, REGISTRY_REPOSITORY } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import { displayTitle, githubRepoLabel } from '../display-title.ts'
-import type { CatalogSkin, InstalledClientPlugin, Operation, RuntimeSkin } from './types.ts'
+import type { CatalogSkin, InstalledClientPlugin, MarketHostKind, Operation, RuntimeSkin } from './types.ts'
 
 export interface SkinMarketSectionProps {
   t: (key: string) => string
@@ -63,6 +63,7 @@ export function restoreListScroll(list: HTMLElement | null, anchor: ListScrollAn
 }
 
 interface MarketStateResponse {
+  hostKind?: MarketHostKind
   skins: RuntimeSkin[]
   operation?: Operation | null
   marketUpdateOperation?: MarketUpdateOperation | null
@@ -313,6 +314,7 @@ const healthLabels = {
 export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCatalogCache }: SkinMarketSectionProps) {
   const [skins, setSkins] = useState<CatalogSkin[]>([])
   const [states, setStates] = useState<RuntimeSkin[]>([])
+  const [hostKind, setHostKind] = useState<MarketHostKind>('dsh')
   const [installedClientPlugins, setInstalledClientPlugins] = useState<InstalledClientPlugin[]>([])
   const [loading, setLoading] = useState(true)
   const [catalogLoading, setCatalogLoading] = useState(true)
@@ -405,6 +407,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       acceptCatalog(catalog.skins, state.skins)
       void catalogCache.write(catalog.skins).catch(() => undefined)
       setStates(state.skins)
+      setHostKind(state.hostKind ?? 'dsh')
       setBusy(current => current?.phase === 'failed' && state.operation == null ? current : state.operation ?? null)
       if ('marketUpdateOperation' in state) {
         const operation = state.marketUpdateOperation !== null && state.marketUpdateOperation !== undefined && !dismissedMarketOperationIds.current.has(state.marketUpdateOperation.id)
@@ -609,7 +612,21 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const shotCount = selectedScreenshots.length
   const state = selected === undefined ? null : runtimeFor(states, selected.id)
   const compatibilityUnverified = selected?.review?.compatibility === 'unverified'
-  const manualOnly = selected?.review?.installation === 'manual-only'
+  const isManualOnly = (skin: CatalogSkin): boolean => hostKind === 'desktop'
+    ? skin.install.desktop?.mode !== 'managed'
+    : skin.review?.installation === 'manual-only'
+  const manualOnly = selected !== undefined && isManualOnly(selected)
+  const desktopManualReason = hostKind === 'desktop' && selected?.install.desktop?.mode === 'manual-only'
+    ? selected.install.desktop.reason
+    : undefined
+  const manualInstallNotice = hostKind === 'desktop'
+    ? desktopManualReason === undefined
+      ? 'Desktop 当前仅支持已验证 npm 精确版本的一键安装；此皮肤请按仓库说明手动安装。'
+      : `Desktop 暂不支持一键安装：${desktopManualReason}。请按仓库说明手动安装。`
+    : '该皮肤暂不支持市场直接安装，请复制提示词交给 Agent 处理。'
+  const manualHealthNotice = hostKind === 'desktop'
+    ? manualInstallNotice
+    : '该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。'
   const autoInstallable = !manualOnly
   const filtered = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
@@ -841,7 +858,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   }
   const closeBrowser = () => { setLightboxOpen(false); setBrowserOpen(false); setShowDetail(false) }
   const openCardInstall = (skin: CatalogSkin) => {
-    if (skin.review?.installation === 'manual-only') {
+    if (isManualOnly(skin)) {
       chooseSkin(skin.id)
       setInstallCopied(null)
       setShowInstallOptions(true)
@@ -872,7 +889,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     const actionCount = cardMutation !== null || needsInstall
       ? 1
       : itemState.installation === 'installed'
-        ? Number(itemState.activation === 'inactive' || itemState.activation === 'active') + Number(itemState.updateAvailable)
+        ? Number(itemState.activation === 'inactive' || itemState.activation === 'active') + Number(itemState.updateAvailable && !isManualOnly(skin))
         : 0
     const stateText = itemState.installation === 'broken'
       ? '安装异常'
@@ -895,10 +912,10 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       </Button>
       {actionCount > 0 && <div className={css.cardInlineActions} role="group" aria-label={`${skin.name.zh} 操作`}>
         {cardMutation !== null ? <span className={css.cardActionProgress}><IconLoadingOutline16 />{mutationLabels[cardMutation.kind]}</span> : <>
-          {needsInstall && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} title={skin.review?.installation === 'manual-only' ? '复制安装提示词' : '直接安装到当前 DSH'} onClick={() => openCardInstall(skin)}>安装</Button>}
+          {needsInstall && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} title={isManualOnly(skin) ? '复制安装提示词' : '直接安装到当前 DSH'} onClick={() => openCardInstall(skin)}>安装</Button>}
           {itemState.installation === 'installed' && itemState.activation === 'inactive' && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} onClick={() => activateCard(skin.id)}>使用</Button>}
           {itemState.installation === 'installed' && itemState.activation === 'active' && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} onClick={() => { void runForSkin(skin.id, 'deactivate') }}>停用</Button>}
-          {itemState.installation === 'installed' && itemState.updateAvailable && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} onClick={() => { void runForSkin(skin.id, 'update') }}>更新</Button>}
+              {itemState.installation === 'installed' && itemState.updateAvailable && !isManualOnly(skin) && <Button className={css.cardAction} variant="ghost" size="sm" disabled={mutation !== null} onClick={() => { void runForSkin(skin.id, 'update') }}>更新</Button>}
         </>}
       </div>}
     </article>
@@ -1042,7 +1059,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
                   <span className={css.cardStars} title={`GitHub Stars 快照，更新于 ${displayDate(skin.starsUpdatedAt)}`}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>
                 </span>
               </span>
-              <span className={mutationLabel !== null ? `${css.cardStatus} ${css.cardStatusUpdate}` : itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.updateAvailable ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.activation === 'active' ? compactStatusLabel(itemState) : itemState.updateAvailable ? '可更新' : itemState.installation === 'missing' && skin.review?.installation === 'manual-only' ? '手动安装' : compactStatusLabel(itemState))}</span>
+              <span className={mutationLabel !== null ? `${css.cardStatus} ${css.cardStatusUpdate}` : itemState.activation === 'active' ? `${css.cardStatus} ${css.cardStatusActive}` : itemState.updateAvailable && !isManualOnly(skin) ? `${css.cardStatus} ${css.cardStatusUpdate}` : css.cardStatus}>{mutationLabel ?? (itemState.activation === 'active' ? compactStatusLabel(itemState) : itemState.updateAvailable && !isManualOnly(skin) ? '可更新' : itemState.installation === 'missing' && isManualOnly(skin) ? '手动安装' : compactStatusLabel(itemState))}</span>
             </Button>
           })}
           {!catalogLoading && visibleCount < filtered.length && <div className={css.loadMoreHint} aria-hidden="true"><span /><span /></div>}
@@ -1084,7 +1101,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               {state.activation === 'active' && <Button className={css.nativeOutline} variant="outline" size="sm" disabled={busy !== null} onClick={() => void run('deactivate')}>停用</Button>}
               {state.activation === 'active' && <Button className={`${css.nativeOutline} ${css.pinAction}`} variant="outline" size="sm" aria-pressed={state.pinned === true} title={state.pinned ? '取消后，如果它不是当前主皮肤，将立即停用；以后切换皮肤时也不会再保留' : '切换其他皮肤时仍保持启用，适合宠物、音效等可叠加插件；多个皮肤可能发生冲突'} disabled={busy !== null} onClick={() => state.pinned ? void run('unpin') : setConfirmPin(true)}>{state.pinned ? '取消常驻' : '常驻使用'}</Button>}
               {state.activation === 'restart-required' && state.pinned && <Button className={`${css.nativeOutline} ${css.pinAction}`} variant="outline" size="sm" aria-pressed="true" title="取消常驻并撤销待重启的启用状态" disabled={busy !== null} onClick={() => void run('unpin')}>取消常驻</Button>}
-              {state.updateAvailable && <Button className={`${state.activation === 'active' && !state.pinned ? css.nativePrimary : css.nativeOutline} ${css.compactActionIcon}`} variant={state.activation === 'active' && !state.pinned ? 'primary' : 'outline'} size="sm" icon={<IconRefreshOutline16 />} disabled={busy !== null} onClick={() => void run('update')}>更新</Button>}
+              {state.updateAvailable && !manualOnly && <Button className={`${state.activation === 'active' && !state.pinned ? css.nativePrimary : css.nativeOutline} ${css.compactActionIcon}`} variant={state.activation === 'active' && !state.pinned ? 'primary' : 'outline'} size="sm" icon={<IconRefreshOutline16 />} disabled={busy !== null} onClick={() => void run('update')}>更新</Button>}
               {state.installation !== 'missing' && <Button className={`${css.nativeOutline} ${css.iconOnlyButton} ${css.compactActionIcon}`} variant="outline" size="sm" icon={<IconTrashOutline16 />} aria-label="卸载" title="卸载" disabled={busy !== null} onClick={() => setConfirmUninstall(true)} />}
               <span className={css.actionDivider} aria-hidden="true" />
               <span className={css.repoMeta}>
@@ -1113,7 +1130,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           </div>
 
           <div className={css.aboutGrid}>
-            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。</p>}{manualOnly && <p className={css.notice}>该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。</p>}{selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{usesMarketScreenshots(selected) && <p className={css.notice}>当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
+            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。</p>}{manualOnly && <p className={css.notice}>{manualHealthNotice}</p>}{selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{usesMarketScreenshots(selected) && <p className={css.notice}>当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
             <aside className={css.changelog}><h3>仓库健康</h3>{selected.health ? <><ol className={css.healthList}>{Object.entries(selected.health.checks).map(([key, value]) => <li key={key}><strong>{healthLabels[key as keyof typeof healthLabels]}</strong><span data-health={value}>{value === 'pass' ? '符合要求' : '建议完善'}</span></li>)}</ol>{selected.health.suggestions.map(suggestion => <p className={css.healthSuggestion} key={suggestion}>{suggestion}</p>)}</> : <p className={css.healthSuggestion}>等待下一次仓库健康扫描。</p>}<h3 className={css.collectionTitle}>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
           </div>
 
@@ -1138,7 +1155,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         onClose={() => setShowInstallOptions(false)}
         title={`安装 ${selected?.name.zh ?? '皮肤'}`}
         closeLabel="关闭"
-        description={manualOnly ? '该皮肤暂不支持市场直接安装，请复制提示词交给 Agent 处理。' : '任选一种，不用都执行。'}
+        description={manualOnly ? `${manualInstallNotice} 可复制提示词交给 Agent 处理。` : '任选一种，不用都执行。'}
         footer={manualOnly ? <><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowInstallOptions(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => void copyInstallOption('prompt')}>{installCopied === `${selected?.id}:prompt` ? '提示词已复制' : '复制提示词'}</Button></> : <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setShowInstallOptions(false)}>关闭</Button>}
       >
         <div className={css.installOptions}>
