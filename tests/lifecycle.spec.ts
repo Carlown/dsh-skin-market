@@ -129,6 +129,102 @@ describe('skin lifecycle', () => {
     expect(readDependencies(dir)[managed.package]).toContain(managed.install.version)
   })
 
+  it('recovers a Desktop managed install by retrying the existing installPlugin request', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog[0]
+    const managed = {
+      ...base,
+      id: 'desktop.recovery',
+      install: {
+        ...base.install,
+        desktop: { mode: 'managed' as const, registry: 'npm' as const, packageName: base.package, packageVersion: base.install.version },
+      },
+    }
+    const calls: PluginInstallRequest[] = []
+    const runner: PluginRunner = Object.assign(
+      async () => success(),
+      {
+        installPlugin: async (_profile: string, request: PluginInstallRequest) => {
+          calls.push(request)
+          return calls.length === 1
+            ? { ...success(), exitCode: 1, stderr: 'published within the minimumReleaseAge cutoff' }
+            : success()
+        },
+      },
+    )
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner, hostKind: 'desktop' }, [managed])
+
+    const operation = await finished(lifecycle.begin('install', managed.id))
+
+    expect(operation.phase).toBe('failed')
+    expect(calls).toHaveLength(2)
+    expect(calls[0]?.pnpmOptions).not.toContain('--config.minimumReleaseAge=0')
+    expect(calls[1]?.pnpmOptions).toContain('--config.minimumReleaseAge=0')
+    expect(calls[0]?.receiptId).toBe(calls[1]?.receiptId)
+  })
+
+  it('auto-retries a new-package lockfile failure before mutating the live profile', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
+    const attempts: Array<readonly string[]> = []
+    const runner: PluginRunner = async (_profile, args) => {
+      attempts.push(args)
+      if (args.includes('--dir')) {
+        if (!args.includes('--config.minimumReleaseAge=0')) return { ...success(), exitCode: 1, stderr: 'published within the minimumReleaseAge cutoff' }
+        return success()
+      }
+      if (args[0] === 'add') {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [base.package]: base.install.target } })
+        const packageDir = join(dir, 'node_modules', ...base.package.split('/'))
+        mkdirSync(packageDir, { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), { version: base.install.version, dsh: { client: { platform: 'web' } } })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [base])
+
+    const operation = await finished(lifecycle.begin('install', base.id))
+
+    expect(operation.phase).toBe('done')
+    expect(attempts[0]).not.toContain('--config.minimumReleaseAge=0')
+    expect(attempts[1]).toContain('--config.minimumReleaseAge=0')
+    expect(attempts.find(args => args[0] === 'add' && !args.includes('--dir'))).not.toContain('--config.minimumReleaseAge=0')
+  })
+
+  it('requires explicit approval for an unknown exact build key and retries with that key', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
+    const buildKey = '@example/skin@https://codeload.github.com/example/skin/tar.gz/0123456789abcdef0123456789abcdef01234567'
+    const skin = { ...base, id: 'build-approval.skin', install: { ...base.install, target: 'github:example/skin#0123456789abcdef0123456789abcdef01234567', allowBuild: undefined } }
+    let rejected = false
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args.includes('--dir')) return success()
+      if (args[0] === 'add' && !rejected) {
+        rejected = true
+        return { ...success(), exitCode: 1, stderr: `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED\n${buildKey} needs to execute build scripts but is not in allowBuilds` }
+      }
+      if (args[0] === 'add') {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+        mkdirSync(packageDir, { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { client: { platform: 'web' } } })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const failedOperation = await finished(lifecycle.begin('install', skin.id))
+    expect(failedOperation).toMatchObject({ phase: 'failed', failure: { kind: 'build-approval', action: 'approve-build', packageName: '@example/skin' } })
+
+    const retried = await finished(lifecycle.retry(failedOperation.id, 'approve-build'))
+
+    expect(retried.phase).toBe('done')
+    expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain(buildKey)
+  })
+
   it('reconciles an already installed package instead of failing the install action', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })

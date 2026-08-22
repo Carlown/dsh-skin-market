@@ -87,6 +87,7 @@ interface MarketUpdateOperation {
   downloadedBytes?: number
   totalBytes?: number
   bytesPerSecond?: number
+  failure?: Operation['failure']
   startedAt: string
   finishedAt?: string
 }
@@ -123,6 +124,12 @@ function operationMeta(operation: ProgressMetadata): string[] {
   }
   if (operation.bytesPerSecond !== undefined && operation.bytesPerSecond > 0) details.push(`${byteLabel(operation.bytesPerSecond)}/s`)
   return details
+}
+
+function recoveryActionLabel(action: 'retry' | 'approve-build' | undefined): string | undefined {
+  if (action === 'approve-build') return '批准构建并重试'
+  if (action === 'retry') return '重试'
+  return undefined
 }
 
 const mutationLabels: Record<MutationKind, string> = {
@@ -726,19 +733,35 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     }
   }, [marketOperation])
 
-  const runForSkin = useCallback(async (skinId: string, kind: MutationKind) => {
+  const retryMarketUpdate = useCallback(async () => {
+    const operation = marketOperation
+    if (operation === null || operation.failure?.action !== 'retry') return
+    setMarketUpdating(true)
+    try {
+      const result = await json<{ operationId: string }>(`/dsh-skin-market/market-update/operations/${operation.id}/retry`, { method: 'POST' })
+      setMarketOperation({ id: result.operationId, phase: 'queued', cancelable: true, startedAt: new Date().toISOString() })
+      void waitForMarketUpdate(result.operationId)
+    } catch (reason) {
+      setMarketUpdating(false)
+      const message = reason instanceof Error ? reason.message : String(reason)
+      setMarketOperation(current => current?.id === operation.id ? { ...current, phase: 'failed', cancelable: false, message } : current)
+      setError(null)
+    }
+  }, [marketOperation, waitForMarketUpdate])
+
+  const runForSkin = useCallback(async (skinId: string, kind: MutationKind, existingOperationId?: string) => {
     const target = skins.find(skin => skin.id === skinId)
     if (target === undefined) return false
     const targetState = runtimeFor(states, target.id)
     setError(null)
     setMutation({ skinId: target.id, kind })
-    setBusy({ id: 'pending', kind, skinId: target.id, phase: 'queued', startedAt: new Date().toISOString() })
+    if (existingOperationId === undefined) setBusy({ id: 'pending', kind, skinId: target.id, phase: 'queued', startedAt: new Date().toISOString() })
     try {
-      const result = await json<{ operationId: string }>(`/dsh-skin-market/${kind}`, {
+      const operationId = existingOperationId ?? (await json<{ operationId: string }>(`/dsh-skin-market/${kind}`, {
         method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ skinId: target.id }),
-      })
+      })).operationId
       for (;;) {
-        const operation = await json<Operation>(`/dsh-skin-market/operations/${result.operationId}`)
+        const operation = await json<Operation>(`/dsh-skin-market/operations/${operationId}`)
         setBusy(operation)
         if (operation.phase === 'done') {
           setBusy(null)
@@ -800,6 +823,22 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       setMutation(null)
     }
   }, [clientRuntime, openRestartConfirm, refresh, skins, states])
+
+  const retrySkinOperation = useCallback(async () => {
+    const operation = busy
+    const action = operation?.failure?.action
+    if (operation === null || operation === undefined || action === undefined) return
+    try {
+      const result = await json<{ operationId: string }>(`/dsh-skin-market/operations/${operation.id}/retry`, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action }),
+      })
+      await runForSkin(operation.skinId, operation.kind, result.operationId)
+    } catch (reason) {
+      const message = reason instanceof Error ? reason.message : String(reason)
+      setBusy(current => current?.id === operation.id ? { ...current, message } : current)
+      setError(null)
+    }
+  }, [busy, runForSkin])
 
   const run = useCallback(async (kind: MutationKind) => selected === undefined ? false : runForSkin(selected.id, kind), [runForSkin, selected])
 
@@ -931,6 +970,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     failed={busy.phase === 'failed'}
     cancelable={busy.cancelable === true}
     onCancel={() => { void cancelOperation() }}
+    action={recoveryActionLabel(busy.failure?.action) === undefined ? undefined : <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { void retrySkinOperation() }}>{recoveryActionLabel(busy.failure?.action)}</Button>}
     onDismiss={busy.phase === 'failed' || busy.phase === 'cancelled' || busy.phase === 'done' ? () => setBusy(null) : undefined}
   />
 
@@ -944,6 +984,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     failed={marketOperation.phase === 'failed'}
     cancelable={marketOperation.cancelable === true}
     onCancel={() => { void cancelMarketUpdate() }}
+    action={recoveryActionLabel(marketOperation.failure?.action) === undefined ? undefined : <Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => { void retryMarketUpdate() }}>{recoveryActionLabel(marketOperation.failure?.action)}</Button>}
     onDismiss={marketOperation.phase === 'failed' || marketOperation.phase === 'cancelled' || marketOperation.phase === 'done' ? () => { dismissedMarketOperationIds.current.add(marketOperation.id); setMarketOperation(null) } : undefined}
   />
 

@@ -2,7 +2,9 @@ import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { commandError, type PluginRunner } from './commands.ts'
+import type { PluginRunner } from './commands.ts'
+import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
+import type { OperationFailure } from './types.ts'
 
 export const MARKET_NPM_PACKAGE = 'dsh-skin-market'
 export const MARKET_NPM_METADATA_URL = `https://registry.npmjs.org/${MARKET_NPM_PACKAGE}`
@@ -25,6 +27,7 @@ export interface MarketUpdateOperation {
   downloadedBytes?: number
   totalBytes?: number
   bytesPerSecond?: number
+  failure?: OperationFailure
   startedAt: string
   finishedAt?: string
 }
@@ -103,6 +106,7 @@ export interface MarketUpdater {
   operation(id: string): MarketUpdateOperation | null
   currentOperation(): MarketUpdateOperation | null
   cancel(id: string): MarketUpdateOperation
+  retry(id: string): MarketUpdateOperation
   readonly restartRequired: boolean
 }
 
@@ -186,18 +190,20 @@ export function createMarketUpdater(
         if (chunk.trim() !== '') operation.message = operation.phase === 'downloading' ? '正在下载皮肤市场更新包' : '正在写入皮肤市场更新'
       }
       const run = async (args: readonly string[]) => {
-        const result = await runner(profile, args, {
-          signal: controller.signal,
-          // Keep self-update on the same 10 minute network budget as ordinary
-          // skin installs without writing a persistent .npmrc into the user's
-          // profile. The update target is the immutable npm package version,
-          // so repository-only assets such as market screenshots are not
-          // included in the downloaded package.
-          env: { pnpm_config_fetch_timeout: String(PNPM_FETCH_TIMEOUT_MS) },
-          onStdout: report,
-          onStderr: report,
+        await runPnpmWithRecovery(args, {
+          attempt: (attemptArgs, attemptOptions) => runner(profile, attemptArgs, {
+            signal: controller.signal,
+            // Keep self-update on the same 10 minute network budget as ordinary
+            // skin installs without writing a persistent .npmrc into the user's
+            // profile. The update target is the immutable npm package version,
+            // so repository-only assets such as market screenshots are not
+            // included in the downloaded package.
+            env: { pnpm_config_fetch_timeout: String(PNPM_FETCH_TIMEOUT_MS), ...attemptOptions?.env },
+            onStdout: report,
+            onStderr: report,
+          }),
+          onRetry: failure => setOperation(operation, { message: recoveryMessage(failure) }),
         })
-        if (result.exitCode !== 0 || result.timedOut || result.aborted) throw new Error(commandError(result))
       }
 
       // Run one profile update only. A temporary prefetch followed by a
@@ -214,7 +220,19 @@ export function createMarketUpdater(
       setOperation(operation, { phase: 'done', message: '更新完成，重启 DSH 后生效', status: next })
     } catch (error) {
       if (controller.signal.aborted) setOperation(operation, { phase: 'cancelled', message: '更新已取消' })
-      else setOperation(operation, { phase: 'failed', message: error instanceof Error ? error.message : String(error) })
+      else {
+        if (error instanceof PnpmCommandError) {
+          const failure = error.failure
+          const action = failure.kind === 'network' || failure.kind === 'fetch-timeout' ? 'retry' : undefined
+          operation.failure = {
+            kind: failure.kind,
+            message: failure.message,
+            ...(failure.packageName === undefined ? {} : { packageName: failure.packageName }),
+            ...(action === undefined ? {} : { action }),
+          }
+        }
+        setOperation(operation, { phase: 'failed', message: error instanceof Error ? error.message : String(error) })
+      }
     } finally {
       abortControllers.delete(operation.id)
       updating = false
@@ -291,5 +309,17 @@ export function createMarketUpdater(
       abortControllers.get(id)?.abort()
       return operation
     },
+    retry(id) {
+      const failed = operations.get(id)
+      if (failed === undefined || failed.phase !== 'failed' || failed.failure?.action !== 'retry') throw new Error('更新任务不可重试')
+      return startUpdate()
+    },
   }
+}
+
+function recoveryMessage(failure: PnpmFailure): string {
+  if (failure.kind === 'release-age') return '检测到新包保护，正在临时放宽本次更新并重试'
+  if (failure.kind === 'fetch-timeout') return '下载超时，正在延长 pnpm 下载等待时间并重试'
+  if (failure.kind === 'network') return '检测到临时网络错误，正在自动重试'
+  return failure.message
 }

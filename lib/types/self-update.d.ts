@@ -1,4 +1,5 @@
-import { type PluginRunner } from './commands.ts';
+import type { PluginRunner } from './commands.ts';
+import type { OperationFailure } from './types.ts';
 export declare const MARKET_NPM_PACKAGE = "dsh-skin-market";
 export declare const MARKET_NPM_METADATA_URL = "https://registry.npmjs.org/dsh-skin-market";
 export interface MarketUpdateStatus {
@@ -16,6 +17,7 @@ export interface MarketUpdateOperation {
     downloadedBytes?: number;
     totalBytes?: number;
     bytesPerSecond?: number;
+    failure?: OperationFailure;
     startedAt: string;
     finishedAt?: string;
 }
@@ -26,6 +28,7 @@ export interface MarketUpdater {
     operation(id: string): MarketUpdateOperation | null;
     currentOperation(): MarketUpdateOperation | null;
     cancel(id: string): MarketUpdateOperation;
+    retry(id: string): MarketUpdateOperation;
     readonly restartRequired: boolean;
 }
 export declare function compareVersions(left: string, right: string): number;

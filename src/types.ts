@@ -104,6 +104,14 @@ export interface InstalledClientPlugin {
 
 export type OperationKind = 'install' | 'activate' | 'deactivate' | 'pin' | 'unpin' | 'update' | 'uninstall'
 export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'installing' | 'validating' | 'activating' | 'cancelling' | 'cancelled' | 'done' | 'failed'
+export type OperationRetryAction = 'retry' | 'approve-build'
+
+export interface OperationFailure {
+  kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'command'
+  message: string
+  packageName?: string
+  action?: OperationRetryAction
+}
 
 export interface Operation {
   id: string
@@ -115,6 +123,7 @@ export interface Operation {
   downloadedBytes?: number
   totalBytes?: number
   bytesPerSecond?: number
+  failure?: OperationFailure
   startedAt: string
   finishedAt?: string
 }

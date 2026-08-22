@@ -301,137 +301,137 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var SkinMarket_module_css_default = {
-			"homeSubmitAction": "VqXecW_homeSubmitAction",
-			"mobileBack": "VqXecW_mobileBack",
-			"compactActionIcon": "VqXecW_compactActionIcon",
-			"titleBlock": "VqXecW_titleBlock",
-			"collectionTitle": "VqXecW_collectionTitle",
-			"homeCardMedia": "VqXecW_homeCardMedia",
-			"filterPill": "VqXecW_filterPill",
-			"thumbnailProgress": "VqXecW_thumbnailProgress",
-			"homeCard": "VqXecW_homeCard",
-			"homeOperation": "VqXecW_homeOperation",
-			"galleryProgress": "VqXecW_galleryProgress",
-			"loadMoreHint": "VqXecW_loadMoreHint",
-			"description": "VqXecW_description",
-			"lightboxNext": "VqXecW_lightboxNext",
-			"recommendations": "VqXecW_recommendations",
-			"operationCancel": "VqXecW_operationCancel",
-			"skinCard": "VqXecW_skinCard",
-			"detailHeader": "VqXecW_detailHeader",
-			"homeUpdateAction": "VqXecW_homeUpdateAction",
-			"repoMeta": "VqXecW_repoMeta",
-			"heroPrev": "VqXecW_heroPrev",
-			"catalogHeader": "VqXecW_catalogHeader",
-			"homeSectionTitle": "VqXecW_homeSectionTitle",
-			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
-			"listSkeleton": "VqXecW_listSkeleton",
-			"statusActive": "VqXecW_statusActive",
-			"nativePrimary": "VqXecW_nativePrimary",
-			"error": "VqXecW_error",
-			"cardMeta": "VqXecW_cardMeta",
-			"installedMoreCard": "VqXecW_installedMoreCard",
-			"skeletonCard": "VqXecW_skeletonCard",
-			"catalogTitle": "VqXecW_catalogTitle",
-			"version": "VqXecW_version",
 			"browserTitlebar": "VqXecW_browserTitlebar",
-			"thumbnails": "VqXecW_thumbnails",
-			"iconOnlyButton": "VqXecW_iconOnlyButton",
-			"detail": "VqXecW_detail",
-			"installedRow": "VqXecW_installedRow",
-			"heroOpen": "VqXecW_heroOpen",
-			"catalog": "VqXecW_catalog",
-			"cardInlineActions": "VqXecW_cardInlineActions",
-			"homeContent": "VqXecW_homeContent",
-			"previewPlaceholder": "VqXecW_previewPlaceholder",
-			"cardDescription": "VqXecW_cardDescription",
-			"homeCardOpen": "VqXecW_homeCardOpen",
-			"repoLink": "VqXecW_repoLink",
-			"operation": "VqXecW_operation",
-			"lightboxNav": "VqXecW_lightboxNav",
-			"homeSection": "VqXecW_homeSection",
-			"author": "VqXecW_author",
-			"srOnly": "VqXecW_srOnly",
-			"lightbox": "VqXecW_lightbox",
-			"cardMetaLine": "VqXecW_cardMetaLine",
-			"browserPanel": "VqXecW_browserPanel",
-			"pinWarning": "VqXecW_pinWarning",
-			"installedSkeletonCard": "VqXecW_installedSkeletonCard",
-			"homeCardFooter": "VqXecW_homeCardFooter",
-			"home": "VqXecW_home",
-			"galleryGroup": "VqXecW_galleryGroup",
-			"homeLoadMore": "VqXecW_homeLoadMore",
-			"detailSkeleton": "VqXecW_detailSkeleton",
-			"heroNext": "VqXecW_heroNext",
-			"root": "VqXecW_root",
-			"cardActionProgress": "VqXecW_cardActionProgress",
-			"aboutGrid": "VqXecW_aboutGrid",
-			"healthList": "VqXecW_healthList",
-			"browser": "VqXecW_browser",
-			"listLoading": "VqXecW_listLoading",
-			"externalPlugin": "VqXecW_externalPlugin",
-			"lightboxThumbnails": "VqXecW_lightboxThumbnails",
-			"homeGithubAction": "VqXecW_homeGithubAction",
-			"homeActions": "VqXecW_homeActions",
-			"browserBackdrop": "VqXecW_browserBackdrop",
-			"staticPill": "VqXecW_staticPill",
-			"copyCapsule": "VqXecW_copyCapsule",
-			"settingsNavIcon": "VqXecW_settingsNavIcon",
 			"skinList": "VqXecW_skinList",
-			"homeCardDescription": "VqXecW_homeCardDescription",
-			"skinCardBody": "VqXecW_skinCardBody",
-			"operationMeta": "VqXecW_operationMeta",
-			"homeLoading": "VqXecW_homeLoading",
-			"empty": "VqXecW_empty",
-			"browserHomeBack": "VqXecW_browserHomeBack",
-			"actionDivider": "VqXecW_actionDivider",
-			"homeHeader": "VqXecW_homeHeader",
-			"hero": "VqXecW_hero",
-			"feedMeta": "VqXecW_feedMeta",
-			"catalogTitleMain": "VqXecW_catalogTitleMain",
-			"homeError": "VqXecW_homeError",
-			"browserClose": "VqXecW_browserClose",
-			"installOptions": "VqXecW_installOptions",
-			"filterBar": "VqXecW_filterBar",
-			"spin": "VqXecW_spin",
-			"skinCardPreview": "VqXecW_skinCardPreview",
-			"operationDismiss": "VqXecW_operationDismiss",
-			"homeCardTitleRow": "VqXecW_homeCardTitleRow",
-			"stars": "VqXecW_stars",
-			"tags": "VqXecW_tags",
-			"mediaLazyPlaceholder": "VqXecW_mediaLazyPlaceholder",
-			"cardStatusActive": "VqXecW_cardStatusActive",
-			"cardAction": "VqXecW_cardAction",
-			"cardTitle": "VqXecW_cardTitle",
+			"listSkeleton": "VqXecW_listSkeleton",
 			"lightboxPrev": "VqXecW_lightboxPrev",
-			"submission": "VqXecW_submission",
-			"heroNav": "VqXecW_heroNav",
-			"homeGithubLabel": "VqXecW_homeGithubLabel",
-			"operationMessage": "VqXecW_operationMessage",
-			"homeTitleRow": "VqXecW_homeTitleRow",
-			"skinAvatar": "VqXecW_skinAvatar",
-			"nativeOutline": "VqXecW_nativeOutline",
-			"notice": "VqXecW_notice",
-			"filters": "VqXecW_filters",
-			"copyCapsuleButton": "VqXecW_copyCapsuleButton",
-			"lightboxClose": "VqXecW_lightboxClose",
-			"marketUpdateButton": "VqXecW_marketUpdateButton",
-			"sortButton": "VqXecW_sortButton",
-			"loading": "VqXecW_loading",
-			"cardStars": "VqXecW_cardStars",
-			"homeSearch": "VqXecW_homeSearch",
-			"operationActions": "VqXecW_operationActions",
-			"marketUpdateLabel": "VqXecW_marketUpdateLabel",
-			"homeSearchPlaceholder": "VqXecW_homeSearchPlaceholder",
-			"skeletonShimmer": "VqXecW_skeletonShimmer",
-			"homeCardCopy": "VqXecW_homeCardCopy",
-			"cardStatus": "VqXecW_cardStatus",
-			"changelog": "VqXecW_changelog",
-			"healthSuggestion": "VqXecW_healthSuggestion",
-			"discoveryGrid": "VqXecW_discoveryGrid",
 			"status": "VqXecW_status",
+			"repoLink": "VqXecW_repoLink",
+			"mediaLazyPlaceholder": "VqXecW_mediaLazyPlaceholder",
+			"lightboxThumbnails": "VqXecW_lightboxThumbnails",
+			"heroOpen": "VqXecW_heroOpen",
+			"home": "VqXecW_home",
+			"srOnly": "VqXecW_srOnly",
+			"marketUpdateLabel": "VqXecW_marketUpdateLabel",
+			"mobileBack": "VqXecW_mobileBack",
+			"empty": "VqXecW_empty",
+			"homeTitleRow": "VqXecW_homeTitleRow",
+			"actionDivider": "VqXecW_actionDivider",
+			"nativeOutline": "VqXecW_nativeOutline",
+			"cardStatusActive": "VqXecW_cardStatusActive",
+			"discoveryGrid": "VqXecW_discoveryGrid",
+			"heroNav": "VqXecW_heroNav",
+			"previewPlaceholder": "VqXecW_previewPlaceholder",
+			"detailSkeleton": "VqXecW_detailSkeleton",
+			"detail": "VqXecW_detail",
+			"homeHeader": "VqXecW_homeHeader",
+			"notice": "VqXecW_notice",
+			"version": "VqXecW_version",
+			"heroNext": "VqXecW_heroNext",
+			"cardStars": "VqXecW_cardStars",
+			"homeUpdateAction": "VqXecW_homeUpdateAction",
+			"homeCardCopy": "VqXecW_homeCardCopy",
+			"spin": "VqXecW_spin",
+			"iconOnlyButton": "VqXecW_iconOnlyButton",
+			"aboutGrid": "VqXecW_aboutGrid",
+			"operationDismiss": "VqXecW_operationDismiss",
+			"filters": "VqXecW_filters",
+			"filterBar": "VqXecW_filterBar",
+			"homeGithubAction": "VqXecW_homeGithubAction",
+			"cardInlineActions": "VqXecW_cardInlineActions",
+			"operationMeta": "VqXecW_operationMeta",
+			"homeError": "VqXecW_homeError",
+			"installOptions": "VqXecW_installOptions",
+			"installedRow": "VqXecW_installedRow",
+			"browserClose": "VqXecW_browserClose",
+			"lightboxNav": "VqXecW_lightboxNav",
+			"galleryGroup": "VqXecW_galleryGroup",
+			"copyCapsule": "VqXecW_copyCapsule",
+			"changelog": "VqXecW_changelog",
+			"operationActions": "VqXecW_operationActions",
+			"cardAction": "VqXecW_cardAction",
+			"homeSearchPlaceholder": "VqXecW_homeSearchPlaceholder",
+			"marketUpdateButton": "VqXecW_marketUpdateButton",
+			"skinAvatar": "VqXecW_skinAvatar",
+			"cardStatus": "VqXecW_cardStatus",
+			"loadMoreHint": "VqXecW_loadMoreHint",
+			"hero": "VqXecW_hero",
+			"skinCard": "VqXecW_skinCard",
+			"lightboxNext": "VqXecW_lightboxNext",
+			"cardMeta": "VqXecW_cardMeta",
+			"stars": "VqXecW_stars",
+			"catalogTitleMain": "VqXecW_catalogTitleMain",
+			"repoMeta": "VqXecW_repoMeta",
+			"operationCancel": "VqXecW_operationCancel",
+			"homeCardDescription": "VqXecW_homeCardDescription",
+			"installedMoreCard": "VqXecW_installedMoreCard",
+			"skeletonShimmer": "VqXecW_skeletonShimmer",
+			"filterPill": "VqXecW_filterPill",
+			"heroPrev": "VqXecW_heroPrev",
+			"sortButton": "VqXecW_sortButton",
+			"error": "VqXecW_error",
+			"tags": "VqXecW_tags",
+			"homeLoading": "VqXecW_homeLoading",
 			"actionRow": "VqXecW_actionRow",
-			"lightboxStage": "VqXecW_lightboxStage"
+			"homeCard": "VqXecW_homeCard",
+			"homeCardOpen": "VqXecW_homeCardOpen",
+			"settingsNavIcon": "VqXecW_settingsNavIcon",
+			"operation": "VqXecW_operation",
+			"homeOperation": "VqXecW_homeOperation",
+			"thumbnails": "VqXecW_thumbnails",
+			"lightbox": "VqXecW_lightbox",
+			"loading": "VqXecW_loading",
+			"operationMessage": "VqXecW_operationMessage",
+			"thumbnailProgress": "VqXecW_thumbnailProgress",
+			"root": "VqXecW_root",
+			"catalogHeader": "VqXecW_catalogHeader",
+			"homeCardFooter": "VqXecW_homeCardFooter",
+			"cardDescription": "VqXecW_cardDescription",
+			"browser": "VqXecW_browser",
+			"homeContent": "VqXecW_homeContent",
+			"titleBlock": "VqXecW_titleBlock",
+			"cardActionProgress": "VqXecW_cardActionProgress",
+			"author": "VqXecW_author",
+			"homeGithubLabel": "VqXecW_homeGithubLabel",
+			"homeSearch": "VqXecW_homeSearch",
+			"homeCardMedia": "VqXecW_homeCardMedia",
+			"homeSectionTitle": "VqXecW_homeSectionTitle",
+			"lightboxStage": "VqXecW_lightboxStage",
+			"statusActive": "VqXecW_statusActive",
+			"pinWarning": "VqXecW_pinWarning",
+			"skinCardPreview": "VqXecW_skinCardPreview",
+			"compactActionIcon": "VqXecW_compactActionIcon",
+			"collectionTitle": "VqXecW_collectionTitle",
+			"homeSubmitAction": "VqXecW_homeSubmitAction",
+			"homeLoadMore": "VqXecW_homeLoadMore",
+			"homeCardTitleRow": "VqXecW_homeCardTitleRow",
+			"listLoading": "VqXecW_listLoading",
+			"homeActions": "VqXecW_homeActions",
+			"catalogTitle": "VqXecW_catalogTitle",
+			"submission": "VqXecW_submission",
+			"catalog": "VqXecW_catalog",
+			"description": "VqXecW_description",
+			"browserHomeBack": "VqXecW_browserHomeBack",
+			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
+			"browserPanel": "VqXecW_browserPanel",
+			"cardTitle": "VqXecW_cardTitle",
+			"homeSection": "VqXecW_homeSection",
+			"installedSkeletonCard": "VqXecW_installedSkeletonCard",
+			"cardMetaLine": "VqXecW_cardMetaLine",
+			"copyCapsuleButton": "VqXecW_copyCapsuleButton",
+			"healthList": "VqXecW_healthList",
+			"recommendations": "VqXecW_recommendations",
+			"skinCardBody": "VqXecW_skinCardBody",
+			"galleryProgress": "VqXecW_galleryProgress",
+			"nativePrimary": "VqXecW_nativePrimary",
+			"browserBackdrop": "VqXecW_browserBackdrop",
+			"externalPlugin": "VqXecW_externalPlugin",
+			"healthSuggestion": "VqXecW_healthSuggestion",
+			"detailHeader": "VqXecW_detailHeader",
+			"skeletonCard": "VqXecW_skeletonCard",
+			"staticPill": "VqXecW_staticPill",
+			"lightboxClose": "VqXecW_lightboxClose",
+			"feedMeta": "VqXecW_feedMeta"
 		};
 		//#endregion
 		//#region \0dsh-skin-market-css:/Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/src/client/media-hover.module.css.mjs
@@ -728,6 +728,10 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			else if (operation.downloadedBytes !== void 0) details.push(`已下载 ${byteLabel(operation.downloadedBytes)}`);
 			if (operation.bytesPerSecond !== void 0 && operation.bytesPerSecond > 0) details.push(`${byteLabel(operation.bytesPerSecond)}/s`);
 			return details;
+		}
+		function recoveryActionLabel(action) {
+			if (action === "approve-build") return "批准构建并重试";
+			if (action === "retry") return "重试";
 		}
 		const mutationLabels = {
 			install: "安装中",
@@ -1443,7 +1447,32 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					setError(null);
 				}
 			}, [marketOperation]);
-			const runForSkin = (0, react.useCallback)(async (skinId, kind) => {
+			const retryMarketUpdate = (0, react.useCallback)(async () => {
+				const operation = marketOperation;
+				if (operation === null || operation.failure?.action !== "retry") return;
+				setMarketUpdating(true);
+				try {
+					const result = await json(`/dsh-skin-market/market-update/operations/${operation.id}/retry`, { method: "POST" });
+					setMarketOperation({
+						id: result.operationId,
+						phase: "queued",
+						cancelable: true,
+						startedAt: (/* @__PURE__ */ new Date()).toISOString()
+					});
+					waitForMarketUpdate(result.operationId);
+				} catch (reason) {
+					setMarketUpdating(false);
+					const message = reason instanceof Error ? reason.message : String(reason);
+					setMarketOperation((current) => current?.id === operation.id ? {
+						...current,
+						phase: "failed",
+						cancelable: false,
+						message
+					} : current);
+					setError(null);
+				}
+			}, [marketOperation, waitForMarketUpdate]);
+			const runForSkin = (0, react.useCallback)(async (skinId, kind, existingOperationId) => {
 				const target = skins.find((skin) => skin.id === skinId);
 				if (target === void 0) return false;
 				const targetState = runtimeFor(states, target.id);
@@ -1452,7 +1481,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					skinId: target.id,
 					kind
 				});
-				setBusy({
+				if (existingOperationId === void 0) setBusy({
 					id: "pending",
 					kind,
 					skinId: target.id,
@@ -1460,13 +1489,13 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					startedAt: (/* @__PURE__ */ new Date()).toISOString()
 				});
 				try {
-					const result = await json(`/dsh-skin-market/${kind}`, {
+					const operationId = existingOperationId ?? (await json(`/dsh-skin-market/${kind}`, {
 						method: "POST",
 						headers: { "content-type": "application/json" },
 						body: JSON.stringify({ skinId: target.id })
-					});
+					})).operationId;
 					for (;;) {
-						const operation = await json(`/dsh-skin-market/operations/${result.operationId}`);
+						const operation = await json(`/dsh-skin-market/operations/${operationId}`);
 						setBusy(operation);
 						if (operation.phase === "done") {
 							setBusy(null);
@@ -1540,6 +1569,26 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				skins,
 				states
 			]);
+			const retrySkinOperation = (0, react.useCallback)(async () => {
+				const operation = busy;
+				const action = operation?.failure?.action;
+				if (operation === null || operation === void 0 || action === void 0) return;
+				try {
+					const result = await json(`/dsh-skin-market/operations/${operation.id}/retry`, {
+						method: "POST",
+						headers: { "content-type": "application/json" },
+						body: JSON.stringify({ action })
+					});
+					await runForSkin(operation.skinId, operation.kind, result.operationId);
+				} catch (reason) {
+					const message = reason instanceof Error ? reason.message : String(reason);
+					setBusy((current) => current?.id === operation.id ? {
+						...current,
+						message
+					} : current);
+					setError(null);
+				}
+			}, [busy, runForSkin]);
 			const run = (0, react.useCallback)(async (kind) => selected === void 0 ? false : runForSkin(selected.id, kind), [runForSkin, selected]);
 			const activateSelected = (0, react.useCallback)(() => {
 				try {
@@ -1766,6 +1815,15 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				onCancel: () => {
 					cancelOperation();
 				},
+				action: recoveryActionLabel(busy.failure?.action) === void 0 ? void 0 : /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+					className: SkinMarket_module_css_default.nativeOutline,
+					variant: "outline",
+					size: "sm",
+					onClick: () => {
+						retrySkinOperation();
+					},
+					children: recoveryActionLabel(busy.failure?.action)
+				}),
 				onDismiss: busy.phase === "failed" || busy.phase === "cancelled" || busy.phase === "done" ? () => setBusy(null) : void 0
 			});
 			const renderMarketOperationBanner = (className) => marketOperation === null || marketOperation.phase === "done" && pendingRestart !== null ? null : /* @__PURE__ */ (0, react_jsx_runtime.jsx)(OperationBanner, {
@@ -1780,6 +1838,15 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				onCancel: () => {
 					cancelMarketUpdate();
 				},
+				action: recoveryActionLabel(marketOperation.failure?.action) === void 0 ? void 0 : /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_deepseek_ai_dsh_client_ui_primitives.Button, {
+					className: SkinMarket_module_css_default.nativeOutline,
+					variant: "outline",
+					size: "sm",
+					onClick: () => {
+						retryMarketUpdate();
+					},
+					children: recoveryActionLabel(marketOperation.failure?.action)
+				}),
 				onDismiss: marketOperation.phase === "failed" || marketOperation.phase === "cancelled" || marketOperation.phase === "done" ? () => {
 					dismissedMarketOperationIds.current.add(marketOperation.id);
 					setMarketOperation(null);

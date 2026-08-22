@@ -3,8 +3,8 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { PluginInstallRequest, PluginRunner } from './commands.ts'
-import { commandError } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
+import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
 import {
   ensureBuildAllowed,
   ensureSkinRegistration,
@@ -23,7 +23,7 @@ import {
   validateInstalledSkin,
   writeMarketState,
 } from './profile.ts'
-import type { DesktopInstallCapability, LoaderEntry, MarketHostKind, Operation, OperationKind, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
+import type { DesktopInstallCapability, LoaderEntry, MarketHostKind, Operation, OperationFailure, OperationKind, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export interface LifecycleHost {
   loader: { entries(): Iterable<LoaderEntry> }
@@ -38,6 +38,13 @@ export interface LifecycleOptions {
 }
 
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error) }
+
+function recoveryMessage(failure: PnpmFailure): string {
+  if (failure.kind === 'release-age') return '检测到新包保护，正在临时放宽本次命令并重试'
+  if (failure.kind === 'fetch-timeout') return '下载超时，正在延长 pnpm 下载等待时间并重试'
+  if (failure.kind === 'network') return '检测到临时网络错误，正在自动重试'
+  return failure.message
+}
 
 export function desktopInstallError(capability: DesktopInstallCapability | undefined): string {
   if (capability?.mode === 'manual-only') {
@@ -128,6 +135,7 @@ export class SkinLifecycle {
   readonly operations = new Map<string, Operation>()
   private activeOperation: string | null = null
   private readonly abortControllers = new Map<string, AbortController>()
+  private readonly pendingBuildKeys = new Map<string, string>()
   private catalogEntries: SkinEntry[]
   private skinById: Map<string, SkinEntry>
   private disposeEvent?: () => void
@@ -243,7 +251,7 @@ export class SkinLifecycle {
     return this.activeOperation === null ? null : this.operations.get(this.activeOperation) ?? null
   }
 
-  begin(kind: OperationKind, skinId: string): Operation {
+  begin(kind: OperationKind, skinId: string, approvedBuildKey?: string): Operation {
     const skin = this.skin(skinId)
     if (kind === 'install' || kind === 'update') {
       if (this.hostKind === 'desktop' && skin.install.desktop?.mode !== 'managed') {
@@ -260,9 +268,19 @@ export class SkinLifecycle {
     }
     this.operations.set(operation.id, operation)
     this.abortControllers.set(operation.id, new AbortController())
+    if (approvedBuildKey !== undefined) this.pendingBuildKeys.set(operation.id, approvedBuildKey)
     this.activeOperation = operation.id
     void this.execute(operation)
     return operation
+  }
+
+  retry(id: string, action: 'retry' | 'approve-build'): Operation {
+    const failed = this.operations.get(id)
+    if (failed === undefined || failed.phase !== 'failed') throw new Error('operation is not retryable')
+    if (failed.failure?.action !== action) throw new Error('该操作不支持此恢复动作')
+    const approvedBuildKey = action === 'approve-build' ? this.pendingBuildKeys.get(id) : undefined
+    if (action === 'approve-build' && approvedBuildKey === undefined) throw new Error('未找到需要批准的精确构建项')
+    return this.begin(failed.kind, failed.skinId, approvedBuildKey)
   }
 
   private update(operation: Operation, phase: Operation['phase'], message?: string): void {
@@ -295,11 +313,32 @@ export class SkinLifecycle {
       this.update(operation, 'done', operation.message)
     } catch (error) {
       if (this.abortControllers.get(operation.id)?.signal.aborted === true) this.update(operation, 'cancelled', '操作已取消')
-      else this.update(operation, 'failed', errorMessage(error))
+      else {
+        if (error instanceof PnpmCommandError) {
+          const failure = error.failure
+          const action = failure.kind === 'network' || failure.kind === 'fetch-timeout'
+            ? 'retry'
+            : failure.kind === 'build-approval' && failure.buildKey !== undefined && this.hostKind !== 'desktop'
+              ? 'approve-build'
+              : undefined
+          const operationFailure: OperationFailure = {
+            kind: failure.kind,
+            message: failure.message,
+            ...(failure.packageName === undefined ? {} : { packageName: failure.packageName }),
+            ...(action === undefined ? {} : { action }),
+          }
+          operation.failure = operationFailure
+          if (failure.buildKey !== undefined) this.pendingBuildKeys.set(operation.id, failure.buildKey)
+        }
+        this.update(operation, 'failed', errorMessage(error))
+      }
     } finally {
       this.activeOperation = null
       this.abortControllers.delete(operation.id)
-      const timer = setTimeout(() => this.operations.delete(operation.id), 30 * 60 * 1000)
+      const timer = setTimeout(() => {
+        this.operations.delete(operation.id)
+        this.pendingBuildKeys.delete(operation.id)
+      }, 30 * 60 * 1000)
       timer.unref?.()
     }
   }
@@ -308,13 +347,20 @@ export class SkinLifecycle {
     const controller = operation === undefined ? undefined : this.abortControllers.get(operation.id)
     if (controller?.signal.aborted === true) throw new Error('操作已取消')
     const tracker = operation === undefined ? undefined : new PnpmProgressTracker()
-    const commandArgs = tracker === undefined || args.some(arg => arg.startsWith('--reporter')) ? args : [...args, '--reporter=ndjson']
-    const result = await this.options.runner(this.options.profile, commandArgs, {
-      signal: controller?.signal,
-      onStdout: chunk => tracker?.push(chunk, operation!),
-      onStderr: chunk => tracker?.push(chunk, operation!),
+    await runPnpmWithRecovery(args, {
+      attempt: async (attemptArgs, attemptOptions) => {
+        const commandArgs = tracker === undefined || attemptArgs.some(arg => arg.startsWith('--reporter')) ? attemptArgs : [...attemptArgs, '--reporter=ndjson']
+        return this.options.runner(this.options.profile, commandArgs, {
+          signal: controller?.signal,
+          env: { pnpm_config_fetch_timeout: String(10 * 60 * 1000), ...attemptOptions?.env },
+          onStdout: chunk => tracker?.push(chunk, operation!),
+          onStderr: chunk => tracker?.push(chunk, operation!),
+        })
+      },
+      onRetry: failure => {
+        if (operation !== undefined) this.update(operation, operation.phase, recoveryMessage(failure))
+      },
     })
-    if (result.exitCode !== 0 || result.timedOut) throw new Error(commandError(result))
   }
 
   private async installPackage(skin: SkinEntry, operation: Operation): Promise<void> {
@@ -335,12 +381,14 @@ export class SkinLifecycle {
         receiptId: randomUUID(),
         pnpmOptions: ['--prefer-offline', '--reporter=ndjson'],
       }
-      const result = await installPlugin(this.options.profile, request, {
-        signal: controller?.signal,
-        onStdout: chunk => tracker.push(chunk, operation),
-        onStderr: chunk => tracker.push(chunk, operation),
+      await runPnpmWithRecovery(request.pnpmOptions ?? [], {
+        attempt: (pnpmOptions) => installPlugin(this.options.profile, { ...request, pnpmOptions }, {
+          signal: controller?.signal,
+          onStdout: chunk => tracker.push(chunk, operation),
+          onStderr: chunk => tracker.push(chunk, operation),
+        }),
+        onRetry: failure => this.update(operation, operation.phase, recoveryMessage(failure)),
       })
-      if (result.exitCode !== 0 || result.timedOut) throw new Error(commandError(result))
       return
     }
 
@@ -377,6 +425,8 @@ export class SkinLifecycle {
       operation.message = 'skin was already installed; market state reconciled'
       return
     }
+    const approvedBuildKey = this.pendingBuildKeys.get(operation.id)
+    if (approvedBuildKey !== undefined) ensureBuildAllowed(this.options.profileDir, approvedBuildKey)
     const snapshot = snapshotManifest(this.options.profileDir)
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
@@ -498,6 +548,8 @@ export class SkinLifecycle {
     const skin = this.skin(operation.skinId)
     const previousState = readMarketState(this.options.profileDir)
     const wasActive = enabledSkinIds(previousState).has(skin.id)
+    const approvedBuildKey = this.pendingBuildKeys.get(operation.id)
+    if (approvedBuildKey !== undefined) ensureBuildAllowed(this.options.profileDir, approvedBuildKey)
     const snapshot = snapshotManifest(this.options.profileDir)
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))

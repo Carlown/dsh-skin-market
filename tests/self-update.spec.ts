@@ -63,4 +63,34 @@ describe('market self update', () => {
     await expect(updater.update()).resolves.toMatchObject({ updateAvailable: false })
     expect(runner).not.toHaveBeenCalled()
   })
+
+  it('retries a self-update once when the new package is inside the release-age cutoff', async () => {
+    const commit = 'c'.repeat(40)
+    const fetchLatest = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        'dist-tags': { latest: '0.1.17' },
+        versions: {
+          '0.1.17': {
+            version: '0.1.17',
+            gitHead: commit,
+            dist: { tarball: 'https://registry.npmjs.org/dsh-skin-market/-/dsh-skin-market-0.1.17.tgz' },
+          },
+        },
+      }),
+    })) as unknown as typeof fetch
+    const attempts: Array<readonly string[]> = []
+    const runner = vi.fn(async (_profile: string, args: readonly string[]) => {
+      attempts.push(args)
+      return attempts.length === 1
+        ? { exitCode: 1, stdout: '', stderr: 'dsh-skin-market@0.1.17 was published within the minimumReleaseAge cutoff', timedOut: false }
+        : { exitCode: 0, stdout: '', stderr: '', timedOut: false }
+    })
+    const updater = createMarketUpdater('web', runner, { currentVersion: '0.1.16', fetch: fetchLatest, cacheMs: 0 })
+
+    await expect(updater.update()).resolves.toMatchObject({ currentVersion: '0.1.17', updateAvailable: false })
+
+    expect(attempts[0]).not.toContain('--config.minimumReleaseAge=0')
+    expect(attempts[1]).toContain('--config.minimumReleaseAge=0')
+  })
 })

@@ -774,6 +774,37 @@ describe('client market', () => {
     await waitFor(() => expect(screen.getAllByRole('status').some(item => item.textContent?.includes('GitHub 插件下载超时'))).toBe(true))
   })
 
+  it('offers a retry action for a classified install failure', async () => {
+    let operationRequests = 0
+    let retryRequests = 0
+    vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-retry-source' }) }
+      if (url.endsWith('/operations/install-retry-source/retry') && init?.method === 'POST') {
+        retryRequests += 1
+        expect(JSON.parse(String(init.body))).toEqual({ action: 'retry' })
+        return { ok: true, json: async () => ({ operationId: 'install-retry-target' }) }
+      }
+      if (url.endsWith('/operations/install-retry-source')) {
+        operationRequests += 1
+        return { ok: true, json: async () => operationRequests === 1
+          ? { id: 'install-retry-source', kind: 'install', skinId: skin.id, phase: 'downloading', startedAt: new Date().toISOString() }
+          : { id: 'install-retry-source', kind: 'install', skinId: skin.id, phase: 'failed', startedAt: new Date().toISOString(), message: '插件下载遇到临时网络错误', failure: { kind: 'network', message: '插件下载遇到临时网络错误', action: 'retry' } } }
+      }
+      if (url.endsWith('/operations/install-retry-target')) return { ok: true, json: async () => ({ id: 'install-retry-target', kind: 'install', skinId: skin.id, phase: 'failed', startedAt: new Date().toISOString(), message: '仍然失败', failure: { kind: 'network', message: '仍然失败', action: 'retry' } }) }
+      throw new Error(`Unexpected request: ${url}`)
+    }))
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
+    expect((await screen.findAllByRole('button', { name: '重试' })).length).toBeGreaterThan(0)
+    fireEvent.click(screen.getAllByRole('button', { name: '重试' })[0]!)
+
+    await waitFor(() => expect(retryRequests).toBe(1))
+  })
+
   it('shows available byte progress in one banner and cancels the download', async () => {
     let cancelled = false
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {

@@ -34,6 +34,12 @@ export async function readSkinId(request: IncomingMessage, limit = 8192): Promis
   return body.skinId
 }
 
+export async function readOperationRetryAction(request: IncomingMessage, limit = 8192): Promise<'retry' | 'approve-build'> {
+  const body = await readJsonBody(request, limit)
+  if (body.action === 'retry' || body.action === 'approve-build') return body.action
+  throw new Error('invalid operation retry action')
+}
+
 export type RestartTarget = { kind: 'skin'; skinId: string } | { kind: 'market-update' }
 
 export async function readRestartTarget(request: IncomingMessage, limit = 8192): Promise<RestartTarget> {

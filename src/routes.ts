@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import { randomUUID } from 'node:crypto'
 import { join } from 'node:path'
 import { CatalogStore, catalogWithStars } from './catalog.ts'
-import { readRestartTarget, readSkinId, sameOrigin, sendJson } from './http.ts'
+import { readOperationRetryAction, readRestartTarget, readSkinId, sameOrigin, sendJson } from './http.ts'
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts'
 import { installedClientPlugins } from './profile.ts'
 import type { PluginRunner } from './commands.ts'
@@ -141,11 +141,14 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
     host.webServer.register({ kind: 'prefix', path: '/dsh-skin-market/market-update/operations', handler: (request, response) => {
       const parts = new URL(request.url ?? '/', 'http://localhost').pathname.split('/').filter(Boolean)
       const cancelling = parts.at(-1) === 'cancel'
-      const id = cancelling ? parts.at(-2) ?? '' : parts.at(-1) ?? ''
-      if (cancelling) {
+      const retrying = parts.at(-1) === 'retry'
+      const id = cancelling || retrying ? parts.at(-2) ?? '' : parts.at(-1) ?? ''
+      if (cancelling || retrying) {
         if (!method(request, response, 'POST')) return
         if (!sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
-        try { return sendJson(response, 202, marketUpdater.cancel(id)) } catch (error) { return sendJson(response, 409, { error: error instanceof Error ? error.message : String(error) }) }
+        try {
+          return sendJson(response, 202, cancelling ? marketUpdater.cancel(id) : { operationId: marketUpdater.retry(id).id })
+        } catch (error) { return sendJson(response, 409, { error: error instanceof Error ? error.message : String(error) }) }
       }
       if (!method(request, response, 'GET')) return
       const operation = marketUpdater.operation(id)
@@ -156,15 +159,18 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
     // its own slash (`pathname.startsWith(`${prefix}/`)`). A trailing slash
     // here would therefore only match a double-slash URL and let normal
     // operation polling fall through to index.html.
-    host.webServer.register({ kind: 'prefix', path: '/dsh-skin-market/operations', handler: (request, response) => {
+    host.webServer.register({ kind: 'prefix', path: '/dsh-skin-market/operations', handler: async (request, response) => {
       const parts = new URL(request.url ?? '/', 'http://localhost').pathname.split('/').filter(Boolean)
       const cancelling = parts.at(-1) === 'cancel'
-      const id = cancelling ? parts.at(-2) ?? '' : parts.at(-1) ?? ''
-      if (cancelling) {
+      const retrying = parts.at(-1) === 'retry'
+      const id = cancelling || retrying ? parts.at(-2) ?? '' : parts.at(-1) ?? ''
+      if (cancelling || retrying) {
         if (!method(request, response, 'POST')) return
         if (!sameOrigin(request)) return sendJson(response, 403, { error: 'same-origin request required' })
         try {
-          return sendJson(response, 202, lifecycle.cancel(id))
+          if (cancelling) return sendJson(response, 202, lifecycle.cancel(id))
+          const action = await readOperationRetryAction(request)
+          return sendJson(response, 202, { operationId: lifecycle.retry(id, action).id })
         } catch (error) {
           return sendJson(response, 409, { error: error instanceof Error ? error.message : String(error) })
         }

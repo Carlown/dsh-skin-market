@@ -92,6 +92,12 @@ export interface Operation {
   downloadedBytes?: number
   totalBytes?: number
   bytesPerSecond?: number
+  failure?: {
+    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'command'
+    message: string
+    packageName?: string
+    action?: 'retry' | 'approve-build'
+  }
   startedAt: string
   finishedAt?: string
 }

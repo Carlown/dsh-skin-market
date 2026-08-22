@@ -26,6 +26,7 @@ export declare class SkinLifecycle {
     readonly operations: Map<string, Operation>;
     private activeOperation;
     private readonly abortControllers;
+    private readonly pendingBuildKeys;
     private catalogEntries;
     private skinById;
     private disposeEvent?;
@@ -42,7 +43,8 @@ export declare class SkinLifecycle {
     replay(): Promise<void>;
     states(): SkinRuntimeState[];
     currentOperation(): Operation | null;
-    begin(kind: OperationKind, skinId: string): Operation;
+    begin(kind: OperationKind, skinId: string, approvedBuildKey?: string): Operation;
+    retry(id: string, action: 'retry' | 'approve-build'): Operation;
     private update;
     cancel(id: string): Operation;
     private execute;
