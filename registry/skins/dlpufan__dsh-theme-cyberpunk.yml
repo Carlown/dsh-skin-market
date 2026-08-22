@@ -25,11 +25,10 @@ compatibility:
   dsh: unverified
   platform:
   - web
-screenshots:
-- https://opengraph.githubassets.com/placeholder/dlpufan.dsh-theme-cyberpunk
+screenshots: []
 review:
   compatibility: unverified
-  preview: repository-card
+  preview: verified
   installation: verified
 health:
   status: improvements
@@ -48,6 +47,10 @@ license:
 featuredRank: 63
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16 13:50:20.382000+00:00
-metadataUpdatedAt: 2026-08-18 15:41:29.736000+00:00
+metadataUpdatedAt: 2026-08-22T08:15:31.354Z
 starsUpdatedAt: 2026-08-16 13:50:20.382000+00:00
-updatedAt: 2026-08-18 15:41:29.736000+00:00
+updatedAt: 2026-08-22T08:15:31.354Z
+marketScreenshots:
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dlpufan__dsh-theme-cyberpunk/0bddb1507514e758f1f63668df2b0c90d8d20102/home.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dlpufan__dsh-theme-cyberpunk/0bddb1507514e758f1f63668df2b0c90d8d20102/conversation.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/dlpufan__dsh-theme-cyberpunk/0bddb1507514e758f1f63668df2b0c90d8d20102/settings.png

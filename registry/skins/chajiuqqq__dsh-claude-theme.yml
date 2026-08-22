@@ -24,11 +24,10 @@ compatibility:
   dsh: unverified
   platform:
   - web
-screenshots:
-- https://opengraph.githubassets.com/placeholder/chajiuqqq.dsh-claude-theme
+screenshots: []
 review:
   compatibility: unverified
-  preview: repository-card
+  preview: verified
   installation: verified
 health:
   status: improvements
@@ -47,6 +46,10 @@ license:
 featuredRank: 61
 starsSnapshot: 2
 releaseUpdatedAt: 2026-08-16 13:50:06.363000+00:00
-metadataUpdatedAt: 2026-08-18 15:41:24.209000+00:00
+metadataUpdatedAt: 2026-08-22T08:15:29.868Z
 starsUpdatedAt: 2026-08-16 13:50:06.363000+00:00
-updatedAt: 2026-08-18 15:41:24.209000+00:00
+updatedAt: 2026-08-22T08:15:29.868Z
+marketScreenshots:
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/chajiuqqq__dsh-claude-theme/976b65da11bd0e23d77aac9cbadd466fea51eb1b/home.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/chajiuqqq__dsh-claude-theme/976b65da11bd0e23d77aac9cbadd466fea51eb1b/conversation.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/chajiuqqq__dsh-claude-theme/976b65da11bd0e23d77aac9cbadd466fea51eb1b/settings.png

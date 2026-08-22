@@ -24,11 +24,10 @@ compatibility:
   dsh: unverified
   platform:
     - web
-screenshots:
-  - https://opengraph.githubassets.com/placeholder/ymh0000123.dsh-theme-endfield
+screenshots: []
 review:
   compatibility: unverified
-  preview: repository-card
+  preview: verified
   installation: verified
 health:
   status: improvements
@@ -50,3 +49,7 @@ releaseUpdatedAt: 2026-08-21T17:50:13.748Z
 metadataUpdatedAt: 2026-08-18 15:42:02.669000+00:00
 starsUpdatedAt: 2026-08-22T03:10:37.916Z
 updatedAt: 2026-08-22T03:10:37.916Z
+marketScreenshots:
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/ymh0000123__dsh-theme-endfield/48ad12921bd6d36286d67fa483472eb32d90b6ee/home.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/ymh0000123__dsh-theme-endfield/48ad12921bd6d36286d67fa483472eb32d90b6ee/conversation.png
+- https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/ymh0000123__dsh-theme-endfield/48ad12921bd6d36286d67fa483472eb32d90b6ee/settings.png
