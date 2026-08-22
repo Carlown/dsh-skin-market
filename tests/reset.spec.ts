@@ -20,7 +20,7 @@ describe('emergency skin reset', () => {
     for (const skin of skins) {
       const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
       mkdirSync(packageDir, { recursive: true })
-      atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+      atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
       atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${skin.rowId}\n      name: ${JSON.stringify(skin.package)}\n`)
     }
     atomicWriteText(profilePatchFile(dir), '- insert:\n    - id: keep\n      name: unrelated-plugin\n')

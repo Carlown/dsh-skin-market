@@ -19,6 +19,7 @@ export interface CatalogSkin {
   author: string
   description: string
   repo: string
+  subpath?: string
   package: string
   rowId: string
   tags: string[]

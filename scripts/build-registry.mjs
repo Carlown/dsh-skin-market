@@ -24,6 +24,9 @@ for (const file of files) {
   const repo = skin.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
   const expected = `github:${repo}#${skin.install.commit}${skin.subpath ? `&path:${skin.subpath}` : ''}`
   if (skin.install.target !== expected) throw new Error(`${file}: install.target must equal ${expected}`)
+  if (skin.subpath !== undefined && skin.install.allowBuild !== undefined && !skin.install.allowBuild.endsWith(`#path:${skin.subpath}`)) {
+    throw new Error(`${file}: install.allowBuild must end with #path:${skin.subpath}`)
+  }
   const marketScreenshots = skin.marketScreenshots ?? []
   const screenshots = [...new Set(skin.screenshots)]
   const display = displayScreenshots(marketScreenshots, screenshots)

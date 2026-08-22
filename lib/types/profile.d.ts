@@ -1,3 +1,4 @@
+import { effectiveBuildApprovalKey } from './build-approval.ts';
 import type { InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts';
 export declare function resolveProfileDir(profile: string, explicit?: string): string;
 export declare function manifestFile(profileDir: string): string;
@@ -20,6 +21,8 @@ export declare function validateInstalledSkin(profileDir: string, skin: SkinEntr
     reason?: string;
     version?: string;
 };
+export declare function installedSpecMatches(skin: SkinEntry, spec: string | null | undefined): boolean;
+export { effectiveBuildApprovalKey };
 export declare function ensureBuildAllowed(profileDir: string, key: string): void;
 export declare function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled?: boolean): void;
 export declare function removeSkinRegistration(profileDir: string, skin: SkinEntry): void;

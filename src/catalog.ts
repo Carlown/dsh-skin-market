@@ -35,6 +35,9 @@ export function validateCatalog(value: unknown): CatalogFile {
     const repo = entry.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
     const expected = `github:${repo}#${entry.install.commit}${entry.subpath ? `&path:${entry.subpath}` : ''}`
     if (entry.install.target !== expected) throw new Error(`invalid pinned install target for ${entry.id}`)
+    if (entry.subpath !== undefined && entry.install.allowBuild !== undefined && !entry.install.allowBuild.endsWith(`#path:${entry.subpath}`)) {
+      throw new Error(`invalid allowBuild path for ${entry.id}; expected #path:${entry.subpath}`)
+    }
     for (const [label, key, set] of [
       ['id', entry.id, ids],
       ['package', entry.package, packages],

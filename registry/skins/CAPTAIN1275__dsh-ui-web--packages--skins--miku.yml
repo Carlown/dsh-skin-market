@@ -20,7 +20,7 @@ install:
   target: github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/miku
   version: 0.2.7
   commit: 4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56
-  allowBuild: "@captain1275/dsh-client-ui-skin-miku@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+  allowBuild: "@captain1275/dsh-client-ui-skin-miku@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56#path:packages/skins/miku"
 compatibility:
   dsh: 0.1.0-rc.6
   platform:

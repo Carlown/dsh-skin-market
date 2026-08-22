@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-22T08:49:30.606Z",
+  "generatedAt": "2026-08-22T14:15:50.202Z",
   "skins": [
     {
       "id": "univerfv.dsh-furina-theme",
@@ -13181,7 +13181,7 @@
         "target": "github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:packages/dsh-web-ui-all",
         "version": "0.1.7",
         "commit": "29fa777bdd8c9f7d93700c56c11a96a32634d967",
-        "allowBuild": "@linxin666/dsh-web-ui-all@https://codeload.github.com/springbrand-lab/dsh-skin-universe/tar.gz/29fa777bdd8c9f7d93700c56c11a96a32634d967"
+        "allowBuild": "@linxin666/dsh-web-ui-all@https://codeload.github.com/springbrand-lab/dsh-skin-universe/tar.gz/29fa777bdd8c9f7d93700c56c11a96a32634d967#path:packages/dsh-web-ui-all"
       },
       "compatibility": {
         "dsh": "unverified",
@@ -13930,7 +13930,7 @@
         "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/aurora",
         "version": "0.2.7",
         "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
-        "allowBuild": "@captain1275/dsh-client-ui-skin-aurora@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+        "allowBuild": "@captain1275/dsh-client-ui-skin-aurora@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56#path:packages/skins/aurora"
       },
       "compatibility": {
         "dsh": "^0.1.0-rc.6",
@@ -14179,7 +14179,7 @@
         "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/miku",
         "version": "0.2.7",
         "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
-        "allowBuild": "@captain1275/dsh-client-ui-skin-miku@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56"
+        "allowBuild": "@captain1275/dsh-client-ui-skin-miku@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56#path:packages/skins/miku"
       },
       "compatibility": {
         "dsh": "0.1.0-rc.6",

@@ -2,12 +2,14 @@ import { randomUUID } from 'node:crypto'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { effectiveBuildApprovalKey } from './build-approval.ts'
 import type { PluginInstallRequest, PluginRunner } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
 import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
 import {
   ensureBuildAllowed,
   ensureSkinRegistration,
+  installedSpecMatches,
   pnpmLockfile,
   pnpmWorkspaceFile,
   profilePatchFile,
@@ -394,7 +396,8 @@ export class SkinLifecycle {
 
     await this.prefetch(skin.install.target, operation)
     this.update(operation, 'installing')
-    if (skin.install.allowBuild !== undefined) ensureBuildAllowed(this.options.profileDir, skin.install.allowBuild)
+    const buildApprovalKey = effectiveBuildApprovalKey(skin)
+    if (buildApprovalKey !== undefined) ensureBuildAllowed(this.options.profileDir, buildApprovalKey)
     await this.run(['add', skin.install.target, '--prefer-offline'], operation)
   }
 
@@ -415,9 +418,13 @@ export class SkinLifecycle {
 
   private async install(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
-    if (readDependencies(this.options.profileDir)[skin.package] !== undefined) {
+    const existingSpec = readDependencies(this.options.profileDir)[skin.package]
+    if (existingSpec !== undefined) {
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
+      if (!installedSpecMatches(skin, existingSpec)) {
+        throw new Error(`installed package ${skin.package} does not match the reviewed source/version; use Update to replace it with ${skin.install.target}`)
+      }
       const state = readMarketState(this.options.profileDir)
       ensureSkinRegistration(this.options.profileDir, skin, !enabledSkinIds(state).has(skin.id))
       this.reconcileDisabledSkinIds(state)
@@ -444,6 +451,9 @@ export class SkinLifecycle {
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
+      if (!installedSpecMatches(skin, readDependencies(this.options.profileDir)[skin.package])) {
+        throw new Error(`installed package ${skin.package} does not match the reviewed source/version ${skin.install.target}`)
+      }
       ensureSkinRegistration(this.options.profileDir, skin)
       const state = readMarketState(this.options.profileDir)
       state.activeSkinId = state.activeSkinId === skin.id ? null : state.activeSkinId
@@ -566,7 +576,10 @@ export class SkinLifecycle {
       await this.installPackage(skin, operation)
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
-      if (!validation.ok || validation.version !== skin.install.version) throw new Error(validation.reason ?? 'installed version did not change to the reviewed version')
+      if (!validation.ok) throw new Error(validation.reason)
+      if (validation.version !== skin.install.version || !installedSpecMatches(skin, readDependencies(this.options.profileDir)[skin.package])) {
+        throw new Error(`installed package did not change to the reviewed source/version ${skin.install.target}`)
+      }
       ensureSkinRegistration(this.options.profileDir, skin, !wasActive)
       await this.setEntryDisabled(skin, !wasActive)
       const nextState = readMarketState(this.options.profileDir)

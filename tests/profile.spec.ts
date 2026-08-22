@@ -3,7 +3,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
-import { atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, installedClientPlugins, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
+import { effectiveBuildApprovalKey } from '../src/build-approval.ts'
+import { atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, installedClientPlugins, installedSpecMatches, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 function fixture() { return mkdtempSync(join(tmpdir(), 'skin-profile-')) }
@@ -35,7 +36,8 @@ describe('profile state', () => {
     atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
     const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
     mkdirSync(packageDir, { recursive: true })
-    atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+    atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+    atomicWriteText(join(packageDir, 'cordis.patch.yml'), '- insert: []\n')
     expect(validateInstalledSkin(dir, skin).ok).toBe(true)
     expect(runtimeState(dir, skin, skin.id, true, true)).toMatchObject({ installation: 'installed', activation: 'active', updateAvailable: false })
     expect(runtimeState(dir, skin, null, false, true)).toMatchObject({ installation: 'installed', activation: 'inactive' })
@@ -91,7 +93,7 @@ describe('profile state', () => {
     const skin = loadCatalog().skins.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
     const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
     mkdirSync(packageDir, { recursive: true })
-    atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { client: { platform: 'web' } } })
+    atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
     atomicWriteText(profilePatchFile(dir), '- insert:\n    - id: keep-me\n      name: existing-plugin\n')
 
     expect(validateInstalledSkin(dir, skin)).toMatchObject({ ok: true, version: skin.install.version })
@@ -115,6 +117,58 @@ describe('profile state', () => {
     ensureBuildAllowed(dir, key)
     const workspace = parse(readFileSync(pnpmWorkspaceFile(dir), 'utf8')) as { allowBuilds: Record<string, boolean> }
     expect(workspace.allowBuilds).toEqual({ esbuild: false, [key]: true })
+  })
+
+  it('derives pnpm build approval keys with a monorepo package subpath', () => {
+    expect(effectiveBuildApprovalKey({
+      subpath: 'packages/dsh-web-ui-all',
+      install: { allowBuild: '@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567' },
+    })).toBe('@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567#path:packages/dsh-web-ui-all')
+    expect(effectiveBuildApprovalKey({
+      subpath: 'packages/dsh-web-ui-all',
+      install: { allowBuild: '@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567#path:old' },
+    })).toBe('@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567#path:packages/dsh-web-ui-all')
+  })
+
+  it('rejects a materialized package that does not match the reviewed package', () => {
+    const dir = fixture()
+    const skin = loadCatalog().skins.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(packageDir, 'package.json'), {
+      name: 'different-package',
+      version: skin.install.version,
+      dsh: { client: { platform: 'web' } },
+    })
+
+    expect(validateInstalledSkin(dir, skin)).toEqual({
+      ok: false,
+      reason: `installed package name mismatch; expected ${skin.package}, found different-package`,
+    })
+  })
+
+  it('reports a broken bundle patch before registration mutates the profile', () => {
+    const dir = fixture()
+    const skin = loadCatalog().skins[0]
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(packageDir, 'package.json'), {
+      name: skin.package,
+      version: skin.install.version,
+      dsh: { bundle: { patch: './cordis.patch.yml' }, client: { platform: 'web' } },
+    })
+
+    expect(validateInstalledSkin(dir, skin)).toEqual({
+      ok: false,
+      reason: `${skin.package} bundle patch is missing: ./cordis.patch.yml`,
+    })
+  })
+
+  it('requires the installed dependency spec to contain the reviewed immutable target', () => {
+    const skin = loadCatalog().skins.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
+    expect(installedSpecMatches(skin, skin.install.target)).toBe(true)
+    expect(installedSpecMatches(skin, 'github:someone/else#0000000000000000000000000000000000000000')).toBe(false)
+    expect(installedSpecMatches(skin, undefined)).toBe(false)
   })
 
   it('discovers installed client plugins that are not in the market catalog', () => {

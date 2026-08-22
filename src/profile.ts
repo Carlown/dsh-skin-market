@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, statSync, unlinkSync, 
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { parse, stringify } from 'yaml'
+import { effectiveBuildApprovalKey } from './build-approval.ts'
 import type { InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export function resolveProfileDir(profile: string, explicit?: string): string {
@@ -87,12 +88,43 @@ export function packageManifest(profileDir: string, packageName: string): Record
 
 export function validateInstalledSkin(profileDir: string, skin: SkinEntry): { ok: boolean; reason?: string; version?: string } {
   const manifest = packageManifest(profileDir, skin.package)
-  if (manifest === null) return { ok: false, reason: 'package manifest missing' }
-  const dsh = manifest.dsh as { client?: unknown } | undefined
-  if (dsh?.client === undefined) return { ok: false, reason: 'dsh client manifest missing' }
+  if (manifest === null) return {
+    ok: false,
+    reason: `installed package manifest missing for ${skin.package}; the plugin command returned without materializing the reviewed package`,
+  }
+  const manifestName = typeof manifest.name === 'string' ? manifest.name : undefined
+  if (manifestName === undefined) return { ok: false, reason: `installed package name missing; expected ${skin.package}` }
+  if (manifestName !== skin.package) return {
+    ok: false,
+    reason: `installed package name mismatch; expected ${skin.package}, found ${manifestName}`,
+  }
   const version = typeof manifest.version === 'string' ? manifest.version : undefined
+  if (version === undefined) return { ok: false, reason: `installed package version missing for ${skin.package}` }
+  const dsh = isRecord(manifest.dsh) ? manifest.dsh : undefined
+  const client = dsh !== undefined && isRecord(dsh.client) ? dsh.client : undefined
+  if (client === undefined) return { ok: false, reason: `dsh client manifest missing in ${skin.package}` }
+  if (client.platform !== undefined && client.platform !== 'web') return {
+    ok: false,
+    reason: `installed package ${skin.package} is not a web client (platform: ${String(client.platform)})`,
+  }
+  try {
+    // Validate bundle metadata and its patch before writing profile overrides.
+    // Client-only packages legitimately return null here.
+    bundlePatchOperations(profileDir, skin.package)
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error ? error.message : String(error) }
+  }
   return { ok: true, version }
 }
+
+export function installedSpecMatches(skin: SkinEntry, spec: string | null | undefined): boolean {
+  if (typeof spec !== 'string' || spec.length === 0) return false
+  return skin.install.desktop?.mode === 'managed'
+    ? spec.includes(skin.install.commit) || spec.includes(skin.install.desktop.packageVersion)
+    : spec.includes(skin.install.commit)
+}
+
+export { effectiveBuildApprovalKey }
 
 interface PatchOperation { insert?: unknown[]; [key: string]: unknown }
 interface PatchRow { id?: unknown; name?: unknown; disabled?: unknown; [key: string]: unknown }
@@ -338,9 +370,7 @@ export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: 
   }
   const active = primary || pinned
   const activation = active ? (loaderFound ? (loaderLive ? 'active' : 'restart-required') : 'restart-required') : 'inactive'
-  const pinnedSpecMatches = skin.install.desktop?.mode === 'managed'
-    ? spec.includes(skin.install.commit) || spec.includes(skin.install.desktop.packageVersion)
-    : spec.includes(skin.install.commit)
+  const pinnedSpecMatches = installedSpecMatches(skin, spec)
   const updateAvailable = validation.version !== skin.install.version || !pinnedSpecMatches
   return {
     skinId: skin.id,

@@ -43,13 +43,13 @@ describe('pnpm recovery', () => {
   it('classifies a build block and extracts only the exact approval key', () => {
     const failure = classifyPnpmFailure(failed([
       'ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED',
-      '@scope/skin@https://codeload.github.com/example/skin/tar.gz/0123456789abcdef0123456789abcdef01234567 needs to execute build scripts but is not in allowBuilds',
+      '@linxin666/dsh-web-ui-all@https://codeload.github.com/springbrand-lab/dsh-skin-universe/tar.gz/29fa777bdd8c9f7d93700c56c11a96a32634d967#path:packages/dsh-web-ui-all needs to execute build scripts but is not in allowBuilds',
     ].join('\n')))
 
     expect(failure).toMatchObject({
       kind: 'build-approval',
-      packageName: '@scope/skin',
-      buildKey: '@scope/skin@https://codeload.github.com/example/skin/tar.gz/0123456789abcdef0123456789abcdef01234567',
+      packageName: '@linxin666/dsh-web-ui-all',
+      buildKey: '@linxin666/dsh-web-ui-all@https://codeload.github.com/springbrand-lab/dsh-skin-universe/tar.gz/29fa777bdd8c9f7d93700c56c11a96a32634d967#path:packages/dsh-web-ui-all',
     })
   })
 

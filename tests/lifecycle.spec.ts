@@ -38,7 +38,7 @@ function anotherInstallable(lifecycle: SkinLifecycle, excludedId: string) {
 function writeBundlePackage(dir: string, skin: { package: string; rowId: string; install: { version: string } }): void {
   const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
   mkdirSync(packageDir, { recursive: true })
-  atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+  atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
   atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${skin.rowId}\n      name: ${JSON.stringify(skin.package)}\n`)
 }
 
@@ -179,7 +179,7 @@ describe('skin lifecycle', () => {
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { [base.package]: base.install.target } })
         const packageDir = join(dir, 'node_modules', ...base.package.split('/'))
         mkdirSync(packageDir, { recursive: true })
-        atomicWriteJson(join(packageDir, 'package.json'), { version: base.install.version, dsh: { client: { platform: 'web' } } })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: base.package, version: base.install.version, dsh: { client: { platform: 'web' } } })
       }
       return success()
     }
@@ -193,12 +193,43 @@ describe('skin lifecycle', () => {
     expect(attempts.find(args => args[0] === 'add' && !args.includes('--dir'))).not.toContain('--config.minimumReleaseAge=0')
   })
 
+  it('pre-approves the exact pnpm build key for a monorepo package', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
+    const allowBuild = '@linxin666/dsh-web-ui-all@https://codeload.github.com/springbrand-lab/dsh-skin-universe/tar.gz/29fa777bdd8c9f7d93700c56c11a96a32634d967'
+    const skin = {
+      ...base,
+      id: 'monorepo-build.skin',
+      subpath: 'packages/dsh-web-ui-all',
+      install: {
+        ...base.install,
+        target: 'github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:packages/dsh-web-ui-all',
+        commit: '29fa777bdd8c9f7d93700c56c11a96a32634d967',
+        allowBuild,
+      },
+    }
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'add' && !args.includes('--dir')) {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+        mkdirSync(packageDir, { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
+    expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain(`${allowBuild}#path:packages/dsh-web-ui-all`)
+  })
+
   it('requires explicit approval for an unknown exact build key and retries with that key', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
     const base = probe.catalog.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
     const buildKey = '@example/skin@https://codeload.github.com/example/skin/tar.gz/0123456789abcdef0123456789abcdef01234567'
-    const skin = { ...base, id: 'build-approval.skin', install: { ...base.install, target: 'github:example/skin#0123456789abcdef0123456789abcdef01234567', allowBuild: undefined } }
+    const skin = { ...base, id: 'build-approval.skin', install: { ...base.install, target: 'github:example/skin#0123456789abcdef0123456789abcdef01234567', commit: '0123456789abcdef0123456789abcdef01234567', allowBuild: undefined } }
     let rejected = false
     const runner: PluginRunner = async (_profile, args) => {
       if (args.includes('--dir')) return success()
@@ -210,7 +241,7 @@ describe('skin lifecycle', () => {
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
         const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
         mkdirSync(packageDir, { recursive: true })
-        atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { client: { platform: 'web' } } })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
       }
       return success()
     }
@@ -429,7 +460,7 @@ describe('skin lifecycle', () => {
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { ...readDependencies(dir), [skin.package]: skin.install.target } })
         const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
         mkdirSync(packageDir, { recursive: true })
-        atomicWriteJson(join(packageDir, 'package.json'), { version: skin.install.version, dsh: { client: { platform: 'web' } } })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
       }
       if (args[0] === 'remove') {
         const next = { ...readDependencies(dir) }
@@ -448,6 +479,22 @@ describe('skin lifecycle', () => {
     expect(lifecycle.states().find(item => item.skinId === skin.id)?.activation).toBe('restart-required')
     expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
     expect(readFileSync(join(dir, 'cordis.patch.yml'), 'utf8')).not.toContain(`id: ${skin.rowId}`)
+  })
+
+  it('does not silently accept a same-name package from a different source', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const skin = probe.catalog.find(item => item.id === 'wyh66666666.dsh-transparent-ui-plugin')!
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: 'github:someone/else#0000000000000000000000000000000000000000' } })
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
+
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() }, [skin])
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation.phase).toBe('failed')
+    expect(operation.message).toContain('does not match the reviewed source/version')
   })
 
   it('pre-approves an exact build artifact and restores profile metadata after a failed install', async () => {
