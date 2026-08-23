@@ -879,4 +879,41 @@ describe('skin lifecycle', () => {
     expect((await finished(lifecycle.begin('uninstall', two.id))).phase).toBe('done')
     expect(readDependencies(dir)).toEqual({})
   })
+
+  it('installs a missing companion when the parent skin is already installed', async () => {
+    const dir = fixture()
+    const commit = 'a'.repeat(40)
+    const companion = {
+      package: '@dsh-external/dsh-client-ui-skin-deep-whale-manager',
+      target: `github:example/repo#${commit}&path:/skin-manager`,
+      version: '0.1.0',
+      commit,
+      rowId: 'ui-skin-deep-whale-manager',
+    }
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = {
+      ...base,
+      id: 'companion.existing',
+      package: 'skin-one',
+      rowId: 'skin-one',
+      review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'verified' as const },
+      install: { target: `github:example/repo#${commit}&path:/one`, version: '1.0.0', commit, companions: [companion] },
+    }
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    writeBundlePackage(dir, skin)
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'add' && args[1] === companion.target) {
+        const dependencies = { ...readDependencies(dir), [companion.package]: companion.target }
+        atomicWriteJson(join(dir, 'package.json'), { dependencies })
+        writeBundlePackage(dir, { package: companion.package, rowId: companion.rowId, install: { version: companion.version } })
+        return success()
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
+    expect(readDependencies(dir)).toMatchObject({ [skin.package]: skin.install.target, [companion.package]: companion.target })
+  })
 })

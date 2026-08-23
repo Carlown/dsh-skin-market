@@ -10,6 +10,7 @@ import { loadCatalog } from './catalog.ts'
 import { companionAsSkin, discoverMonorepoTarget, isNpmInstallTarget, preferredInstallTarget } from './install-resolution.ts'
 import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
 import {
+  companionNeedsInstall,
   ensureBuildAllowed,
   ensureSkinRegistration,
   installedSpecMatches,
@@ -499,8 +500,7 @@ export class SkinLifecycle {
 
   private async installCompanions(skin: SkinEntry, operation: Operation): Promise<void> {
     for (const companion of skin.install.companions ?? []) {
-      const existing = readDependencies(this.options.profileDir)[companion.package]
-      if (existing !== companion.target) {
+      if (companionNeedsInstall(this.options.profileDir, companion)) {
         await this.run(['add', companion.target, '--prefer-offline'], operation)
       }
       ensureSkinRegistration(this.options.profileDir, companionAsSkin(skin, companion), false)
@@ -584,6 +584,7 @@ export class SkinLifecycle {
       }
       const snapshot = snapshotInstallFiles(this.options.profileDir, skin.package, skin.install.version)
       try {
+        await this.installCompanions(skin, operation)
         await this.applyCompatibility(skin, operation)
         validation = validateInstalledSkin(this.options.profileDir, skin)
         if (!validation.ok) throw new Error(validation.reason)

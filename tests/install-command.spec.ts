@@ -6,7 +6,10 @@ describe('portable DSH install commands', () => {
     const target = `github:owner/repo#${'a'.repeat(40)}&path:/packages/skin`
     expect(quoteInstallTarget(target)).toBe(`"${target}"`)
     expect(createDshPluginAddCommand(target)).toBe(`dsh plugin --profile web add "${target}"`)
-    expect(createInstallCommand(target)).toBe(`pnpm add "${target}" --dir "$DSH_HOME/profiles/web"`)
+    expect(createInstallCommand(target)).toBe([
+      `pnpm add "${target}" --dir "$HOME/.dsh/profiles/web"`,
+      `pnpm add "${target}" --dir "$env:USERPROFILE\\.dsh\\profiles\\web"`,
+    ].join('\n'))
   })
 
   it('keeps npm and root-repo targets on dsh plugin add', () => {

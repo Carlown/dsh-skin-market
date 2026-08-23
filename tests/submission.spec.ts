@@ -46,15 +46,32 @@ describe('agent-assisted skin submission', () => {
     expect(prompt).toContain('必须先完成只读冲突检查')
     expect(prompt).toContain('停在安装前')
     expect(prompt).toContain('未经我确认不得修改任何 profile 文件，也不得执行安装')
-    expect(prompt.indexOf('安装前只读检查')).toBeLessThan(prompt.indexOf('然后执行上面的固定安装命令'))
+    expect(prompt.indexOf('安装前只读检查')).toBeLessThan(prompt.indexOf('然后执行上面的全部固定安装命令'))
     expect(createSkinInstallCommand(skin)).toBe(`dsh plugin --profile web add "${skin.install.target}"`)
   })
 
   it('copies subdirectory install targets as pnpm add so Windows cmd does not split on &', () => {
+    const commit = 'a'.repeat(40)
     const skin = {
       id: 'small-tailqwq.maid-atelier',
-      install: { target: `github:Small-tailqwq/dsh-deep-whale#${'a'.repeat(40)}&path:/maid-atelier` },
+      install: {
+        target: `github:Small-tailqwq/dsh-deep-whale#${commit}&path:/maid-atelier`,
+        companions: [{
+          package: '@dsh-external/dsh-client-ui-skin-deep-whale-manager',
+          target: `github:Small-tailqwq/dsh-deep-whale#${commit}&path:/skin-manager`,
+          version: '0.1.0',
+          commit,
+          rowId: 'ui-skin-deep-whale-manager',
+        }],
+      },
     } as CatalogSkin
-    expect(createSkinInstallCommand(skin)).toBe(`pnpm add "${skin.install.target}" --dir "$DSH_HOME/profiles/web"`)
+    const command = createSkinInstallCommand(skin)
+    expect(command).toContain(`pnpm add "${skin.install.target}" --dir "$HOME/.dsh/profiles/web"`)
+    expect(command).toContain(`pnpm add "${skin.install.target}" --dir "$env:USERPROFILE\\.dsh\\profiles\\web"`)
+    expect(command).toContain(`pnpm add "${skin.install.companions![0]!.target}" --dir "$HOME/.dsh/profiles/web"`)
+    const prompt = createSkinInstallPrompt(skin)
+    expect(prompt).toContain('伴生包：@dsh-external/dsh-client-ui-skin-deep-whale-manager')
+    expect(prompt).toContain('全部固定安装命令（含伴生包）')
+    expect(prompt).toContain('ui-skin-deep-whale-manager')
   })
 })

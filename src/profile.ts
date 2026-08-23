@@ -184,6 +184,15 @@ export function installedSpecMatches(skin: SkinEntry, spec: string | null | unde
     : spec.includes(skin.install.commit)
 }
 
+export function companionNeedsInstall(profileDir: string, companion: { package: string; commit: string }): boolean {
+  const spec = readDependencies(profileDir)[companion.package]
+  return typeof spec !== 'string' || !spec.includes(companion.commit)
+}
+
+export function companionsNeedInstall(profileDir: string, skin: SkinEntry): boolean {
+  return (skin.install.companions ?? []).some(companion => companionNeedsInstall(profileDir, companion))
+}
+
 export { effectiveBuildApprovalKey }
 
 interface PatchOperation { insert?: unknown[]; [key: string]: unknown }
@@ -611,7 +620,7 @@ export function runtimeState(profileDir: string, skin: SkinEntry, activeSkinId: 
   const active = primary || pinned
   const activation = active ? (loaderFound ? (loaderLive ? 'active' : 'restart-required') : 'restart-required') : 'inactive'
   const pinnedSpecMatches = installedSpecMatches(skin, spec)
-  const updateAvailable = validation.version !== skin.install.version || !pinnedSpecMatches
+  const updateAvailable = validation.version !== skin.install.version || !pinnedSpecMatches || companionsNeedInstall(profileDir, skin)
   return {
     skinId: skin.id,
     installation: 'installed',

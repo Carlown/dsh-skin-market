@@ -44,6 +44,29 @@ describe('profile state', () => {
     expect(runtimeState(dir, skin, null, false, true)).toMatchObject({ installation: 'installed', activation: 'inactive' })
   })
 
+  it('marks an installed skin as updatable when a companion is missing', () => {
+    const dir = fixture()
+    const commit = 'a'.repeat(40)
+    const base = loadCatalog().skins[0]
+    const companion = {
+      package: '@example/companion',
+      target: `github:example/repo#${commit}&path:/manager`,
+      version: '0.1.0',
+      commit,
+      rowId: 'ui-companion',
+    }
+    const skin = {
+      ...base,
+      install: { target: `github:example/repo#${commit}&path:/skin`, version: '1.0.0', commit, companions: [companion] },
+    }
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
+
+    expect(runtimeState(dir, skin, null, false, true)).toMatchObject({ installation: 'installed', updateAvailable: true })
+  })
+
   it('validates the reviewed npm repository and lockfile integrity', () => {
     const dir = fixture()
     const base = loadCatalog().skins[0]

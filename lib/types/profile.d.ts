@@ -26,6 +26,11 @@ export declare function validateInstalledSkin(profileDir: string, skin: SkinEntr
     repairable?: boolean;
 };
 export declare function installedSpecMatches(skin: SkinEntry, spec: string | null | undefined): boolean;
+export declare function companionNeedsInstall(profileDir: string, companion: {
+    package: string;
+    commit: string;
+}): boolean;
+export declare function companionsNeedInstall(profileDir: string, skin: SkinEntry): boolean;
 export { effectiveBuildApprovalKey };
 export interface LoaderIdentity {
     id?: string;
