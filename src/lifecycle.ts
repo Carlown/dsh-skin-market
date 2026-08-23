@@ -3,6 +3,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { buildApprovalKeyForTarget, effectiveBuildApprovalKey } from './build-approval.ts'
+import { assessCompatibility, persistCompatibilityPatch, planCompatibilityPatch } from './compatibility-adapter.ts'
 import type { PluginInstallRequest, PluginRunner } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
 import { discoverMonorepoTarget, isNpmInstallTarget, preferredInstallTarget } from './install-resolution.ts'
@@ -19,7 +20,9 @@ import {
   readProfileBundles,
   assertNoLoaderConflicts,
   InstallConflictError,
+  compatibilityPatchFile,
   removeSkinRegistration,
+  removeCompatibilityPatches,
   restoreFile,
   restoreManifest,
   runtimeState,
@@ -28,7 +31,7 @@ import {
   validateInstalledSkin,
   writeMarketState,
 } from './profile.ts'
-import type { DesktopInstallCapability, LoaderEntry, MarketHostKind, Operation, OperationFailure, OperationKind, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
+import type { DesktopInstallCapability, DshRuntime, LoaderEntry, MarketHostKind, Operation, OperationFailure, OperationKind, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export interface LifecycleHost {
   loader: { entries(): Iterable<LoaderEntry> }
@@ -40,6 +43,7 @@ export interface LifecycleOptions {
   profileDir: string
   runner: PluginRunner
   hostKind?: MarketHostKind
+  runtime?: DshRuntime
 }
 
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error) }
@@ -153,6 +157,28 @@ export class SkinLifecycle {
   get catalog(): SkinEntry[] { return this.catalogEntries }
 
   private get hostKind(): MarketHostKind { return this.options.hostKind ?? this.options.runner.hostKind ?? 'dsh' }
+
+  private get runtime(): DshRuntime {
+    return this.options.runtime ?? { version: null, capabilities: [], source: 'unknown' }
+  }
+
+  private assertRuntimeCompatibility(skin: SkinEntry): void {
+    const assessment = assessCompatibility(skin, this.runtime)
+    if (assessment.decision === 'incompatible') throw new Error(`当前 DSH 与 ${skin.package} 不兼容：${assessment.reason}`)
+  }
+
+  private async applyCompatibility(skin: SkinEntry, operation: Operation): Promise<void> {
+    const plan = planCompatibilityPatch(this.options.profileDir, skin, this.runtime)
+    if (plan === null || plan.adapterIds.length === 0) return
+    persistCompatibilityPatch(this.options.profileDir, plan)
+    this.update(operation, 'installing', `正在应用兼容适配：${plan.adapterIds.join('、')}`)
+    await this.run(['install'], operation)
+  }
+
+  private async repairMaterializedPackage(skin: SkinEntry, operation: Operation): Promise<void> {
+    this.update(operation, 'installing', `正在修复已记录但未物化的皮肤依赖：${skin.package}`)
+    await this.run(['install'], operation)
+  }
 
   async replaceCatalog(catalog: SkinEntry[]): Promise<void> {
     this.catalogEntries = catalog
@@ -456,9 +482,17 @@ export class SkinLifecycle {
 
   private async install(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
+    this.assertRuntimeCompatibility(skin)
     const existingSpec = readDependencies(this.options.profileDir)[skin.package]
     if (existingSpec !== undefined) {
-      const validation = validateInstalledSkin(this.options.profileDir, skin)
+      let validation = validateInstalledSkin(this.options.profileDir, skin)
+      if (!validation.ok && validation.repairable === true) {
+        await this.repairMaterializedPackage(skin, operation)
+        validation = validateInstalledSkin(this.options.profileDir, skin)
+      }
+      if (!validation.ok) throw new Error(validation.reason)
+      await this.applyCompatibility(skin, operation)
+      validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
       if (!installedSpecMatches(skin, existingSpec)) {
         throw new Error(`installed package ${skin.package} does not match the reviewed source/version; use Update to replace it with ${skin.install.target}`)
@@ -476,16 +510,19 @@ export class SkinLifecycle {
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
     const lockfileSnapshot = snapshotFile(pnpmLockfile(this.options.profileDir))
+    const compatibilitySnapshot = snapshotFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version))
     const restoreInstallFiles = (): void => {
       restoreManifest(this.options.profileDir, snapshot)
       restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
       restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
       restoreFile(pnpmLockfile(this.options.profileDir), lockfileSnapshot)
+      restoreFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version), compatibilitySnapshot)
     }
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
       await this.installPackage(skin, operation)
+      await this.applyCompatibility(skin, operation)
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
@@ -595,6 +632,7 @@ export class SkinLifecycle {
 
   private async updateSkin(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
+    this.assertRuntimeCompatibility(skin)
     const previousState = readMarketState(this.options.profileDir)
     const wasActive = enabledSkinIds(previousState).has(skin.id)
     const approvedBuildKey = this.pendingBuildKeys.get(operation.id)
@@ -603,16 +641,19 @@ export class SkinLifecycle {
     const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
     const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
     const lockfileSnapshot = snapshotFile(pnpmLockfile(this.options.profileDir))
+    const compatibilitySnapshot = snapshotFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version))
     const restoreInstallFiles = (): void => {
       restoreManifest(this.options.profileDir, snapshot)
       restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
       restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
       restoreFile(pnpmLockfile(this.options.profileDir), lockfileSnapshot)
+      restoreFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version), compatibilitySnapshot)
     }
     this.update(operation, 'resolving')
     try {
       this.update(operation, 'downloading')
       await this.installPackage(skin, operation)
+      await this.applyCompatibility(skin, operation)
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
       if (!validation.ok) throw new Error(validation.reason)
@@ -645,6 +686,7 @@ export class SkinLifecycle {
     if (enabledSkinIds(state).has(skin.id)) await this.deactivate(operation)
     this.update(operation, 'downloading')
     await this.run(['remove', skin.package])
+    removeCompatibilityPatches(this.options.profileDir, skin.package)
     removeSkinRegistration(this.options.profileDir, skin)
     const next = readMarketState(this.options.profileDir)
     next.disabledSkinIds = next.disabledSkinIds.filter(id => id !== skin.id)

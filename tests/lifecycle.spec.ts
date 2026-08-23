@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { SkinLifecycle } from '../src/lifecycle.ts'
-import { atomicWriteJson, atomicWriteText, profilePatchFile, readDependencies, readMarketState } from '../src/profile.ts'
+import { atomicWriteJson, atomicWriteText, compatibilityPatchFile, pnpmWorkspaceFile, profilePatchFile, readDependencies, readMarketState } from '../src/profile.ts'
 import type { CommandResult, PluginInstallRequest, PluginRunner } from '../src/commands.ts'
 import type { LoaderEntry, Operation } from '../src/types.ts'
 
@@ -129,6 +129,28 @@ describe('skin lifecycle', () => {
     expect(readDependencies(dir)[managed.package]).toContain(managed.install.version)
   })
 
+  it('repairs a dependency recorded without a materialized package manifest', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const skin = firstInstallable(probe)
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    let repairCalls = 0
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'install') {
+        repairCalls += 1
+        writeBundlePackage(dir, skin)
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation).toMatchObject({ phase: 'done', message: 'skin was already installed; market state reconciled' })
+    expect(repairCalls).toBe(1)
+    expect(lifecycle.states().find(item => item.skinId === skin.id)?.installation).toBe('installed')
+  })
+
   it('recovers a Desktop managed install by retrying the existing installPlugin request', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
@@ -222,6 +244,66 @@ describe('skin lifecycle', () => {
 
     expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
     expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain(`${allowBuild}#path:packages/dsh-web-ui-all`)
+  })
+
+  it('applies a generic compatibility adapter during live install', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog[0]
+    const commit = '0123456789abcdef0123456789abcdef01234567'
+    const skin = {
+      ...base,
+      id: 'generic-compatible.skin',
+      package: '@example/generic-skin',
+      rowId: 'generic-skin',
+      repo: 'https://github.com/example/generic-skin',
+      install: { ...base.install, target: 'github:example/generic-skin#' + commit, version: '1.0.0', commit },
+      compatibility: {
+        dsh: '^0.1.0-rc.5',
+        platform: ['web'],
+        adapters: [{ id: 'generic-keyed-slot', kind: 'keyed-slot-id-to-key' as const, when: '>=0.1.0-rc.6 <0.2.0-0', slot: 'settings.plugin.item', key: 'locale' }],
+      },
+    }
+    let compatibilityInstallCalls = 0
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args.includes('--dir')) return success()
+      if (args[0] === 'add') {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+        mkdirSync(join(packageDir, 'lib'), { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), {
+          name: skin.package,
+          version: skin.install.version,
+          exports: { './client': { default: './lib/client.js' } },
+          dsh: { client: { platform: 'web' } },
+        })
+        atomicWriteText(join(packageDir, 'lib/client.js'), [
+          'const NS = "settings.generic"',
+          'ctx.slots.register({',
+          '  name: "settings.plugin.item",',
+          '  id: "generic",',
+          '  locale: NS,',
+          '}, Card)',
+        ].join('\n'))
+      }
+      if (args[0] === 'install') compatibilityInstallCalls += 1
+      return success()
+    }
+    const lifecycle = new SkinLifecycle(
+      { loader: { entries: () => [] } },
+      {
+        profile: 'test',
+        profileDir: dir,
+        runner,
+        runtime: { version: '0.1.1-rc.1', capabilities: ['slot:keyed:settings.plugin.item'], source: 'injected' },
+      },
+      [skin],
+    )
+
+    expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
+    expect(compatibilityInstallCalls).toBe(1)
+    expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).toContain(skin.package + '@' + skin.install.version)
+    expect(readFileSync(compatibilityPatchFile(dir, skin.package, skin.install.version), 'utf8')).toContain('+  key: "settings.generic",')
   })
 
   it('installs the curated npm source before the GitHub fallback and saves it exactly', async () => {

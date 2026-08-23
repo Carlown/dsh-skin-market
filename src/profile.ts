@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, join, resolve, sep } from 'node:path'
 import { parse, stringify } from 'yaml'
 import { effectiveBuildApprovalKey } from './build-approval.ts'
 import type { InstallConflict, InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
@@ -72,8 +72,17 @@ export function removeProfileBundles(profileDir: string, packageNames: Iterable<
   atomicWriteJson(file, manifest)
 }
 
-function packageDir(profileDir: string, packageName: string): string {
+export function packageDir(profileDir: string, packageName: string): string {
   return join(profileDir, 'node_modules', ...packageName.split('/'))
+}
+
+export function compatibilityPatchDir(profileDir: string): string {
+  return join(profileDir, '.dsh-skin-market', 'patches')
+}
+
+export function compatibilityPatchFile(profileDir: string, packageName: string, version: string): string {
+  const safeName = `${packageName}@${version}`.replace(/[^A-Za-z0-9._-]+/g, '_')
+  return join(compatibilityPatchDir(profileDir), `${safeName}.patch`)
 }
 
 function packageInstalledAt(profileDir: string, packageName: string): string | null {
@@ -132,10 +141,11 @@ function validateInstalledNpmSource(profileDir: string, skin: SkinEntry, manifes
   return null
 }
 
-export function validateInstalledSkin(profileDir: string, skin: SkinEntry): { ok: boolean; reason?: string; version?: string } {
+export function validateInstalledSkin(profileDir: string, skin: SkinEntry): { ok: boolean; reason?: string; version?: string; repairable?: boolean } {
   const manifest = packageManifest(profileDir, skin.package)
   if (manifest === null) return {
     ok: false,
+    repairable: true,
     reason: `installed package manifest missing for ${skin.package}; the plugin command returned without materializing the reviewed package`,
   }
   const manifestName = typeof manifest.name === 'string' ? manifest.name : undefined
@@ -395,6 +405,66 @@ export function ensureBuildAllowed(profileDir: string, key: string): void {
     : {}
   allowBuilds[key] = true
   workspace.allowBuilds = allowBuilds
+  atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
+}
+
+export function ensurePatchedDependency(profileDir: string, packageName: string, version: string, patchFile: string): void {
+  const file = pnpmWorkspaceFile(profileDir)
+  const parsed = existsSync(file) ? parse(readFileSync(file, 'utf8')) as unknown : {}
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) throw new Error('profile pnpm-workspace.yaml must contain a YAML mapping')
+  const workspace = parsed as Record<string, unknown>
+  const patchedDependencies = typeof workspace.patchedDependencies === 'object' && workspace.patchedDependencies !== null && !Array.isArray(workspace.patchedDependencies)
+    ? workspace.patchedDependencies as Record<string, unknown>
+    : {}
+  patchedDependencies[`${packageName}@${version}`] = patchFile
+  workspace.patchedDependencies = patchedDependencies
+  atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
+}
+
+export function removePatchedDependency(profileDir: string, packageName: string, version: string): void {
+  const file = pnpmWorkspaceFile(profileDir)
+  if (!existsSync(file)) return
+  const parsed = parse(readFileSync(file, 'utf8')) as unknown
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return
+  const workspace = parsed as Record<string, unknown>
+  const patchedDependencies = workspace.patchedDependencies
+  if (typeof patchedDependencies !== 'object' || patchedDependencies === null || Array.isArray(patchedDependencies)) return
+  const next = { ...(patchedDependencies as Record<string, unknown>) }
+  delete next[`${packageName}@${version}`]
+  if (Object.keys(next).length === 0) delete workspace.patchedDependencies
+  else workspace.patchedDependencies = next
+  atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
+}
+
+export function removeCompatibilityPatch(profileDir: string, packageName: string, version: string): void {
+  removePatchedDependency(profileDir, packageName, version)
+  const file = compatibilityPatchFile(profileDir, packageName, version)
+  if (existsSync(file)) unlinkSync(file)
+}
+
+export function removeCompatibilityPatches(profileDir: string, packageName: string): void {
+  const file = pnpmWorkspaceFile(profileDir)
+  if (!existsSync(file)) return
+  const parsed = parse(readFileSync(file, 'utf8')) as unknown
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return
+  const workspace = parsed as Record<string, unknown>
+  const patchedDependencies = workspace.patchedDependencies
+  if (typeof patchedDependencies !== 'object' || patchedDependencies === null || Array.isArray(patchedDependencies)) return
+  const prefix = packageName + '@'
+  const next = { ...(patchedDependencies as Record<string, unknown>) }
+  let changed = false
+  for (const [key, value] of Object.entries(patchedDependencies as Record<string, unknown>)) {
+    if (!key.startsWith(prefix)) continue
+    delete next[key]
+    changed = true
+    if (typeof value !== 'string') continue
+    const patchRoot = resolve(compatibilityPatchDir(profileDir))
+    const patchFile = resolve(profileDir, value)
+    if (patchFile.startsWith(patchRoot + sep) && existsSync(patchFile)) unlinkSync(patchFile)
+  }
+  if (!changed) return
+  if (Object.keys(next).length === 0) delete workspace.patchedDependencies
+  else workspace.patchedDependencies = next
   atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
 }
 

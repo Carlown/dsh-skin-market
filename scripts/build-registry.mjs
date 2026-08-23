@@ -15,11 +15,21 @@ const sourceDir = join(root, 'registry/skins')
 const files = (await readdir(sourceDir)).filter(file => file.endsWith('.yml')).sort()
 const skins = []
 
+const versionTerm = /^(>=|<=|>|<|=|\^|~)?\s*\d+(?:\.\d+){0,2}(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
+function isVersionRange(value) {
+  if (value === 'unverified') return true
+  return value.split('||').every(alternative => alternative.trim().split(/\s+/).filter(Boolean).every(term => versionTerm.test(term)))
+}
+
 for (const file of files) {
   const skin = parse(await readFile(join(sourceDir, file), 'utf8'))
   if (!validate(skin)) {
     const details = (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message}`).join('; ')
     throw new Error(`${file}: ${details}`)
+  }
+  if (!isVersionRange(skin.compatibility.dsh)) throw new Error(`${file}: compatibility.dsh is not a supported semver range`)
+  for (const adapter of skin.compatibility.adapters ?? []) {
+    if (!isVersionRange(adapter.when)) throw new Error(`${file}: compatibility adapter ${adapter.id} has an invalid when range`)
   }
   const repo = skin.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
   const expected = `github:${repo}#${skin.install.commit}${skin.subpath ? `&path:${skin.subpath}` : ''}`

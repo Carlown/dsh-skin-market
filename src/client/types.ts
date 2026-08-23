@@ -1,5 +1,11 @@
 export type MarketHostKind = 'dsh' | 'desktop'
 
+export interface DshRuntime {
+  version: string | null
+  capabilities: string[]
+  source: 'host-package' | 'injected' | 'unknown'
+}
+
 export type DesktopInstallCapability =
   | {
       mode: 'managed'
@@ -33,7 +39,7 @@ export interface CatalogSkin {
   tags: string[]
   modes: string[]
   install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability }
-  compatibility: { dsh: string; platform: string[] }
+  compatibility: { dsh: string; platform: string[]; adapters?: Array<{ id: string; kind: 'keyed-slot-id-to-key'; when: string; slot: string; key: 'locale' | string }> }
   marketScreenshots?: string[]
   listScreenshot?: string
   screenshots: string[]

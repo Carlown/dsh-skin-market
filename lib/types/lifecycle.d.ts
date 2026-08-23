@@ -1,5 +1,5 @@
 import type { PluginRunner } from './commands.ts';
-import type { DesktopInstallCapability, LoaderEntry, MarketHostKind, Operation, OperationKind, SkinEntry, SkinRuntimeState } from './types.ts';
+import type { DesktopInstallCapability, DshRuntime, LoaderEntry, MarketHostKind, Operation, OperationKind, SkinEntry, SkinRuntimeState } from './types.ts';
 export interface LifecycleHost {
     loader: {
         entries(): Iterable<LoaderEntry>;
@@ -18,6 +18,7 @@ export interface LifecycleOptions {
     profileDir: string;
     runner: PluginRunner;
     hostKind?: MarketHostKind;
+    runtime?: DshRuntime;
 }
 export declare function desktopInstallError(capability: DesktopInstallCapability | undefined): string;
 export declare class SkinLifecycle {
@@ -33,6 +34,10 @@ export declare class SkinLifecycle {
     constructor(host: LifecycleHost, options: LifecycleOptions, catalog?: SkinEntry[]);
     get catalog(): SkinEntry[];
     private get hostKind();
+    private get runtime();
+    private assertRuntimeCompatibility;
+    private applyCompatibility;
+    private repairMaterializedPackage;
     replaceCatalog(catalog: SkinEntry[]): Promise<void>;
     start(): void;
     dispose(): void;

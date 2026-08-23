@@ -25,7 +25,7 @@ import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt, REGISTRY_REPOSITORY } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import { displayTitle, githubRepoLabel } from '../display-title.ts'
-import type { CatalogSkin, InstalledClientPlugin, MarketHostKind, Operation, RuntimeSkin } from './types.ts'
+import type { CatalogSkin, DshRuntime, InstalledClientPlugin, MarketHostKind, Operation, RuntimeSkin } from './types.ts'
 
 export interface SkinMarketSectionProps {
   t: (key: string) => string
@@ -64,6 +64,7 @@ export function restoreListScroll(list: HTMLElement | null, anchor: ListScrollAn
 
 interface MarketStateResponse {
   hostKind?: MarketHostKind
+  runtime?: DshRuntime
   skins: RuntimeSkin[]
   operation?: Operation | null
   marketUpdateOperation?: MarketUpdateOperation | null
@@ -322,6 +323,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [skins, setSkins] = useState<CatalogSkin[]>([])
   const [states, setStates] = useState<RuntimeSkin[]>([])
   const [hostKind, setHostKind] = useState<MarketHostKind>('dsh')
+  const [runtime, setRuntime] = useState<DshRuntime | null>(null)
   const [installedClientPlugins, setInstalledClientPlugins] = useState<InstalledClientPlugin[]>([])
   const [loading, setLoading] = useState(true)
   const [catalogLoading, setCatalogLoading] = useState(true)
@@ -415,6 +417,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       void catalogCache.write(catalog.skins).catch(() => undefined)
       setStates(state.skins)
       setHostKind(state.hostKind ?? 'dsh')
+      setRuntime(state.runtime ?? null)
       setBusy(current => current?.phase === 'failed' && state.operation == null ? current : state.operation ?? null)
       if ('marketUpdateOperation' in state) {
         const operation = state.marketUpdateOperation !== null && state.marketUpdateOperation !== undefined && !dismissedMarketOperationIds.current.has(state.marketUpdateOperation.id)
@@ -1125,7 +1128,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               <h2>{selected.name.zh}</h2>
               <p className={css.description} title={selected.description}>{displayTitle(selected.description)}</p>
               <p className={css.author}>{githubRepoLabel(selected.repo)}</p>
-              <p className={css.version}>版本 {selected.install.version}<span aria-hidden="true"> · </span>{compatibilityUnverified ? 'DSH 兼容性待验证' : `兼容 DSH ${selected.compatibility.dsh}`}<Pill className={state.activation === 'active' ? `${css.status} ${css.statusActive}` : css.status}>{statusLabel(state)}</Pill></p>
+              <p className={css.version}>版本 {selected.install.version}<span aria-hidden="true"> · </span>{compatibilityUnverified ? 'DSH 兼容性待验证' : `兼容 DSH ${selected.compatibility.dsh}`}{runtime?.version !== undefined && runtime.version !== null && <><span aria-hidden="true"> · </span>当前 DSH {runtime.version}</>}<Pill className={state.activation === 'active' ? `${css.status} ${css.statusActive}` : css.status}>{statusLabel(state)}</Pill></p>
             </div>
           </header>
 

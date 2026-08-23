@@ -15,11 +15,15 @@ export declare function readDependencies(profileDir: string): Record<string, str
 export declare function readProfileBundles(profileDir: string): string[];
 /** Remove legacy market-promoted bundles; normal registration preserves bundle layers. */
 export declare function removeProfileBundles(profileDir: string, packageNames: Iterable<string>): void;
+export declare function packageDir(profileDir: string, packageName: string): string;
+export declare function compatibilityPatchDir(profileDir: string): string;
+export declare function compatibilityPatchFile(profileDir: string, packageName: string, version: string): string;
 export declare function packageManifest(profileDir: string, packageName: string): Record<string, unknown> | null;
 export declare function validateInstalledSkin(profileDir: string, skin: SkinEntry): {
     ok: boolean;
     reason?: string;
     version?: string;
+    repairable?: boolean;
 };
 export declare function installedSpecMatches(skin: SkinEntry, spec: string | null | undefined): boolean;
 export { effectiveBuildApprovalKey };
@@ -36,6 +40,10 @@ export declare function packageLoaderIdentities(profileDir: string, packageName:
 export declare function installedLoaderIdentities(profileDir: string, excludePackage?: string): LoaderIdentity[];
 export declare function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry): void;
 export declare function ensureBuildAllowed(profileDir: string, key: string): void;
+export declare function ensurePatchedDependency(profileDir: string, packageName: string, version: string, patchFile: string): void;
+export declare function removePatchedDependency(profileDir: string, packageName: string, version: string): void;
+export declare function removeCompatibilityPatch(profileDir: string, packageName: string, version: string): void;
+export declare function removeCompatibilityPatches(profileDir: string, packageName: string): void;
 export declare function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled?: boolean): void;
 export declare function removeSkinRegistration(profileDir: string, skin: SkinEntry): void;
 export declare function installedClientPlugins(profileDir: string, catalog: SkinEntry[]): InstalledClientPlugin[];

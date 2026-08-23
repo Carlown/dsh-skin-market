@@ -21,6 +21,20 @@ export interface NpmInstallSource {
   gitHead?: string
 }
 
+export interface CompatibilityAdapter {
+  id: string
+  kind: 'keyed-slot-id-to-key'
+  when: string
+  slot: string
+  key: 'locale' | string
+}
+
+export interface DshRuntime {
+  version: string | null
+  capabilities: string[]
+  source: 'host-package' | 'injected' | 'unknown'
+}
+
 export interface SkinEntry {
   id: string
   name: { zh: string; en: string }
@@ -34,7 +48,7 @@ export interface SkinEntry {
   tags: string[]
   modes: Array<'light' | 'dark'>
   install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability }
-  compatibility: { dsh: string; platform: string[] }
+  compatibility: { dsh: string; platform: string[]; adapters?: CompatibilityAdapter[] }
   marketScreenshots?: string[]
   listScreenshot?: string
   screenshots: string[]

@@ -16,6 +16,18 @@ export interface NpmInstallSource {
     repository: string;
     gitHead?: string;
 }
+export interface CompatibilityAdapter {
+    id: string;
+    kind: 'keyed-slot-id-to-key';
+    when: string;
+    slot: string;
+    key: 'locale' | string;
+}
+export interface DshRuntime {
+    version: string | null;
+    capabilities: string[];
+    source: 'host-package' | 'injected' | 'unknown';
+}
 export interface SkinEntry {
     id: string;
     name: {
@@ -42,6 +54,7 @@ export interface SkinEntry {
     compatibility: {
         dsh: string;
         platform: string[];
+        adapters?: CompatibilityAdapter[];
     };
     marketScreenshots?: string[];
     listScreenshot?: string;

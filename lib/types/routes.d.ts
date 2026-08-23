@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { CatalogStore } from './catalog.ts';
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts';
 import type { PluginRunner } from './commands.ts';
-import type { MarketHostKind } from './types.ts';
+import type { DshRuntime, MarketHostKind } from './types.ts';
 import type { RestartScheduler } from './restart.ts';
 import { type MarketUpdater } from './self-update.ts';
 export interface WebServerService {
@@ -28,6 +28,7 @@ export interface RouteOptions {
     profileDir: string;
     runner: PluginRunner;
     hostKind?: MarketHostKind;
+    runtime?: DshRuntime;
     restart?: RestartScheduler;
     catalogStore?: CatalogStore;
     marketUpdater?: MarketUpdater;

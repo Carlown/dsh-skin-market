@@ -6,7 +6,7 @@ import { readOperationRetryAction, readRestartTarget, readSkinId, sameOrigin, se
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts'
 import { installedClientPlugins } from './profile.ts'
 import type { PluginRunner } from './commands.ts'
-import type { MarketHostKind, OperationKind } from './types.ts'
+import type { DshRuntime, MarketHostKind, OperationKind } from './types.ts'
 import type { RestartScheduler } from './restart.ts'
 import { createMarketUpdater, type MarketUpdater } from './self-update.ts'
 
@@ -30,7 +30,7 @@ export interface SkinMarketHost extends LifecycleHost {
   agents: AgentRegistryLike
 }
 
-export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; hostKind?: MarketHostKind; restart?: RestartScheduler; catalogStore?: CatalogStore; marketUpdater?: MarketUpdater }
+export interface RouteOptions { profile: string; profileDir: string; runner: PluginRunner; hostKind?: MarketHostKind; runtime?: DshRuntime; restart?: RestartScheduler; catalogStore?: CatalogStore; marketUpdater?: MarketUpdater }
 
 export function canRestartSkin(state: ReturnType<SkinLifecycle['states']>[number] | undefined): boolean {
   return state?.installation === 'installed'
@@ -111,6 +111,7 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
       if (!method(request, response, 'GET')) return
       sendJson(response, 200, {
         hostKind,
+        runtime: options.runtime,
         skins: lifecycle.states(),
         installedClientPlugins: installedClientPlugins(options.profileDir, lifecycle.catalog),
         operation: lifecycle.currentOperation(),

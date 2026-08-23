@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { effectiveBuildApprovalKey } from '../src/build-approval.ts'
-import { assertNoLoaderConflicts, atomicWriteJson, atomicWriteText, ensureBuildAllowed, ensureSkinRegistration, InstallConflictError, installedClientPlugins, installedSpecMatches, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
+import { assertNoLoaderConflicts, atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensureBuildAllowed, ensurePatchedDependency, ensureSkinRegistration, InstallConflictError, installedClientPlugins, installedSpecMatches, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeCompatibilityPatches, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 function fixture() { return mkdtempSync(join(tmpdir(), 'skin-profile-')) }
@@ -146,6 +146,23 @@ describe('profile state', () => {
     ensureBuildAllowed(dir, key)
     const workspace = parse(readFileSync(pnpmWorkspaceFile(dir), 'utf8')) as { allowBuilds: Record<string, boolean> }
     expect(workspace.allowBuilds).toEqual({ esbuild: false, [key]: true })
+  })
+
+  it('removes all compatibility patches for a package without touching other packages', () => {
+    const dir = fixture()
+    const skinPatch = compatibilityPatchFile(dir, '@example/skin', '1.0.0')
+    const otherPatch = compatibilityPatchFile(dir, '@example/other', '1.0.0')
+    atomicWriteText(skinPatch, 'skin patch')
+    atomicWriteText(otherPatch, 'other patch')
+    ensurePatchedDependency(dir, '@example/skin', '1.0.0', '.dsh-skin-market/patches/_example_skin_1.0.0.patch')
+    ensurePatchedDependency(dir, '@example/other', '1.0.0', '.dsh-skin-market/patches/_example_other_1.0.0.patch')
+
+    removeCompatibilityPatches(dir, '@example/skin')
+
+    expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).not.toContain('@example/skin@1.0.0')
+    expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).toContain('@example/other@1.0.0')
+    expect(() => readFileSync(skinPatch, 'utf8')).toThrow()
+    expect(readFileSync(otherPatch, 'utf8')).toBe('other patch')
   })
 
   it('derives pnpm build approval keys with a monorepo package subpath', () => {

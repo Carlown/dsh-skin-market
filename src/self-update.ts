@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { PluginRunner } from './commands.ts'
 import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
+import { compareVersions, parseVersion } from './semver.ts'
 import type { OperationFailure } from './types.ts'
 
 export const MARKET_NPM_PACKAGE = 'dsh-skin-market'
@@ -117,36 +118,7 @@ function packageVersion(): string {
   return value.version
 }
 
-function semverParts(value: string): { core: number[]; prerelease: string[] } | null {
-  const match = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/.exec(value)
-  if (match === null) return null
-  return { core: [Number(match[1]), Number(match[2]), Number(match[3])], prerelease: match[4]?.split('.') ?? [] }
-}
-
-export function compareVersions(left: string, right: string): number {
-  const a = semverParts(left)
-  const b = semverParts(right)
-  if (a === null || b === null) return left.localeCompare(right)
-  for (let index = 0; index < 3; index += 1) {
-    if (a.core[index] !== b.core[index]) return a.core[index] - b.core[index]
-  }
-  if (a.prerelease.length === 0 || b.prerelease.length === 0) {
-    return a.prerelease.length === b.prerelease.length ? 0 : a.prerelease.length === 0 ? 1 : -1
-  }
-  const length = Math.max(a.prerelease.length, b.prerelease.length)
-  for (let index = 0; index < length; index += 1) {
-    const x = a.prerelease[index]
-    const y = b.prerelease[index]
-    if (x === undefined || y === undefined) return x === y ? 0 : x === undefined ? -1 : 1
-    if (x === y) continue
-    const xNumber = /^\d+$/.test(x)
-    const yNumber = /^\d+$/.test(y)
-    if (xNumber && yNumber) return Number(x) - Number(y)
-    if (xNumber !== yNumber) return xNumber ? -1 : 1
-    return x.localeCompare(y)
-  }
-  return 0
-}
+export { compareVersions } from './semver.ts'
 
 export function createMarketUpdater(
   profile: string,
@@ -254,7 +226,7 @@ export function createMarketUpdater(
     }
     const tags = value['dist-tags']
     const latestVersion = tags !== null && typeof tags === 'object' ? (tags as Record<string, unknown>).latest : undefined
-    if (typeof latestVersion !== 'string' || semverParts(latestVersion) === null) throw new Error('npm 未返回有效的市场 latest 版本')
+    if (typeof latestVersion !== 'string' || parseVersion(latestVersion) === null) throw new Error('npm 未返回有效的市场 latest 版本')
     const versions = value.versions
     if (versions === null || typeof versions !== 'object') throw new Error('npm 未返回有效的市场版本列表')
     const releaseValue = (versions as Record<string, unknown>)[latestVersion]

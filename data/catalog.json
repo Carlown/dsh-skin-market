@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-22T14:15:50.202Z",
+  "generatedAt": "2026-08-22T17:18:51.286Z",
   "skins": [
     {
       "id": "univerfv.dsh-furina-theme",
@@ -2838,6 +2838,15 @@
         "dsh": "^0.1.0-rc.5",
         "platform": [
           "web"
+        ],
+        "adapters": [
+          {
+            "id": "dsh-keyed-settings-plugin-item",
+            "kind": "keyed-slot-id-to-key",
+            "when": ">=0.1.0-rc.6 <0.2.0-0",
+            "slot": "settings.plugin.item",
+            "key": "locale"
+          }
         ]
       },
       "screenshots": [

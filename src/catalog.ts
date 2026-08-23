@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import Ajv from 'ajv/dist/2020.js'
 import { atomicWriteJson } from './profile.ts'
+import { isVersionRange } from './semver.ts'
 import type { CatalogFile, CatalogSkin, SkinEntry } from './types.ts'
 
 export const REMOTE_CATALOG_URL = 'https://raw.githubusercontent.com/kingOfSoySauce/dsh-skin-market/main/data/catalog.json'
@@ -32,6 +33,10 @@ export function validateCatalog(value: unknown): CatalogFile {
       throw new Error(`invalid skin entry: ${details}`)
     }
     const entry = skin as SkinEntry
+    if (!isVersionRange(entry.compatibility.dsh)) throw new Error(`invalid DSH compatibility range for ${entry.id}`)
+    for (const adapter of entry.compatibility.adapters ?? []) {
+      if (!isVersionRange(adapter.when)) throw new Error(`invalid compatibility adapter range for ${entry.id}: ${adapter.id}`)
+    }
     const repo = entry.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
     const expected = `github:${repo}#${entry.install.commit}${entry.subpath ? `&path:${entry.subpath}` : ''}`
     if (entry.install.target !== expected) throw new Error(`invalid pinned install target for ${entry.id}`)
