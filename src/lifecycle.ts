@@ -24,6 +24,7 @@ import {
   InstallConflictError,
   compatibilityPatchFile,
   marketStateFile,
+  packageManifest,
   patchedDependenciesNeedSync,
   removeSkinRegistration,
   restoreFile,
@@ -160,6 +161,14 @@ function enabledSkinIds(state: PersistedMarketState): Set<string> {
   return new Set([...(state.activeSkinId === null ? [] : [state.activeSkinId]), ...pinnedSkinIds(state)])
 }
 
+function isWebClientPackage(profileDir: string, packageName: string): boolean {
+  const manifest = packageManifest(profileDir, packageName)
+  if (manifest === null || typeof manifest.dsh !== 'object' || manifest.dsh === null || Array.isArray(manifest.dsh)) return false
+  const client = (manifest.dsh as Record<string, unknown>).client
+  if (typeof client !== 'object' || client === null || Array.isArray(client)) return false
+  return (client as Record<string, unknown>).platform === 'web'
+}
+
 function recordActivity(state: PersistedMarketState, skinId: string, kind: 'installedAt' | 'updatedAt' | 'usedAt', at: string): void {
   state.activity = { ...state.activity, [skinId]: { ...state.activity?.[skinId], [kind]: at } }
 }
@@ -270,6 +279,15 @@ export class SkinLifecycle {
   private reconcileDisabledSkinIds(state: PersistedMarketState): void {
     const enabled = enabledSkinIds(state)
     state.disabledSkinIds = this.catalog.filter(skin => !enabled.has(skin.id)).map(skin => skin.id)
+  }
+
+  private requiresRestartForTransition(previous: PersistedMarketState, next: PersistedMarketState): boolean {
+    const changed = new Set([...enabledSkinIds(previous), ...enabledSkinIds(next)])
+    const dependencies = readDependencies(this.options.profileDir)
+    return [...changed].some(id => {
+      const skin = this.skinById.get(id)
+      return skin !== undefined && dependencies[skin.package] !== undefined && isWebClientPackage(this.options.profileDir, skin.package)
+    })
   }
 
   async replay(): Promise<void> {
@@ -597,19 +615,34 @@ export class SkinLifecycle {
     const next: PersistedMarketState = { ...previous, version: 1, activeSkinId: skin.id, pinnedSkinIds: pinnedSkinIds(previous) }
     recordActivity(next, skin.id, 'usedAt', operation.startedAt)
     this.reconcileDisabledSkinIds(next)
+    const requiresRestart = this.requiresRestartForTransition(previous, next)
     const enabled = enabledSkinIds(next)
     try {
       for (const item of this.catalog) {
-        if (!enabled.has(item.id)) await this.setEntryDisabled(item, true)
-      }
-      for (const item of this.catalog) {
-        if (enabled.has(item.id) && readDependencies(this.options.profileDir)[item.package] !== undefined) {
+        const installed = readDependencies(this.options.profileDir)[item.package] !== undefined
+        if (installed && enabled.has(item.id)) {
           ensureSkinRegistration(this.options.profileDir, item, false)
         }
+        if (installed && !enabled.has(item.id)) ensureSkinRegistration(this.options.profileDir, item, true)
+      }
+      let active: { found: boolean; live: boolean } | undefined
+      if (!requiresRestart) {
+        for (const item of this.catalog) {
+          if (!enabled.has(item.id)) await this.setEntryDisabled(item, true)
+        }
+        for (const item of this.catalog) {
+          if (enabled.has(item.id) && readDependencies(this.options.profileDir)[item.package] !== undefined) {
+            await this.setEntryDisabled(item, false)
+          }
+        }
+        active = await this.setEntryDisabled(skin, false)
       }
       writeMarketState(this.options.profileDir, next)
-      const active = await this.setEntryDisabled(skin, false)
-      operation.message = active.found && active.live ? 'skin is active' : 'activation saved; restart DSH to load this skin'
+      if (requiresRestart) {
+        operation.message = 'activation saved; restart DSH to load this skin'
+      } else {
+        operation.message = active?.found && active.live ? 'skin is active' : 'activation saved; restart DSH to load this skin'
+      }
     } catch (error) {
       writeMarketState(this.options.profileDir, previous)
       await this.replay()
@@ -620,14 +653,18 @@ export class SkinLifecycle {
   private async deactivate(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
     this.update(operation, 'activating')
-    const state = readMarketState(this.options.profileDir)
-    ensureSkinRegistration(this.options.profileDir, skin, true)
-    await this.setEntryDisabled(skin, true)
-    if (state.activeSkinId === skin.id) state.activeSkinId = null
-    state.pinnedSkinIds = pinnedSkinIds(state).filter(id => id !== skin.id)
+    const previous = readMarketState(this.options.profileDir)
+    const state = { ...previous, pinnedSkinIds: pinnedSkinIds(previous) }
+    state.activeSkinId = state.activeSkinId === skin.id ? null : state.activeSkinId
+    state.pinnedSkinIds = state.pinnedSkinIds.filter(id => id !== skin.id)
     this.reconcileDisabledSkinIds(state)
+    const requiresRestart = this.requiresRestartForTransition(previous, state)
+    ensureSkinRegistration(this.options.profileDir, skin, true)
+    if (!requiresRestart) await this.setEntryDisabled(skin, true)
     writeMarketState(this.options.profileDir, state)
-    operation.message = enabledSkinIds(state).size === 0 ? 'DSH default appearance restored; package kept installed' : 'skin disabled; other enabled skins were kept active'
+    operation.message = requiresRestart
+      ? 'skin disabled; restart DSH to apply the change'
+      : enabledSkinIds(state).size === 0 ? 'DSH default appearance restored; package kept installed' : 'skin disabled; other enabled skins were kept active'
   }
 
   private async pin(operation: Operation): Promise<void> {
@@ -637,11 +674,16 @@ export class SkinLifecycle {
     this.update(operation, 'activating')
     const next: PersistedMarketState = { ...previous, pinnedSkinIds: [...new Set([...pinnedSkinIds(previous), skin.id])] }
     this.reconcileDisabledSkinIds(next)
+    const requiresRestart = this.requiresRestartForTransition(previous, next)
     try {
       ensureSkinRegistration(this.options.profileDir, skin, false)
       writeMarketState(this.options.profileDir, next)
-      const active = await this.setEntryDisabled(skin, false)
-      operation.message = active.found && active.live ? 'skin is pinned and active' : 'pin saved; restart DSH to load this skin'
+      if (requiresRestart) {
+        operation.message = 'pin saved; restart DSH to load this skin'
+      } else {
+        const active = await this.setEntryDisabled(skin, false)
+        operation.message = active.found && active.live ? 'skin is pinned and active' : 'pin saved; restart DSH to load this skin'
+      }
     } catch (error) {
       writeMarketState(this.options.profileDir, previous)
       await this.replay()
@@ -656,13 +698,16 @@ export class SkinLifecycle {
     this.update(operation, 'activating')
     const next: PersistedMarketState = { ...previous, pinnedSkinIds: pinnedSkinIds(previous).filter(id => id !== skin.id) }
     this.reconcileDisabledSkinIds(next)
+    const requiresRestart = this.requiresRestartForTransition(previous, next)
     try {
       if (next.activeSkinId !== skin.id) {
         ensureSkinRegistration(this.options.profileDir, skin, true)
-        await this.setEntryDisabled(skin, true)
+        if (!requiresRestart) await this.setEntryDisabled(skin, true)
       }
       writeMarketState(this.options.profileDir, next)
-      operation.message = next.activeSkinId === skin.id ? 'skin is no longer pinned and remains the current skin' : 'skin is no longer pinned and was disabled'
+      operation.message = requiresRestart
+        ? 'skin is no longer pinned; restart DSH to apply the change'
+        : next.activeSkinId === skin.id ? 'skin is no longer pinned and remains the current skin' : 'skin is no longer pinned and was disabled'
     } catch (error) {
       writeMarketState(this.options.profileDir, previous)
       await this.replay()

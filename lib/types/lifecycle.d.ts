@@ -46,6 +46,7 @@ export declare class SkinLifecycle {
     private entriesFor;
     private setEntryDisabled;
     private reconcileDisabledSkinIds;
+    private requiresRestartForTransition;
     replay(): Promise<void>;
     states(): SkinRuntimeState[];
     currentOperation(): Operation | null;

@@ -651,6 +651,44 @@ describe('skin lifecycle', () => {
     expect(entry.options.disabled).not.toBe(true)
   })
 
+  it('does not hot-toggle web client skins because DSH reloads the client graph on restart', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const first = firstInstallable(probe)
+    const second = anotherInstallable(probe, first.id)
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [first.package]: first.install.target, [second.package]: second.install.target } })
+    for (const skin of [first, second]) {
+      writeBundlePackage(dir, skin)
+      atomicWriteJson(join(dir, 'node_modules', ...skin.package.split('/'), 'package.json'), {
+        name: skin.package,
+        version: skin.install.version,
+        dsh: { bundle: { patch: './cordis.patch.yml' }, client: { platform: 'web' } },
+      })
+    }
+    const updates: string[] = []
+    const entries = [first, second].map(skin => {
+      const entry: LoaderEntry = {
+        options: { id: skin.rowId, name: skin.rowId, disabled: true },
+        update: async value => {
+          updates.push(`${skin.rowId}:${String(value.disabled)}`)
+          entry.options.disabled = value.disabled
+          entry.fiber = value.disabled ? undefined : {}
+        },
+      }
+      return entry
+    })
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => entries } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+
+    expect((await finished(lifecycle.begin('activate', first.id))).phase).toBe('done')
+    expect(updates).toEqual([])
+    expect(lifecycle.states().find(state => state.skinId === first.id)).toMatchObject({ activation: 'restart-required' })
+
+    expect((await finished(lifecycle.begin('activate', second.id))).phase).toBe('done')
+    expect(updates).toEqual([])
+    expect(readMarketState(dir).activeSkinId).toBe(second.id)
+    expect(lifecycle.states().find(state => state.skinId === second.id)).toMatchObject({ activation: 'restart-required' })
+  })
+
   it('enables an installed inactive skin as pinned without replacing the current primary skin', async () => {
     const dir = fixture()
     const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
