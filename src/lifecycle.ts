@@ -3,7 +3,8 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { buildApprovalKeyForTarget, effectiveBuildApprovalKey } from './build-approval.ts'
-import { assessCompatibility, persistCompatibilityPatch, planCompatibilityPatch } from './compatibility-adapter.ts'
+import { assessCompatibility } from './compatibility.ts'
+import { persistCompatibilityPatch, planCompatibilityPatch } from './compatibility-adapter.ts'
 import type { PluginInstallRequest, PluginRunner } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
 import { discoverMonorepoTarget, isNpmInstallTarget, preferredInstallTarget } from './install-resolution.ts'
@@ -418,6 +419,9 @@ export class SkinLifecycle {
         }
         if (error instanceof InstallConflictError) {
           operation.failure = { kind: 'conflict', message: error.message, conflicts: error.conflicts }
+        }
+        if (operation.failure === undefined && (operation.kind === 'install' || operation.kind === 'update') && assessCompatibility(this.skin(operation.skinId), this.runtime).decision === 'incompatible') {
+          operation.failure = { kind: 'compatibility', message: errorMessage(error) }
         }
         this.update(operation, 'failed', errorMessage(error))
       }

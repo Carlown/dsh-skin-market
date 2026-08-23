@@ -25,6 +25,7 @@ import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt, REGISTRY_REPOSITORY } from './submission.ts'
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import { displayTitle, githubRepoLabel } from '../display-title.ts'
+import { assessCompatibility, type CompatibilityAssessment } from '../compatibility.ts'
 import type { CatalogSkin, DshRuntime, InstalledClientPlugin, MarketHostKind, Operation, RuntimeSkin } from './types.ts'
 
 export interface SkinMarketSectionProps {
@@ -247,6 +248,16 @@ function compactStatusLabel(state: RuntimeSkin): string {
   return '未安装'
 }
 
+function installCompatibility(skin: CatalogSkin, hostKind: MarketHostKind, runtime: DshRuntime | null): CompatibilityAssessment | null {
+  if (hostKind !== 'dsh') return null
+  if (runtime === null) return {
+    decision: 'unknown',
+    reason: '无法读取当前 DSH 版本，暂时拦截安装以避免破坏 profile',
+    adapterIds: [],
+  }
+  return assessCompatibility(skin, runtime)
+}
+
 function displayDate(value: string): string {
   const date = new Date(value)
   return Number.isNaN(date.getTime()) ? '未知' : new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium' }).format(date)
@@ -363,6 +374,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [marketUpdating, setMarketUpdating] = useState(false)
   const [restartTarget, setRestartTarget] = useState<RestartTarget | null>(null)
   const [pendingRestart, setPendingRestart] = useState<PendingRestartNotice | null>(null)
+  const [compatibilityNotice, setCompatibilityNotice] = useState<{ skin: CatalogSkin; assessment: CompatibilityAssessment } | null>(null)
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
   const [homeCompact, setHomeCompact] = useState(false)
   const skinListRef = useRef<HTMLDivElement | null>(null)
@@ -621,6 +633,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const selectedScreenshots = selected === undefined ? [] : getCatalogScreenshotUrls(selected)
   const shotCount = selectedScreenshots.length
   const state = selected === undefined ? null : runtimeFor(states, selected.id)
+  const selectedCompatibility = selected === undefined ? null : installCompatibility(selected, hostKind, runtime)
+  const compatibilityBlocked = selectedCompatibility?.decision === 'incompatible'
   const compatibilityUnverified = selected?.review?.compatibility === 'unverified'
   const isManualOnly = (skin: CatalogSkin): boolean => hostKind === 'desktop'
     ? skin.install.desktop?.mode !== 'managed'
@@ -637,7 +651,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const manualHealthNotice = hostKind === 'desktop'
     ? manualInstallNotice
     : '该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。'
-  const autoInstallable = !manualOnly
+  const autoInstallable = !manualOnly && !compatibilityBlocked
   const filtered = useMemo(() => skins.filter(skin => {
     const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
     if (!haystack.includes(query.trim().toLowerCase())) return false
@@ -755,6 +769,14 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const runForSkin = useCallback(async (skinId: string, kind: MutationKind, existingOperationId?: string) => {
     const target = skins.find(skin => skin.id === skinId)
     if (target === undefined) return false
+    if (existingOperationId === undefined && (kind === 'install' || kind === 'update')) {
+      const assessment = installCompatibility(target, hostKind, runtime)
+      if (assessment !== null && (assessment.decision === 'unknown' || assessment.decision === 'incompatible')) {
+        setCompatibilityNotice({ skin: target, assessment })
+        setError(null)
+        return false
+      }
+    }
     const targetState = runtimeFor(states, target.id)
     setError(null)
     setMutation({ skinId: target.id, kind })
@@ -805,6 +827,12 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           return false
         }
         if (operation.phase === 'failed') {
+          if (operation.failure?.kind === 'compatibility') {
+            setBusy(null)
+            setCompatibilityNotice({ skin: target, assessment: { decision: 'incompatible', reason: operation.failure.message, adapterIds: [] } })
+            await refresh().catch(() => undefined)
+            return false
+          }
           // Keep terminal operation failures in the shared banner so the
           // actionable error is visible where the progress was shown.
           await refresh().catch(() => undefined)
@@ -825,7 +853,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     } finally {
       setMutation(null)
     }
-  }, [clientRuntime, openRestartConfirm, refresh, skins, states])
+  }, [clientRuntime, hostKind, openRestartConfirm, refresh, runtime, skins, states])
 
   const retrySkinOperation = useCallback(async () => {
     const operation = busy
@@ -906,6 +934,11 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       setShowInstallOptions(true)
       return
     }
+    const assessment = installCompatibility(skin, hostKind, runtime)
+    if (assessment !== null && (assessment.decision === 'unknown' || assessment.decision === 'incompatible')) {
+      setCompatibilityNotice({ skin, assessment })
+      return
+    }
     void runForSkin(skin.id, 'install')
   }
   const activateCard = (skinId: string) => {
@@ -927,13 +960,17 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const renderHomeCard = (skin: CatalogSkin, location: 'installed' | 'discover') => {
     const itemState = runtimeFor(states, skin.id)
     const cardMutation = mutation?.skinId === skin.id ? mutation : null
-    const needsInstall = itemState.installation === 'missing' || itemState.installation === 'broken'
+    const itemCompatibility = installCompatibility(skin, hostKind, runtime)
+    const installBlocked = itemCompatibility?.decision === 'incompatible'
+    const needsInstall = (itemState.installation === 'missing' || itemState.installation === 'broken') && !installBlocked
     const actionCount = cardMutation !== null || needsInstall
       ? 1
       : itemState.installation === 'installed'
-        ? Number(itemState.activation === 'inactive' || itemState.activation === 'active') + Number(itemState.updateAvailable && !isManualOnly(skin))
+        ? Number(itemState.activation === 'inactive' || itemState.activation === 'active') + Number(itemState.updateAvailable && !isManualOnly(skin) && !installBlocked)
         : 0
-    const stateText = itemState.installation === 'broken'
+    const stateText = installBlocked
+      ? '当前 DSH 不兼容'
+      : itemState.installation === 'broken'
       ? '安装异常'
       : itemState.activation === 'active'
         ? compactStatusLabel(itemState)
@@ -1145,7 +1182,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               {state.activation === 'active' && <Button className={css.nativeOutline} variant="outline" size="sm" disabled={busy !== null} onClick={() => void run('deactivate')}>停用</Button>}
               {state.activation === 'active' && <Button className={`${css.nativeOutline} ${css.pinAction}`} variant="outline" size="sm" aria-pressed={state.pinned === true} title={state.pinned ? '取消后，如果它不是当前主皮肤，将立即停用；以后切换皮肤时也不会再保留' : '切换其他皮肤时仍保持启用，适合宠物、音效等可叠加插件；多个皮肤可能发生冲突'} disabled={busy !== null} onClick={() => state.pinned ? void run('unpin') : setConfirmPin(true)}>{state.pinned ? '取消常驻' : '常驻使用'}</Button>}
               {state.activation === 'restart-required' && state.pinned && <Button className={`${css.nativeOutline} ${css.pinAction}`} variant="outline" size="sm" aria-pressed="true" title="取消常驻并撤销待重启的启用状态" disabled={busy !== null} onClick={() => void run('unpin')}>取消常驻</Button>}
-              {state.updateAvailable && !manualOnly && <Button className={`${state.activation === 'active' && !state.pinned ? css.nativePrimary : css.nativeOutline} ${css.compactActionIcon}`} variant={state.activation === 'active' && !state.pinned ? 'primary' : 'outline'} size="sm" icon={<IconRefreshOutline16 />} disabled={busy !== null} onClick={() => void run('update')}>更新</Button>}
+              {state.updateAvailable && !manualOnly && !compatibilityBlocked && <Button className={`${state.activation === 'active' && !state.pinned ? css.nativePrimary : css.nativeOutline} ${css.compactActionIcon}`} variant={state.activation === 'active' && !state.pinned ? 'primary' : 'outline'} size="sm" icon={<IconRefreshOutline16 />} disabled={busy !== null} onClick={() => void run('update')}>更新</Button>}
               {state.installation !== 'missing' && <Button className={`${css.nativeOutline} ${css.iconOnlyButton} ${css.compactActionIcon}`} variant="outline" size="sm" icon={<IconTrashOutline16 />} aria-label="卸载" title="卸载" disabled={busy !== null} onClick={() => setConfirmUninstall(true)} />}
               <span className={css.actionDivider} aria-hidden="true" />
               <span className={css.repoMeta}>
@@ -1155,6 +1192,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           </div>
 
           {state.installation === 'installed' && state.activation === 'inactive' && !activationWarningAccepted && <p className={css.notice} role="note">首次启用提示：请先在设置 → 插件中停用其他皮肤、主题和外观插件，避免全局样式冲突。点击“使用”即表示已确认。</p>}
+          {selectedCompatibility?.decision === 'incompatible' && <p className={css.notice} role="alert">{selectedCompatibility.reason}。已拦截安装；请提醒皮肤开发者声明或更新兼容范围。</p>}
+          {selectedCompatibility?.decision === 'unknown' && <p className={css.notice} role="note">当前暂时无法确认 DSH 兼容性，点击安装时会先拦截并提示，不会修改 profile。</p>}
 
           {renderSkinOperationBanner()}
           {renderMarketOperationBanner()}
@@ -1174,7 +1213,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           </div>
 
           <div className={css.aboutGrid}>
-            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。</p>}{manualOnly && <p className={css.notice}>{manualHealthNotice}</p>}{selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{usesMarketScreenshots(selected) && <p className={css.notice}>当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
+            <article><h3>关于此皮肤</h3><p>{selected.description}</p><div className={css.tags}>{selected.tags.map(tag => <Pill className={css.staticPill} key={tag}>{tag}</Pill>)}</div><dl className={css.metadata}><div><dt>许可证</dt><dd>{selected.license.code}</dd></div><div><dt>代码商业使用</dt><dd>{selected.license.commercialUse ? '许可证允许' : '未获授权'}</dd></div><div><dt>模式</dt><dd>{selected.modes.join(' / ')}</dd></div></dl>{compatibilityUnverified && !manualOnly && <p className={css.notice}>市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。为避免破坏当前 profile，安装已被拦截；请先提醒皮肤开发者声明兼容范围。</p>}{manualOnly && <p className={css.notice}>{manualHealthNotice}</p>}{selected.review?.preview === 'repository-card' && !(selected.marketScreenshots?.length) && <p className={css.notice}>该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。</p>}{usesMarketScreenshots(selected) && <p className={css.notice}>当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。</p>}{selected.license.notice && <p className={css.notice}>{selected.license.notice}</p>}</article>
             <aside className={css.changelog}><h3>仓库健康</h3>{selected.health ? <><ol className={css.healthList}>{Object.entries(selected.health.checks).map(([key, value]) => <li key={key}><strong>{healthLabels[key as keyof typeof healthLabels]}</strong><span data-health={value}>{value === 'pass' ? '符合要求' : '建议完善'}</span></li>)}</ol>{selected.health.suggestions.map(suggestion => <p className={css.healthSuggestion} key={suggestion}>{suggestion}</p>)}</> : <p className={css.healthSuggestion}>等待下一次仓库健康扫描。</p>}<h3 className={css.collectionTitle}>收录信息</h3><ol><li><strong>{selected.install.version}</strong><span>版本快照更新于 {displayDate(selected.releaseUpdatedAt)}</span></li><li><strong>Stars</strong><span>{selected.githubStars}，更新于 {displayDate(selected.starsUpdatedAt)}</span></li><li><strong>兼容</strong><span>{compatibilityUnverified ? '等待维护者声明 DSH 兼容范围' : `支持 DSH ${selected.compatibility.dsh}`}</span></li></ol><a href={selected.repo} target="_blank" rel="noreferrer">查看仓库详情</a></aside>
           </div>
 
@@ -1194,6 +1233,16 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
 
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />
       <Modal open={confirmPin} onClose={() => setConfirmPin(false)} title="常驻使用此皮肤" closeLabel="关闭" description="开启后，切换其他皮肤时不会自动停用此皮肤。适合宠物、音效等可叠加插件；多个皮肤可能同时修改样式、页面结构或功能，相关冲突风险由用户自行承担。" footer={<><Button className={css.nativeOutline} variant="outline" size="sm" onClick={() => setConfirmPin(false)}>取消</Button><Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => { setConfirmPin(false); void run('pin') }}>确认常驻</Button></>}><p className={css.pinWarning}>如果发生冲突或页面无法操作，请停止 DSH，然后查看 <a href={RESET_HELP_URL} target="_blank" rel="noreferrer">页面异常时重置皮肤</a> 中的修复命令。</p></Modal>
+      <Modal
+        open={compatibilityNotice !== null}
+        onClose={() => setCompatibilityNotice(null)}
+        title="已拦截安装"
+        closeLabel="关闭"
+        description={compatibilityNotice === null ? '' : `${compatibilityNotice.skin.name.zh}：${compatibilityNotice.assessment.reason}`}
+        footer={<Button className={css.nativePrimary} variant="primary" size="sm" onClick={() => setCompatibilityNotice(null)}>知道了</Button>}
+      >
+        <p className={css.notice}>为避免损坏当前 DSH profile，市场没有执行安装。请提醒皮肤开发者测试并声明当前 DSH 版本的兼容范围，或提供适配器。</p>
+      </Modal>
       <Modal
         open={showInstallOptions}
         onClose={() => setShowInstallOptions(false)}

@@ -55,6 +55,16 @@ export interface CatalogSkin {
       topic?: 'pass' | 'improve'
     }
     suggestions: string[]
+    scan?: {
+      commit: string
+      packageVersion: string
+      scannerVersion: string
+      dshVersion?: string
+      mode: 'static' | 'runtime'
+      result: 'pass' | 'warn' | 'fail' | 'unknown'
+      checkedAt: string
+      findings: Array<{ code: string; message: string }>
+    }
   }
   license: { code: string; commercialUse: boolean; notice?: string }
   githubStars: number
@@ -108,7 +118,7 @@ export interface Operation {
   totalBytes?: number
   bytesPerSecond?: number
   failure?: {
-    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'conflict' | 'command'
+    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'compatibility' | 'conflict' | 'command'
     message: string
     packageName?: string
     action?: 'retry' | 'approve-build'

@@ -152,7 +152,33 @@
             "topic": { "enum": ["pass", "improve"] }
           }
         },
-        "suggestions": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+        "suggestions": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "scan": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["commit", "packageVersion", "scannerVersion", "mode", "result", "checkedAt", "findings"],
+          "properties": {
+            "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+            "packageVersion": { "type": "string", "minLength": 1 },
+            "scannerVersion": { "type": "string", "minLength": 1 },
+            "dshVersion": { "type": "string", "minLength": 1 },
+            "mode": { "enum": ["static", "runtime"] },
+            "result": { "enum": ["pass", "warn", "fail", "unknown"] },
+            "checkedAt": { "type": "string", "format": "date-time" },
+            "findings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["code", "message"],
+                "properties": {
+                  "code": { "type": "string", "minLength": 1 },
+                  "message": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "license": {

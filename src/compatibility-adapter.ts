@@ -1,9 +1,15 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, relative, resolve, sep } from 'node:path'
+import { applicableAdapters } from './compatibility.ts'
+import type { CompatibilityAssessment } from './compatibility.ts'
 import { compatibilityPatchFile, ensurePatchedDependency, packageDir, packageManifest } from './profile.ts'
-import { hasRuntimeCapability, KEYED_SLOT_CAPABILITY_PREFIX } from './runtime.ts'
-import { satisfiesVersionRange } from './semver.ts'
 import type { CompatibilityAdapter, DshRuntime, SkinEntry } from './types.ts'
+
+// Keep the historical exports available to host-side consumers while the
+// pure compatibility assessment is shared with the browser client.
+export { assessCompatibility } from './compatibility.ts'
+export type { CompatibilityAssessment } from './compatibility.ts'
+export type CompatibilityDecision = CompatibilityAssessment['decision']
 
 export interface CompatibilityPatchPlan {
   patchFile: string
@@ -17,24 +23,8 @@ export interface CompatibilityPatchPlan {
   matchedAdapterIds: string[]
 }
 
-export type CompatibilityDecision = 'compatible' | 'adaptable' | 'unknown' | 'incompatible'
-
-export interface CompatibilityAssessment {
-  decision: CompatibilityDecision
-  reason: string
-  adapterIds: string[]
-}
-
 interface TextEdit { start: number; end: number; value: string }
 interface AdapterTransformResult { source: string; count: number; matched: boolean }
-
-const DEFAULT_ADAPTER: CompatibilityAdapter = {
-  id: 'builtin-keyed-settings-plugin-item',
-  kind: 'keyed-slot-id-to-key',
-  when: '>=0.1.0-rc.6 <0.2.0-0',
-  slot: 'settings.plugin.item',
-  key: 'locale',
-}
 
 function exportedPath(value: unknown): string | null {
   if (typeof value === 'string') return value
@@ -156,61 +146,6 @@ function transformKeyedSlot(source: string, adapter: CompatibilityAdapter): Adap
 function applyAdapter(source: string, adapter: CompatibilityAdapter): AdapterTransformResult {
   if (adapter.kind === 'keyed-slot-id-to-key') return transformKeyedSlot(source, adapter)
   return { source, count: 0, matched: false }
-}
-
-function declaredAdapters(skin: SkinEntry): CompatibilityAdapter[] {
-  return skin.compatibility.adapters ?? []
-}
-
-function sameAdapter(left: CompatibilityAdapter, right: CompatibilityAdapter): boolean {
-  return left.kind === right.kind
-    && left.when === right.when
-    && left.slot === right.slot
-    && left.key === right.key
-}
-
-function applicableAdapters(skin: SkinEntry, runtime: DshRuntime, includeBuiltIns: boolean): CompatibilityAdapter[] {
-  if (runtime.version === null) return []
-  const declared = declaredAdapters(skin)
-  const adapters = includeBuiltIns
-    ? [...declared, DEFAULT_ADAPTER].filter((adapter, index, all) => all.findIndex(item => sameAdapter(item, adapter)) === index)
-    : declared
-  return adapters.filter(adapter =>
-    satisfiesVersionRange(runtime.version!, adapter.when)
-    && hasRuntimeCapability(runtime, `${KEYED_SLOT_CAPABILITY_PREFIX}${adapter.slot}`),
-  )
-}
-
-export function assessCompatibility(skin: SkinEntry, runtime: DshRuntime): CompatibilityAssessment {
-  if (runtime.version === null) return {
-    decision: 'unknown',
-    reason: '无法读取当前 DSH 版本，保留安装流程但不会自动应用兼容补丁',
-    adapterIds: [],
-  }
-  // Declared adapters are safe to advertise before downloading a package.
-  // Built-ins are deliberately applied optimistically only after the package
-  // has materialized, where the source can be inspected.
-  const adapters = applicableAdapters(skin, runtime, false)
-  if (skin.compatibility.dsh === 'unverified') return {
-    decision: 'unknown',
-    reason: `皮肤未声明 DSH 兼容范围（当前 ${runtime.version}）`,
-    adapterIds: adapters.map(adapter => adapter.id),
-  }
-  if (adapters.length > 0) return {
-    decision: 'adaptable',
-    reason: `当前 DSH ${runtime.version} 命中可选兼容适配器`,
-    adapterIds: adapters.map(adapter => adapter.id),
-  }
-  if (satisfiesVersionRange(runtime.version, skin.compatibility.dsh)) return {
-    decision: 'compatible',
-    reason: `当前 DSH ${runtime.version} 在声明范围 ${skin.compatibility.dsh} 内`,
-    adapterIds: adapters.map(adapter => adapter.id),
-  }
-  return {
-    decision: 'incompatible',
-    reason: `当前 DSH ${runtime.version} 不在皮肤声明的兼容范围 ${skin.compatibility.dsh} 内，且没有可用适配器`,
-    adapterIds: [],
-  }
 }
 
 export function planCompatibilityPatch(profileDir: string, skin: SkinEntry, runtime: DshRuntime): CompatibilityPatchPlan | null {

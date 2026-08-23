@@ -25,6 +25,7 @@ const skin = {
   tags: ['dark'], modes: ['dark'], install: { target: 'https://github.com/a/b.git#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', version: '1.0.0', commit: 'a'.repeat(40) }, compatibility: { dsh: '0.1.0-rc.6', platform: ['web'] },
   screenshots: ['https://example.com/preview.png'], license: { code: 'MIT', commercialUse: true }, githubStars: 42, starsStale: false, starsUpdatedAt: '2026-08-16T00:00:00Z', recommendations: [], releaseUpdatedAt: '2026-08-16T00:00:00Z', metadataUpdatedAt: '2026-08-16T00:00:00Z', updatedAt: '2026-08-16T00:00:00Z',
 } satisfies CatalogSkin
+const dshRuntime = { version: '0.1.0-rc.6', capabilities: [], source: 'injected' as const }
 
 afterEach(() => { cleanup(); window.localStorage.clear(); vi.unstubAllGlobals() })
 
@@ -358,7 +359,7 @@ describe('client market', () => {
   it('uses a low-priority card action to install without activating', async () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: dshRuntime }) }
       if (url.endsWith('/install') && init?.method === 'POST') return await new Promise(() => undefined)
       throw new Error(`Unexpected request: ${url}`)
     })
@@ -373,6 +374,40 @@ describe('client market', () => {
     await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/install') && init?.method === 'POST')).toBe(true))
     expect(screen.getByRole('group', { name: '测试皮肤 操作' }).textContent).toContain('安装中')
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/activate'))).toBe(false)
+  })
+
+  it('hides install actions for a known incompatible DSH version', async () => {
+    const incompatible = { ...skin, id: 'test.incompatible', name: { zh: '不兼容皮肤', en: 'Incompatible Skin' }, compatibility: { dsh: '<0.1.0-rc.6', platform: ['web'] } }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [incompatible] } : {
+        skins: [],
+        runtime: { version: '0.1.1-rc.1', capabilities: ['slot:keyed:settings.plugin.item'], source: 'injected' },
+      },
+    })))
+    render(<SkinMarketSection t={key => key} />)
+
+    await openSkinCard(/不兼容皮肤 界面预览/)
+    expect(screen.queryByRole('button', { name: '安装并使用' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '仅安装' })).toBeNull()
+    expect(screen.queryByRole('button', { name: '其他安装方式' })).toBeNull()
+    expect(screen.getByRole('alert').textContent).toContain('已拦截安装')
+    expect(screen.getByRole('alert').textContent).toContain('请提醒皮肤开发者')
+  })
+
+  it('shows a compatibility popup and blocks installation when runtime version is unknown', async () => {
+    const fetchMock = vi.fn(async (url: string) => ({
+      ok: true,
+      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] },
+    }))
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
+    expect(await screen.findByRole('dialog', { name: '已拦截安装' })).toBeTruthy()
+    expect(screen.getByText(/无法读取当前 DSH 版本/)).toBeTruthy()
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
   })
 
   it('opens a prompt-only install dialog for manual cards', async () => {
@@ -636,7 +671,7 @@ describe('client market', () => {
       if (url.endsWith('/market-update')) return { ok: true, json: async () => ({ currentVersion: '0.1.26', latestVersion: '0.1.26', updateAvailable: false }) }
       if (url.endsWith('/update') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'update-1' }) }
       if (url.endsWith('/operations/update-1')) return { ok: true, json: async () => ({ id: 'update-1', phase: 'done' }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ runningAgentCount: 0, skins: [{ skinId: skin.id, installation: 'installed', activation: 'active', installedVersion: '1.0.0', updateAvailable: true }] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ runningAgentCount: 0, skins: [{ skinId: skin.id, installation: 'installed', activation: 'active', installedVersion: '1.0.0', updateAvailable: true }], runtime: dshRuntime }) }
       throw new Error(`Unexpected request: ${url}`)
     })
     vi.stubGlobal('fetch', fetchMock)
@@ -730,7 +765,7 @@ describe('client market', () => {
   it('shows an installing status on the matching list row immediately', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: dshRuntime }) }
       if (init?.method === 'POST') return await new Promise(() => undefined)
       throw new Error(`Unexpected request: ${url}`)
     }))
@@ -751,7 +786,7 @@ describe('client market', () => {
     let operationRequests = 0
     vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null, runtime: dshRuntime }) }
       if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-progress' }) }
       if (url.endsWith('/operations/install-progress')) {
         operationRequests += 1
@@ -779,7 +814,7 @@ describe('client market', () => {
     let retryRequests = 0
     vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: dshRuntime }) }
       if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-retry-source' }) }
       if (url.endsWith('/operations/install-retry-source/retry') && init?.method === 'POST') {
         retryRequests += 1
@@ -809,7 +844,7 @@ describe('client market', () => {
     let cancelled = false
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null, runtime: dshRuntime }) }
       if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-cancel' }) }
       if (url.endsWith('/operations/install-cancel/cancel') && init?.method === 'POST') {
         cancelled = true
@@ -838,7 +873,7 @@ describe('client market', () => {
   it('activates a verified skin after installation completes', async () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: dshRuntime }) }
       if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-1' }) }
       if (url.endsWith('/operations/install-1')) return { ok: true, json: async () => ({ id: 'install-1', phase: 'done' }) }
       if (url.endsWith('/activate') && init?.method === 'POST') return await new Promise(() => undefined)
@@ -853,11 +888,11 @@ describe('client market', () => {
     await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/activate') && init?.method === 'POST')).toBe(true))
   })
 
-  it('allows market installation while warning that compatibility is unverified', async () => {
+  it('blocks installation while warning that compatibility is unverified', async () => {
     const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const, installation: 'verified' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [unverified] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: dshRuntime }) }
       if (init?.method === 'POST') return await new Promise(() => undefined)
       throw new Error(`Unexpected request: ${url}`)
     })
@@ -871,8 +906,9 @@ describe('client market', () => {
     expect(otherMethods.getAttribute('variant')).toBe('outline')
     expect(screen.queryByRole('button', { name: '待验证，手动安装' })).toBeNull()
     fireEvent.click(automatic)
-    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
-    expect(screen.getByText('市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。仍可安装；建议先确认当前 DSH Web 版本，并留意安装后的界面表现。')).toBeTruthy()
+    expect(await screen.findByRole('dialog', { name: '已拦截安装' })).toBeTruthy()
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
+    expect(screen.getByText('市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。为避免破坏当前 profile，安装已被拦截；请先提醒皮肤开发者声明兼容范围。')).toBeTruthy()
     expect(screen.getByText('该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。')).toBeTruthy()
     expect(screen.getAllByRole('img', { name: '测试皮肤 暂无界面截图' }).length).toBeGreaterThanOrEqual(2)
     expect(document.querySelector(`img[src="${unverified.screenshots[0]}"]`)).toBeNull()

@@ -2,7 +2,8 @@ import { mkdirSync, mkdtempSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { assessCompatibility, persistCompatibilityPatch, planCompatibilityPatch, unifiedPatch } from '../src/compatibility-adapter.ts'
+import { assessCompatibility } from '../src/compatibility.ts'
+import { persistCompatibilityPatch, planCompatibilityPatch, unifiedPatch } from '../src/compatibility-adapter.ts'
 import { atomicWriteJson, atomicWriteText, pnpmWorkspaceFile } from '../src/profile.ts'
 import type { DshRuntime, SkinEntry } from '../src/types.ts'
 
@@ -91,6 +92,14 @@ describe('generic compatibility adapters', () => {
     const plan = planCompatibilityPatch(dir, current, runtime)
     expect(plan?.adapterIds).toEqual(['builtin-keyed-settings-plugin-item'])
     expect(plan?.patchedSource).toContain('key: "settings.generic"')
+  })
+
+  it('advertises the built-in adapter before installing an exact older-range skin', () => {
+    const current = { ...skin(), compatibility: { dsh: '0.1.0-rc.6', platform: ['web'] } }
+    expect(assessCompatibility(current, runtime)).toMatchObject({
+      decision: 'adaptable',
+      adapterIds: ['builtin-keyed-settings-plugin-item'],
+    })
   })
 
   it('creates a patch only for a real source change', () => {

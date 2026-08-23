@@ -86,6 +86,20 @@ export interface CatalogMedia {
     list?: CatalogImageMedia;
     screenshots: Array<CatalogImageMedia | null>;
 }
+export interface HealthScanFinding {
+    code: string;
+    message: string;
+}
+export interface HealthScanSnapshot {
+    commit: string;
+    packageVersion: string;
+    scannerVersion: string;
+    dshVersion?: string;
+    mode: 'static' | 'runtime';
+    result: 'pass' | 'warn' | 'fail' | 'unknown';
+    checkedAt: string;
+    findings: HealthScanFinding[];
+}
 export interface SkinHealth {
     status: 'healthy' | 'improvements';
     checks: {
@@ -96,6 +110,7 @@ export interface SkinHealth {
         topic?: 'pass' | 'improve';
     };
     suggestions: string[];
+    scan?: HealthScanSnapshot;
 }
 export interface CatalogFile {
     schemaVersion: number;
@@ -141,7 +156,7 @@ export type OperationKind = 'install' | 'activate' | 'deactivate' | 'pin' | 'unp
 export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'installing' | 'validating' | 'activating' | 'cancelling' | 'cancelled' | 'done' | 'failed';
 export type OperationRetryAction = 'retry' | 'approve-build';
 export interface OperationFailure {
-    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'conflict' | 'command';
+    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'compatibility' | 'conflict' | 'command';
     message: string;
     packageName?: string;
     action?: OperationRetryAction;
