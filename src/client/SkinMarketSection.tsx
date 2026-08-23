@@ -1194,6 +1194,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           {state.installation === 'installed' && state.activation === 'inactive' && !activationWarningAccepted && <p className={css.notice} role="note">首次启用提示：请先在设置 → 插件中停用其他皮肤、主题和外观插件，避免全局样式冲突。点击“使用”即表示已确认。</p>}
           {selectedCompatibility?.decision === 'incompatible' && <p className={css.notice} role="alert">{selectedCompatibility.reason}。已拦截安装；请提醒皮肤开发者声明或更新兼容范围。</p>}
           {selectedCompatibility?.decision === 'unknown' && <p className={css.notice} role="note">当前暂时无法确认 DSH 兼容性，点击安装时会先拦截并提示，不会修改 profile。</p>}
+          {(selected.install.companions?.length ?? 0) > 0 && <p className={css.notice} role="note">安装时会同时装上细节定制管理器，不会作为一张独立皮肤出现在市场里。</p>}
 
           {renderSkinOperationBanner()}
           {renderMarketOperationBanner()}

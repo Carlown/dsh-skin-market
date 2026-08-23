@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { createDshPluginAddCommand, quoteInstallTarget } from '../src/install-command.ts'
+import { createDshPluginAddCommand, createInstallCommand, quoteInstallTarget } from '../src/install-command.ts'
 
 describe('portable DSH install commands', () => {
   it('uses double quotes for targets containing cmd metacharacters', () => {
-    const target = `github:owner/repo#${'a'.repeat(40)}&path:packages/skin`
+    const target = `github:owner/repo#${'a'.repeat(40)}&path:/packages/skin`
     expect(quoteInstallTarget(target)).toBe(`"${target}"`)
     expect(createDshPluginAddCommand(target)).toBe(`dsh plugin --profile web add "${target}"`)
+    expect(createInstallCommand(target)).toBe(`pnpm add "${target}" --dir "$DSH_HOME/profiles/web"`)
+  })
+
+  it('keeps npm and root-repo targets on dsh plugin add', () => {
+    const target = `github:owner/repo#${'a'.repeat(40)}`
+    expect(createInstallCommand(target)).toBe(`dsh plugin --profile web add "${target}"`)
   })
 
   it('rejects command-breaking target text instead of emitting an unsafe command', () => {

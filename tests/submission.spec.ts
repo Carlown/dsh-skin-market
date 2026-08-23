@@ -49,4 +49,12 @@ describe('agent-assisted skin submission', () => {
     expect(prompt.indexOf('安装前只读检查')).toBeLessThan(prompt.indexOf('然后执行上面的固定安装命令'))
     expect(createSkinInstallCommand(skin)).toBe(`dsh plugin --profile web add "${skin.install.target}"`)
   })
+
+  it('copies subdirectory install targets as pnpm add so Windows cmd does not split on &', () => {
+    const skin = {
+      id: 'small-tailqwq.maid-atelier',
+      install: { target: `github:Small-tailqwq/dsh-deep-whale#${'a'.repeat(40)}&path:/maid-atelier` },
+    } as CatalogSkin
+    expect(createSkinInstallCommand(skin)).toBe(`pnpm add "${skin.install.target}" --dir "$DSH_HOME/profiles/web"`)
+  })
 })

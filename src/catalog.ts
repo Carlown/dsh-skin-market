@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import Ajv from 'ajv/dist/2020.js'
+import { githubInstallTarget, parseGithubTarget } from './install-resolution.ts'
 import { atomicWriteJson } from './profile.ts'
 import { isVersionRange } from './semver.ts'
 import type { CatalogFile, CatalogSkin, SkinEntry } from './types.ts'
@@ -38,8 +39,17 @@ export function validateCatalog(value: unknown): CatalogFile {
       if (!isVersionRange(adapter.when)) throw new Error(`invalid compatibility adapter range for ${entry.id}: ${adapter.id}`)
     }
     const repo = entry.repo.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')
-    const expected = `github:${repo}#${entry.install.commit}${entry.subpath ? `&path:${entry.subpath}` : ''}`
+    const expected = githubInstallTarget(repo, entry.install.commit, entry.subpath)
     if (entry.install.target !== expected) throw new Error(`invalid pinned install target for ${entry.id}`)
+    for (const companion of entry.install.companions ?? []) {
+      const parts = parseGithubTarget(companion.target)
+      if (parts === null) throw new Error(`invalid companion target for ${entry.id}: ${companion.package}`)
+      if (parts.repository !== repo) throw new Error(`companion ${companion.package} for ${entry.id} must use the same GitHub repository`)
+      if (parts.commit !== companion.commit) throw new Error(`invalid companion commit for ${entry.id}: ${companion.package}`)
+      if (companion.target !== githubInstallTarget(parts.repository, companion.commit, parts.subpath)) {
+        throw new Error(`invalid companion path for ${entry.id}: ${companion.package}`)
+      }
+    }
     const npm = entry.install.npm
     if (npm !== undefined) {
       const npmRepo = npm.repository.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')

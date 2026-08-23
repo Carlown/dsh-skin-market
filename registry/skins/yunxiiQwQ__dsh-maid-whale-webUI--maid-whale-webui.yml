@@ -18,7 +18,7 @@ modes:
   - light
   - dark
 install:
-  target: github:yunxiiQwQ/dsh-maid-whale-webUI#4b46791a2eb868b8e081aab896d34dab124d4b62&path:maid-whale-webui
+  target: github:yunxiiQwQ/dsh-maid-whale-webUI#4b46791a2eb868b8e081aab896d34dab124d4b62&path:/maid-whale-webui
   version: 0.1.0
   commit: 4b46791a2eb868b8e081aab896d34dab124d4b62
   desktop:

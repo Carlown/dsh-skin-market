@@ -18,7 +18,7 @@ modes:
   - light
   - dark
 install:
-  target: github:DocJlm/dsh-arknights#87116ed1536c61dbb287addd9e4830cf3e8e0f36&path:skins/pramanix-eyjafjalla
+  target: github:DocJlm/dsh-arknights#87116ed1536c61dbb287addd9e4830cf3e8e0f36&path:/skins/pramanix-eyjafjalla
   version: 0.1.0
   commit: 87116ed1536c61dbb287addd9e4830cf3e8e0f36
   desktop:

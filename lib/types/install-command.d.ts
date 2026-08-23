@@ -5,3 +5,9 @@
  */
 export declare function quoteInstallTarget(target: string): string;
 export declare function createDshPluginAddCommand(target: string, profile?: string): string;
+/**
+ * Copied install command. Git subdirectory specs keep `&path:/`, which cmd.exe
+ * splits when DSH forwards to pnpm with `shell: true`. Those specs go through
+ * pnpm directly, matching the market's runtime bypass.
+ */
+export declare function createInstallCommand(target: string, profile?: string): string;

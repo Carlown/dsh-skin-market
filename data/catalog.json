@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-23T05:44:58.365Z",
+  "generatedAt": "2026-08-23T11:17:19.980Z",
   "skins": [
     {
       "id": "univerfv.dsh-furina-theme",
@@ -330,9 +330,18 @@
         "dark"
       ],
       "install": {
-        "target": "github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:maid-atelier",
+        "target": "github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:/maid-atelier",
         "version": "0.0.1",
         "commit": "b693d2c224a0a6fb5b621e7cc1284f20d9849c1c",
+        "companions": [
+          {
+            "package": "@dsh-external/dsh-client-ui-skin-deep-whale-manager",
+            "target": "github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:/skin-manager",
+            "version": "0.1.0",
+            "commit": "b693d2c224a0a6fb5b621e7cc1284f20d9849c1c",
+            "rowId": "ui-skin-deep-whale-manager"
+          }
+        ],
         "desktop": {
           "mode": "manual-only",
           "reason": "npm-package-not-found"
@@ -528,9 +537,18 @@
         "dark"
       ],
       "install": {
-        "target": "github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:orca-link",
+        "target": "github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:/orca-link",
         "version": "0.0.1",
         "commit": "b693d2c224a0a6fb5b621e7cc1284f20d9849c1c",
+        "companions": [
+          {
+            "package": "@dsh-external/dsh-client-ui-skin-deep-whale-manager",
+            "target": "github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:/skin-manager",
+            "version": "0.1.0",
+            "commit": "b693d2c224a0a6fb5b621e7cc1284f20d9849c1c",
+            "rowId": "ui-skin-deep-whale-manager"
+          }
+        ],
         "desktop": {
           "mode": "manual-only",
           "reason": "npm-package-not-found"
@@ -1804,7 +1822,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:DocJlm/dsh-arknights#87116ed1536c61dbb287addd9e4830cf3e8e0f36&path:skins/pramanix-eyjafjalla",
+        "target": "github:DocJlm/dsh-arknights#87116ed1536c61dbb287addd9e4830cf3e8e0f36&path:/skins/pramanix-eyjafjalla",
         "version": "0.1.0",
         "commit": "87116ed1536c61dbb287addd9e4830cf3e8e0f36",
         "desktop": {
@@ -2198,7 +2216,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:yunxiiQwQ/dsh-maid-whale-webUI#4b46791a2eb868b8e081aab896d34dab124d4b62&path:maid-whale-webui",
+        "target": "github:yunxiiQwQ/dsh-maid-whale-webUI#4b46791a2eb868b8e081aab896d34dab124d4b62&path:/maid-whale-webui",
         "version": "0.1.0",
         "commit": "4b46791a2eb868b8e081aab896d34dab124d4b62",
         "desktop": {
@@ -11224,7 +11242,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:FeatherHunter/dsh-opencode-palette#11a3c01ff4e6cd22239e990fb8964d8421b04b01&path:package",
+        "target": "github:FeatherHunter/dsh-opencode-palette#11a3c01ff4e6cd22239e990fb8964d8421b04b01&path:/package",
         "version": "1.6.4",
         "commit": "11a3c01ff4e6cd22239e990fb8964d8421b04b01",
         "desktop": {
@@ -11447,7 +11465,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:rison114514/dsh-endfield-ui#66b05412f3f5df4d497cd9f86ec96656a2be4648&path:endfield-ui-plugin",
+        "target": "github:rison114514/dsh-endfield-ui#66b05412f3f5df4d497cd9f86ec96656a2be4648&path:/endfield-ui-plugin",
         "version": "0.7.0",
         "commit": "66b05412f3f5df4d497cd9f86ec96656a2be4648",
         "desktop": {
@@ -15379,7 +15397,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:packages/dsh-web-ui-all",
+        "target": "github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:/packages/dsh-web-ui-all",
         "version": "0.1.7",
         "commit": "29fa777bdd8c9f7d93700c56c11a96a32634d967",
         "desktop": {
@@ -16252,7 +16270,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:packages/skins/aurora",
+        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:/packages/skins/aurora",
         "version": "0.3.1",
         "commit": "251119cedac66dbd31ca8ce6cb112369b60b359b",
         "desktop": {
@@ -16360,7 +16378,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:packages/skins/blue-fantasy",
+        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:/packages/skins/blue-fantasy",
         "version": "0.3.1",
         "commit": "251119cedac66dbd31ca8ce6cb112369b60b359b",
         "desktop": {
@@ -16469,7 +16487,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:packages/skins/dragon-heir",
+        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:/packages/skins/dragon-heir",
         "version": "0.3.1",
         "commit": "251119cedac66dbd31ca8ce6cb112369b60b359b",
         "desktop": {
@@ -16579,7 +16597,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:packages/skins/miku",
+        "target": "github:CAPTAIN1275/dsh-ui-web#4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56&path:/packages/skins/miku",
         "version": "0.2.7",
         "commit": "4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56",
         "allowBuild": "@captain1275/dsh-client-ui-skin-miku@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/4a275b080cb6ff1a1a7a91a77e08aad6ad1eab56#path:packages/skins/miku"
@@ -16653,7 +16671,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:packages/skins/minecraft",
+        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:/packages/skins/minecraft",
         "version": "0.3.1",
         "commit": "251119cedac66dbd31ca8ce6cb112369b60b359b",
         "desktop": {
@@ -16763,7 +16781,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:packages/skins/whale-song",
+        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:/packages/skins/whale-song",
         "version": "0.3.1",
         "commit": "251119cedac66dbd31ca8ce6cb112369b60b359b",
         "desktop": {
@@ -16872,7 +16890,7 @@
         "dark"
       ],
       "install": {
-        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:packages/skins/xp",
+        "target": "github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:/packages/skins/xp",
         "version": "0.3.1",
         "commit": "251119cedac66dbd31ca8ce6cb112369b60b359b",
         "desktop": {

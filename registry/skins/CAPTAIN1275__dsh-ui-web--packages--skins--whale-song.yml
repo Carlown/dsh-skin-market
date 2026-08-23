@@ -17,7 +17,7 @@ modes:
   - light
   - dark
 install:
-  target: github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:packages/skins/whale-song
+  target: github:CAPTAIN1275/dsh-ui-web#251119cedac66dbd31ca8ce6cb112369b60b359b&path:/packages/skins/whale-song
   version: 0.3.1
   commit: 251119cedac66dbd31ca8ce6cb112369b60b359b
   desktop:

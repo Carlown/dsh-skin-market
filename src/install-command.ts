@@ -11,3 +11,13 @@ export function quoteInstallTarget(target: string): string {
 export function createDshPluginAddCommand(target: string, profile = 'web'): string {
   return `dsh plugin --profile ${profile} add ${quoteInstallTarget(target)}`
 }
+
+/**
+ * Copied install command. Git subdirectory specs keep `&path:/`, which cmd.exe
+ * splits when DSH forwards to pnpm with `shell: true`. Those specs go through
+ * pnpm directly, matching the market's runtime bypass.
+ */
+export function createInstallCommand(target: string, profile = 'web'): string {
+  if (!target.includes('&')) return createDshPluginAddCommand(target, profile)
+  return `pnpm add ${quoteInstallTarget(target)} --dir "$DSH_HOME/profiles/${profile}"`
+}

@@ -18,7 +18,7 @@ modes:
   - light
   - dark
 install:
-  target: github:rison114514/dsh-endfield-ui#66b05412f3f5df4d497cd9f86ec96656a2be4648&path:endfield-ui-plugin
+  target: github:rison114514/dsh-endfield-ui#66b05412f3f5df4d497cd9f86ec96656a2be4648&path:/endfield-ui-plugin
   version: 0.7.0
   commit: 66b05412f3f5df4d497cd9f86ec96656a2be4648
   desktop:

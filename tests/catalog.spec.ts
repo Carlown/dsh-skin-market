@@ -13,7 +13,17 @@ describe('catalog', () => {
       expect(skin.install.commit).toMatch(/^[0-9a-f]{40}$/)
       expect(skin.install.target).toContain(skin.install.commit)
       expect(repositorySlug(skin.repo)).toContain('/')
+      if (skin.subpath !== undefined) {
+        expect(skin.install.target).toContain(`&path:/${skin.subpath}`)
+        expect(skin.install.target).not.toContain(`&path:${skin.subpath}&`)
+      }
     }
+    const maid = catalog.skins.find(skin => skin.id === 'small-tailqwq.maid-atelier')
+    expect(maid?.install.companions?.[0]).toMatchObject({
+      package: '@dsh-external/dsh-client-ui-skin-deep-whale-manager',
+      rowId: 'ui-skin-deep-whale-manager',
+    })
+    expect(maid?.install.companions?.[0]?.target).toContain('&path:/skin-manager')
   })
 
   it('keeps the Chinese homepage description for dsh-ads', () => {

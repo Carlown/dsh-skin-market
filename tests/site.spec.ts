@@ -34,4 +34,9 @@ describe('static catalog prompts', () => {
 
     expect(command).toBe(`dsh plugin --profile web add "${target}"`)
   })
+
+  it('copies subdirectory skins as a direct pnpm add', () => {
+    const target = `github:example/dsh-skin#${'a'.repeat(40)}&path:/packages/skin`
+    expect(skinCommand(target)).toBe(`pnpm add "${target}" --dir "$DSH_HOME/profiles/web"`)
+  })
 })

@@ -35,6 +35,14 @@ export interface DshRuntime {
   source: 'host-package' | 'injected' | 'unknown'
 }
 
+export interface SkinCompanion {
+  package: string
+  target: string
+  version: string
+  commit: string
+  rowId: string
+}
+
 export interface SkinEntry {
   id: string
   name: { zh: string; en: string }
@@ -47,7 +55,7 @@ export interface SkinEntry {
   category: string
   tags: string[]
   modes: Array<'light' | 'dark'>
-  install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability }
+  install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability; companions?: SkinCompanion[] }
   compatibility: { dsh: string; platform: string[]; adapters?: CompatibilityAdapter[] }
   marketScreenshots?: string[]
   listScreenshot?: string

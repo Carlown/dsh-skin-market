@@ -28,6 +28,13 @@ export interface DshRuntime {
     capabilities: string[];
     source: 'host-package' | 'injected' | 'unknown';
 }
+export interface SkinCompanion {
+    package: string;
+    target: string;
+    version: string;
+    commit: string;
+    rowId: string;
+}
 export interface SkinEntry {
     id: string;
     name: {
@@ -50,6 +57,7 @@ export interface SkinEntry {
         allowBuild?: string;
         npm?: NpmInstallSource;
         desktop?: DesktopInstallCapability;
+        companions?: SkinCompanion[];
     };
     compatibility: {
         dsh: string;

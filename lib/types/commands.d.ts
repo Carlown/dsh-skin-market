@@ -27,6 +27,21 @@ export interface PluginRunner {
 }
 export declare function normalizedEnvironment(options?: CommandOptions): NodeJS.ProcessEnv | undefined;
 export declare const winCmdShim: boolean;
+export interface PluginProcess {
+    file: string;
+    argv: string[];
+    cwd?: string;
+    viaShell: boolean;
+}
+/**
+ * Choose how to run a profile plugin command.
+ *
+ * Specs with `&path:` cannot go through `dsh plugin` on Windows: DSH forwards
+ * to pnpm with `shell: true`, and cmd.exe splits on `&`. Same policy as
+ * dsh-market's TARGET_RE (reject `&` at the dsh boundary); here we keep the
+ * pinned `#commit&path:/` form and spawn pnpm ourselves.
+ */
+export declare function pluginProcess(profile: string, args: readonly string[]): PluginProcess;
 /** Quote one argv token before passing it through cmd.exe. */
 export declare function quoteCmdArg(arg: string): string;
 /** Build the command line used by the explicit Windows cmd.exe bridge. */

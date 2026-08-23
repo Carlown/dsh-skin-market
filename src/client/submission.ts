@@ -1,4 +1,4 @@
-import { createDshPluginAddCommand } from '../install-command.ts'
+import { createInstallCommand } from '../install-command.ts'
 import { effectiveBuildApprovalKey } from '../build-approval.ts'
 
 export const REGISTRY_REPOSITORY = 'https://github.com/kingOfSoySauce/dsh-skin-market'
@@ -54,6 +54,6 @@ export function createSkinInstallPrompt(skin: CatalogSkin): string {
 }
 
 export function createSkinInstallCommand(skin: CatalogSkin): string {
-  return createDshPluginAddCommand(skin.install.target)
+  return createInstallCommand(skin.install.target)
 }
 import type { CatalogSkin } from './types.ts'

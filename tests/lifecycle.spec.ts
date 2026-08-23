@@ -267,7 +267,7 @@ describe('skin lifecycle', () => {
       subpath: 'packages/dsh-web-ui-all',
       install: {
         ...base.install,
-        target: 'github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:packages/dsh-web-ui-all',
+        target: 'github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:/packages/dsh-web-ui-all',
         commit: '29fa777bdd8c9f7d93700c56c11a96a32634d967',
         allowBuild,
       },
@@ -813,5 +813,70 @@ describe('skin lifecycle', () => {
     expect(readDependencies(dir)).toEqual({})
     expect(existsSync(join(dir, 'pnpm-workspace.yaml'))).toBe(false)
     expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).toBe(originalLockfile)
+  })
+
+  it('installs a shared companion with the skin and removes it only after the last owner is uninstalled', async () => {
+    const dir = fixture()
+    const commit = 'a'.repeat(40)
+    const companion = {
+      package: '@dsh-external/dsh-client-ui-skin-deep-whale-manager',
+      target: `github:example/repo#${commit}&path:/skin-manager`,
+      version: '0.1.0',
+      commit,
+      rowId: 'ui-skin-deep-whale-manager',
+    }
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const one = {
+      ...base,
+      id: 'companion.one',
+      package: 'skin-one',
+      rowId: 'skin-one',
+      review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'verified' as const },
+      install: { target: `github:example/repo#${commit}&path:/one`, version: '1.0.0', commit, companions: [companion] },
+    }
+    const two = {
+      ...one,
+      id: 'companion.two',
+      package: 'skin-two',
+      rowId: 'skin-two',
+      install: { ...one.install, target: `github:example/repo#${commit}&path:/two` },
+    }
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'add' && args.includes('--dir')) return success()
+      if (args[0] === 'add') {
+        const spec = args[1]!
+        const dependencies = { ...readDependencies(dir) }
+        const added = spec === companion.target
+          ? { package: companion.package, rowId: companion.rowId, install: { version: companion.version } }
+          : spec === one.install.target ? one : spec === two.install.target ? two : null
+        if (added === null) return { ...success(), exitCode: 1, stderr: `unexpected spec ${spec}` }
+        dependencies[added.package] = spec
+        atomicWriteJson(join(dir, 'package.json'), { dependencies })
+        writeBundlePackage(dir, added)
+        return success()
+      }
+      if (args[0] === 'remove') {
+        const dependencies = { ...readDependencies(dir) }
+        delete dependencies[args[1]!]
+        atomicWriteJson(join(dir, 'package.json'), { dependencies })
+        return success()
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [one, two])
+
+    expect((await finished(lifecycle.begin('install', one.id))).phase).toBe('done')
+    expect(readDependencies(dir)).toMatchObject({ [companion.package]: companion.target, [one.package]: one.install.target })
+
+    expect((await finished(lifecycle.begin('install', two.id))).phase).toBe('done')
+    expect(readDependencies(dir)[companion.package]).toBe(companion.target)
+
+    expect((await finished(lifecycle.begin('uninstall', one.id))).phase).toBe('done')
+    expect(readDependencies(dir)[companion.package]).toBe(companion.target)
+    expect(readDependencies(dir)[one.package]).toBeUndefined()
+
+    expect((await finished(lifecycle.begin('uninstall', two.id))).phase).toBe('done')
+    expect(readDependencies(dir)).toEqual({})
   })
 })

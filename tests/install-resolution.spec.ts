@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { atomicWriteJson } from '../src/profile.ts'
-import { discoverMonorepoTarget, npmInstallTarget, parseGithubTarget, preferredInstallTarget } from '../src/install-resolution.ts'
+import { discoverMonorepoTarget, githubInstallTarget, githubPathQuery, npmInstallTarget, parseGithubTarget, preferredInstallTarget } from '../src/install-resolution.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 describe('install resolution', () => {
@@ -32,7 +32,7 @@ describe('install resolution', () => {
     atomicWriteJson(join(root, 'packages', 'skin', 'package.json'), { name: base.package, version: base.install.version, dsh: { client: { platform: 'web' } } })
 
     expect(discoverMonorepoTarget(directory, base, `github:example/repo#${commit}`))
-      .toBe(`github:example/repo#${commit}&path:packages/skin`)
+      .toBe(`github:example/repo#${commit}&path:/packages/skin`)
   })
 
   it('rejects an ambiguous collection instead of guessing a child', () => {
@@ -48,5 +48,18 @@ describe('install resolution', () => {
     }
 
     expect(() => discoverMonorepoTarget(directory, base, `github:example/repo#${commit}`)).toThrow('找到多个')
+  })
+
+  it('emits pnpm subdirectory selectors with a leading slash and parses both spellings', () => {
+    const commit = 'c'.repeat(40)
+    expect(githubPathQuery('maid-atelier')).toBe('&path:/maid-atelier')
+    expect(githubPathQuery('/packages/skin')).toBe('&path:/packages/skin')
+    expect(githubInstallTarget('owner/repo', commit, 'maid-atelier'))
+      .toBe(`github:owner/repo#${commit}&path:/maid-atelier`)
+    expect(parseGithubTarget(`github:owner/repo#${commit}&path:/maid-atelier`))
+      .toEqual({ repository: 'owner/repo', commit, subpath: 'maid-atelier' })
+    expect(parseGithubTarget(`github:owner/repo#${commit}&path:maid-atelier`))
+      .toEqual({ repository: 'owner/repo', commit, subpath: 'maid-atelier' })
+    expect(() => githubPathQuery('../escape')).toThrow('invalid github subpath')
   })
 })

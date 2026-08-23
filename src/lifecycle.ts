@@ -7,7 +7,7 @@ import { assessCompatibility } from './compatibility.ts'
 import { persistCompatibilityPatch, planCompatibilityPatch } from './compatibility-adapter.ts'
 import type { PluginInstallRequest, PluginRunner } from './commands.ts'
 import { loadCatalog } from './catalog.ts'
-import { discoverMonorepoTarget, isNpmInstallTarget, preferredInstallTarget } from './install-resolution.ts'
+import { companionAsSkin, discoverMonorepoTarget, isNpmInstallTarget, preferredInstallTarget } from './install-resolution.ts'
 import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
 import {
   ensureBuildAllowed,
@@ -493,7 +493,35 @@ export class SkinLifecycle {
     this.update(operation, 'installing')
     const buildApprovalKey = buildApprovalKeyForTarget(skin, target) ?? effectiveBuildApprovalKey(skin)
     if (buildApprovalKey !== undefined) ensureBuildAllowed(this.options.profileDir, buildApprovalKey)
+    await this.installCompanions(skin, operation)
     await this.run(['add', target, '--prefer-offline', ...(isNpmInstallTarget(skin, target) ? ['--save-exact'] : [])], operation)
+  }
+
+  private async installCompanions(skin: SkinEntry, operation: Operation): Promise<void> {
+    for (const companion of skin.install.companions ?? []) {
+      const existing = readDependencies(this.options.profileDir)[companion.package]
+      if (existing !== companion.target) {
+        await this.run(['add', companion.target, '--prefer-offline'], operation)
+      }
+      ensureSkinRegistration(this.options.profileDir, companionAsSkin(skin, companion), false)
+    }
+  }
+
+  private companionStillNeeded(packageName: string, exceptSkinId: string): boolean {
+    return this.catalog.some(item => {
+      if (item.id === exceptSkinId) return false
+      if (!(item.install.companions ?? []).some(companion => companion.package === packageName)) return false
+      return readDependencies(this.options.profileDir)[item.package] !== undefined
+    })
+  }
+
+  private async uninstallUnusedCompanions(skin: SkinEntry, operation: Operation): Promise<void> {
+    for (const companion of skin.install.companions ?? []) {
+      if (this.companionStillNeeded(companion.package, skin.id)) continue
+      if (readDependencies(this.options.profileDir)[companion.package] === undefined) continue
+      await this.run(['remove', companion.package], operation)
+      removeSkinRegistration(this.options.profileDir, companionAsSkin(skin, companion))
+    }
   }
 
   private assertRuntimeLoaderConflicts(skin: SkinEntry): void {
@@ -773,6 +801,7 @@ export class SkinLifecycle {
       if (enabledSkinIds(state).has(skin.id)) await this.deactivate(operation)
       this.update(operation, 'downloading')
       await this.run(['remove', skin.package], operation)
+      await this.uninstallUnusedCompanions(skin, operation)
       detachedPatchFiles = detachCompatibilityPatches(this.options.profileDir, skin.package)
       await this.syncPnpmMetadata(operation, '正在清理兼容适配并同步 pnpm 锁文件')
       removeSkinRegistration(this.options.profileDir, skin)

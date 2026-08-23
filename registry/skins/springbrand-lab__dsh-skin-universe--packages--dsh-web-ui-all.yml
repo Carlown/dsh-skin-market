@@ -15,7 +15,7 @@ modes:
   - light
   - dark
 install:
-  target: github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:packages/dsh-web-ui-all
+  target: github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:/packages/dsh-web-ui-all
   version: 0.1.7
   commit: 29fa777bdd8c9f7d93700c56c11a96a32634d967
   desktop:

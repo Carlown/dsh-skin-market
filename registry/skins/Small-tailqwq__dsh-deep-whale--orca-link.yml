@@ -19,9 +19,15 @@ modes:
   - light
   - dark
 install:
-  target: github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:orca-link
+  target: github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:/orca-link
   version: 0.0.1
   commit: b693d2c224a0a6fb5b621e7cc1284f20d9849c1c
+  companions:
+    - package: "@dsh-external/dsh-client-ui-skin-deep-whale-manager"
+      target: github:Small-tailqwq/dsh-deep-whale#b693d2c224a0a6fb5b621e7cc1284f20d9849c1c&path:/skin-manager
+      version: "0.1.0"
+      commit: b693d2c224a0a6fb5b621e7cc1284f20d9849c1c
+      rowId: ui-skin-deep-whale-manager
   desktop:
     mode: manual-only
     reason: npm-package-not-found

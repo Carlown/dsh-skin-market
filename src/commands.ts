@@ -1,5 +1,6 @@
 import { spawn, type ChildProcess, type SpawnOptions } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
+import { resolveProfileDir } from './profile.ts'
 import type { MarketHostKind } from './types.ts'
 
 export interface CommandResult {
@@ -52,6 +53,40 @@ function dshInvocation(): { file: string; prefix: string[]; cwd?: string; viaShe
     return { file: process.execPath, prefix: [...process.execArgv, absolute], cwd: dirname(absolute), viaShell: false }
   }
   return { file: 'dsh', prefix: [], viaShell: winCmdShim }
+}
+
+export interface PluginProcess {
+  file: string
+  argv: string[]
+  cwd?: string
+  viaShell: boolean
+}
+
+/**
+ * Choose how to run a profile plugin command.
+ *
+ * Specs with `&path:` cannot go through `dsh plugin` on Windows: DSH forwards
+ * to pnpm with `shell: true`, and cmd.exe splits on `&`. Same policy as
+ * dsh-market's TARGET_RE (reject `&` at the dsh boundary); here we keep the
+ * pinned `#commit&path:/` form and spawn pnpm ourselves.
+ */
+export function pluginProcess(profile: string, args: readonly string[]): PluginProcess {
+  if (args.some(arg => arg.includes('&'))) {
+    const profileDir = resolveProfileDir(profile)
+    return {
+      file: 'pnpm',
+      argv: args.includes('--dir') ? [...args] : [...args, '--dir', profileDir],
+      cwd: profileDir,
+      viaShell: winCmdShim,
+    }
+  }
+  const invocation = dshInvocation()
+  return {
+    file: invocation.file,
+    argv: [...invocation.prefix, 'plugin', '--profile', profile, ...args],
+    cwd: invocation.cwd,
+    viaShell: invocation.viaShell,
+  }
 }
 
 /** Characters that cmd.exe reinterprets when it reparses a command line. */
@@ -182,7 +217,7 @@ export function createPnpmProvisioner(execute: CommandExecutor = runCommand): (o
 export const ensurePnpmAvailable = createPnpmProvisioner()
 
 export const runPluginCli: PluginRunner = (profile, args, options) => new Promise(resolvePromise => {
-  const invocation = dshInvocation()
+  const invocation = pluginProcess(profile, args)
   const env: NodeJS.ProcessEnv = { ...process.env, ...normalizedEnvironment(options), CI: 'true' }
   if (process.platform !== 'win32') {
     const parts = (env.PATH ?? '').split(':').filter(Boolean)
@@ -191,7 +226,7 @@ export const runPluginCli: PluginRunner = (profile, args, options) => new Promis
     }
     env.PATH = parts.join(':')
   }
-  const child = spawnShim(invocation.file, [...invocation.prefix, 'plugin', '--profile', profile, ...args], {
+  const child = spawnShim(invocation.file, invocation.argv, {
     cwd: invocation.cwd,
     env,
     stdio: ['ignore', 'pipe', 'pipe'],

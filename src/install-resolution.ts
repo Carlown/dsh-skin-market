@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
-import type { SkinEntry } from './types.ts'
+import type { SkinCompanion, SkinEntry } from './types.ts'
 
 interface PackageManifest {
   name?: unknown
@@ -13,13 +13,38 @@ export interface GithubTargetParts {
   subpath?: string
 }
 
+/** Repo-relative directory for pnpm's `#path:` / `&path:/` selectors. */
+export function validSubpath(subpath: string): boolean {
+  if (!/^[A-Za-z0-9_./-]+$/.test(subpath)) return false
+  return !subpath.split('/').some(seg => seg === '' || seg === '.' || seg === '..')
+}
+
+export function normalizeGithubSubpath(subpath: string): string {
+  const normalized = subpath.replaceAll('\\', '/').replace(/^\/+|\/+$/g, '')
+  if (!validSubpath(normalized)) throw new Error(`invalid github subpath: ${subpath}`)
+  return normalized
+}
+
+/** pnpm git subdirectory selector. Leading slash is required; see pnpm PR #7487. */
+export function githubPathQuery(subpath: string): string {
+  return `&path:/${normalizeGithubSubpath(subpath)}`
+}
+
+export function githubInstallTarget(repository: string, commit: string, subpath?: string): string {
+  return `github:${repository}#${commit}${subpath === undefined ? '' : githubPathQuery(subpath)}`
+}
+
 export function parseGithubTarget(target: string): GithubTargetParts | null {
-  const match = /^github:([^#]+)#([0-9a-f]{40})(?:&path:([A-Za-z0-9._/-]+))?$/i.exec(target)
+  const match = /^github:([^#]+)#([0-9a-f]{40})(?:&path:\/?([A-Za-z0-9._/-]+))?$/i.exec(target)
   if (match === null) return null
-  return {
-    repository: match[1],
-    commit: match[2].toLowerCase(),
-    ...(match[3] === undefined ? {} : { subpath: match[3] }),
+  const raw = match[3]
+  if (raw === undefined) {
+    return { repository: match[1], commit: match[2].toLowerCase() }
+  }
+  try {
+    return { repository: match[1], commit: match[2].toLowerCase(), subpath: normalizeGithubSubpath(raw) }
+  } catch {
+    return null
   }
 }
 
@@ -30,6 +55,21 @@ export function npmInstallTarget(skin: SkinEntry): string | null {
 
 export function preferredInstallTarget(skin: SkinEntry): string {
   return npmInstallTarget(skin) ?? skin.install.target
+}
+
+export function companionAsSkin(skin: SkinEntry, companion: SkinCompanion): SkinEntry {
+  const parts = parseGithubTarget(companion.target)
+  return {
+    ...skin,
+    package: companion.package,
+    rowId: companion.rowId,
+    ...(parts?.subpath === undefined ? { subpath: undefined } : { subpath: parts.subpath }),
+    install: {
+      target: companion.target,
+      version: companion.version,
+      commit: companion.commit,
+    },
+  }
 }
 
 export function isNpmInstallTarget(skin: SkinEntry, target: string): boolean {
@@ -103,5 +143,5 @@ export function discoverMonorepoTarget(directory: string, skin: SkinEntry, targe
   if (root === undefined) throw new Error(`无法确定 ${skin.package} 的 monorepo 根目录`)
   const subpath = relative(root, unique[0]!).split(sep).join('/')
   if (subpath === '' || subpath.startsWith('../')) throw new Error(`无法确定 ${skin.package} 的 monorepo 子路径`)
-  return `github:${parts.repository}#${parts.commit}&path:${subpath}`
+  return githubInstallTarget(parts.repository, parts.commit, subpath)
 }

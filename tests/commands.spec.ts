@@ -1,13 +1,22 @@
 import { PassThrough } from 'node:stream'
 import { describe, expect, it } from 'vitest'
-import { cmdCommandLine, commandError, createPnpmProvisioner, desktopRunner, normalizedEnvironment, quoteCmdArg, type CommandResult, type DesktopPnpmLike } from '../src/commands.ts'
+import { cmdCommandLine, commandError, createPnpmProvisioner, desktopRunner, normalizedEnvironment, pluginProcess, quoteCmdArg, type CommandResult, type DesktopPnpmLike } from '../src/commands.ts'
 
 describe('Windows command shim quoting', () => {
   it('quotes cmd metacharacters as one argument', () => {
-    const target = 'github:owner/repo#' + 'a'.repeat(40) + '&path:sub'
+    const target = 'github:owner/repo#' + 'a'.repeat(40) + '&path:/sub'
     expect(quoteCmdArg(target)).toBe(`"${target}"`)
     expect(cmdCommandLine(['dsh', 'plugin', '--profile', 'web', 'add', target]))
       .toContain(`"${target}"`)
+  })
+
+  it('runs git subdirectory specs through pnpm instead of dsh plugin', () => {
+    const target = 'github:owner/repo#' + 'a'.repeat(40) + '&path:/maid-atelier'
+    const process = pluginProcess('web', ['add', target, '--prefer-offline'])
+    expect(process.file).toBe('pnpm')
+    expect(process.argv).toEqual(['add', target, '--prefer-offline', '--dir', process.cwd])
+    expect(process.argv.filter(arg => arg.includes('&'))).toEqual([target])
+    expect(pluginProcess('web', ['add', 'dskin@1.0.0']).argv).toContain('plugin')
   })
 
   it('quotes spaces and embedded double quotes without changing plain tokens', () => {

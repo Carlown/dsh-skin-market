@@ -38,7 +38,7 @@ export interface CatalogSkin {
   rowId: string
   tags: string[]
   modes: string[]
-  install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability }
+  install: { target: string; version: string; commit: string; allowBuild?: string; npm?: NpmInstallSource; desktop?: DesktopInstallCapability; companions?: Array<{ package: string; target: string; version: string; commit: string; rowId: string }> }
   compatibility: { dsh: string; platform: string[]; adapters?: Array<{ id: string; kind: 'keyed-slot-id-to-key'; when: string; slot: string; key: 'locale' | string }> }
   marketScreenshots?: string[]
   listScreenshot?: string

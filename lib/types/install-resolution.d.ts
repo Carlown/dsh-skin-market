@@ -1,12 +1,19 @@
-import type { SkinEntry } from './types.ts';
+import type { SkinCompanion, SkinEntry } from './types.ts';
 export interface GithubTargetParts {
     repository: string;
     commit: string;
     subpath?: string;
 }
+/** Repo-relative directory for pnpm's `#path:` / `&path:/` selectors. */
+export declare function validSubpath(subpath: string): boolean;
+export declare function normalizeGithubSubpath(subpath: string): string;
+/** pnpm git subdirectory selector. Leading slash is required; see pnpm PR #7487. */
+export declare function githubPathQuery(subpath: string): string;
+export declare function githubInstallTarget(repository: string, commit: string, subpath?: string): string;
 export declare function parseGithubTarget(target: string): GithubTargetParts | null;
 export declare function npmInstallTarget(skin: SkinEntry): string | null;
 export declare function preferredInstallTarget(skin: SkinEntry): string;
+export declare function companionAsSkin(skin: SkinEntry, companion: SkinCompanion): SkinEntry;
 export declare function isNpmInstallTarget(skin: SkinEntry, target: string): boolean;
 /**
  * Inspect a root GitHub package fetched into a temporary profile. A package
