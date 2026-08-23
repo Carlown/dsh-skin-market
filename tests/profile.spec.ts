@@ -1,10 +1,11 @@
+import { createHash } from 'node:crypto'
 import { mkdirSync, mkdtempSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { effectiveBuildApprovalKey } from '../src/build-approval.ts'
-import { assertNoLoaderConflicts, atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensureBuildAllowed, ensurePatchedDependency, ensureSkinRegistration, InstallConflictError, installedClientPlugins, installedSpecMatches, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeCompatibilityPatches, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
+import { assertNoLoaderConflicts, atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensureBuildAllowed, ensurePatchedDependency, ensureSkinRegistration, InstallConflictError, installedClientPlugins, installedSpecMatches, patchedDependenciesNeedSync, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeCompatibilityPatches, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 function fixture() { return mkdtempSync(join(tmpdir(), 'skin-profile-')) }
@@ -163,6 +164,20 @@ describe('profile state', () => {
     expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).toContain('@example/other@1.0.0')
     expect(() => readFileSync(skinPatch, 'utf8')).toThrow()
     expect(readFileSync(otherPatch, 'utf8')).toBe('other patch')
+  })
+
+  it('detects patched dependency drift and accepts pnpm lockfile hashes', () => {
+    const dir = fixture()
+    const patchFile = compatibilityPatchFile(dir, '@example/skin', '1.0.0')
+    atomicWriteText(patchFile, 'skin patch\n')
+    ensurePatchedDependency(dir, '@example/skin', '1.0.0', '.dsh-skin-market/patches/_example_skin_1.0.0.patch')
+
+    expect(patchedDependenciesNeedSync(dir)).toBe(true)
+
+    const hash = createHash('sha256').update('skin patch\n').digest('hex')
+    atomicWriteText(join(dir, 'pnpm-lock.yaml'), `lockfileVersion: '9.0'\npatchedDependencies:\n  '@example/skin@1.0.0': ${hash}\n`)
+
+    expect(patchedDependenciesNeedSync(dir)).toBe(false)
   })
 
   it('derives pnpm build approval keys with a monorepo package subpath', () => {

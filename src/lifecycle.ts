@@ -12,6 +12,8 @@ import {
   ensureBuildAllowed,
   ensureSkinRegistration,
   installedSpecMatches,
+  cleanupCompatibilityPatchFiles,
+  detachCompatibilityPatches,
   pnpmLockfile,
   pnpmWorkspaceFile,
   profilePatchFile,
@@ -21,15 +23,16 @@ import {
   assertNoLoaderConflicts,
   InstallConflictError,
   compatibilityPatchFile,
+  marketStateFile,
+  patchedDependenciesNeedSync,
   removeSkinRegistration,
-  removeCompatibilityPatches,
   restoreFile,
   restoreManifest,
   runtimeState,
   snapshotFile,
-  snapshotManifest,
   validateInstalledSkin,
   writeMarketState,
+  type FileSnapshot,
 } from './profile.ts'
 import type { DesktopInstallCapability, DshRuntime, LoaderEntry, MarketHostKind, Operation, OperationFailure, OperationKind, PersistedMarketState, SkinEntry, SkinRuntimeState } from './types.ts'
 
@@ -53,6 +56,32 @@ function recoveryMessage(failure: PnpmFailure): string {
   if (failure.kind === 'fetch-timeout') return '下载超时，正在延长 pnpm 下载等待时间并重试'
   if (failure.kind === 'network') return '检测到临时网络错误，正在自动重试'
   return failure.message
+}
+
+interface ProfileInstallSnapshot {
+  manifest: FileSnapshot
+  profilePatch: FileSnapshot
+  workspace: FileSnapshot
+  lockfile: FileSnapshot
+  compatibility: FileSnapshot
+}
+
+function snapshotInstallFiles(profileDir: string, packageName: string, version: string): ProfileInstallSnapshot {
+  return {
+    manifest: snapshotFile(join(profileDir, 'package.json')),
+    profilePatch: snapshotFile(profilePatchFile(profileDir)),
+    workspace: snapshotFile(pnpmWorkspaceFile(profileDir)),
+    lockfile: snapshotFile(pnpmLockfile(profileDir)),
+    compatibility: snapshotFile(compatibilityPatchFile(profileDir, packageName, version)),
+  }
+}
+
+function restoreProfileInstallFiles(profileDir: string, packageName: string, version: string, snapshot: ProfileInstallSnapshot): void {
+  restoreManifest(profileDir, snapshot.manifest)
+  restoreFile(profilePatchFile(profileDir), snapshot.profilePatch)
+  restoreFile(pnpmWorkspaceFile(profileDir), snapshot.workspace)
+  restoreFile(pnpmLockfile(profileDir), snapshot.lockfile)
+  restoreFile(compatibilityPatchFile(profileDir, packageName, version), snapshot.compatibility)
 }
 
 export function desktopInstallError(capability: DesktopInstallCapability | undefined): string {
@@ -171,8 +200,16 @@ export class SkinLifecycle {
     const plan = planCompatibilityPatch(this.options.profileDir, skin, this.runtime)
     if (plan === null || plan.adapterIds.length === 0) return
     persistCompatibilityPatch(this.options.profileDir, plan)
-    this.update(operation, 'installing', `正在应用兼容适配：${plan.adapterIds.join('、')}`)
-    await this.run(['install'], operation)
+    await this.syncPnpmMetadata(operation, `正在应用兼容适配：${plan.adapterIds.join('、')}`)
+  }
+
+  private async syncPnpmMetadata(operation: Operation, message = '正在同步 pnpm 锁文件'): Promise<void> {
+    if (!patchedDependenciesNeedSync(this.options.profileDir)) return
+    this.update(operation, 'installing', message)
+    await this.run(['install', '--no-frozen-lockfile'], operation)
+    if (patchedDependenciesNeedSync(this.options.profileDir)) {
+      throw new Error('pnpm patchedDependencies 未能与锁文件同步，已停止本次操作以保护 profile')
+    }
   }
 
   private async repairMaterializedPackage(skin: SkinEntry, operation: Operation): Promise<void> {
@@ -483,6 +520,7 @@ export class SkinLifecycle {
   private async install(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
     this.assertRuntimeCompatibility(skin)
+    await this.syncPnpmMetadata(operation, '正在修复 profile 的 pnpm 锁文件')
     const existingSpec = readDependencies(this.options.profileDir)[skin.package]
     if (existingSpec !== undefined) {
       let validation = validateInstalledSkin(this.options.profileDir, skin)
@@ -491,35 +529,36 @@ export class SkinLifecycle {
         validation = validateInstalledSkin(this.options.profileDir, skin)
       }
       if (!validation.ok) throw new Error(validation.reason)
-      await this.applyCompatibility(skin, operation)
-      validation = validateInstalledSkin(this.options.profileDir, skin)
-      if (!validation.ok) throw new Error(validation.reason)
       if (!installedSpecMatches(skin, existingSpec)) {
         throw new Error(`installed package ${skin.package} does not match the reviewed source/version; use Update to replace it with ${skin.install.target}`)
       }
-      const state = readMarketState(this.options.profileDir)
-      ensureSkinRegistration(this.options.profileDir, skin, !enabledSkinIds(state).has(skin.id))
-      this.reconcileDisabledSkinIds(state)
-      writeMarketState(this.options.profileDir, state)
-      operation.message = 'skin was already installed; market state reconciled'
-      return
+      const snapshot = snapshotInstallFiles(this.options.profileDir, skin.package, skin.install.version)
+      try {
+        await this.applyCompatibility(skin, operation)
+        validation = validateInstalledSkin(this.options.profileDir, skin)
+        if (!validation.ok) throw new Error(validation.reason)
+        const state = readMarketState(this.options.profileDir)
+        ensureSkinRegistration(this.options.profileDir, skin, !enabledSkinIds(state).has(skin.id))
+        this.reconcileDisabledSkinIds(state)
+        writeMarketState(this.options.profileDir, state)
+        operation.message = 'skin was already installed; market state reconciled'
+        return
+      } catch (error) {
+        restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
+        if (this.abortControllers.get(operation.id)?.signal.aborted !== true) {
+          try { await this.run(['install'], operation) } catch { /* retain original failure */ }
+        }
+        restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
+        throw error
+      }
     }
     const approvedBuildKey = this.pendingBuildKeys.get(operation.id)
     if (approvedBuildKey !== undefined) ensureBuildAllowed(this.options.profileDir, approvedBuildKey)
-    const snapshot = snapshotManifest(this.options.profileDir)
-    const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
-    const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
-    const lockfileSnapshot = snapshotFile(pnpmLockfile(this.options.profileDir))
-    const compatibilitySnapshot = snapshotFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version))
-    const restoreInstallFiles = (): void => {
-      restoreManifest(this.options.profileDir, snapshot)
-      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
-      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
-      restoreFile(pnpmLockfile(this.options.profileDir), lockfileSnapshot)
-      restoreFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version), compatibilitySnapshot)
-    }
+    const snapshot = snapshotInstallFiles(this.options.profileDir, skin.package, skin.install.version)
+    const detachedPatchFiles = detachCompatibilityPatches(this.options.profileDir, skin.package)
     this.update(operation, 'resolving')
     try {
+      await this.syncPnpmMetadata(operation, '正在清理旧的兼容适配')
       this.update(operation, 'downloading')
       await this.installPackage(skin, operation)
       await this.applyCompatibility(skin, operation)
@@ -536,15 +575,16 @@ export class SkinLifecycle {
       if (!state.disabledSkinIds.includes(skin.id)) state.disabledSkinIds.push(skin.id)
       recordActivity(state, skin.id, 'installedAt', operation.startedAt)
       writeMarketState(this.options.profileDir, state)
+      cleanupCompatibilityPatchFiles(detachedPatchFiles.filter(file => file !== compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version)))
       operation.message = 'installed; choose Use to activate'
     } catch (error) {
-      restoreInstallFiles()
+      restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
       if (this.abortControllers.get(operation.id)?.signal.aborted !== true) {
         try { await this.run(['install']) } catch { /* retain the original failure */ }
       }
       // The repair install may rewrite pnpm-lock.yaml while it restores node_modules.
       // Keep the profile metadata byte-for-byte identical to its pre-operation state.
-      restoreInstallFiles()
+      restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
       throw error
     }
   }
@@ -633,24 +673,16 @@ export class SkinLifecycle {
   private async updateSkin(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
     this.assertRuntimeCompatibility(skin)
+    await this.syncPnpmMetadata(operation, '正在修复 profile 的 pnpm 锁文件')
     const previousState = readMarketState(this.options.profileDir)
     const wasActive = enabledSkinIds(previousState).has(skin.id)
     const approvedBuildKey = this.pendingBuildKeys.get(operation.id)
     if (approvedBuildKey !== undefined) ensureBuildAllowed(this.options.profileDir, approvedBuildKey)
-    const snapshot = snapshotManifest(this.options.profileDir)
-    const patchSnapshot = snapshotFile(profilePatchFile(this.options.profileDir))
-    const workspaceSnapshot = snapshotFile(pnpmWorkspaceFile(this.options.profileDir))
-    const lockfileSnapshot = snapshotFile(pnpmLockfile(this.options.profileDir))
-    const compatibilitySnapshot = snapshotFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version))
-    const restoreInstallFiles = (): void => {
-      restoreManifest(this.options.profileDir, snapshot)
-      restoreFile(profilePatchFile(this.options.profileDir), patchSnapshot)
-      restoreFile(pnpmWorkspaceFile(this.options.profileDir), workspaceSnapshot)
-      restoreFile(pnpmLockfile(this.options.profileDir), lockfileSnapshot)
-      restoreFile(compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version), compatibilitySnapshot)
-    }
+    const snapshot = snapshotInstallFiles(this.options.profileDir, skin.package, skin.install.version)
+    const detachedPatchFiles = detachCompatibilityPatches(this.options.profileDir, skin.package)
     this.update(operation, 'resolving')
     try {
+      await this.syncPnpmMetadata(operation, '正在清理旧的兼容适配')
       this.update(operation, 'downloading')
       await this.installPackage(skin, operation)
       await this.applyCompatibility(skin, operation)
@@ -666,15 +698,16 @@ export class SkinLifecycle {
       const nextState = readMarketState(this.options.profileDir)
       recordActivity(nextState, skin.id, 'updatedAt', operation.startedAt)
       writeMarketState(this.options.profileDir, nextState)
+      cleanupCompatibilityPatchFiles(detachedPatchFiles.filter(file => file !== compatibilityPatchFile(this.options.profileDir, skin.package, skin.install.version)))
       operation.message = wasActive ? 'updated and kept active' : 'updated and kept inactive'
     } catch (error) {
-      restoreInstallFiles()
+      restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
       if (this.abortControllers.get(operation.id)?.signal.aborted !== true) {
         try { await this.run(['install']) } catch { /* retain original failure */ }
       }
       // The repair install may rewrite pnpm-lock.yaml while it restores node_modules.
       // Keep the profile metadata byte-for-byte identical to its pre-operation state.
-      restoreInstallFiles()
+      restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
       throw error
     }
   }
@@ -682,18 +715,35 @@ export class SkinLifecycle {
   private async uninstall(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
     if (readDependencies(this.options.profileDir)[skin.package] === undefined) throw new Error('skin is not installed')
-    const state = readMarketState(this.options.profileDir)
-    if (enabledSkinIds(state).has(skin.id)) await this.deactivate(operation)
-    this.update(operation, 'downloading')
-    await this.run(['remove', skin.package])
-    removeCompatibilityPatches(this.options.profileDir, skin.package)
-    removeSkinRegistration(this.options.profileDir, skin)
-    const next = readMarketState(this.options.profileDir)
-    next.disabledSkinIds = next.disabledSkinIds.filter(id => id !== skin.id)
-    next.pinnedSkinIds = pinnedSkinIds(next).filter(id => id !== skin.id)
-    if (next.activeSkinId === skin.id) next.activeSkinId = null
-    if (next.activity !== undefined) delete next.activity[skin.id]
-    writeMarketState(this.options.profileDir, next)
-    operation.message = 'skin uninstalled'
+    await this.syncPnpmMetadata(operation, '正在修复 profile 的 pnpm 锁文件')
+    const snapshot = snapshotInstallFiles(this.options.profileDir, skin.package, skin.install.version)
+    const marketStateSnapshot = snapshotFile(marketStateFile(this.options.profileDir))
+    let detachedPatchFiles: string[] = []
+    try {
+      const state = readMarketState(this.options.profileDir)
+      if (enabledSkinIds(state).has(skin.id)) await this.deactivate(operation)
+      this.update(operation, 'downloading')
+      await this.run(['remove', skin.package], operation)
+      detachedPatchFiles = detachCompatibilityPatches(this.options.profileDir, skin.package)
+      await this.syncPnpmMetadata(operation, '正在清理兼容适配并同步 pnpm 锁文件')
+      removeSkinRegistration(this.options.profileDir, skin)
+      const next = readMarketState(this.options.profileDir)
+      next.disabledSkinIds = next.disabledSkinIds.filter(id => id !== skin.id)
+      next.pinnedSkinIds = pinnedSkinIds(next).filter(id => id !== skin.id)
+      if (next.activeSkinId === skin.id) next.activeSkinId = null
+      if (next.activity !== undefined) delete next.activity[skin.id]
+      writeMarketState(this.options.profileDir, next)
+      cleanupCompatibilityPatchFiles(detachedPatchFiles)
+      operation.message = 'skin uninstalled'
+    } catch (error) {
+      restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
+      restoreFile(marketStateFile(this.options.profileDir), marketStateSnapshot)
+      if (this.abortControllers.get(operation.id)?.signal.aborted !== true) {
+        try { await this.run(['install'], operation) } catch { /* retain original failure */ }
+      }
+      restoreProfileInstallFiles(this.options.profileDir, skin.package, skin.install.version, snapshot)
+      restoreFile(marketStateFile(this.options.profileDir), marketStateSnapshot)
+      throw error
+    }
   }
 }

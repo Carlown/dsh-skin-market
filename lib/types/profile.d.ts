@@ -41,6 +41,15 @@ export declare function installedLoaderIdentities(profileDir: string, excludePac
 export declare function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry): void;
 export declare function ensureBuildAllowed(profileDir: string, key: string): void;
 export declare function ensurePatchedDependency(profileDir: string, packageName: string, version: string, patchFile: string): void;
+/**
+ * pnpm records patch file hashes in pnpm-lock.yaml, not the configured paths.
+ * Keep this check local so an older interrupted market operation can repair
+ * its metadata before the next frozen install.
+ */
+export declare function patchedDependenciesNeedSync(profileDir: string): boolean;
+/** Remove a package's patch settings but keep patch files available for rollback. */
+export declare function detachCompatibilityPatches(profileDir: string, packageName: string): string[];
+export declare function cleanupCompatibilityPatchFiles(files: readonly string[]): void;
 export declare function removePatchedDependency(profileDir: string, packageName: string, version: string): void;
 export declare function removeCompatibilityPatch(profileDir: string, packageName: string, version: string): void;
 export declare function removeCompatibilityPatches(profileDir: string, packageName: string): void;

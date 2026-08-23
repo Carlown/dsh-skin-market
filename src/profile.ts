@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join, resolve, sep } from 'node:path'
@@ -421,6 +422,82 @@ export function ensurePatchedDependency(profileDir: string, packageName: string,
   atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
 }
 
+function patchedDependencyMap(value: unknown): Record<string, string> {
+  if (!isRecord(value)) return {}
+  const result: Record<string, string> = {}
+  for (const [key, entry] of Object.entries(value)) {
+    if (typeof entry === 'string') result[key] = entry
+    else if (isRecord(entry) && typeof entry.hash === 'string') result[key] = entry.hash
+  }
+  return result
+}
+
+function normalizedPatchedDependencyMap(value: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(Object.entries(value).sort(([left], [right]) => left.localeCompare(right)))
+}
+
+function patchHash(file: string): string | null {
+  try {
+    const contents = readFileSync(file, 'utf8').replace(/\r\n/g, '\n')
+    return createHash('sha256').update(contents).digest('hex')
+  } catch {
+    return null
+  }
+}
+
+/**
+ * pnpm records patch file hashes in pnpm-lock.yaml, not the configured paths.
+ * Keep this check local so an older interrupted market operation can repair
+ * its metadata before the next frozen install.
+ */
+export function patchedDependenciesNeedSync(profileDir: string): boolean {
+  const workspace = existsSync(pnpmWorkspaceFile(profileDir))
+    ? parse(readFileSync(pnpmWorkspaceFile(profileDir), 'utf8')) as unknown
+    : {}
+  const lockfile = existsSync(pnpmLockfile(profileDir))
+    ? parse(readFileSync(pnpmLockfile(profileDir), 'utf8')) as unknown
+    : {}
+  const configured = isRecord(workspace) ? patchedDependencyMap(workspace.patchedDependencies) : {}
+  const recorded = isRecord(lockfile) ? patchedDependencyMap(lockfile.patchedDependencies) : {}
+  const expected = Object.fromEntries(Object.entries(configured).map(([key, relativeFile]) => {
+    const hash = patchHash(resolve(profileDir, relativeFile))
+    return [key, hash ?? '']
+  }))
+  return JSON.stringify(normalizedPatchedDependencyMap(expected)) !== JSON.stringify(normalizedPatchedDependencyMap(recorded))
+}
+
+/** Remove a package's patch settings but keep patch files available for rollback. */
+export function detachCompatibilityPatches(profileDir: string, packageName: string): string[] {
+  const file = pnpmWorkspaceFile(profileDir)
+  if (!existsSync(file)) return []
+  const parsed = parse(readFileSync(file, 'utf8')) as unknown
+  if (!isRecord(parsed)) return []
+  const patchedDependencies = parsed.patchedDependencies
+  if (!isRecord(patchedDependencies)) return []
+  const next = { ...patchedDependencies }
+  const retainedFiles: string[] = []
+  const prefix = packageName + '@'
+  const patchRoot = resolve(compatibilityPatchDir(profileDir))
+  let changed = false
+  for (const [key, value] of Object.entries(patchedDependencies)) {
+    if (!key.startsWith(prefix)) continue
+    delete next[key]
+    changed = true
+    if (typeof value !== 'string') continue
+    const patchFile = resolve(profileDir, value)
+    if (patchFile.startsWith(patchRoot + sep) && existsSync(patchFile)) retainedFiles.push(patchFile)
+  }
+  if (!changed) return []
+  if (Object.keys(next).length === 0) delete parsed.patchedDependencies
+  else parsed.patchedDependencies = next
+  atomicWriteText(file, stringify(parsed, { lineWidth: 0 }))
+  return retainedFiles
+}
+
+export function cleanupCompatibilityPatchFiles(files: readonly string[]): void {
+  for (const file of files) if (existsSync(file)) unlinkSync(file)
+}
+
 export function removePatchedDependency(profileDir: string, packageName: string, version: string): void {
   const file = pnpmWorkspaceFile(profileDir)
   if (!existsSync(file)) return
@@ -443,29 +520,7 @@ export function removeCompatibilityPatch(profileDir: string, packageName: string
 }
 
 export function removeCompatibilityPatches(profileDir: string, packageName: string): void {
-  const file = pnpmWorkspaceFile(profileDir)
-  if (!existsSync(file)) return
-  const parsed = parse(readFileSync(file, 'utf8')) as unknown
-  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return
-  const workspace = parsed as Record<string, unknown>
-  const patchedDependencies = workspace.patchedDependencies
-  if (typeof patchedDependencies !== 'object' || patchedDependencies === null || Array.isArray(patchedDependencies)) return
-  const prefix = packageName + '@'
-  const next = { ...(patchedDependencies as Record<string, unknown>) }
-  let changed = false
-  for (const [key, value] of Object.entries(patchedDependencies as Record<string, unknown>)) {
-    if (!key.startsWith(prefix)) continue
-    delete next[key]
-    changed = true
-    if (typeof value !== 'string') continue
-    const patchRoot = resolve(compatibilityPatchDir(profileDir))
-    const patchFile = resolve(profileDir, value)
-    if (patchFile.startsWith(patchRoot + sep) && existsSync(patchFile)) unlinkSync(patchFile)
-  }
-  if (!changed) return
-  if (Object.keys(next).length === 0) delete workspace.patchedDependencies
-  else workspace.patchedDependencies = next
-  atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
+  cleanupCompatibilityPatchFiles(detachCompatibilityPatches(profileDir, packageName))
 }
 
 export function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disabled = true): void {

@@ -37,6 +37,7 @@ export declare class SkinLifecycle {
     private get runtime();
     private assertRuntimeCompatibility;
     private applyCompatibility;
+    private syncPnpmMetadata;
     private repairMaterializedPackage;
     replaceCatalog(catalog: SkinEntry[]): Promise<void>;
     start(): void;

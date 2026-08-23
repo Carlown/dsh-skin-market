@@ -1,9 +1,11 @@
+import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { parse, stringify } from 'yaml'
 import { SkinLifecycle } from '../src/lifecycle.ts'
-import { atomicWriteJson, atomicWriteText, compatibilityPatchFile, pnpmWorkspaceFile, profilePatchFile, readDependencies, readMarketState } from '../src/profile.ts'
+import { atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensurePatchedDependency, patchedDependenciesNeedSync, pnpmWorkspaceFile, profilePatchFile, readDependencies, readMarketState } from '../src/profile.ts'
 import type { CommandResult, PluginInstallRequest, PluginRunner } from '../src/commands.ts'
 import type { LoaderEntry, Operation } from '../src/types.ts'
 
@@ -40,6 +42,20 @@ function writeBundlePackage(dir: string, skin: { package: string; rowId: string;
   mkdirSync(packageDir, { recursive: true })
   atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
   atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${skin.rowId}\n      name: ${JSON.stringify(skin.package)}\n`)
+}
+
+function syncPatchLockfile(dir: string): void {
+  const workspace = parse(readFileSync(pnpmWorkspaceFile(dir), 'utf8')) as { patchedDependencies?: Record<string, unknown> }
+  const patchedDependencies = Object.fromEntries(Object.entries(workspace.patchedDependencies ?? {}).flatMap(([key, value]) => {
+    if (typeof value !== 'string') return []
+    const patchFile = join(dir, value)
+    const hash = createHash('sha256').update(readFileSync(patchFile, 'utf8').replace(/\r\n/g, '\n')).digest('hex')
+    return [[key, hash]]
+  }))
+  atomicWriteText(join(dir, 'pnpm-lock.yaml'), stringify({
+    lockfileVersion: '9.0',
+    ...(Object.keys(patchedDependencies).length === 0 ? {} : { patchedDependencies }),
+  }, { lineWidth: 0 }))
 }
 
 describe('skin lifecycle', () => {
@@ -149,6 +165,31 @@ describe('skin lifecycle', () => {
     expect(operation).toMatchObject({ phase: 'done', message: 'skin was already installed; market state reconciled' })
     expect(repairCalls).toBe(1)
     expect(lifecycle.states().find(item => item.skinId === skin.id)?.installation).toBe('installed')
+  })
+
+  it('repairs a stale compatibility lockfile before installing another skin', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const skin = firstInstallable(probe)
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    writeBundlePackage(dir, skin)
+    const patchFile = compatibilityPatchFile(dir, '@example/stale-skin', '1.0.0')
+    atomicWriteText(patchFile, 'stale patch\n')
+    ensurePatchedDependency(dir, '@example/stale-skin', '1.0.0', '.dsh-skin-market/patches/' + basename(patchFile))
+    const calls: Array<readonly string[]> = []
+    const runner: PluginRunner = async (_profile, args) => {
+      calls.push(args)
+      if (args[0] === 'install') syncPatchLockfile(dir)
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation.phase).toBe('done')
+    expect(calls).toHaveLength(1)
+    expect(calls[0]).toContain('--no-frozen-lockfile')
+    expect(patchedDependenciesNeedSync(dir)).toBe(false)
   })
 
   it('recovers a Desktop managed install by retrying the existing installPlugin request', async () => {
@@ -265,6 +306,7 @@ describe('skin lifecycle', () => {
       },
     }
     let compatibilityInstallCalls = 0
+    let compatibilityInstallArgs: readonly string[] = []
     const runner: PluginRunner = async (_profile, args) => {
       if (args.includes('--dir')) return success()
       if (args[0] === 'add') {
@@ -286,7 +328,11 @@ describe('skin lifecycle', () => {
           '}, Card)',
         ].join('\n'))
       }
-      if (args[0] === 'install') compatibilityInstallCalls += 1
+      if (args[0] === 'install') {
+        compatibilityInstallCalls += 1
+        compatibilityInstallArgs = args
+        syncPatchLockfile(dir)
+      }
       return success()
     }
     const lifecycle = new SkinLifecycle(
@@ -302,8 +348,80 @@ describe('skin lifecycle', () => {
 
     expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
     expect(compatibilityInstallCalls).toBe(1)
+    expect(compatibilityInstallArgs).toContain('--no-frozen-lockfile')
+    expect(patchedDependenciesNeedSync(dir)).toBe(false)
     expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).toContain(skin.package + '@' + skin.install.version)
     expect(readFileSync(compatibilityPatchFile(dir, skin.package, skin.install.version), 'utf8')).toContain('+  key: "settings.generic",')
+  })
+
+  it('syncs and removes compatibility patch metadata as one uninstall transaction', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const skin = firstInstallable(probe)
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    writeBundlePackage(dir, skin)
+    const patchFile = compatibilityPatchFile(dir, skin.package, skin.install.version)
+    atomicWriteText(patchFile, 'compatibility patch\n')
+    ensurePatchedDependency(dir, skin.package, skin.install.version, '.dsh-skin-market/patches/' + basename(patchFile))
+    const installArgs: Array<readonly string[]> = []
+    const runner: PluginRunner = async (_profile, args) => {
+      installArgs.push(args)
+      if (args[0] === 'remove') atomicWriteJson(join(dir, 'package.json'), { dependencies: {} })
+      if (args[0] === 'install') syncPatchLockfile(dir)
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('uninstall', skin.id))
+
+    expect(operation.phase).toBe('done')
+    expect(readDependencies(dir)).toEqual({})
+    expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).not.toContain(skin.package + '@' + skin.install.version)
+    expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).not.toContain('patchedDependencies')
+    expect(() => readFileSync(patchFile, 'utf8')).toThrow()
+    expect(patchedDependenciesNeedSync(dir)).toBe(false)
+    expect(installArgs.find(args => args[0] === 'install')).toContain('--no-frozen-lockfile')
+  })
+
+  it('detaches old compatibility patches before updating a package', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog[0]
+    const skin = {
+      ...base,
+      id: 'update-patch.skin',
+      package: '@example/update-skin',
+      rowId: 'update-skin',
+      install: { ...base.install, target: 'github:example/update-skin#newcommit', version: '2.0.0', commit: 'newcommit' },
+    }
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: 'github:example/update-skin#oldcommit' } })
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: '1.0.0', dsh: { client: { platform: 'web' } } })
+    const oldPatch = compatibilityPatchFile(dir, skin.package, '1.0.0')
+    atomicWriteText(oldPatch, 'old compatibility patch\n')
+    ensurePatchedDependency(dir, skin.package, '1.0.0', '.dsh-skin-market/patches/' + basename(oldPatch))
+    syncPatchLockfile(dir)
+    const installArgs: Array<readonly string[]> = []
+    const runner: PluginRunner = async (_profile, args) => {
+      installArgs.push(args)
+      if (args[0] === 'install') syncPatchLockfile(dir)
+      if (args[0] === 'add' && !args.includes('--dir')) {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('update', skin.id))
+
+    expect(operation.phase).toBe('done')
+    expect(readDependencies(dir)[skin.package]).toBe(skin.install.target)
+    expect(() => readFileSync(oldPatch, 'utf8')).toThrow()
+    expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).not.toContain('@example/update-skin@1.0.0')
+    expect(patchedDependenciesNeedSync(dir)).toBe(false)
+    expect(installArgs.find(args => args[0] === 'install')).toContain('--no-frozen-lockfile')
   })
 
   it('installs the curated npm source before the GitHub fallback and saves it exactly', async () => {
