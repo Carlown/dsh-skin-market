@@ -25,22 +25,28 @@ compatibility:
   dsh: unverified
   platform:
     - web
-screenshots: []
+marketScreenshots:
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Small-tailqwq__dsh-deepcel--deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/home.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Small-tailqwq__dsh-deepcel--deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/conversation.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Small-tailqwq__dsh-deepcel--deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/settings.png
+screenshots:
+  - https://raw.githubusercontent.com/Small-tailqwq/dsh-deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/deepcel/preview/light.webp
+  - https://raw.githubusercontent.com/Small-tailqwq/dsh-deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/deepcel/preview/dark.webp
 review:
   compatibility: unverified
-  preview: repository-card
+  preview: verified
   installation: verified
 health:
   status: improvements
   checks:
-    readmeScreenshots: improve
+    readmeScreenshots: pass
     compatibility: improve
     installation: pass
     installCommand: pass
-    topic: pass
+    topic: improve
   suggestions:
-    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
     - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
+    - 建议为仓库添加 dsh-plugin Topic，方便用户和 DSH 皮肤市场发现它。
   scan:
     commit: d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142
     packageVersion: 0.0.1
@@ -55,10 +61,6 @@ license:
 featuredRank: 986
 starsSnapshot: 14
 releaseUpdatedAt: 2026-08-23T10:13:28.821Z
-metadataUpdatedAt: 2026-08-23T15:26:54.639Z
+metadataUpdatedAt: 2026-08-23T17:17:58.862Z
 starsUpdatedAt: 2026-08-23T10:13:28.821Z
-updatedAt: 2026-08-23T15:26:54.639Z
-marketScreenshots:
-  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Small-tailqwq__dsh-deepcel--deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/home.png
-  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Small-tailqwq__dsh-deepcel--deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/conversation.png
-  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Small-tailqwq__dsh-deepcel--deepcel/d2af0efa1c1c8d68ee1cd5d99ac776426f9fb142/settings.png
+updatedAt: 2026-08-23T17:17:58.862Z

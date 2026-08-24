@@ -33,10 +33,6 @@ screenshots:
   - https://raw.githubusercontent.com/nlqh7/dsh-beautify/7d82c8338a04a37f543d401386efb63293e19c54/docs/screenshots/04-five-babies.png
   - https://raw.githubusercontent.com/nlqh7/dsh-beautify/7d82c8338a04a37f543d401386efb63293e19c54/docs/screenshots/05-we-wallpaper.png
   - https://raw.githubusercontent.com/nlqh7/dsh-beautify/7d82c8338a04a37f543d401386efb63293e19c54/docs/screenshots/06-we-picker.png
-  - https://raw.githubusercontent.com/nlqh7/dsh-beautify/cb92fbcfcb4846a347b202e146d32fe8b7984480/docs/screenshots/01-three-babies.png
-  - https://raw.githubusercontent.com/nlqh7/dsh-beautify/cb92fbcfcb4846a347b202e146d32fe8b7984480/docs/screenshots/04-five-babies.png
-  - https://raw.githubusercontent.com/nlqh7/dsh-beautify/cb92fbcfcb4846a347b202e146d32fe8b7984480/docs/screenshots/05-we-wallpaper.png
-  - https://raw.githubusercontent.com/nlqh7/dsh-beautify/cb92fbcfcb4846a347b202e146d32fe8b7984480/docs/screenshots/06-we-picker.png
 review:
   compatibility: unverified
   preview: verified
@@ -48,24 +44,25 @@ health:
     compatibility: improve
     installation: pass
     installCommand: improve
-    topic: pass
+    topic: improve
   suggestions:
     - 建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。
     - 建议在 README 中补充可复制的 DSH 安装命令，方便用户直接使用。
+    - 建议为仓库添加 dsh-plugin Topic，方便用户和 DSH 皮肤市场发现它。
   scan:
     commit: 7d82c8338a04a37f543d401386efb63293e19c54
     packageVersion: 0.2.1
     scannerVersion: static-v2
     mode: static
     result: pass
-    checkedAt: 2026-08-23T05:32:07.483Z
+    checkedAt: 2026-08-23T17:11:49.363Z
     findings: []
 license:
   code: MIT
   commercialUse: true
 featuredRank: 184
-starsSnapshot: 1
-releaseUpdatedAt: 2026-08-23T05:32:07.538Z
-metadataUpdatedAt: 2026-08-23T05:32:07.538Z
-starsUpdatedAt: 2026-08-21T09:10:28.384Z
-updatedAt: 2026-08-23T05:32:07.538Z
+starsSnapshot: 0
+releaseUpdatedAt: 2026-08-23T17:11:50.168Z
+metadataUpdatedAt: 2026-08-23T17:11:50.168Z
+starsUpdatedAt: 2026-08-18T15:45:34.008Z
+updatedAt: 2026-08-23T17:11:50.168Z
