@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-24T04:29:32.238Z",
+  "generatedAt": "2026-08-24T06:38:59.631Z",
   "skins": [
     {
       "id": "univerfv.dsh-furina-theme",
@@ -4522,7 +4522,7 @@
         "scan": {
           "commit": "93c0a90e8147c53cb5d3f3f4babb75e89ebe930b",
           "packageVersion": "0.1.0",
-          "scannerVersion": "static-v2",
+          "scannerVersion": "runtime-smoke-v1",
           "mode": "runtime",
           "result": "fail",
           "checkedAt": "2026-08-24T04:29:13.000Z",
