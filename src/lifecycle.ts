@@ -325,6 +325,7 @@ export class SkinLifecycle {
     for (const skin of installed) {
       await this.setEntryDisabled(skin, !enabled.has(skin.id))
     }
+    await this.syncInstalledCompanions(state, true)
   }
 
   states(): SkinRuntimeState[] {
@@ -499,11 +500,38 @@ export class SkinLifecycle {
   }
 
   private async installCompanions(skin: SkinEntry, operation: Operation): Promise<void> {
+    const enabled = enabledSkinIds(readMarketState(this.options.profileDir))
     for (const companion of skin.install.companions ?? []) {
       if (companionNeedsInstall(this.options.profileDir, companion)) {
         await this.run(['add', companion.target, '--prefer-offline'], operation)
       }
-      ensureSkinRegistration(this.options.profileDir, companionAsSkin(skin, companion), false)
+      ensureSkinRegistration(
+        this.options.profileDir,
+        companionAsSkin(skin, companion),
+        !this.companionOwnersEnabled(companion.package, enabled),
+      )
+    }
+  }
+
+  private companionOwnersEnabled(packageName: string, enabled: Set<string>): boolean {
+    return this.catalog.some(item =>
+      enabled.has(item.id) && (item.install.companions ?? []).some(companion => companion.package === packageName),
+    )
+  }
+
+  private async syncInstalledCompanions(state: PersistedMarketState, live: boolean): Promise<void> {
+    const enabled = enabledSkinIds(state)
+    const seen = new Set<string>()
+    const dependencies = readDependencies(this.options.profileDir)
+    for (const item of this.catalog) {
+      for (const companion of item.install.companions ?? []) {
+        if (seen.has(companion.package) || dependencies[companion.package] === undefined) continue
+        seen.add(companion.package)
+        const entry = companionAsSkin(item, companion)
+        const disabled = !this.companionOwnersEnabled(companion.package, enabled)
+        ensureSkinRegistration(this.options.profileDir, entry, disabled)
+        if (live) await this.setEntryDisabled(entry, disabled)
+      }
     }
   }
 
@@ -658,6 +686,7 @@ export class SkinLifecycle {
         }
         if (installed && !enabled.has(item.id)) ensureSkinRegistration(this.options.profileDir, item, true)
       }
+      await this.syncInstalledCompanions(next, !requiresRestart)
       let active: { found: boolean; live: boolean } | undefined
       if (!requiresRestart) {
         for (const item of this.catalog) {
@@ -694,6 +723,7 @@ export class SkinLifecycle {
     const requiresRestart = this.requiresRestartForTransition(previous, state)
     ensureSkinRegistration(this.options.profileDir, skin, true)
     if (!requiresRestart) await this.setEntryDisabled(skin, true)
+    await this.syncInstalledCompanions(state, !requiresRestart)
     writeMarketState(this.options.profileDir, state)
     operation.message = requiresRestart
       ? 'skin disabled; restart DSH to apply the change'
@@ -710,6 +740,7 @@ export class SkinLifecycle {
     const requiresRestart = this.requiresRestartForTransition(previous, next)
     try {
       ensureSkinRegistration(this.options.profileDir, skin, false)
+      await this.syncInstalledCompanions(next, !requiresRestart)
       writeMarketState(this.options.profileDir, next)
       if (requiresRestart) {
         operation.message = 'pin saved; restart DSH to load this skin'
@@ -737,6 +768,7 @@ export class SkinLifecycle {
         ensureSkinRegistration(this.options.profileDir, skin, true)
         if (!requiresRestart) await this.setEntryDisabled(skin, true)
       }
+      await this.syncInstalledCompanions(next, !requiresRestart)
       writeMarketState(this.options.profileDir, next)
       operation.message = requiresRestart
         ? 'skin is no longer pinned; restart DSH to apply the change'
@@ -772,6 +804,7 @@ export class SkinLifecycle {
       }
       assertNoLoaderConflicts(this.options.profileDir, skin)
       ensureSkinRegistration(this.options.profileDir, skin, !wasActive)
+      await this.syncInstalledCompanions(previousState, false)
       await this.setEntryDisabled(skin, !wasActive)
       const nextState = readMarketState(this.options.profileDir)
       recordActivity(nextState, skin.id, 'updatedAt', operation.startedAt)

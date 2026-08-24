@@ -58,6 +58,8 @@ export declare class SkinLifecycle {
     private run;
     private installPackage;
     private installCompanions;
+    private companionOwnersEnabled;
+    private syncInstalledCompanions;
     private companionStillNeeded;
     private uninstallUnusedCompanions;
     private assertRuntimeLoaderConflicts;

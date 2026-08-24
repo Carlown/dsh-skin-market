@@ -916,4 +916,59 @@ describe('skin lifecycle', () => {
     expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
     expect(readDependencies(dir)).toMatchObject({ [skin.package]: skin.install.target, [companion.package]: companion.target })
   })
+
+  it('disables a companion in settings until an owning skin is in use', async () => {
+    const dir = fixture()
+    const commit = 'a'.repeat(40)
+    const companion = {
+      package: '@dsh-external/dsh-client-ui-skin-deep-whale-manager',
+      target: `github:example/repo#${commit}&path:/skin-manager`,
+      version: '0.1.0',
+      commit,
+      rowId: 'ui-skin-deep-whale-manager',
+    }
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const owner = {
+      ...base,
+      id: 'companion.owner',
+      package: 'skin-one',
+      rowId: 'skin-one',
+      review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'verified' as const },
+      install: { target: `github:example/repo#${commit}&path:/one`, version: '1.0.0', commit, companions: [companion] },
+    }
+    const other = {
+      ...base,
+      id: 'companion.other',
+      package: 'skin-two',
+      rowId: 'skin-two',
+      review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'verified' as const },
+      install: { target: `github:example/repo#${commit}&path:/two`, version: '1.0.0', commit },
+    }
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'add' && args.includes('--dir')) return success()
+      if (args[0] === 'add') {
+        const spec = args[1]!
+        const added = spec === companion.target
+          ? { package: companion.package, rowId: companion.rowId, install: { version: companion.version } }
+          : spec === owner.install.target ? owner : spec === other.install.target ? other : null
+        if (added === null) return { ...success(), exitCode: 1, stderr: `unexpected spec ${spec}` }
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { ...readDependencies(dir), [added.package]: spec } })
+        writeBundlePackage(dir, added)
+        return success()
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [owner, other])
+
+    expect((await finished(lifecycle.begin('install', owner.id))).phase).toBe('done')
+    expect((await finished(lifecycle.begin('install', other.id))).phase).toBe('done')
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).toMatch(/id:\s*ui-skin-deep-whale-manager[\s\S]*disabled:\s*true/)
+
+    expect((await finished(lifecycle.begin('activate', owner.id))).phase).toBe('done')
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).not.toMatch(/id:\s*ui-skin-deep-whale-manager[\s\S]*disabled:\s*true/)
+
+    expect((await finished(lifecycle.begin('activate', other.id))).phase).toBe('done')
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).toMatch(/id:\s*ui-skin-deep-whale-manager[\s\S]*disabled:\s*true/)
+  })
 })
