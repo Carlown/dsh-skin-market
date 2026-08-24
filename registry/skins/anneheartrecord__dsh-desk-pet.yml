@@ -3,38 +3,64 @@ name:
   zh: dsh-desk-pet
   en: dsh-desk-pet
 author: anneheartrecord
-description: Always-on-top DeepSeek Harness desktop pet. Default whale, four skins,
-  four silent states. Not an in-page widget.
+description: Always-on-top DeepSeek Harness desktop pet. Default whale, four skins, four silent states. Not an in-page widget.
 repo: https://github.com/anneheartrecord/dsh-desk-pet
 package: dsh-desk-pet
 rowId: dsh-desk-pet
 category: theme
 tags:
-- wallpaper
-- glass
-- token-theme
+  - wallpaper
+  - glass
+  - token-theme
 modes:
-- light
+  - light
 install:
   target: github:anneheartrecord/dsh-desk-pet#93c0a90e8147c53cb5d3f3f4babb75e89ebe930b
   version: 0.1.0
   commit: 93c0a90e8147c53cb5d3f3f4babb75e89ebe930b
+  desktop:
+    mode: manual-only
+    reason: dsh-plugin-loader-module-shape-mismatch
 compatibility:
   dsh: unverified
   platform:
-  - web
+    - web
 screenshots:
-- https://opengraph.githubassets.com/placeholder/anneheartrecord.dsh-desk-pet
+  - https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/whale/idle/00.png
+  - https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/threadcore/working/00.png
+  - https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/jellyfish/happy/00.png
+  - https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/nautilus/sleeping/00.png
 review:
   compatibility: unverified
-  preview: repository-card
-  installation: verified
+  preview: verified
+  installation: manual-only
+health:
+  status: improvements
+  checks:
+    readmeScreenshots: improve
+    compatibility: improve
+    installation: improve
+    installCommand: pass
+    topic: pass
+  suggestions:
+    - 固定版本的桌宠素材已补入预览；当前 DSH loader 对该插件的模块导出形状不兼容，因此暂不提供一键安装。
+    - 修复插件入口导出后，可重新执行桌面端 smoke test 并恢复 verified 安装状态。
+  scan:
+    commit: 93c0a90e8147c53cb5d3f3f4babb75e89ebe930b
+    packageVersion: 0.1.0
+    scannerVersion: runtime-smoke-v1
+    mode: runtime
+    result: fail
+    checkedAt: 2026-08-24T04:29:13.000Z
+    findings:
+      - code: dsh-plugin-loader-module-shape-mismatch
+        message: 当前 DSH loader 收到 plugin/index.mjs 模块命名空间对象，未解析为可 apply 的插件入口。
 license:
   code: MIT
   commercialUse: true
 featuredRank: 48
 starsSnapshot: 3
-releaseUpdatedAt: 2026-08-16 13:48:42.914000+00:00
-metadataUpdatedAt: 2026-08-16 14:18:29.509000+00:00
-starsUpdatedAt: 2026-08-16 13:48:42.914000+00:00
-updatedAt: 2026-08-16 14:18:29.509000+00:00
+releaseUpdatedAt: 2026-08-16T13:48:42.914Z
+metadataUpdatedAt: 2026-08-16T14:18:29.509Z
+starsUpdatedAt: 2026-08-16T13:48:42.914Z
+updatedAt: 2026-08-16T14:18:29.509Z

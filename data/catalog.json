@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-24T02:47:01.247Z",
+  "generatedAt": "2026-08-24T04:29:32.238Z",
   "skins": [
     {
       "id": "univerfv.dsh-furina-theme",
@@ -4483,7 +4483,11 @@
       "install": {
         "target": "github:anneheartrecord/dsh-desk-pet#93c0a90e8147c53cb5d3f3f4babb75e89ebe930b",
         "version": "0.1.0",
-        "commit": "93c0a90e8147c53cb5d3f3f4babb75e89ebe930b"
+        "commit": "93c0a90e8147c53cb5d3f3f4babb75e89ebe930b",
+        "desktop": {
+          "mode": "manual-only",
+          "reason": "dsh-plugin-loader-module-shape-mismatch"
+        }
       },
       "compatibility": {
         "dsh": "unverified",
@@ -4492,12 +4496,43 @@
         ]
       },
       "screenshots": [
-        "https://opengraph.githubassets.com/placeholder/anneheartrecord.dsh-desk-pet"
+        "https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/whale/idle/00.png",
+        "https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/threadcore/working/00.png",
+        "https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/jellyfish/happy/00.png",
+        "https://raw.githubusercontent.com/anneheartrecord/dsh-desk-pet/93c0a90e8147c53cb5d3f3f4babb75e89ebe930b/assets/web/nautilus/sleeping/00.png"
       ],
       "review": {
         "compatibility": "unverified",
-        "preview": "repository-card",
-        "installation": "verified"
+        "preview": "verified",
+        "installation": "manual-only"
+      },
+      "health": {
+        "status": "improvements",
+        "checks": {
+          "readmeScreenshots": "improve",
+          "compatibility": "improve",
+          "installation": "improve",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": [
+          "固定版本的桌宠素材已补入预览；当前 DSH loader 对该插件的模块导出形状不兼容，因此暂不提供一键安装。",
+          "修复插件入口导出后，可重新执行桌面端 smoke test 并恢复 verified 安装状态。"
+        ],
+        "scan": {
+          "commit": "93c0a90e8147c53cb5d3f3f4babb75e89ebe930b",
+          "packageVersion": "0.1.0",
+          "scannerVersion": "static-v2",
+          "mode": "runtime",
+          "result": "fail",
+          "checkedAt": "2026-08-24T04:29:13.000Z",
+          "findings": [
+            {
+              "code": "dsh-plugin-loader-module-shape-mismatch",
+              "message": "当前 DSH loader 收到 plugin/index.mjs 模块命名空间对象，未解析为可 apply 的插件入口。"
+            }
+          ]
+        }
       },
       "license": {
         "code": "MIT",
@@ -4505,10 +4540,34 @@
       },
       "featuredRank": 48,
       "starsSnapshot": 3,
-      "releaseUpdatedAt": "2026-08-16 13:48:42.914000+00:00",
-      "metadataUpdatedAt": "2026-08-16 14:18:29.509000+00:00",
-      "starsUpdatedAt": "2026-08-16 13:48:42.914000+00:00",
-      "updatedAt": "2026-08-16 14:18:29.509000+00:00"
+      "releaseUpdatedAt": "2026-08-16T13:48:42.914Z",
+      "metadataUpdatedAt": "2026-08-16T14:18:29.509Z",
+      "starsUpdatedAt": "2026-08-16T13:48:42.914Z",
+      "updatedAt": "2026-08-16T14:18:29.509Z",
+      "media": {
+        "list": {
+          "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/2cac3b90e539b9d5d638f1ca6c0ff227.preview.webp",
+          "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/2cac3b90e539b9d5d638f1ca6c0ff227.full.webp"
+        },
+        "screenshots": [
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/2cac3b90e539b9d5d638f1ca6c0ff227.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/2cac3b90e539b9d5d638f1ca6c0ff227.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/3bc4b118a23f4ed978fd456178c9fdbd.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/3bc4b118a23f4ed978fd456178c9fdbd.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/dd9c112988bb020c0ad4eb546eb09f8c.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/dd9c112988bb020c0ad4eb546eb09f8c.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/e7be6c25e402af79a0eb15bb868ac21e.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/e7be6c25e402af79a0eb15bb868ac21e.full.webp"
+          }
+        ]
+      }
     },
     {
       "id": "estellalee.dsh-outdoor-theme",
@@ -5711,59 +5770,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "stushansusu.dsh-miku-skin",
-      "name": {
-        "zh": "dsh-miku-skin",
-        "en": "dsh-miku-skin"
-      },
-      "author": "stushansusu",
-      "description": "初音未来（Hatsune Miku）主题皮肤：蓝紫洋红渐变标题栏与按钮、半透明毛玻璃面板与输入框、可自定义背景图，用于 DeepSeek Harness (DSH) Web GUI",
-      "repo": "https://github.com/stushansusu/dsh-miku-skin",
-      "package": "@deepseek-ai/dsh-client-ui-skin-miku",
-      "rowId": "ui-skin-miku",
-      "category": "theme",
-      "tags": [
-        "wallpaper",
-        "glass",
-        "retro",
-        "token-theme",
-        "light-dark"
-      ],
-      "modes": [
-        "light",
-        "dark"
-      ],
-      "install": {
-        "target": "github:stushansusu/dsh-miku-skin#3a5dcacf09786820eafc1e43ee8c2603dce4b9ff",
-        "version": "1.0.0",
-        "commit": "3a5dcacf09786820eafc1e43ee8c2603dce4b9ff"
-      },
-      "compatibility": {
-        "dsh": "unverified",
-        "platform": [
-          "web"
-        ]
-      },
-      "screenshots": [
-        "https://opengraph.githubassets.com/placeholder/stushansusu.dsh-miku-skin"
-      ],
-      "review": {
-        "compatibility": "unverified",
-        "preview": "repository-card",
-        "installation": "verified"
-      },
-      "license": {
-        "code": "BSD-3-Clause",
-        "commercialUse": true
-      },
-      "featuredRank": 66,
-      "starsSnapshot": 2,
-      "releaseUpdatedAt": "2026-08-16 13:51:00.375000+00:00",
-      "metadataUpdatedAt": "2026-08-16 14:20:35.164000+00:00",
-      "starsUpdatedAt": "2026-08-16 13:51:00.375000+00:00",
-      "updatedAt": "2026-08-16 14:20:35.164000+00:00"
     },
     {
       "id": "wangxilhy23.dsh-wx-skin",
@@ -15368,85 +15374,6 @@
       }
     },
     {
-      "id": "springbrand-lab.dsh-web-ui-all",
-      "name": {
-        "zh": "dsh-web-ui-all",
-        "en": "dsh-web-ui-all"
-      },
-      "author": "springbrand-lab",
-      "description": "DSH Web GUI 全家桶：带定时调度的任务看板、Git 分支图、文件与变更侧栏、支持 SFTP 与端口转发的 SSH 终端、扫码配对的手机远程控制、桌面宠物、实时 token 统计，以及五套可安装主题。",
-      "repo": "https://github.com/springbrand-lab/dsh-skin-universe",
-      "subpath": "packages/dsh-web-ui-all",
-      "package": "@linxin666/dsh-web-ui-all",
-      "rowId": "ui-web-ui-compat",
-      "category": "theme",
-      "tags": [
-        "token-theme"
-      ],
-      "modes": [
-        "light",
-        "dark"
-      ],
-      "install": {
-        "target": "github:springbrand-lab/dsh-skin-universe#29fa777bdd8c9f7d93700c56c11a96a32634d967&path:/packages/dsh-web-ui-all",
-        "version": "0.1.7",
-        "commit": "29fa777bdd8c9f7d93700c56c11a96a32634d967",
-        "desktop": {
-          "mode": "manual-only",
-          "reason": "npm-repository-mismatch"
-        },
-        "allowBuild": "@linxin666/dsh-web-ui-all@https://codeload.github.com/springbrand-lab/dsh-skin-universe/tar.gz/29fa777bdd8c9f7d93700c56c11a96a32634d967#path:packages/dsh-web-ui-all"
-      },
-      "compatibility": {
-        "dsh": "unverified",
-        "platform": [
-          "web"
-        ]
-      },
-      "screenshots": [
-        "https://opengraph.githubassets.com/29fa777bdd8c9f7d93700c56c11a96a32634d967/springbrand-lab/dsh-skin-universe"
-      ],
-      "review": {
-        "compatibility": "unverified",
-        "preview": "repository-card",
-        "installation": "verified"
-      },
-      "health": {
-        "status": "improvements",
-        "checks": {
-          "readmeScreenshots": "improve",
-          "compatibility": "improve",
-          "installation": "pass",
-          "installCommand": "improve",
-          "topic": "pass"
-        },
-        "suggestions": [
-          "建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。",
-          "建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。",
-          "建议在 README 中补充可复制的 DSH 安装命令，方便用户直接使用。"
-        ],
-        "scan": {
-          "commit": "29fa777bdd8c9f7d93700c56c11a96a32634d967",
-          "packageVersion": "0.1.7",
-          "scannerVersion": "static-v2",
-          "mode": "static",
-          "result": "pass",
-          "checkedAt": "2026-08-23T05:28:48.809Z",
-          "findings": []
-        }
-      },
-      "license": {
-        "code": "BSD-3-Clause",
-        "commercialUse": true
-      },
-      "featuredRank": 203,
-      "starsSnapshot": 5,
-      "releaseUpdatedAt": "2026-08-23T05:28:48.890Z",
-      "metadataUpdatedAt": "2026-08-23T05:28:48.890Z",
-      "starsUpdatedAt": "2026-08-19T04:34:49.785Z",
-      "updatedAt": "2026-08-23T05:28:48.890Z"
-    },
-    {
       "id": "starryhui.dsh-custom-background",
       "name": {
         "zh": "dsh-custom-background",
@@ -18972,83 +18899,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "rnlao.dsh-wallpaper",
-      "name": {
-        "zh": "dsh-wallpaper",
-        "en": "dsh-wallpaper"
-      },
-      "author": "RNlao",
-      "description": "dsh-wallpaper · DSH 壁纸插件",
-      "repo": "https://github.com/RNlao/dsh-wallpaper",
-      "package": "dsh-wallpaper",
-      "rowId": "dsh-wallpaper",
-      "category": "theme",
-      "tags": [
-        "wallpaper",
-        "glass",
-        "token-theme"
-      ],
-      "modes": [
-        "light",
-        "dark"
-      ],
-      "install": {
-        "target": "github:RNlao/dsh-wallpaper#cfa4bce21d2d6ee4944656658052e5391a5c81a5",
-        "version": "0.1.0",
-        "commit": "cfa4bce21d2d6ee4944656658052e5391a5c81a5",
-        "desktop": {
-          "mode": "manual-only",
-          "reason": "npm-package-deprecated"
-        }
-      },
-      "compatibility": {
-        "dsh": "unverified",
-        "platform": [
-          "web"
-        ]
-      },
-      "screenshots": [
-        "https://repository-images.githubusercontent.com/1333486205/208d5ee9-1233-4bdb-a99c-f985e7ccd975"
-      ],
-      "review": {
-        "compatibility": "unverified",
-        "preview": "verified",
-        "installation": "verified"
-      },
-      "health": {
-        "status": "improvements",
-        "checks": {
-          "readmeScreenshots": "pass",
-          "compatibility": "improve",
-          "installation": "pass",
-          "installCommand": "pass",
-          "topic": "pass"
-        },
-        "suggestions": [
-          "建议在 README 或 package.json 中明确声明支持的 DSH Web 版本范围（例如 0.1.0-rc.6 或兼容区间），方便用户在安装前确认环境。"
-        ],
-        "scan": {
-          "commit": "cfa4bce21d2d6ee4944656658052e5391a5c81a5",
-          "packageVersion": "0.1.0",
-          "scannerVersion": "static-v2",
-          "mode": "static",
-          "result": "pass",
-          "checkedAt": "2026-08-23T05:30:36.942Z",
-          "findings": []
-        }
-      },
-      "license": {
-        "code": "MIT",
-        "commercialUse": true
-      },
-      "featuredRank": 1004,
-      "starsSnapshot": 2,
-      "releaseUpdatedAt": "2026-08-23T05:30:37.017Z",
-      "metadataUpdatedAt": "2026-08-23T05:30:37.017Z",
-      "starsUpdatedAt": "2026-08-20T05:07:48.948Z",
-      "updatedAt": "2026-08-23T05:30:37.017Z"
     },
     {
       "id": "cjz-wr.background-plugin",
