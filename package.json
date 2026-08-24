@@ -77,7 +77,6 @@
     "@vitejs/plugin-react": "latest",
     "jsdom": "^26.1.0",
     "lightningcss": "^1.33.0",
-    "playwright": "^1.62.1",
     "react": "^18.3.1",
     "react-dom": "~18.3.1",
     "tsdown": "^0.22.14",
