@@ -1,4 +1,5 @@
 import { commandError, type CommandResult } from './commands.ts'
+import { readDependencies } from './profile.ts'
 
 export type PnpmFailureKind = 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'command'
 
@@ -7,6 +8,7 @@ export interface PnpmFailure {
   message: string
   packageName?: string
   buildKey?: string
+  recovery?: 'disable-peer-autoinstall'
 }
 
 export class PnpmCommandError extends Error {
@@ -23,6 +25,7 @@ export interface PnpmAttemptOptions {
 export interface PnpmRecoveryOptions {
   attempt: (args: readonly string[], options?: PnpmAttemptOptions) => Promise<CommandResult>
   onRetry?: (failure: PnpmFailure) => void
+  profileDir?: string
 }
 
 const RELEASE_AGE_OVERRIDE = '--config.minimumReleaseAge=0'
@@ -42,6 +45,18 @@ function packageNameFromBuildKey(key: string | undefined): string | undefined {
   const separator = key.indexOf('@https://') >= 0 ? key.indexOf('@https://') : key.indexOf('@http://')
   if (separator <= 0) return undefined
   return key.slice(0, separator)
+}
+
+function packageNameFromFetch404(output: string): string | undefined {
+  const match = output.match(/\bGET\s+(https?:\/\/[^\s]+):\s*(?:Not Found|404)/i)
+  if (match?.[1] === undefined) return undefined
+  try {
+    const url = new URL(match[1])
+    const name = decodeURIComponent(url.pathname.replace(/^\/+/, ''))
+    return name === '' ? undefined : name
+  } catch {
+    return undefined
+  }
 }
 
 export function classifyPnpmFailure(result: CommandResult): PnpmFailure {
@@ -79,6 +94,14 @@ export function classifyPnpmFailure(result: CommandResult): PnpmFailure {
     }
   }
 
+  if (/ERR_PNPM_FETCH_404/i.test(output)) {
+    return {
+      kind: 'command',
+      message: commandError(result),
+      packageName: packageNameFromFetch404(output),
+    }
+  }
+
   return { kind: 'command', message: commandError(result) }
 }
 
@@ -86,6 +109,29 @@ function withReleaseAgeOverride(args: readonly string[]): string[] {
   const commandIndex = args.findIndex(arg => arg === 'add' || arg === 'remove' || arg === 'install')
   if (commandIndex < 0) return [...args, RELEASE_AGE_OVERRIDE]
   return [...args.slice(0, commandIndex + 1), RELEASE_AGE_OVERRIDE, ...args.slice(commandIndex + 1)]
+}
+
+const AUTO_INSTALL_PEERS_OFF = '--config.auto-install-peers=false'
+
+function withCommandOption(args: readonly string[], option: string): string[] {
+  const commandIndex = args.findIndex(arg => arg === 'add' || arg === 'remove' || arg === 'install')
+  if (commandIndex < 0) return [...args, option]
+  return [...args.slice(0, commandIndex + 1), option, ...args.slice(commandIndex + 1)]
+}
+
+function explicitDirectory(args: readonly string[]): string | undefined {
+  const index = args.indexOf('--dir')
+  const directory = index >= 0 ? args[index + 1] : undefined
+  return directory === undefined || directory.startsWith('-') ? undefined : directory
+}
+
+function shouldDisablePeerAutoinstall(args: readonly string[], failure: PnpmFailure, profileDir?: string): boolean {
+  if (args[0] !== 'add' && args[0] !== 'remove') return false
+  if (args.includes(AUTO_INSTALL_PEERS_OFF)) return false
+  if (failure.packageName === undefined || !failure.packageName.startsWith('@deepseek-ai/')) return false
+  const directory = explicitDirectory(args) ?? profileDir
+  if (directory === undefined) return false
+  return !Object.hasOwn(readDependencies(directory), failure.packageName)
 }
 
 function isAutomaticallyRecoverable(kind: PnpmFailureKind): boolean {
@@ -97,10 +143,13 @@ export async function runPnpmWithRecovery(args: readonly string[], options: Pnpm
   if (result.exitCode === 0 && !result.timedOut && result.aborted !== true) return
 
   const failure = classifyPnpmFailure(result)
-  if (!isAutomaticallyRecoverable(failure.kind)) throw new PnpmCommandError(failure)
+  const disablePeerAutoinstall = shouldDisablePeerAutoinstall(args, failure, options.profileDir)
+  if (!disablePeerAutoinstall && !isAutomaticallyRecoverable(failure.kind)) throw new PnpmCommandError(failure)
 
-  options.onRetry?.(failure)
-  const retryArgs = failure.kind === 'release-age' ? withReleaseAgeOverride(args) : args
+  options.onRetry?.(disablePeerAutoinstall ? { ...failure, recovery: 'disable-peer-autoinstall' } : failure)
+  const retryArgs = disablePeerAutoinstall
+    ? withCommandOption(args, AUTO_INSTALL_PEERS_OFF)
+    : failure.kind === 'release-age' ? withReleaseAgeOverride(args) : args
   const retryOptions = failure.kind === 'fetch-timeout'
     ? { env: { pnpm_config_fetch_timeout: String(FETCH_TIMEOUT_MS) } }
     : undefined

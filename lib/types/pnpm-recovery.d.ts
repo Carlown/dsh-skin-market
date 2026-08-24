@@ -5,6 +5,7 @@ export interface PnpmFailure {
     message: string;
     packageName?: string;
     buildKey?: string;
+    recovery?: 'disable-peer-autoinstall';
 }
 export declare class PnpmCommandError extends Error {
     readonly failure: PnpmFailure;
@@ -16,6 +17,7 @@ export interface PnpmAttemptOptions {
 export interface PnpmRecoveryOptions {
     attempt: (args: readonly string[], options?: PnpmAttemptOptions) => Promise<CommandResult>;
     onRetry?: (failure: PnpmFailure) => void;
+    profileDir?: string;
 }
 export declare function classifyPnpmFailure(result: CommandResult): PnpmFailure;
 export declare function runPnpmWithRecovery(args: readonly string[], options: PnpmRecoveryOptions): Promise<void>;

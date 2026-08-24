@@ -1,3 +1,6 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { classifyPnpmFailure, PnpmCommandError, runPnpmWithRecovery } from '../src/pnpm-recovery.ts'
 import type { CommandResult } from '../src/commands.ts'
@@ -62,6 +65,52 @@ describe('pnpm recovery', () => {
     })
 
     expect(failure.kind).toBe('fetch-timeout')
+  })
+
+  it('extracts the missing scoped package from a pnpm 404', () => {
+    const failure = classifyPnpmFailure(failed([
+      '[ERR_PNPM_FETCH_404] GET https://registry.npmjs.org/@deepseek-ai%2Fdsh-compact: Not Found - 404',
+      'This error happened while installing a direct dependency of /tmp/profile',
+    ].join('\n')))
+
+    expect(failure).toMatchObject({
+      kind: 'command',
+      packageName: '@deepseek-ai/dsh-compact',
+    })
+  })
+
+  it('retries an unrequested host peer with peer auto-install disabled', async () => {
+    const profileDir = mkdtempSync(join(tmpdir(), 'pnpm-recovery-host-peer-'))
+    mkdirSync(profileDir, { recursive: true })
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ dependencies: { 'installed-plugin': '1.0.0' } }))
+    const calls: Array<readonly string[]> = []
+    await runPnpmWithRecovery(['add', 'new-plugin'], {
+      profileDir,
+      attempt: async args => {
+        calls.push(args)
+        return calls.length === 1
+          ? failed('[ERR_PNPM_FETCH_404] GET https://registry.npmjs.org/@deepseek-ai%2Fdsh-compact: Not Found - 404')
+          : success()
+      },
+    })
+
+    expect(calls).toEqual([
+      ['add', 'new-plugin'],
+      ['add', '--config.auto-install-peers=false', 'new-plugin'],
+    ])
+  })
+
+  it('does not hide a direct profile dependency behind the peer recovery', async () => {
+    const profileDir = mkdtempSync(join(tmpdir(), 'pnpm-recovery-direct-'))
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ dependencies: { '@deepseek-ai/dsh-compact': '^0.0.1-rc.1' } }))
+
+    await expect(runPnpmWithRecovery(['add', 'new-plugin'], {
+      profileDir,
+      attempt: async () => failed('[ERR_PNPM_FETCH_404] GET https://registry.npmjs.org/@deepseek-ai%2Fdsh-compact: Not Found - 404'),
+    })).rejects.toMatchObject({
+      name: 'PnpmCommandError',
+      failure: { kind: 'command', packageName: '@deepseek-ai/dsh-compact' },
+    } satisfies Partial<PnpmCommandError>)
   })
 
   it('exposes a typed failure after the automatic recovery is exhausted', async () => {

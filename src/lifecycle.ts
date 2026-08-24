@@ -55,6 +55,7 @@ export interface LifecycleOptions {
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error) }
 
 function recoveryMessage(failure: PnpmFailure): string {
+  if (failure.recovery === 'disable-peer-autoinstall') return '检测到宿主提供但 npm 未发布的 peer，正在关闭 peer 自动安装并重试'
   if (failure.kind === 'release-age') return '检测到新包保护，正在临时放宽本次命令并重试'
   if (failure.kind === 'fetch-timeout') return '下载超时，正在延长 pnpm 下载等待时间并重试'
   if (failure.kind === 'network') return '检测到临时网络错误，正在自动重试'
@@ -178,7 +179,9 @@ function recordActivity(state: PersistedMarketState, skinId: string, kind: 'inst
 // Keep this in an .npmrc file instead of passing `--config.fetchTimeout` on
 // the CLI. pnpm 11 currently leaves the dotted CLI value as a string, while
 // its retry timer requires a number and throws ERR_INVALID_ARG_TYPE.
-const PNPM_FETCH_CONFIG = 'fetch-timeout=600000\n'
+// The prefetch project only downloads and inspects the plugin; it must not
+// resolve host-provided peer packages from the public npm registry.
+const PNPM_FETCH_CONFIG = 'fetch-timeout=600000\nauto-install-peers=false\n'
 
 export class SkinLifecycle {
   readonly operations = new Map<string, Operation>()
@@ -440,6 +443,7 @@ export class SkinLifecycle {
     if (ensurePnpm !== undefined) await ensurePnpm({ signal: controller?.signal })
     const tracker = operation === undefined ? undefined : new PnpmProgressTracker()
     await runPnpmWithRecovery(args, {
+      profileDir: this.options.profileDir,
       attempt: async (attemptArgs, attemptOptions) => {
         const commandArgs = tracker === undefined || attemptArgs.some(arg => arg.startsWith('--reporter')) ? attemptArgs : [...attemptArgs, '--reporter=ndjson']
         return this.options.runner(this.options.profile, commandArgs, {

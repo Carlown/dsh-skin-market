@@ -75,6 +75,9 @@ describe('skin lifecycle', () => {
 
     expect(operation).toMatchObject({ phase: 'downloading', cancelable: true })
     expect(commandArgs).toContain('--reporter=ndjson')
+    const tempDirectory = commandArgs[commandArgs.indexOf('--dir') + 1]
+    expect(tempDirectory).toBeTruthy()
+    expect(readFileSync(join(tempDirectory!, '.npmrc'), 'utf8')).toContain('auto-install-peers=false')
     lifecycle.cancel(operation.id)
 
     expect(await finished(operation)).toMatchObject({ phase: 'cancelled', cancelable: false, message: '操作已取消' })

@@ -291,6 +291,7 @@ export function createMarketUpdater(
 }
 
 function recoveryMessage(failure: PnpmFailure): string {
+  if (failure.recovery === 'disable-peer-autoinstall') return '检测到宿主提供但 npm 未发布的 peer，正在关闭 peer 自动安装并重试'
   if (failure.kind === 'release-age') return '检测到新包保护，正在临时放宽本次更新并重试'
   if (failure.kind === 'fetch-timeout') return '下载超时，正在延长 pnpm 下载等待时间并重试'
   if (failure.kind === 'network') return '检测到临时网络错误，正在自动重试'
