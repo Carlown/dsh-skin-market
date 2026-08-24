@@ -19,7 +19,7 @@ import {
 import css from './SkinMarket.module.css'
 import './media-hover.module.css'
 import { compareCatalogOrder, getCatalogListScreenshot, getCatalogScreenshotUrls, hasCatalogPreview, usesMarketScreenshots } from '../catalog-order.ts'
-import { generatedMediaFor, generatedMediaUrl } from '../media-preview.ts'
+import { generatedMediaFor, generatedMediaManifestUrl, generatedMediaUrl, parseGeneratedMediaManifest, previewSourceCandidates, setGeneratedMediaSources } from '../media-preview.ts'
 import { useLazyMedia } from '../media-visibility.ts'
 import { browserCatalogCache, type CatalogCache } from './catalog-cache.ts'
 import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt, createSubmissionPrompt, REGISTRY_REPOSITORY } from './submission.ts'
@@ -291,28 +291,47 @@ export function compareInstalledSkinOrder(a: CatalogSkin, b: CatalogSkin, states
 interface PreviewMediaProps {
   skin: CatalogSkin
   src?: string
+  fallbackSources?: readonly string[]
   alt: string
   kind: 'list' | 'avatar' | 'hero' | 'thumbnail' | 'recommendation'
   loading?: 'eager' | 'lazy'
 }
 
-function PreviewMedia({ skin, src, alt, kind, loading }: PreviewMediaProps) {
+function PreviewMedia({ skin, src, fallbackSources, alt, kind, loading }: PreviewMediaProps) {
+  const candidates = previewSourceCandidates(src, fallbackSources)
+  const candidateKey = candidates.join('\u0001')
+  const [sourceIndex, setSourceIndex] = useState(0)
   const [failed, setFailed] = useState(false)
   const [previewFailed, setPreviewFailed] = useState(false)
   const [fullFailed, setFullFailed] = useState(false)
   const lazyMedia = useLazyMedia(loading)
-  const placeholder = !hasCatalogPreview(skin) || src === undefined || failed
+  useEffect(() => {
+    setSourceIndex(0)
+    setFailed(false)
+    setPreviewFailed(false)
+    setFullFailed(false)
+  }, [candidateKey])
+  const activeIndex = Math.min(sourceIndex, Math.max(0, candidates.length - 1))
+  const activeSrc = candidates[activeIndex]
+  const tryNextSource = () => {
+    if (fallbackSources !== undefined && activeIndex + 1 < candidates.length) {
+      setSourceIndex(activeIndex + 1)
+      setPreviewFailed(false)
+      setFullFailed(false)
+    } else setFailed(true)
+  }
+  const placeholder = !hasCatalogPreview(skin) || activeSrc === undefined || failed
   if (placeholder) return <div className={css.previewPlaceholder} data-preview-kind={kind} role="img" aria-label={`${skin.name.zh} 暂无界面截图`}><MarkGithubIcon aria-hidden="true" /><strong>{skin.author}</strong><small>暂无界面截图</small></div>
   if (!lazyMedia.visible) return <span ref={lazyMedia.ref} className={css.mediaLazyPlaceholder} role="img" aria-label={alt} />
-  const media = generatedMediaFor(skin, src, kind)
-  if (media === undefined) return <img src={src} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => setFailed(true)} />
+  const media = generatedMediaFor(skin, activeSrc, kind)
+  if (media === undefined) return <img src={activeSrc} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={tryNextSource} />
   const showFull = kind === 'hero'
   if (showFull) {
-    if (fullFailed) return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
+    if (fullFailed) return <img src={activeSrc} alt={alt} loading={loading} decoding="async" onError={tryNextSource} />
     return <img src={generatedMediaUrl(media.full)} alt={alt} loading={loading === 'lazy' ? 'lazy' : 'eager'} decoding="async" onError={() => setFullFailed(true)} />
   }
-  const imageSource = previewFailed ? src : generatedMediaUrl(media.preview)
-  return <img src={imageSource} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => { if (previewFailed) setFailed(true); else setPreviewFailed(true) }} />
+  const imageSource = previewFailed ? activeSrc : generatedMediaUrl(media.preview)
+  return <img src={imageSource} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => { if (previewFailed) tryNextSource(); else setPreviewFailed(true) }} />
 }
 
 function GalleryPreloads({ skin, screenshots }: { skin: CatalogSkin; screenshots: string[] }) {
@@ -560,6 +579,15 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     })()
     return () => { disposed = true }
   }, [acceptCatalog, catalogCache, refresh])
+  useEffect(() => {
+    const controller = new AbortController()
+    setGeneratedMediaSources([])
+    void fetch(generatedMediaManifestUrl(), { cache: 'no-store', signal: controller.signal })
+      .then(async response => response.ok ? parseGeneratedMediaManifest(await response.json()) : undefined)
+      .then(sources => setGeneratedMediaSources(sources))
+      .catch(() => setGeneratedMediaSources(undefined))
+    return () => controller.abort()
+  }, [])
   useEffect(() => { void checkMarketUpdate() }, [checkMarketUpdate])
   useEffect(() => {
     if (marketOperation === null || ['done', 'failed', 'cancelled'].includes(marketOperation.phase)) return
@@ -982,7 +1010,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     const open = () => location === 'installed' ? openInstalledBrowser(skin.id) : openBrowser(skin.id, 'discover')
     return <article className={css.homeCard} data-active={itemState.activation === 'active' ? 'true' : undefined} data-actions={actionCount} key={`${location}:${skin.id}`}>
       <Button variant="ghost" className={`${css.homeCardOpen} dsh-skin-media-hover`} aria-current={itemState.activation === 'active' ? 'true' : undefined} aria-label={location === 'installed' ? `${skin.name.zh} 已安装卡片` : `${skin.name.zh} 界面预览`} onClick={open}>
-        <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={getCatalogListScreenshot(skin)} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
+        <span className={css.homeCardMedia}><PreviewMedia skin={skin} src={getCatalogListScreenshot(skin)} fallbackSources={getCatalogScreenshotUrls(skin)} alt={`${skin.name.zh} 界面预览`} kind="recommendation" loading="lazy" /></span>
         <span className={css.homeCardCopy}>
           <span className={css.homeCardTitleRow}><strong title={skin.name.zh}>{skin.name.zh}</strong>{location === 'discover' && <span className={css.feedMeta}><StarIcon size={12} aria-hidden="true" /> {skin.githubStars}</span>}</span>
           <span className={css.homeCardDescription} title={skin.description}>{displayTitle(skin.description)}</span>
@@ -1131,7 +1159,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
             const itemState = runtimeFor(states, skin.id)
             const mutationLabel = mutation?.skinId === skin.id ? mutationLabels[mutation.kind] : null
             return <Button key={skin.id} variant="ghost" className={css.skinCard} data-skin-id={skin.id} data-selected={skin.id === selected?.id} aria-current={skin.id === selected?.id ? 'true' : undefined} onClick={() => select(skin.id)}>
-              <span className={`${css.skinCardPreview} dsh-skin-media-hover`}><PreviewMedia key={`${skin.id}:${getCatalogListScreenshot(skin) ?? 'missing'}:list`} skin={skin} src={getCatalogListScreenshot(skin)} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" /></span>
+              <span className={`${css.skinCardPreview} dsh-skin-media-hover`}><PreviewMedia key={`${skin.id}:${getCatalogListScreenshot(skin) ?? 'missing'}:list`} skin={skin} src={getCatalogListScreenshot(skin)} fallbackSources={getCatalogScreenshotUrls(skin)} alt={`${skin.name.zh} 界面预览`} kind="list" loading="lazy" /></span>
               <span className={css.skinCardBody}>
                 <span className={css.cardTitle}>{skin.name.zh}</span>
                 <span className={css.cardDescription} title={skin.description}>{displayTitle(skin.description)}</span>

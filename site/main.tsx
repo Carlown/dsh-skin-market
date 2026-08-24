@@ -5,7 +5,7 @@ import { StarIcon } from '@primer/octicons-react'
 import { fetchLiveCatalog, fetchLiveCatalogWithFallback, REMOTE_CATALOG_URL } from './catalog.ts'
 import { comparePublicCatalogOrder, shouldRenderPublicPreview } from './catalog-order.ts'
 import { getCatalogListScreenshot, getCatalogScreenshotUrls, usesMarketScreenshots } from '../src/catalog-order.ts'
-import { generatedMediaFor, generatedMediaUrl, hasGeneratedMediaBase, setGeneratedMediaSources } from '../src/media-preview.ts'
+import { generatedMediaFor, generatedMediaManifestUrl, generatedMediaUrl, hasGeneratedMediaBase, parseGeneratedMediaManifest, previewSourceCandidates, setGeneratedMediaSources } from '../src/media-preview.ts'
 import { useLazyMedia } from '../src/media-visibility.ts'
 import type { CatalogMedia } from '../src/types.ts'
 import { CLI_INSTALL_WARNING, MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinCommand, skinPrompt } from './prompts.ts'
@@ -44,7 +44,7 @@ function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => vo
   const title = skin.name.zh
   return <article className="feed-card">
     <button className="feed-card-open dsh-skin-media-hover" aria-label={`${title} 界面预览`} onClick={onOpen}>
-      <span className="feed-card-media"><PreviewMedia skin={skin} src={getCatalogListScreenshot(skin)} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
+      <span className="feed-card-media"><PreviewMedia skin={skin} src={getCatalogListScreenshot(skin)} fallbackSources={getCatalogScreenshotUrls(skin)} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
       <span className="feed-card-copy">
         <span className="feed-card-title"><strong title={title}>{title}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
         <span className="feed-card-description" title={skin.description}>{displayTitle(skin.description)}</span>
@@ -337,31 +337,34 @@ function Site() {
 
   useEffect(() => {
     const controller = new AbortController()
+    let disposed = false
     const fallbackUrl = `${import.meta.env.BASE_URL}catalog.json`
     const useLocalPreviewCatalog = new URLSearchParams(window.location.search).get('dsh-media') === '1'
     const fetchCatalog = (input: string, init: RequestInit) => fetch(input, { ...init, signal: controller.signal })
     const catalogRequest = useLocalPreviewCatalog
       ? fetchLiveCatalog<Skin>(fallbackUrl, fetchCatalog)
       : fetchLiveCatalogWithFallback<Skin>(REMOTE_CATALOG_URL, fallbackUrl, fetchCatalog)
-    const localMediaRequest = hasGeneratedMediaBase()
-      ? fetch(`${import.meta.env.BASE_URL}skin-media/v1/manifest.json`, { cache: 'no-store', signal: controller.signal })
-        .then(async response => {
-          if (!response.ok) return []
-          const value = await response.json()
-          return typeof value === 'object' && value !== null ? Object.keys(value) : []
-        })
-        .catch(() => [])
-      : Promise.resolve(undefined)
-    void Promise.all([catalogRequest, localMediaRequest])
-      .then(([skins, mediaSources]) => {
-        if (mediaSources !== undefined) setGeneratedMediaSources(mediaSources)
+    setGeneratedMediaSources([])
+    void fetch(generatedMediaManifestUrl(), { cache: 'no-store', signal: controller.signal })
+      .then(async response => response.ok ? parseGeneratedMediaManifest(await response.json()) : undefined)
+      .then(sources => {
+        if (disposed) return
+        setGeneratedMediaSources(sources)
         setMediaReady(true)
-        setCatalog({ skins })
+      })
+      .catch(() => {
+        if (disposed) return
+        setGeneratedMediaSources(undefined)
+        setMediaReady(true)
+      })
+    void catalogRequest
+      .then(skins => {
+        if (!disposed) setCatalog({ skins })
       })
       .catch(error => {
-        if (!controller.signal.aborted) setCatalog({ error: error instanceof Error ? error.message : String(error) })
+        if (!disposed && !controller.signal.aborted) setCatalog({ error: error instanceof Error ? error.message : String(error) })
       })
-    return () => controller.abort()
+    return () => { disposed = true; controller.abort() }
   }, [])
 
   if (!mediaReady) return <main className="empty-page">正在准备本地图片预览…</main>
@@ -372,24 +375,42 @@ function Site() {
   return <App skins={catalog.skins} />
 }
 
-function PreviewMedia({ skin, src, alt, kind, loading }: { skin: Skin; src?: string; alt: string; kind: 'list' | 'avatar' | 'gallery' | 'thumbnail' | 'recommendation' | 'card'; loading?: 'eager' | 'lazy' }) {
+function PreviewMedia({ skin, src, fallbackSources, alt, kind, loading }: { skin: Skin; src?: string; fallbackSources?: readonly string[]; alt: string; kind: 'list' | 'avatar' | 'gallery' | 'thumbnail' | 'recommendation' | 'card'; loading?: 'eager' | 'lazy' }) {
+  const candidates = previewSourceCandidates(src, fallbackSources)
+  const candidateKey = candidates.join('\u0001')
+  const [sourceIndex, setSourceIndex] = useState(0)
   const [failed, setFailed] = useState(false)
   const [previewFailed, setPreviewFailed] = useState(false)
   const [fullFailed, setFullFailed] = useState(false)
   const lazyMedia = useLazyMedia(loading)
-  if (!shouldRenderPublicPreview(skin, src, failed)) {
+  useEffect(() => {
+    setSourceIndex(0)
+    setFailed(false)
+    setPreviewFailed(false)
+    setFullFailed(false)
+  }, [candidateKey])
+  const activeIndex = Math.min(sourceIndex, Math.max(0, candidates.length - 1))
+  const activeSrc = candidates[activeIndex]
+  const tryNextSource = () => {
+    if (fallbackSources !== undefined && activeIndex + 1 < candidates.length) {
+      setSourceIndex(activeIndex + 1)
+      setPreviewFailed(false)
+      setFullFailed(false)
+    } else setFailed(true)
+  }
+  if (!shouldRenderPublicPreview(skin, activeSrc, failed)) {
     return <div className="preview-placeholder" data-preview-kind={kind} role="img" aria-label={`${skin.name.zh} 暂无界面截图`}><GithubLogo size={kind === 'list' ? 16 : 24} aria-hidden="true" /><strong>{skin.author}</strong><small>暂无界面截图</small></div>
   }
   if (!lazyMedia.visible) return <span ref={lazyMedia.ref} className="media-lazy-placeholder" role="img" aria-label={alt} />
-  const media = generatedMediaFor(skin, src, kind)
-  if (media === undefined) return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
+  const media = generatedMediaFor(skin, activeSrc, kind)
+  if (media === undefined) return <img src={activeSrc} alt={alt} loading={loading} decoding="async" onError={tryNextSource} />
   const showFull = kind === 'gallery'
   if (showFull) {
-    if (fullFailed) return <img src={src} alt={alt} loading={loading} decoding="async" onError={() => setFailed(true)} />
+    if (fullFailed) return <img src={activeSrc} alt={alt} loading={loading} decoding="async" onError={tryNextSource} />
     return <img src={generatedMediaUrl(media.full)} alt={alt} loading={loading === 'lazy' ? 'lazy' : 'eager'} decoding="async" onError={() => setFullFailed(true)} />
   }
-  const imageSource = previewFailed ? src : generatedMediaUrl(media.preview)
-  return <img src={imageSource} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => { if (previewFailed) setFailed(true); else setPreviewFailed(true) }} />
+  const imageSource = previewFailed ? activeSrc : generatedMediaUrl(media.preview)
+  return <img src={imageSource} alt={alt} loading={loading} decoding="async" onLoad={event => { event.currentTarget.dataset.loaded = 'true' }} onError={() => { if (previewFailed) tryNextSource(); else setPreviewFailed(true) }} />
 }
 
 createRoot(document.getElementById('root')!).render(<Site />)

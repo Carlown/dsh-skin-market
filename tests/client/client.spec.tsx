@@ -18,6 +18,7 @@ vi.mock('@deepseek-ai/dsh-client-ui-primitives', () => {
 import { CATALOG_BATCH_SIZE, captureListScroll, compareInstalledSkinOrder, compareSkinOrder, restartReloadUrl, restoreListScroll, restoreMarketStyleOrder, SkinMarketSection } from '../../src/client/SkinMarketSection.tsx'
 import { createClientSkinRuntime, missingPrimitives, switchClientSkin } from '../../src/client/index.ts'
 import { createSkinInstallCommand, createSkinInstallPrompt } from '../../src/client/submission.ts'
+import { setGeneratedMediaSources } from '../../src/media-preview.ts'
 import type { CatalogSkin } from '../../src/client/types.ts'
 
 const skin = {
@@ -27,7 +28,7 @@ const skin = {
 } satisfies CatalogSkin
 const dshRuntime = { version: '0.1.0-rc.6', capabilities: [], source: 'injected' as const }
 
-afterEach(() => { cleanup(); window.localStorage.clear(); vi.unstubAllGlobals() })
+afterEach(() => { cleanup(); setGeneratedMediaSources(undefined); window.localStorage.clear(); vi.unstubAllGlobals() })
 
 async function openSkinCard(name: RegExp = /测试皮肤 界面预览/) {
   const card = await screen.findByRole('button', { name })
@@ -985,7 +986,8 @@ describe('client market', () => {
 
     window.history.replaceState({}, '', '/')
     render(<SkinMarketSection t={key => key} />)
-    expect((await screen.findByRole('img', { name: '测试皮肤 界面预览' })).getAttribute('src')).toBe(preview)
+    const cardPreview = await screen.findByRole('img', { name: '测试皮肤 界面预览' })
+    await waitFor(() => expect(cardPreview.getAttribute('src')).toBe(preview))
     fireEvent.click(await screen.findByRole('button', { name: /测试皮肤 界面预览/ }))
     const fullImage = await waitFor(() => document.querySelector(`img[src="${full}"]`))
     expect(fullImage).toBeTruthy()
@@ -997,6 +999,55 @@ describe('client market', () => {
     await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
     expect(document.querySelector(`img[src="${preview}"]`)).toBeNull()
     window.history.replaceState({}, '', '/')
+  })
+
+  it('uses the original card screenshot immediately when its source is absent from the manifest', async () => {
+    const source = 'https://example.com/aurora-missing.png'
+    const layered = {
+      ...skin,
+      screenshots: [source],
+      media: { list: { preview: 'https://cdn.example.com/aurora.webp', full: 'https://cdn.example.com/aurora-full.webp' }, screenshots: [{ preview: 'https://cdn.example.com/aurora.webp', full: 'https://cdn.example.com/aurora-full.webp' }] },
+    }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [layered] }) }
+      if (url.endsWith('/manifest.json')) return { ok: true, json: async () => ({}) }
+      return { ok: true, json: async () => ({ skins: [], installedClientPlugins: [], runningAgentCount: 0 }) }
+    }))
+    render(<SkinMarketSection t={key => key} />)
+
+    const image = await screen.findByRole('img', { name: '测试皮肤 界面预览' })
+    await waitFor(() => expect(image.getAttribute('src')).toBe(source))
+  })
+
+  it('moves a failed card to the next catalog screenshot after WebP and original fallback fail', async () => {
+    const first = 'https://example.com/aurora-first.png'
+    const second = 'https://example.com/aurora-second.png'
+    const firstPreview = 'https://cdn.example.com/aurora-first.webp'
+    const secondPreview = 'https://cdn.example.com/aurora-second.webp'
+    const layered = {
+      ...skin,
+      screenshots: [first, second],
+      media: {
+        list: { preview: firstPreview, full: 'https://cdn.example.com/aurora-first-full.webp' },
+        screenshots: [
+          { preview: firstPreview, full: 'https://cdn.example.com/aurora-first-full.webp' },
+          { preview: secondPreview, full: 'https://cdn.example.com/aurora-second-full.webp' },
+        ],
+      },
+    }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [layered] }) }
+      if (url.endsWith('/manifest.json')) return { ok: true, json: async () => ({ [first]: 'first', [second]: 'second' }) }
+      return { ok: true, json: async () => ({ skins: [], installedClientPlugins: [], runningAgentCount: 0 }) }
+    }))
+    render(<SkinMarketSection t={key => key} />)
+
+    const image = await screen.findByRole('img', { name: '测试皮肤 界面预览' })
+    await waitFor(() => expect(image.getAttribute('src')).toBe(firstPreview))
+    fireEvent.error(image)
+    expect(image.getAttribute('src')).toBe(first)
+    fireEvent.error(image)
+    expect(image.getAttribute('src')).toBe(secondPreview)
   })
 
   it('sends verified client-only skins to their manual installation guide', async () => {

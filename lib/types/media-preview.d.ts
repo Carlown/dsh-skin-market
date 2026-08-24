@@ -11,7 +11,10 @@ export interface GeneratedMediaEntry extends PreviewableCatalogEntry {
 }
 export declare function hasGeneratedMediaBase(): boolean;
 export declare function setGeneratedMediaSources(sources: Iterable<string> | undefined): void;
+export declare function parseGeneratedMediaManifest(value: unknown): string[] | undefined;
 export declare function generatedMediaEnabled(): boolean;
+export declare function generatedMediaManifestUrl(): string;
+export declare function previewSourceCandidates(source: string | undefined, fallbacks?: readonly string[]): string[];
 /**
  * An explicit base is available only for testing an alternate media host.
  */

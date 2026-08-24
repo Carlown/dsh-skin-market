@@ -7,7 +7,7 @@ import { promisify } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import { parse } from 'yaml'
 import { displayScreenshots } from './registry-screenshots.mjs'
-import { mediaDescriptor, mediaKey, MEDIA_VERSION, isRasterImageUrl } from './media.mjs'
+import { mediaDescriptor, mediaKey, MEDIA_VERSION, isRasterImageUrl, retainMediaManifestEntries } from './media.mjs'
 
 const execFile = promisify(execFileCallback)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -90,10 +90,12 @@ const manifestPath = join(outputDir, 'manifest.json')
 let manifest = {}
 try { manifest = JSON.parse(await readFile(manifestPath, 'utf8')) } catch { /* first run */ }
 const urls = await sourceUrls()
+manifest = retainMediaManifestEntries(manifest, urls)
 let cursor = 0
 let converted = 0
 let cached = 0
 let failed = 0
+const failedSources = []
 await Promise.all(Array.from({ length: Math.min(concurrency, urls.length) }, async () => {
   while (cursor < urls.length) {
     const source = urls[cursor++]
@@ -103,9 +105,15 @@ await Promise.all(Array.from({ length: Math.min(concurrency, urls.length) }, asy
       if (result.status === 'cached') cached += 1
     } catch (error) {
       failed += 1
+      delete manifest[source]
+      failedSources.push(source)
       console.warn(`media: skipped ${source}: ${error instanceof Error ? error.message : String(error)}`)
     }
   }
 }))
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
 console.log(`media: ${converted} converted, ${cached} cached, ${failed} failed, ${urls.length} raster sources`)
+if (failedSources.length > 0) {
+  console.warn(`media: ${failedSources.length} source(s) unavailable; frontends will use original-image fallback`)
+  for (const source of failedSources.sort()) console.warn(`media: unavailable ${source}`)
+}

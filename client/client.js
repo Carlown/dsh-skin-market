@@ -301,137 +301,137 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var SkinMarket_module_css_default = {
-			"browser": "VqXecW_browser",
-			"externalPlugin": "VqXecW_externalPlugin",
-			"skeletonCard": "VqXecW_skeletonCard",
-			"mediaLazyPlaceholder": "VqXecW_mediaLazyPlaceholder",
-			"titleBlock": "VqXecW_titleBlock",
-			"marketUpdateLabel": "VqXecW_marketUpdateLabel",
-			"mobileBack": "VqXecW_mobileBack",
-			"nativePrimary": "VqXecW_nativePrimary",
-			"operationMeta": "VqXecW_operationMeta",
-			"aboutGrid": "VqXecW_aboutGrid",
-			"thumbnailProgress": "VqXecW_thumbnailProgress",
-			"marketUpdateButton": "VqXecW_marketUpdateButton",
-			"cardDescription": "VqXecW_cardDescription",
-			"galleryProgress": "VqXecW_galleryProgress",
-			"detailHeader": "VqXecW_detailHeader",
-			"skinList": "VqXecW_skinList",
-			"browserTitlebar": "VqXecW_browserTitlebar",
-			"filterBar": "VqXecW_filterBar",
-			"operationMessage": "VqXecW_operationMessage",
-			"pinWarning": "VqXecW_pinWarning",
-			"operation": "VqXecW_operation",
-			"heroNav": "VqXecW_heroNav",
-			"operationActions": "VqXecW_operationActions",
-			"homeSubmitAction": "VqXecW_homeSubmitAction",
-			"sortButton": "VqXecW_sortButton",
-			"actionRow": "VqXecW_actionRow",
-			"actionDivider": "VqXecW_actionDivider",
-			"cardMeta": "VqXecW_cardMeta",
-			"cardStatus": "VqXecW_cardStatus",
-			"statusActive": "VqXecW_statusActive",
-			"browserBackdrop": "VqXecW_browserBackdrop",
-			"hero": "VqXecW_hero",
-			"heroPrev": "VqXecW_heroPrev",
-			"loading": "VqXecW_loading",
-			"homeOperation": "VqXecW_homeOperation",
-			"author": "VqXecW_author",
-			"homeCardMedia": "VqXecW_homeCardMedia",
-			"filters": "VqXecW_filters",
-			"loadMoreHint": "VqXecW_loadMoreHint",
-			"detailSkeleton": "VqXecW_detailSkeleton",
-			"healthList": "VqXecW_healthList",
-			"lightboxStage": "VqXecW_lightboxStage",
-			"cardTitle": "VqXecW_cardTitle",
-			"installOptions": "VqXecW_installOptions",
-			"stars": "VqXecW_stars",
-			"cardInlineActions": "VqXecW_cardInlineActions",
-			"browserClose": "VqXecW_browserClose",
-			"discoveryGrid": "VqXecW_discoveryGrid",
-			"cardStars": "VqXecW_cardStars",
-			"thumbnails": "VqXecW_thumbnails",
+			"homeCardOpen": "VqXecW_homeCardOpen",
+			"home": "VqXecW_home",
+			"homeSection": "VqXecW_homeSection",
 			"skeletonShimmer": "VqXecW_skeletonShimmer",
+			"cardDescription": "VqXecW_cardDescription",
+			"titleBlock": "VqXecW_titleBlock",
+			"aboutGrid": "VqXecW_aboutGrid",
+			"cardAction": "VqXecW_cardAction",
+			"lightboxPrev": "VqXecW_lightboxPrev",
+			"cardStatus": "VqXecW_cardStatus",
 			"collectionTitle": "VqXecW_collectionTitle",
-			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
-			"version": "VqXecW_version",
-			"installedMoreCard": "VqXecW_installedMoreCard",
+			"homeCard": "VqXecW_homeCard",
+			"catalogHeader": "VqXecW_catalogHeader",
+			"loading": "VqXecW_loading",
+			"detail": "VqXecW_detail",
+			"browserPanel": "VqXecW_browserPanel",
 			"compactActionIcon": "VqXecW_compactActionIcon",
+			"copyCapsule": "VqXecW_copyCapsule",
+			"homeUpdateAction": "VqXecW_homeUpdateAction",
+			"lightboxClose": "VqXecW_lightboxClose",
+			"skinCardPreview": "VqXecW_skinCardPreview",
+			"empty": "VqXecW_empty",
 			"homeSearch": "VqXecW_homeSearch",
+			"lightboxNext": "VqXecW_lightboxNext",
+			"homeCardTitleRow": "VqXecW_homeCardTitleRow",
+			"homeHeader": "VqXecW_homeHeader",
+			"browserBackdrop": "VqXecW_browserBackdrop",
+			"homeGithubAction": "VqXecW_homeGithubAction",
+			"author": "VqXecW_author",
+			"stars": "VqXecW_stars",
+			"cardMeta": "VqXecW_cardMeta",
+			"homeCardDescription": "VqXecW_homeCardDescription",
+			"previewPlaceholder": "VqXecW_previewPlaceholder",
+			"homeCardCopy": "VqXecW_homeCardCopy",
+			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
+			"homeError": "VqXecW_homeError",
+			"skinAvatar": "VqXecW_skinAvatar",
+			"homeSearchPlaceholder": "VqXecW_homeSearchPlaceholder",
+			"filterBar": "VqXecW_filterBar",
+			"repoLink": "VqXecW_repoLink",
+			"status": "VqXecW_status",
+			"operationCancel": "VqXecW_operationCancel",
+			"homeSubmitAction": "VqXecW_homeSubmitAction",
+			"operation": "VqXecW_operation",
+			"feedMeta": "VqXecW_feedMeta",
+			"heroNav": "VqXecW_heroNav",
+			"changelog": "VqXecW_changelog",
+			"discoveryGrid": "VqXecW_discoveryGrid",
+			"cardActionProgress": "VqXecW_cardActionProgress",
+			"homeTitleRow": "VqXecW_homeTitleRow",
+			"catalog": "VqXecW_catalog",
+			"skinCard": "VqXecW_skinCard",
+			"heroOpen": "VqXecW_heroOpen",
+			"iconOnlyButton": "VqXecW_iconOnlyButton",
+			"operationMessage": "VqXecW_operationMessage",
+			"skinCardBody": "VqXecW_skinCardBody",
+			"mediaLazyPlaceholder": "VqXecW_mediaLazyPlaceholder",
+			"heroNext": "VqXecW_heroNext",
+			"operationActions": "VqXecW_operationActions",
+			"cardInlineActions": "VqXecW_cardInlineActions",
+			"homeOperation": "VqXecW_homeOperation",
+			"nativeOutline": "VqXecW_nativeOutline",
+			"browser": "VqXecW_browser",
+			"browserClose": "VqXecW_browserClose",
+			"lightbox": "VqXecW_lightbox",
+			"catalogTitleMain": "VqXecW_catalogTitleMain",
+			"nativePrimary": "VqXecW_nativePrimary",
+			"sortButton": "VqXecW_sortButton",
+			"installedSkeletonCard": "VqXecW_installedSkeletonCard",
+			"filters": "VqXecW_filters",
+			"thumbnailProgress": "VqXecW_thumbnailProgress",
+			"cardTitle": "VqXecW_cardTitle",
+			"homeCardMedia": "VqXecW_homeCardMedia",
+			"notice": "VqXecW_notice",
+			"installOptions": "VqXecW_installOptions",
+			"galleryGroup": "VqXecW_galleryGroup",
+			"browserTitlebar": "VqXecW_browserTitlebar",
+			"actionDivider": "VqXecW_actionDivider",
+			"filterPill": "VqXecW_filterPill",
+			"installedMoreCard": "VqXecW_installedMoreCard",
+			"cardStatusActive": "VqXecW_cardStatusActive",
+			"recommendations": "VqXecW_recommendations",
+			"cardMetaLine": "VqXecW_cardMetaLine",
+			"mobileBack": "VqXecW_mobileBack",
+			"listSkeleton": "VqXecW_listSkeleton",
+			"galleryProgress": "VqXecW_galleryProgress",
+			"operationMeta": "VqXecW_operationMeta",
 			"root": "VqXecW_root",
 			"installedRow": "VqXecW_installedRow",
-			"skinCardPreview": "VqXecW_skinCardPreview",
-			"homeActions": "VqXecW_homeActions",
-			"skinCardBody": "VqXecW_skinCardBody",
-			"copyCapsule": "VqXecW_copyCapsule",
 			"lightboxThumbnails": "VqXecW_lightboxThumbnails",
-			"homeGithubAction": "VqXecW_homeGithubAction",
-			"homeCardOpen": "VqXecW_homeCardOpen",
-			"browserPanel": "VqXecW_browserPanel",
-			"cardActionProgress": "VqXecW_cardActionProgress",
-			"cardStatusActive": "VqXecW_cardStatusActive",
-			"operationDismiss": "VqXecW_operationDismiss",
-			"recommendations": "VqXecW_recommendations",
-			"filterPill": "VqXecW_filterPill",
-			"lightboxClose": "VqXecW_lightboxClose",
-			"homeError": "VqXecW_homeError",
-			"catalog": "VqXecW_catalog",
-			"homeHeader": "VqXecW_homeHeader",
-			"homeTitleRow": "VqXecW_homeTitleRow",
-			"lightbox": "VqXecW_lightbox",
-			"homeCardTitleRow": "VqXecW_homeCardTitleRow",
-			"healthSuggestion": "VqXecW_healthSuggestion",
-			"settingsNavIcon": "VqXecW_settingsNavIcon",
-			"listSkeleton": "VqXecW_listSkeleton",
-			"skinAvatar": "VqXecW_skinAvatar",
-			"home": "VqXecW_home",
-			"homeCardCopy": "VqXecW_homeCardCopy",
-			"srOnly": "VqXecW_srOnly",
-			"staticPill": "VqXecW_staticPill",
-			"detail": "VqXecW_detail",
-			"skinCard": "VqXecW_skinCard",
-			"homeLoadMore": "VqXecW_homeLoadMore",
-			"spin": "VqXecW_spin",
-			"catalogTitleMain": "VqXecW_catalogTitleMain",
-			"nativeOutline": "VqXecW_nativeOutline",
-			"homeSectionTitle": "VqXecW_homeSectionTitle",
-			"error": "VqXecW_error",
-			"copyCapsuleButton": "VqXecW_copyCapsuleButton",
-			"lightboxNav": "VqXecW_lightboxNav",
-			"notice": "VqXecW_notice",
-			"homeCardDescription": "VqXecW_homeCardDescription",
-			"changelog": "VqXecW_changelog",
-			"iconOnlyButton": "VqXecW_iconOnlyButton",
-			"homeCard": "VqXecW_homeCard",
-			"galleryGroup": "VqXecW_galleryGroup",
-			"homeContent": "VqXecW_homeContent",
-			"heroNext": "VqXecW_heroNext",
-			"cardMetaLine": "VqXecW_cardMetaLine",
-			"status": "VqXecW_status",
-			"repoMeta": "VqXecW_repoMeta",
-			"operationCancel": "VqXecW_operationCancel",
-			"homeCardFooter": "VqXecW_homeCardFooter",
-			"repoLink": "VqXecW_repoLink",
-			"tags": "VqXecW_tags",
-			"empty": "VqXecW_empty",
-			"browserHomeBack": "VqXecW_browserHomeBack",
-			"catalogHeader": "VqXecW_catalogHeader",
-			"catalogTitle": "VqXecW_catalogTitle",
-			"installedSkeletonCard": "VqXecW_installedSkeletonCard",
-			"previewPlaceholder": "VqXecW_previewPlaceholder",
-			"homeSearchPlaceholder": "VqXecW_homeSearchPlaceholder",
-			"homeUpdateAction": "VqXecW_homeUpdateAction",
-			"heroOpen": "VqXecW_heroOpen",
-			"feedMeta": "VqXecW_feedMeta",
-			"lightboxNext": "VqXecW_lightboxNext",
+			"detailHeader": "VqXecW_detailHeader",
 			"description": "VqXecW_description",
-			"submission": "VqXecW_submission",
-			"lightboxPrev": "VqXecW_lightboxPrev",
-			"homeSection": "VqXecW_homeSection",
-			"cardAction": "VqXecW_cardAction",
+			"actionRow": "VqXecW_actionRow",
+			"healthSuggestion": "VqXecW_healthSuggestion",
+			"homeSectionTitle": "VqXecW_homeSectionTitle",
+			"repoMeta": "VqXecW_repoMeta",
+			"operationDismiss": "VqXecW_operationDismiss",
+			"skeletonCard": "VqXecW_skeletonCard",
+			"pinWarning": "VqXecW_pinWarning",
+			"homeActions": "VqXecW_homeActions",
+			"srOnly": "VqXecW_srOnly",
+			"spin": "VqXecW_spin",
+			"statusActive": "VqXecW_statusActive",
+			"version": "VqXecW_version",
+			"browserHomeBack": "VqXecW_browserHomeBack",
+			"copyCapsuleButton": "VqXecW_copyCapsuleButton",
+			"hero": "VqXecW_hero",
+			"staticPill": "VqXecW_staticPill",
+			"cardStars": "VqXecW_cardStars",
+			"detailSkeleton": "VqXecW_detailSkeleton",
+			"heroPrev": "VqXecW_heroPrev",
+			"homeLoading": "VqXecW_homeLoading",
 			"homeGithubLabel": "VqXecW_homeGithubLabel",
+			"externalPlugin": "VqXecW_externalPlugin",
+			"loadMoreHint": "VqXecW_loadMoreHint",
 			"listLoading": "VqXecW_listLoading",
-			"homeLoading": "VqXecW_homeLoading"
+			"marketUpdateLabel": "VqXecW_marketUpdateLabel",
+			"lightboxStage": "VqXecW_lightboxStage",
+			"tags": "VqXecW_tags",
+			"homeCardFooter": "VqXecW_homeCardFooter",
+			"marketUpdateButton": "VqXecW_marketUpdateButton",
+			"submission": "VqXecW_submission",
+			"settingsNavIcon": "VqXecW_settingsNavIcon",
+			"error": "VqXecW_error",
+			"homeLoadMore": "VqXecW_homeLoadMore",
+			"thumbnails": "VqXecW_thumbnails",
+			"healthList": "VqXecW_healthList",
+			"homeContent": "VqXecW_homeContent",
+			"skinList": "VqXecW_skinList",
+			"lightboxNav": "VqXecW_lightboxNav",
+			"catalogTitle": "VqXecW_catalogTitle"
 		};
 		//#endregion
 		//#region \0dsh-skin-market-css:/Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/src/client/media-hover.module.css.mjs
@@ -482,12 +482,21 @@ window.__ModuleLoader__.load({
 		}
 		//#endregion
 		//#region src/media-preview.ts
+		const DEFAULT_MEDIA_BASE_URL = "https://kingofsoysauce.github.io/dsh-skin-market/skin-media";
+		const MEDIA_VERSION = "v1";
 		function currentSearchParams() {
 			const location = globalThis.location;
 			return location === void 0 ? void 0 : new URLSearchParams(location.search ?? "");
 		}
-		function hasGeneratedMediaBase() {
-			return generatedMediaBase() !== void 0;
+		let localGeneratedMediaSources;
+		function setGeneratedMediaSources(sources) {
+			localGeneratedMediaSources = sources === void 0 ? void 0 : new Set(sources);
+		}
+		function parseGeneratedMediaManifest(value) {
+			if (typeof value !== "object" || value === null || Array.isArray(value)) return void 0;
+			const entries = Object.entries(value);
+			if (!entries.every(([source, digest]) => /^https?:\/\//i.test(source) && typeof digest === "string")) return void 0;
+			return entries.map(([source]) => source);
 		}
 		function generatedMediaEnabled() {
 			return currentSearchParams()?.get("dsh-media") !== "0";
@@ -495,6 +504,18 @@ window.__ModuleLoader__.load({
 		function generatedMediaBase() {
 			const explicit = currentSearchParams()?.get("dsh-media-base");
 			return explicit === null ? void 0 : explicit;
+		}
+		function generatedMediaManifestUrl() {
+			const base = generatedMediaBase();
+			if (base === void 0) return `${DEFAULT_MEDIA_BASE_URL}/${MEDIA_VERSION}/manifest.json`;
+			try {
+				return new URL("manifest.json", base.endsWith("/") ? base : `${base}/`).toString();
+			} catch {
+				return `${DEFAULT_MEDIA_BASE_URL}/${MEDIA_VERSION}/manifest.json`;
+			}
+		}
+		function previewSourceCandidates(source, fallbacks = []) {
+			return [...new Set([source, ...fallbacks].filter((item) => typeof item === "string" && item !== ""))];
 		}
 		/**
 		* An explicit base is available only for testing an alternate media host.
@@ -511,8 +532,8 @@ window.__ModuleLoader__.load({
 		}
 		function generatedMediaFor(entry, source, kind) {
 			if (!generatedMediaEnabled() || source === void 0 || entry.media === void 0) return void 0;
-			if (hasGeneratedMediaBase() && false);
-			if (kind === "list" || kind === "avatar" || kind === "recommendation" || kind === "card") return entry.media.list;
+			if (localGeneratedMediaSources !== void 0 && !localGeneratedMediaSources.has(source)) return void 0;
+			if ((kind === "list" || kind === "avatar" || kind === "recommendation" || kind === "card") && source === getCatalogListScreenshot(entry)) return entry.media.list;
 			const index = getCatalogScreenshotUrls(entry).indexOf(source);
 			return index >= 0 ? entry.media.screenshots[index] ?? void 0 : void 0;
 		}
@@ -1075,12 +1096,30 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 			const bTime = Date.parse(bState.lastOperatedAt ?? bState.installedAt ?? "");
 			return (Number.isFinite(bTime) ? bTime : 0) - (Number.isFinite(aTime) ? aTime : 0) || a.name.zh.localeCompare(b.name.zh, "zh-CN") || a.id.localeCompare(b.id);
 		}
-		function PreviewMedia({ skin, src, alt, kind, loading }) {
+		function PreviewMedia({ skin, src, fallbackSources, alt, kind, loading }) {
+			const candidates = previewSourceCandidates(src, fallbackSources);
+			const candidateKey = candidates.join("");
+			const [sourceIndex, setSourceIndex] = (0, react.useState)(0);
 			const [failed, setFailed] = (0, react.useState)(false);
 			const [previewFailed, setPreviewFailed] = (0, react.useState)(false);
 			const [fullFailed, setFullFailed] = (0, react.useState)(false);
 			const lazyMedia = useLazyMedia(loading);
-			if (!hasCatalogPreview(skin) || src === void 0 || failed) return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+			(0, react.useEffect)(() => {
+				setSourceIndex(0);
+				setFailed(false);
+				setPreviewFailed(false);
+				setFullFailed(false);
+			}, [candidateKey]);
+			const activeIndex = Math.min(sourceIndex, Math.max(0, candidates.length - 1));
+			const activeSrc = candidates[activeIndex];
+			const tryNextSource = () => {
+				if (fallbackSources !== void 0 && activeIndex + 1 < candidates.length) {
+					setSourceIndex(activeIndex + 1);
+					setPreviewFailed(false);
+					setFullFailed(false);
+				} else setFailed(true);
+			};
+			if (!hasCatalogPreview(skin) || activeSrc === void 0 || failed) return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 				className: SkinMarket_module_css_default.previewPlaceholder,
 				"data-preview-kind": kind,
 				role: "img",
@@ -1097,24 +1136,24 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				role: "img",
 				"aria-label": alt
 			});
-			const media = generatedMediaFor(skin, src, kind);
+			const media = generatedMediaFor(skin, activeSrc, kind);
 			if (media === void 0) return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("img", {
-				src,
+				src: activeSrc,
 				alt,
 				loading,
 				decoding: "async",
 				onLoad: (event) => {
 					event.currentTarget.dataset.loaded = "true";
 				},
-				onError: () => setFailed(true)
+				onError: tryNextSource
 			});
 			if (kind === "hero") {
 				if (fullFailed) return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("img", {
-					src,
+					src: activeSrc,
 					alt,
 					loading,
 					decoding: "async",
-					onError: () => setFailed(true)
+					onError: tryNextSource
 				});
 				return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("img", {
 					src: generatedMediaUrl(media.full),
@@ -1124,7 +1163,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					onError: () => setFullFailed(true)
 				});
 			}
-			const imageSource = previewFailed ? src : generatedMediaUrl(media.preview);
+			const imageSource = previewFailed ? activeSrc : generatedMediaUrl(media.preview);
 			return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("img", {
 				src: imageSource,
 				alt,
@@ -1134,7 +1173,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 					event.currentTarget.dataset.loaded = "true";
 				},
 				onError: () => {
-					if (previewFailed) setFailed(true);
+					if (previewFailed) tryNextSource();
 					else setPreviewFailed(true);
 				}
 			});
@@ -1420,6 +1459,15 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 				catalogCache,
 				refresh
 			]);
+			(0, react.useEffect)(() => {
+				const controller = new AbortController();
+				setGeneratedMediaSources([]);
+				fetch(generatedMediaManifestUrl(), {
+					cache: "no-store",
+					signal: controller.signal
+				}).then(async (response) => response.ok ? parseGeneratedMediaManifest(await response.json()) : void 0).then((sources) => setGeneratedMediaSources(sources)).catch(() => setGeneratedMediaSources(void 0));
+				return () => controller.abort();
+			}, []);
 			(0, react.useEffect)(() => {
 				checkMarketUpdate();
 			}, [checkMarketUpdate]);
@@ -1949,6 +1997,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(PreviewMedia, {
 								skin,
 								src: getCatalogListScreenshot(skin),
+								fallbackSources: getCatalogScreenshotUrls(skin),
 								alt: `${skin.name.zh} 界面预览`,
 								kind: "recommendation",
 								loading: "lazy"
@@ -2393,6 +2442,7 @@ ${repository === null ? "皮肤仓库：如果当前工作区就是待提交的�
 															children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(PreviewMedia, {
 																skin,
 																src: getCatalogListScreenshot(skin),
+																fallbackSources: getCatalogScreenshotUrls(skin),
 																alt: `${skin.name.zh} 界面预览`,
 																kind: "list",
 																loading: "lazy"

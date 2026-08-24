@@ -37,3 +37,17 @@ export function mediaForSources(screenshots, listScreenshot, baseUrl = MEDIA_BAS
     screenshots: screenshotMedia,
   }
 }
+
+export function retainMediaManifestEntries(manifest, sources) {
+  if (typeof manifest !== 'object' || manifest === null || Array.isArray(manifest)) return {}
+  const allowed = new Set(sources)
+  return Object.fromEntries(Object.entries(manifest).filter(([source]) => allowed.has(source)))
+}
+
+export function removeMediaManifestEntry(manifest, source) {
+  if (typeof manifest !== 'object' || manifest === null || Array.isArray(manifest)) return {}
+  if (!(source in manifest)) return manifest
+  const next = { ...manifest }
+  delete next[source]
+  return next
+}
