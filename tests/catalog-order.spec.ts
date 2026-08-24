@@ -72,4 +72,23 @@ describe('public catalog order', () => {
     expect(getCatalogScreenshotUrls(entry)).toEqual(['https://pages.example/market.png'])
     expect(usesMarketScreenshots(entry)).toBe(true)
   })
+
+  it('isolates monorepo package previews and restores local captures when upstream mixes packages', () => {
+    const entry = {
+      ...previewed,
+      subpath: 'packages/skins/ocean',
+      marketScreenshots: ['https://pages.example/market.png'],
+      screenshots: [
+        'https://raw.example/repo/packages/skins/black-whale/preview/dark.jpg',
+        'https://raw.example/repo/packages/skins/ocean/preview/dark.jpg',
+      ],
+    }
+
+    expect(getCatalogScreenshotUrls(entry)).toEqual([
+      'https://pages.example/market.png',
+      'https://raw.example/repo/packages/skins/ocean/preview/dark.jpg',
+    ])
+    expect(getCatalogListScreenshot(entry)).toBe('https://pages.example/market.png')
+    expect(usesMarketScreenshots(entry)).toBe(true)
+  })
 })

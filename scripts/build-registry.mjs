@@ -53,9 +53,12 @@ for (const file of files) {
   }
   const marketScreenshots = skin.marketScreenshots ?? []
   const screenshots = [...new Set(skin.screenshots)]
-  const display = displayScreenshots(marketScreenshots, screenshots)
+  const display = displayScreenshots(marketScreenshots, screenshots, skin.subpath)
   if (display.length === 0) console.warn(`${file}: no displayable screenshot; keeping the entry without media`)
-  const listScreenshot = skin.listScreenshot ?? (marketScreenshots.length > 0 ? display[0] : undefined)
+  const configuredListScreenshot = skin.listScreenshot
+  const listScreenshot = configuredListScreenshot !== undefined
+    ? (display.includes(configuredListScreenshot) ? configuredListScreenshot : display[0] ?? configuredListScreenshot)
+    : marketScreenshots.length > 0 ? display[0] : undefined
   const media = mediaForSources(display, listScreenshot ?? display[0])
   skins.push({ ...skin, ...(listScreenshot ? { listScreenshot } : {}), screenshots, ...(media ? { media } : {}) })
 }

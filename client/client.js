@@ -301,137 +301,137 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var SkinMarket_module_css_default = {
-			"homeCardOpen": "VqXecW_homeCardOpen",
-			"home": "VqXecW_home",
-			"homeSection": "VqXecW_homeSection",
-			"skeletonShimmer": "VqXecW_skeletonShimmer",
-			"cardDescription": "VqXecW_cardDescription",
-			"titleBlock": "VqXecW_titleBlock",
-			"aboutGrid": "VqXecW_aboutGrid",
-			"cardAction": "VqXecW_cardAction",
-			"lightboxPrev": "VqXecW_lightboxPrev",
-			"cardStatus": "VqXecW_cardStatus",
-			"collectionTitle": "VqXecW_collectionTitle",
-			"homeCard": "VqXecW_homeCard",
-			"catalogHeader": "VqXecW_catalogHeader",
-			"loading": "VqXecW_loading",
-			"detail": "VqXecW_detail",
-			"browserPanel": "VqXecW_browserPanel",
-			"compactActionIcon": "VqXecW_compactActionIcon",
-			"copyCapsule": "VqXecW_copyCapsule",
-			"homeUpdateAction": "VqXecW_homeUpdateAction",
-			"lightboxClose": "VqXecW_lightboxClose",
-			"skinCardPreview": "VqXecW_skinCardPreview",
-			"empty": "VqXecW_empty",
-			"homeSearch": "VqXecW_homeSearch",
-			"lightboxNext": "VqXecW_lightboxNext",
-			"homeCardTitleRow": "VqXecW_homeCardTitleRow",
-			"homeHeader": "VqXecW_homeHeader",
-			"browserBackdrop": "VqXecW_browserBackdrop",
-			"homeGithubAction": "VqXecW_homeGithubAction",
-			"author": "VqXecW_author",
-			"stars": "VqXecW_stars",
-			"cardMeta": "VqXecW_cardMeta",
-			"homeCardDescription": "VqXecW_homeCardDescription",
-			"previewPlaceholder": "VqXecW_previewPlaceholder",
-			"homeCardCopy": "VqXecW_homeCardCopy",
-			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
-			"homeError": "VqXecW_homeError",
-			"skinAvatar": "VqXecW_skinAvatar",
-			"homeSearchPlaceholder": "VqXecW_homeSearchPlaceholder",
-			"filterBar": "VqXecW_filterBar",
-			"repoLink": "VqXecW_repoLink",
-			"status": "VqXecW_status",
-			"operationCancel": "VqXecW_operationCancel",
-			"homeSubmitAction": "VqXecW_homeSubmitAction",
-			"operation": "VqXecW_operation",
-			"feedMeta": "VqXecW_feedMeta",
-			"heroNav": "VqXecW_heroNav",
-			"changelog": "VqXecW_changelog",
-			"discoveryGrid": "VqXecW_discoveryGrid",
-			"cardActionProgress": "VqXecW_cardActionProgress",
 			"homeTitleRow": "VqXecW_homeTitleRow",
-			"catalog": "VqXecW_catalog",
-			"skinCard": "VqXecW_skinCard",
-			"heroOpen": "VqXecW_heroOpen",
-			"iconOnlyButton": "VqXecW_iconOnlyButton",
-			"operationMessage": "VqXecW_operationMessage",
-			"skinCardBody": "VqXecW_skinCardBody",
-			"mediaLazyPlaceholder": "VqXecW_mediaLazyPlaceholder",
-			"heroNext": "VqXecW_heroNext",
-			"operationActions": "VqXecW_operationActions",
-			"cardInlineActions": "VqXecW_cardInlineActions",
-			"homeOperation": "VqXecW_homeOperation",
-			"nativeOutline": "VqXecW_nativeOutline",
-			"browser": "VqXecW_browser",
-			"browserClose": "VqXecW_browserClose",
-			"lightbox": "VqXecW_lightbox",
-			"catalogTitleMain": "VqXecW_catalogTitleMain",
-			"nativePrimary": "VqXecW_nativePrimary",
-			"sortButton": "VqXecW_sortButton",
 			"installedSkeletonCard": "VqXecW_installedSkeletonCard",
-			"filters": "VqXecW_filters",
-			"thumbnailProgress": "VqXecW_thumbnailProgress",
-			"cardTitle": "VqXecW_cardTitle",
-			"homeCardMedia": "VqXecW_homeCardMedia",
-			"notice": "VqXecW_notice",
-			"installOptions": "VqXecW_installOptions",
-			"galleryGroup": "VqXecW_galleryGroup",
-			"browserTitlebar": "VqXecW_browserTitlebar",
-			"actionDivider": "VqXecW_actionDivider",
-			"filterPill": "VqXecW_filterPill",
-			"installedMoreCard": "VqXecW_installedMoreCard",
-			"cardStatusActive": "VqXecW_cardStatusActive",
-			"recommendations": "VqXecW_recommendations",
-			"cardMetaLine": "VqXecW_cardMetaLine",
-			"mobileBack": "VqXecW_mobileBack",
-			"listSkeleton": "VqXecW_listSkeleton",
-			"galleryProgress": "VqXecW_galleryProgress",
+			"operationActions": "VqXecW_operationActions",
 			"operationMeta": "VqXecW_operationMeta",
-			"root": "VqXecW_root",
-			"installedRow": "VqXecW_installedRow",
-			"lightboxThumbnails": "VqXecW_lightboxThumbnails",
-			"detailHeader": "VqXecW_detailHeader",
-			"description": "VqXecW_description",
-			"actionRow": "VqXecW_actionRow",
-			"healthSuggestion": "VqXecW_healthSuggestion",
-			"homeSectionTitle": "VqXecW_homeSectionTitle",
-			"repoMeta": "VqXecW_repoMeta",
-			"operationDismiss": "VqXecW_operationDismiss",
-			"skeletonCard": "VqXecW_skeletonCard",
-			"pinWarning": "VqXecW_pinWarning",
-			"homeActions": "VqXecW_homeActions",
-			"srOnly": "VqXecW_srOnly",
-			"spin": "VqXecW_spin",
-			"statusActive": "VqXecW_statusActive",
-			"version": "VqXecW_version",
-			"browserHomeBack": "VqXecW_browserHomeBack",
+			"detail": "VqXecW_detail",
+			"filters": "VqXecW_filters",
 			"copyCapsuleButton": "VqXecW_copyCapsuleButton",
-			"hero": "VqXecW_hero",
-			"staticPill": "VqXecW_staticPill",
-			"cardStars": "VqXecW_cardStars",
-			"detailSkeleton": "VqXecW_detailSkeleton",
-			"heroPrev": "VqXecW_heroPrev",
-			"homeLoading": "VqXecW_homeLoading",
-			"homeGithubLabel": "VqXecW_homeGithubLabel",
-			"externalPlugin": "VqXecW_externalPlugin",
-			"loadMoreHint": "VqXecW_loadMoreHint",
-			"listLoading": "VqXecW_listLoading",
-			"marketUpdateLabel": "VqXecW_marketUpdateLabel",
-			"lightboxStage": "VqXecW_lightboxStage",
-			"tags": "VqXecW_tags",
-			"homeCardFooter": "VqXecW_homeCardFooter",
-			"marketUpdateButton": "VqXecW_marketUpdateButton",
-			"submission": "VqXecW_submission",
-			"settingsNavIcon": "VqXecW_settingsNavIcon",
-			"error": "VqXecW_error",
+			"cardInlineActions": "VqXecW_cardInlineActions",
+			"homeCard": "VqXecW_homeCard",
+			"skeletonShimmer": "VqXecW_skeletonShimmer",
 			"homeLoadMore": "VqXecW_homeLoadMore",
-			"thumbnails": "VqXecW_thumbnails",
+			"nativePrimary": "VqXecW_nativePrimary",
+			"skinAvatar": "VqXecW_skinAvatar",
+			"author": "VqXecW_author",
+			"homeSectionTitle": "VqXecW_homeSectionTitle",
+			"mediaLazyPlaceholder": "VqXecW_mediaLazyPlaceholder",
+			"installOptions": "VqXecW_installOptions",
+			"spin": "VqXecW_spin",
+			"cardStatusActive": "VqXecW_cardStatusActive",
+			"heroPrev": "VqXecW_heroPrev",
+			"homeGithubAction": "VqXecW_homeGithubAction",
+			"operationCancel": "VqXecW_operationCancel",
+			"lightboxNext": "VqXecW_lightboxNext",
+			"recommendations": "VqXecW_recommendations",
 			"healthList": "VqXecW_healthList",
+			"catalog": "VqXecW_catalog",
+			"externalPlugin": "VqXecW_externalPlugin",
+			"discoveryGrid": "VqXecW_discoveryGrid",
+			"pinWarning": "VqXecW_pinWarning",
+			"titleBlock": "VqXecW_titleBlock",
+			"sortButton": "VqXecW_sortButton",
+			"homeGithubLabel": "VqXecW_homeGithubLabel",
+			"homeUpdateAction": "VqXecW_homeUpdateAction",
+			"filterBar": "VqXecW_filterBar",
+			"galleryGroup": "VqXecW_galleryGroup",
 			"homeContent": "VqXecW_homeContent",
 			"skinList": "VqXecW_skinList",
+			"loading": "VqXecW_loading",
+			"staticPill": "VqXecW_staticPill",
+			"statusActive": "VqXecW_statusActive",
+			"repoMeta": "VqXecW_repoMeta",
+			"homeSearchPlaceholder": "VqXecW_homeSearchPlaceholder",
+			"heroOpen": "VqXecW_heroOpen",
+			"catalogHeader": "VqXecW_catalogHeader",
+			"compactActionIcon": "VqXecW_compactActionIcon",
+			"installedMoreCard": "VqXecW_installedMoreCard",
+			"previewPlaceholder": "VqXecW_previewPlaceholder",
+			"homeCardFooter": "VqXecW_homeCardFooter",
+			"homeSubmitAction": "VqXecW_homeSubmitAction",
+			"cardAction": "VqXecW_cardAction",
+			"filterPill": "VqXecW_filterPill",
+			"cardStars": "VqXecW_cardStars",
+			"marketUpdateLabel": "VqXecW_marketUpdateLabel",
+			"description": "VqXecW_description",
+			"skinCard": "VqXecW_skinCard",
+			"cardDescription": "VqXecW_cardDescription",
+			"cardActionProgress": "VqXecW_cardActionProgress",
+			"version": "VqXecW_version",
+			"nativeOutline": "VqXecW_nativeOutline",
+			"skinCardPreview": "VqXecW_skinCardPreview",
+			"stars": "VqXecW_stars",
+			"actionDivider": "VqXecW_actionDivider",
+			"operationMessage": "VqXecW_operationMessage",
+			"catalogTitleMain": "VqXecW_catalogTitleMain",
+			"healthSuggestion": "VqXecW_healthSuggestion",
+			"homeCardCopy": "VqXecW_homeCardCopy",
+			"heroNav": "VqXecW_heroNav",
 			"lightboxNav": "VqXecW_lightboxNav",
-			"catalogTitle": "VqXecW_catalogTitle"
+			"homeSection": "VqXecW_homeSection",
+			"homeOperation": "VqXecW_homeOperation",
+			"homeHeader": "VqXecW_homeHeader",
+			"lightboxStage": "VqXecW_lightboxStage",
+			"actionRow": "VqXecW_actionRow",
+			"root": "VqXecW_root",
+			"browserPanel": "VqXecW_browserPanel",
+			"browserClose": "VqXecW_browserClose",
+			"operation": "VqXecW_operation",
+			"lightboxClose": "VqXecW_lightboxClose",
+			"cardStatus": "VqXecW_cardStatus",
+			"lightboxThumbnails": "VqXecW_lightboxThumbnails",
+			"iconOnlyButton": "VqXecW_iconOnlyButton",
+			"skeletonCard": "VqXecW_skeletonCard",
+			"listSkeleton": "VqXecW_listSkeleton",
+			"thumbnailProgress": "VqXecW_thumbnailProgress",
+			"homeError": "VqXecW_homeError",
+			"mobileBack": "VqXecW_mobileBack",
+			"changelog": "VqXecW_changelog",
+			"lightboxPrev": "VqXecW_lightboxPrev",
+			"homeLoading": "VqXecW_homeLoading",
+			"tags": "VqXecW_tags",
+			"browser": "VqXecW_browser",
+			"catalogTitle": "VqXecW_catalogTitle",
+			"cardTitle": "VqXecW_cardTitle",
+			"empty": "VqXecW_empty",
+			"detailSkeleton": "VqXecW_detailSkeleton",
+			"copyCapsule": "VqXecW_copyCapsule",
+			"collectionTitle": "VqXecW_collectionTitle",
+			"home": "VqXecW_home",
+			"status": "VqXecW_status",
+			"feedMeta": "VqXecW_feedMeta",
+			"skinCardBody": "VqXecW_skinCardBody",
+			"heroNext": "VqXecW_heroNext",
+			"aboutGrid": "VqXecW_aboutGrid",
+			"cardMetaLine": "VqXecW_cardMetaLine",
+			"homeCardTitleRow": "VqXecW_homeCardTitleRow",
+			"srOnly": "VqXecW_srOnly",
+			"thumbnails": "VqXecW_thumbnails",
+			"browserBackdrop": "VqXecW_browserBackdrop",
+			"browserHomeBack": "VqXecW_browserHomeBack",
+			"browserTitlebar": "VqXecW_browserTitlebar",
+			"listLoading": "VqXecW_listLoading",
+			"homeCardOpen": "VqXecW_homeCardOpen",
+			"lightbox": "VqXecW_lightbox",
+			"error": "VqXecW_error",
+			"installedRow": "VqXecW_installedRow",
+			"loadMoreHint": "VqXecW_loadMoreHint",
+			"detailHeader": "VqXecW_detailHeader",
+			"galleryProgress": "VqXecW_galleryProgress",
+			"operationDismiss": "VqXecW_operationDismiss",
+			"homeSearch": "VqXecW_homeSearch",
+			"hero": "VqXecW_hero",
+			"submission": "VqXecW_submission",
+			"repoLink": "VqXecW_repoLink",
+			"homeCardMedia": "VqXecW_homeCardMedia",
+			"cardStatusUpdate": "VqXecW_cardStatusUpdate",
+			"notice": "VqXecW_notice",
+			"marketUpdateButton": "VqXecW_marketUpdateButton",
+			"homeActions": "VqXecW_homeActions",
+			"homeCardDescription": "VqXecW_homeCardDescription",
+			"settingsNavIcon": "VqXecW_settingsNavIcon",
+			"cardMeta": "VqXecW_cardMeta"
 		};
 		//#endregion
 		//#region \0dsh-skin-market-css:/Users/leon/Code/liang-intensity-calibrator/code/dsh-skin-market/src/client/media-hover.module.css.mjs
@@ -449,11 +449,35 @@ window.__ModuleLoader__.load({
 		function isRepositoryPreviewUrl(url) {
 			return url.includes("opengraph.githubassets.com/") || url.includes("repository-images.githubusercontent.com/") || url.includes("dshfind.com/api/card");
 		}
+		function matchingScreenshots(upstreamScreenshots, subpath) {
+			if (subpath === void 0 || subpath.trim() === "") return [];
+			const normalizedSubpath = subpath.replace(/^\/+|\/+$/g, "");
+			return upstreamScreenshots.filter((url) => {
+				try {
+					const pathname = decodeURIComponent(new URL(url).pathname).replace(/^\/+|\/+$/g, "");
+					return pathname === normalizedSubpath || pathname.includes(`/${normalizedSubpath}/`) || pathname.endsWith(`/${normalizedSubpath}`);
+				} catch {
+					return false;
+				}
+			});
+		}
+		function scopedScreenshots(upstreamScreenshots, subpath) {
+			const unique = [...new Set(upstreamScreenshots)];
+			const scoped = matchingScreenshots(unique, subpath);
+			return scoped.length > 0 ? scoped : unique;
+		}
+		function hasCrossPackageScreenshots(upstreamScreenshots, subpath) {
+			const unique = [...new Set(upstreamScreenshots)];
+			if (subpath === void 0 || unique.length === 0) return false;
+			const scoped = matchingScreenshots(unique, subpath);
+			return scoped.length > 0 && scoped.length < unique.length;
+		}
 		function usesMarketScreenshots(entry) {
 			const market = entry.marketScreenshots ?? [];
 			const upstream = entry.screenshots;
-			const hasUsableUpstream = entry.review?.preview !== "repository-card" && upstream.some((url) => !isRepositoryPreviewUrl(url));
-			return market.length > 0 && !hasUsableUpstream;
+			const scopedUpstream = scopedScreenshots(upstream, entry.subpath);
+			const hasUsableUpstream = entry.review?.preview !== "repository-card" && scopedUpstream.some((url) => !isRepositoryPreviewUrl(url));
+			return market.length > 0 && (hasCrossPackageScreenshots(upstream, entry.subpath) || !hasUsableUpstream);
 		}
 		/**
 		* Returns the URLs that should actually be rendered. Market captures are
@@ -462,10 +486,16 @@ window.__ModuleLoader__.load({
 		function getCatalogScreenshotUrls(entry) {
 			const market = entry.marketScreenshots ?? [];
 			const upstream = entry.screenshots;
-			const usableUpstream = entry.review?.preview === "repository-card" ? [] : upstream.filter((url) => !isRepositoryPreviewUrl(url));
+			const contaminated = hasCrossPackageScreenshots(upstream, entry.subpath);
+			const scopedUpstream = scopedScreenshots(upstream, entry.subpath);
+			const usableUpstream = entry.review?.preview === "repository-card" ? [] : scopedUpstream.filter((url) => !isRepositoryPreviewUrl(url));
+			if (contaminated) {
+				const scopedDisplay = [.../* @__PURE__ */ new Set([...market, ...usableUpstream])];
+				if (scopedDisplay.length > 0) return scopedDisplay;
+			}
 			if (usableUpstream.length > 0) return [...new Set(usableUpstream)];
 			if (market.length > 0) return [...new Set(market)];
-			return [.../* @__PURE__ */ new Set([...market, ...upstream])];
+			return [.../* @__PURE__ */ new Set([...market, ...scopedUpstream])];
 		}
 		function getCatalogListScreenshot(entry) {
 			return getCatalogScreenshotUrls(entry)[0] ?? entry.listScreenshot;
@@ -473,7 +503,8 @@ window.__ModuleLoader__.load({
 		/** Keep entries with real UI imagery ahead of repository-only placeholders. */
 		function hasCatalogPreview(entry) {
 			const hasMarketScreenshots = (entry.marketScreenshots?.length ?? 0) > 0;
-			return entry.review?.preview !== "repository-card" && entry.screenshots.some((url) => !isRepositoryPreviewUrl(url)) || hasMarketScreenshots;
+			const scopedUpstream = scopedScreenshots(entry.screenshots, entry.subpath);
+			return entry.review?.preview !== "repository-card" && scopedUpstream.some((url) => !isRepositoryPreviewUrl(url)) || hasMarketScreenshots;
 		}
 		function compareCatalogOrder(a, b, sortBy, starsFor, updatedAtFor) {
 			const aHasPreview = hasCatalogPreview(a);

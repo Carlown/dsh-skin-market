@@ -28,4 +28,29 @@ describe('registry screenshot merge', () => {
       ['https://raw.example/original.png'],
     )).toEqual(['https://raw.example/original.png'])
   })
+
+  it('uses market captures and the current package when a monorepo list mixes packages', () => {
+    expect(displayScreenshots(
+      ['https://pages.example/market.png'],
+      [
+        'https://raw.example/repo/packages/skins/black-whale/preview/dark.jpg',
+        'https://raw.example/repo/packages/skins/ocean/preview/dark.jpg',
+      ],
+      'packages/skins/ocean',
+    )).toEqual([
+      'https://pages.example/market.png',
+      'https://raw.example/repo/packages/skins/ocean/preview/dark.jpg',
+    ])
+  })
+
+  it('keeps only package-scoped upstream screenshots when no market capture exists', () => {
+    expect(displayScreenshots(
+      [],
+      [
+        'https://raw.example/repo/packages/skins/black-whale/preview/dark.jpg',
+        'https://raw.example/repo/packages/skins/ocean/preview/dark.jpg',
+      ],
+      'packages/skins/ocean',
+    )).toEqual(['https://raw.example/repo/packages/skins/ocean/preview/dark.jpg'])
+  })
 })

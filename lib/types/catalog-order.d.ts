@@ -2,6 +2,7 @@ export interface PreviewableCatalogEntry {
     review?: {
         preview: 'verified' | 'repository-card';
     };
+    subpath?: string;
     marketScreenshots?: string[];
     listScreenshot?: string;
     screenshots: string[];
