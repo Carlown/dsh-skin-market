@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type Ref } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ArrowLeft, Check, Copy, GithubLogo, MagnifyingGlass, X } from '@phosphor-icons/react'
+import { ArrowLeft, Check, Copy, DownloadSimpleIcon, GithubLogo, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { StarIcon } from '@primer/octicons-react'
 import { fetchLiveCatalog, fetchLiveCatalogWithFallback, REMOTE_CATALOG_URL } from './catalog.ts'
 import { comparePublicCatalogOrder, shouldRenderPublicPreview } from './catalog-order.ts'
@@ -42,16 +42,19 @@ const FEED_COMPACT_EXIT_OFFSET = 16
 function CatalogCard({ skin, onOpen, onInstall }: { skin: Skin; onOpen: () => void; onInstall: () => void }) {
   const repoLabel = githubRepoLabel(skin.repo)
   const title = skin.name.zh
+  const manualOnly = skin.review?.installation === 'manual-only'
   return <article className="feed-card">
     <button className="feed-card-open dsh-skin-media-hover" aria-label={`${title} 界面预览`} onClick={onOpen}>
       <span className="feed-card-media"><PreviewMedia skin={skin} src={getCatalogListScreenshot(skin)} fallbackSources={getCatalogScreenshotUrls(skin)} alt={`${skin.name.zh} 界面预览`} kind="card" loading="lazy" /></span>
       <span className="feed-card-copy">
         <span className="feed-card-title"><strong title={title}>{title}</strong><span className="feed-card-stats"><StarIcon size={12} /> {skin.starsSnapshot}</span></span>
         <span className="feed-card-description" title={skin.description}>{displayTitle(skin.description)}</span>
-        <small><span title={repoLabel}>{repoLabel}</span>{skin.review?.installation === 'manual-only' && <span className="status pending">手动安装</span>}</small>
       </span>
     </button>
-    <button className="card-install" onClick={onInstall}>安装</button>
+    <div className="feed-card-footer">
+      <small title={repoLabel}>{repoLabel}</small>
+      <button className="button outline card-install" onClick={onInstall}>{manualOnly ? '需手动安装' : '安装'}</button>
+    </div>
   </article>
 }
 
@@ -239,7 +242,7 @@ function App({ skins }: { skins: Skin[] }) {
       </a>
       <nav className="top-actions" ref={topActionsRef} aria-label="平台操作">
         <a className="button outline" href={MARKET_REPOSITORY} target="_blank" rel="noreferrer"><GithubLogo size={17} /> GitHub</a>
-        <button className="button outline" onClick={() => { setCopied(null); setInstallDialog('market') }}>安装皮肤市场</button>
+        <button className="button outline" onClick={() => { setCopied(null); setInstallDialog('market') }}><DownloadSimpleIcon size={17} /> 安装皮肤市场</button>
         <a className="qr-share" href={MARKET_PUBLIC_URL} target="_blank" rel="noreferrer" aria-label="扫描二维码打开 DSH 皮肤市场">
           <span><strong>扫码打开本页</strong></span>
           <img src={`${import.meta.env.BASE_URL}market-qr.svg`} alt="DSH 皮肤市场二维码" />
@@ -311,9 +314,9 @@ function App({ skins }: { skins: Skin[] }) {
 
     {installDialog !== null && <div className="install-dialog-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setInstallDialog(null) }}>
       <section className="install-dialog" role="dialog" aria-modal="true" aria-labelledby="install-dialog-title">
-        <header><div><h2 id="install-dialog-title">{installDialog === 'market' ? '安装皮肤市场' : `安装 ${selected.name.zh}`}</h2><p>{installDialog === 'skin' && manualOnly ? '该皮肤需要 Agent 协助安装，请复制提示词。' : '任选一种，不用都执行。'}</p></div><button aria-label="关闭" onClick={() => setInstallDialog(null)}><X size={18} /></button></header>
+        <header><div><h2 id="install-dialog-title">{installDialog === 'market' ? '安装皮肤市场' : `安装 ${selected.name.zh}`}</h2><p>{installDialog === 'skin' && manualOnly ? '需要按仓库说明完成安装。' : '任选一种，不用都执行。'}</p></div><button aria-label="关闭" onClick={() => setInstallDialog(null)}><X size={18} /></button></header>
         <div className="install-method-grid" data-single={installDialog === 'market' ? 'true' : 'false'}>
-          {installDialog === 'skin' && <InstallGroup title="安装这个皮肤" prompt={skinPrompt(selected.repo, verified, selected.install.target)} command={manualOnly ? undefined : skinCommand(selected.install.target)} copyKey="skin" copied={copied} onCopy={copyPrompt} />}
+          {installDialog === 'skin' && <InstallGroup title="安装这个皮肤" prompt={skinPrompt(selected.repo, verified, selected.install.target)} command={manualOnly ? undefined : skinCommand(selected.install.target)} manualOnly={manualOnly} repo={selected.repo} copyKey="skin" copied={copied} onCopy={copyPrompt} />}
           <InstallGroup title={installDialog === 'skin' ? '皮肤市场插件内安装' : undefined} prompt={MARKET_PROMPT} command={MARKET_CLI_COMMAND} copyKey="market" copied={copied} onCopy={copyPrompt} />
         </div>
       </section>
@@ -327,8 +330,8 @@ function InstallOption({ label, value, copied, onCopy, note }: { label: string; 
   return <div className="install-option"><strong>{label}</strong><div className="copy-capsule"><code title={value}>{value}</code><button aria-label={`复制${label}`} title={`复制${label}`} onClick={onCopy}>{copied ? <Check size={16} /> : <Copy size={16} />}</button></div>{note && <small>{note}</small>}</div>
 }
 
-function InstallGroup({ title, prompt, command, copyKey, copied, onCopy }: { title?: string; prompt: string; command?: string; copyKey: string; copied: string | null; onCopy: (key: string, value: string) => Promise<void> }) {
-  return <section className="install-group">{title && <h3>{title}</h3>}<InstallOption label="提示词" value={prompt} copied={copied === `${copyKey}:prompt`} onCopy={() => void onCopy(`${copyKey}:prompt`, prompt)} />{command !== undefined && <InstallOption label="命令" value={command} copied={copied === `${copyKey}:command`} onCopy={() => void onCopy(`${copyKey}:command`, command)} note={CLI_INSTALL_WARNING} />}</section>
+function InstallGroup({ title, prompt, command, manualOnly = false, repo, copyKey, copied, onCopy }: { title?: string; prompt: string; command?: string; manualOnly?: boolean; repo?: string; copyKey: string; copied: string | null; onCopy: (key: string, value: string) => Promise<void> }) {
+  return <section className="install-group">{title && <h3>{title}</h3>}<InstallOption label="提示词" value={prompt} copied={copied === `${copyKey}:prompt`} onCopy={() => void onCopy(`${copyKey}:prompt`, prompt)} />{manualOnly && repo !== undefined && <div className="manual-install-guide"><strong>按仓库说明安装</strong><p>市场不提供这款皮肤的一键安装命令。复制左侧提示词，让 Agent 先检查仓库，再按维护者说明完成安装。</p><a href={repo} target="_blank" rel="noreferrer"><GithubLogo size={15} />打开 GitHub 仓库</a></div>}{command !== undefined && <InstallOption label="命令" value={command} copied={copied === `${copyKey}:command`} onCopy={() => void onCopy(`${copyKey}:command`, command)} note={CLI_INSTALL_WARNING} />}</section>
 }
 
 function Site() {

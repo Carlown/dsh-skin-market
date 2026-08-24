@@ -180,9 +180,8 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} />)
 
     fireEvent.click(await screen.findByRole('button', { name: '更新皮肤市场到 0.1.16' }))
-    expect((await screen.findAllByText('正在下载皮肤市场')).length).toBe(2)
+    expect((await screen.findAllByText('正在下载皮肤市场')).length).toBe(1)
     expect(document.querySelector('[class*="homeHeader"] [role="status"] strong')?.textContent).toBe('正在下载皮肤市场')
-    expect(document.querySelector('[class*="detail"] [role="status"] strong')?.textContent).toBe('正在下载皮肤市场')
     expect(document.querySelector('[class*="homeHeader"] [role="status"]')?.textContent).not.toContain('正在下载皮肤市场更新包')
     expect(operationRequests).toBeGreaterThan(0)
   })
@@ -260,8 +259,8 @@ describe('client market', () => {
 
     const activeCard = await screen.findByRole('button', { name: /当前皮肤 已安装卡片/ })
     expect(activeCard.getAttribute('aria-current')).toBe('true')
-    expect(activeCard.textContent).toContain('使用中')
-    expect(activeCard.textContent).not.toContain('可更新')
+    expect(activeCard.closest('article')?.textContent).toContain('使用中')
+    expect(activeCard.closest('article')?.textContent).not.toContain('可更新')
     expect(screen.queryByText('正在加载皮肤…')).toBeNull()
   })
 
@@ -357,24 +356,26 @@ describe('client market', () => {
     expect(screen.getByRole('button', { name: '已安装', pressed: true })).toBeTruthy()
   })
 
-  it('uses a low-priority card action to install without activating', async () => {
+  it('installs and activates from the discovery card action', async () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
       if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: dshRuntime }) }
-      if (url.endsWith('/install') && init?.method === 'POST') return await new Promise(() => undefined)
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'card-install' }) }
+      if (url.endsWith('/operations/card-install')) return { ok: true, json: async () => ({ id: 'card-install', kind: 'install', skinId: skin.id, phase: 'done' }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') return await new Promise(() => undefined)
       throw new Error(`Unexpected request: ${url}`)
     })
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
-    const install = await screen.findByRole('button', { name: '安装' })
-    expect(install.getAttribute('variant')).toBe('ghost')
+    const install = await screen.findByRole('button', { name: '安装并使用' })
+    expect(install.getAttribute('variant')).toBe('outline')
     expect(screen.queryByText('可安装')).toBeNull()
     fireEvent.click(install)
 
     await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/install') && init?.method === 'POST')).toBe(true))
-    expect(screen.getByRole('group', { name: '测试皮肤 操作' }).textContent).toContain('安装中')
-    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/activate'))).toBe(false)
+    await waitFor(() => expect(screen.getByRole('group', { name: '测试皮肤 操作' }).textContent).toContain('使用中'))
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/activate') && init?.method === 'POST')).toBe(true))
   })
 
   it('warns about a known incompatible DSH version after Use, not on the detail page', async () => {
@@ -435,9 +436,10 @@ describe('client market', () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [manual] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: '安装' }))
+    fireEvent.click(await screen.findByRole('button', { name: '需手动安装' }))
     const dialog = screen.getByRole('dialog', { name: '安装 测试皮肤' })
-    expect(dialog.textContent).toContain('暂不支持市场直接安装')
+    expect(dialog.textContent).toContain('按仓库说明完成安装')
+    expect(dialog.textContent).not.toContain('该皮肤需要 Agent 协助安装')
     expect(screen.queryByRole('button', { name: '复制命令' })).toBeNull()
     const copyPrompt = screen.getAllByRole('button', { name: '复制提示词' }).at(-1)!
     fireEvent.click(copyPrompt)
@@ -547,6 +549,7 @@ describe('client market', () => {
     render(<SkinMarketSection t={key => key} catalogCache={catalogCache} />)
 
     expect(await screen.findByRole('button', { name: /测试皮肤 界面预览/ })).toBeTruthy()
+    await openSkinCard()
     expect(screen.queryByText('正在加载皮肤列表…')).toBeNull()
     expect(screen.getByText('正在加载皮肤详情…')).toBeTruthy()
   })
@@ -1001,7 +1004,7 @@ describe('client market', () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [supplemented] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
 
-    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+    await openSkinCard()
     expect(screen.getByText('当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。')).toBeTruthy()
   })
 
@@ -1018,7 +1021,7 @@ describe('client market', () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [supplemented] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
 
-    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+    await openSkinCard()
     expect(document.querySelector(`img[src="${upstreamCover}"]`)).toBeTruthy()
     expect(screen.getByAltText('测试皮肤 大图预览').getAttribute('src')).toBe(upstreamCover)
     expect(screen.queryByText('当前展示的是市场在隔离 DSH 中实机补录的截图；仓库尚无可识别的界面截图。')).toBeNull()
@@ -1108,6 +1111,7 @@ describe('client market', () => {
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
+    await openSkinCard()
     fireEvent.click(await screen.findByTitle('前往 GitHub 查看维护者提供的手动安装方式'))
     expect(open).toHaveBeenCalledWith(manual.repo, '_blank', 'noopener,noreferrer')
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
