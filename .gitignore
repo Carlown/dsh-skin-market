@@ -13,3 +13,4 @@ design-qa.md
 .pnpm-store/
 .private-ops/
 site/public/skin-media/
+.playwright-mcp/

@@ -35,7 +35,6 @@ export declare class SkinLifecycle {
     get catalog(): SkinEntry[];
     private get hostKind();
     private get runtime();
-    private assertRuntimeCompatibility;
     private applyCompatibility;
     private syncPnpmMetadata;
     private repairMaterializedPackage;

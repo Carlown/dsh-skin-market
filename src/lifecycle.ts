@@ -202,11 +202,6 @@ export class SkinLifecycle {
     return this.options.runtime ?? { version: null, capabilities: [], source: 'unknown' }
   }
 
-  private assertRuntimeCompatibility(skin: SkinEntry): void {
-    const assessment = assessCompatibility(skin, this.runtime)
-    if (assessment.decision === 'incompatible') throw new Error(`当前 DSH 与 ${skin.package} 不兼容：${assessment.reason}`)
-  }
-
   private async applyCompatibility(skin: SkinEntry, operation: Operation): Promise<void> {
     const plan = planCompatibilityPatch(this.options.profileDir, skin, this.runtime)
     if (plan === null || plan.adapterIds.length === 0) return
@@ -597,7 +592,6 @@ export class SkinLifecycle {
 
   private async install(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
-    this.assertRuntimeCompatibility(skin)
     await this.syncPnpmMetadata(operation, '正在修复 profile 的 pnpm 锁文件')
     const existingSpec = readDependencies(this.options.profileDir)[skin.package]
     if (existingSpec !== undefined) {
@@ -782,7 +776,6 @@ export class SkinLifecycle {
 
   private async updateSkin(operation: Operation): Promise<void> {
     const skin = this.skin(operation.skinId)
-    this.assertRuntimeCompatibility(skin)
     await this.syncPnpmMetadata(operation, '正在修复 profile 的 pnpm 锁文件')
     const previousState = readMarketState(this.options.profileDir)
     const wasActive = enabledSkinIds(previousState).has(skin.id)

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import React from 'react'
 
@@ -377,38 +377,55 @@ describe('client market', () => {
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/activate'))).toBe(false)
   })
 
-  it('hides install actions for a known incompatible DSH version', async () => {
+  it('warns about a known incompatible DSH version after Use, not on the detail page', async () => {
     const incompatible = { ...skin, id: 'test.incompatible', name: { zh: '不兼容皮肤', en: 'Incompatible Skin' }, compatibility: { dsh: '<0.1.0-rc.6', platform: ['web'] } }
-    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
-      ok: true,
-      json: async () => url.endsWith('/catalog') ? { skins: [incompatible] } : {
-        skins: [],
-        runtime: { version: '0.1.1-rc.1', capabilities: ['slot:keyed:settings.plugin.item'], source: 'injected' },
-      },
-    })))
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [incompatible] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: { version: '0.1.1-rc.1', capabilities: ['slot:keyed:settings.plugin.item'], source: 'injected' } }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'op-incompatible' }) }
+      if (url.endsWith('/operations/op-incompatible')) return { ok: true, json: async () => ({ id: 'op-incompatible', kind: 'install', skinId: incompatible.id, phase: 'done' }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'op-activate' }) }
+      if (url.endsWith('/operations/op-activate')) return { ok: true, json: async () => ({ id: 'op-activate', kind: 'activate', skinId: incompatible.id, phase: 'done' }) }
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
 
     await openSkinCard(/不兼容皮肤 界面预览/)
-    expect(screen.queryByRole('button', { name: '安装并使用' })).toBeNull()
-    expect(screen.queryByRole('button', { name: '仅安装' })).toBeNull()
-    expect(screen.queryByRole('button', { name: '其他安装方式' })).toBeNull()
-    expect(screen.getByRole('alert').textContent).toContain('已拦截安装')
-    expect(screen.getByRole('alert').textContent).toContain('请提醒皮肤开发者')
+    expect(screen.getByRole('button', { name: '安装并使用' })).toBeTruthy()
+    expect(screen.queryByText(/仍可安装|仍可继续使用/)).toBeNull()
+    expect(screen.queryByRole('dialog', { name: '兼容性提示' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: '安装并使用' }))
+    const dialog = await screen.findByRole('dialog', { name: '兼容性提示' })
+    expect(dialog.textContent).toMatch(/不在皮肤声明的兼容范围/)
+    expect(dialog.textContent).toMatch(/仍可继续使用/)
+    expect(within(dialog).getByRole('link', { name: '页面异常时重置皮肤' }).getAttribute('href')).toContain('#页面异常时重置皮肤')
+    expect(screen.queryByRole('button', { name: '确认无任务，立即重启' })).toBeNull()
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
   })
 
-  it('shows a compatibility popup and blocks installation when runtime version is unknown', async () => {
-    const fetchMock = vi.fn(async (url: string) => ({
-      ok: true,
-      json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] },
-    }))
+  it('still installs when runtime version is unknown', async () => {
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [] }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'op-unknown' }) }
+      if (url.endsWith('/operations/op-unknown')) return { ok: true, json: async () => ({ id: 'op-unknown', kind: 'install', skinId: skin.id, phase: 'done' }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'op-activate' }) }
+      if (url.endsWith('/operations/op-activate')) return { ok: true, json: async () => ({ id: 'op-activate', kind: 'activate', skinId: skin.id, phase: 'done' }) }
+      throw new Error(`Unexpected request: ${url}`)
+    })
     vi.stubGlobal('fetch', fetchMock)
     render(<SkinMarketSection t={key => key} />)
     await openSkinCard()
 
-    fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
-    expect(await screen.findByRole('dialog', { name: '已拦截安装' })).toBeTruthy()
-    expect(screen.getByText(/无法读取当前 DSH 版本/)).toBeTruthy()
-    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
+    expect(screen.queryByRole('dialog', { name: '兼容性提示' })).toBeNull()
+    fireEvent.click(await screen.findByRole('button', { name: '安装并使用' }))
+    const dialog = await screen.findByRole('dialog', { name: '兼容性提示' })
+    expect(dialog.textContent).toMatch(/无法读取当前 DSH 版本/)
+    expect(dialog.textContent).toMatch(/仍可继续使用/)
+    expect(screen.queryByRole('button', { name: '确认无任务，立即重启' })).toBeNull()
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
+    expect(screen.queryByRole('dialog', { name: '已拦截安装' })).toBeNull()
   })
 
   it('opens a prompt-only install dialog for manual cards', async () => {
@@ -490,7 +507,7 @@ describe('client market', () => {
     fireEvent.click(pin)
     const dialog = screen.getByRole('dialog', { name: '常驻使用此皮肤' })
     expect(dialog.textContent).toContain('冲突风险由用户自行承担')
-    const help = screen.getByRole('link', { name: '页面异常时重置皮肤' })
+    const help = within(dialog).getByRole('link', { name: '页面异常时重置皮肤' })
     expect(help.getAttribute('href')).toBe('https://github.com/kingOfSoySauce/dsh-skin-market#页面异常时重置皮肤')
     expect(screen.getByRole('button', { name: '确认常驻' })).toBeTruthy()
   })
@@ -714,7 +731,7 @@ describe('client market', () => {
   it('asks for restart immediately after Use when the client entry is absent', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
-      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [{ skinId: skin.id, installation: 'installed', activation: 'inactive', installedVersion: '1.0.0', updateAvailable: false }] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [{ skinId: skin.id, installation: 'installed', activation: 'inactive', installedVersion: '1.0.0', updateAvailable: false }], runtime: dshRuntime }) }
       if (url.endsWith('/activate') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'activate-1' }) }
       if (url.endsWith('/operations/activate-1')) return { ok: true, json: async () => ({ id: 'activate-1', phase: 'done' }) }
       throw new Error(`Unexpected request: ${url}`)
@@ -724,8 +741,32 @@ describe('client market', () => {
     await openSkinCard()
 
     fireEvent.click(await screen.findByRole('button', { name: '使用' }))
-    expect(await screen.findByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })).toBeTruthy()
+    const dialog = await screen.findByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })
+    expect(dialog.textContent).not.toMatch(/仍可继续使用/)
     expect(clientRuntime.setActive).toHaveBeenCalledWith(skin.package, true)
+  })
+
+  it('puts the compatibility warning into the restart panel after Use', async () => {
+    const incompatible = { ...skin, compatibility: { dsh: '<0.1.0-rc.6', platform: ['web'] } }
+    vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [incompatible] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ runningAgentCount: 0, skins: [{ skinId: incompatible.id, installation: 'installed', activation: 'inactive', installedVersion: '1.0.0', updateAvailable: false }], runtime: { version: '0.1.1-rc.1', capabilities: ['slot:keyed:settings.plugin.item'], source: 'injected' } }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'activate-1' }) }
+      if (url.endsWith('/operations/activate-1')) return { ok: true, json: async () => ({ id: 'activate-1', phase: 'done' }) }
+      throw new Error(`Unexpected request: ${url}`)
+    }))
+    const clientRuntime = { setActive: vi.fn(async () => false) }
+    render(<SkinMarketSection t={key => key} clientRuntime={clientRuntime} />)
+    await openSkinCard()
+
+    expect(screen.queryByText(/仍可继续使用/)).toBeNull()
+    fireEvent.click(await screen.findByRole('button', { name: '使用' }))
+    const dialog = await screen.findByRole('dialog', { name: '需要重启 DSH 应用此皮肤' })
+    expect(dialog.textContent).toMatch(/不在皮肤声明的兼容范围/)
+    expect(dialog.textContent).toMatch(/仍可继续使用/)
+    expect(dialog.textContent).toMatch(/Agent 状态检查已通过/)
+    expect(within(dialog).getByRole('link', { name: '页面异常时重置皮肤' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: '确认无任务，立即重启' })).toBeTruthy()
   })
 
   it('filters the catalog from the native search input', async () => {
@@ -889,12 +930,15 @@ describe('client market', () => {
     await waitFor(() => expect(fetchMock.mock.calls.some(([url, init]) => url.endsWith('/activate') && init?.method === 'POST')).toBe(true))
   })
 
-  it('blocks installation while warning that compatibility is unverified', async () => {
+  it('warns that compatibility is unverified but still installs', async () => {
     const unverified = { ...skin, review: { compatibility: 'unverified' as const, preview: 'repository-card' as const, installation: 'verified' as const }, compatibility: { dsh: 'unverified', platform: ['web'] } }
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [unverified] }) }
       if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], runtime: dshRuntime }) }
-      if (init?.method === 'POST') return await new Promise(() => undefined)
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'op-unverified' }) }
+      if (url.endsWith('/operations/op-unverified')) return { ok: true, json: async () => ({ id: 'op-unverified', kind: 'install', skinId: unverified.id, phase: 'done' }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'op-activate' }) }
+      if (url.endsWith('/operations/op-activate')) return { ok: true, json: async () => ({ id: 'op-activate', kind: 'activate', skinId: unverified.id, phase: 'done' }) }
       throw new Error(`Unexpected request: ${url}`)
     })
     vi.stubGlobal('fetch', fetchMock)
@@ -906,10 +950,16 @@ describe('client market', () => {
     expect(automatic.getAttribute('variant')).toBe('primary')
     expect(otherMethods.getAttribute('variant')).toBe('outline')
     expect(screen.queryByRole('button', { name: '待验证，手动安装' })).toBeNull()
+    expect(screen.queryByText(/维护者尚未声明 DSH 兼容范围，仍可一键安装/)).toBeNull()
+    expect(screen.queryByRole('dialog', { name: '兼容性提示' })).toBeNull()
     fireEvent.click(automatic)
-    expect(await screen.findByRole('dialog', { name: '已拦截安装' })).toBeTruthy()
-    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(false)
-    expect(screen.getByText('市场已具备自动安装所需信息，但维护者尚未声明 DSH 兼容范围。为避免破坏当前 profile，安装已被拦截；请先提醒皮肤开发者声明兼容范围。')).toBeTruthy()
+    const dialog = await screen.findByRole('dialog', { name: '兼容性提示' })
+    expect(dialog.textContent).toMatch(/皮肤未声明 DSH 兼容范围/)
+    expect(dialog.textContent).toMatch(/仍可继续使用/)
+    expect(within(dialog).getByRole('link', { name: '页面异常时重置皮肤' }).getAttribute('href')).toContain('#页面异常时重置皮肤')
+    expect(screen.queryByRole('button', { name: '确认无任务，立即重启' })).toBeNull()
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/install'))).toBe(true))
+    expect(screen.queryByRole('dialog', { name: '已拦截安装' })).toBeNull()
     expect(screen.getByText('该仓库暂无可识别的皮肤截图，市场使用本地占位卡，不会加载 GitHub 仓库图片。')).toBeTruthy()
     expect(screen.getAllByRole('img', { name: '测试皮肤 暂无界面截图' }).length).toBeGreaterThanOrEqual(2)
     expect(document.querySelector(`img[src="${unverified.screenshots[0]}"]`)).toBeNull()
