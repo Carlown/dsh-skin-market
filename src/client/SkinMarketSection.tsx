@@ -150,13 +150,17 @@ interface OperationBannerProps {
   cancelable?: boolean
   terminal?: boolean
   failed?: boolean
+  operationId?: string
+  copyingLog?: boolean
+  copiedLog?: boolean
   className?: string
   onCancel?: () => void
+  onCopyLog?: () => void
   onDismiss?: () => void
   action?: ReactNode
 }
 
-function OperationBanner({ title, startedAt, metadata, message, cancelable = false, terminal = false, failed = false, className, onCancel, onDismiss, action }: OperationBannerProps) {
+function OperationBanner({ title, startedAt, metadata, message, cancelable = false, terminal = false, failed = false, operationId, copyingLog = false, copiedLog = false, className, onCancel, onCopyLog, onDismiss, action }: OperationBannerProps) {
   const [now, setNow] = useState(Date.now())
   useEffect(() => {
     if (terminal) return
@@ -179,9 +183,10 @@ function OperationBanner({ title, startedAt, metadata, message, cancelable = fal
     {terminal ? <IconRefreshOutline16 size={16} /> : <IconLoadingOutline16 size={16} />}
     <strong>{title}</strong>
     <span className={css.operationMeta}>{details.map(item => <small key={item}>· {item}</small>)}</span>
-    {messageText !== undefined && <span className={css.operationMessage}>· {messageText}</span>}
+    {messageText !== undefined && <span className={css.operationMessage} title={messageText}>· {messageText}</span>}
     <span className={css.operationActions}>
       {cancelable && onCancel !== undefined && <Button className={css.operationCancel} variant="outline" size="sm" onClick={onCancel}>取消</Button>}
+      {failed && onCopyLog !== undefined && operationId !== undefined && <Button className={css.operationCopyLog} variant="outline" size="sm" icon={<IconCopyOutline16 />} disabled={copyingLog} onClick={onCopyLog}>{copiedLog ? '日志已复制' : copyingLog ? '复制中…' : '复制日志'}</Button>}
       {action}
       {onDismiss !== undefined && <Button className={css.operationDismiss} variant="ghost" size="sm" icon={<XIcon size={14} />} aria-label="关闭提示" title="关闭提示" onClick={onDismiss} />}
     </span>
@@ -407,6 +412,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [installCopied, setInstallCopied] = useState<string | null>(null)
   const [marketUpdate, setMarketUpdate] = useState<MarketUpdateStatus | null>(null)
   const [marketOperation, setMarketOperation] = useState<MarketUpdateOperation | null>(null)
+  const [copyingLogId, setCopyingLogId] = useState<string | null>(null)
+  const [copiedLogId, setCopiedLogId] = useState<string | null>(null)
+  const [dismissedBuildApprovalId, setDismissedBuildApprovalId] = useState<string | null>(null)
   const [marketUpdating, setMarketUpdating] = useState(false)
   const [restartTarget, setRestartTarget] = useState<RestartTarget | null>(null)
   const [pendingRestart, setPendingRestart] = useState<PendingRestartNotice | null>(null)
@@ -415,14 +423,24 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
   const [homeCompact, setHomeCompact] = useState(false)
   const skinListRef = useRef<HTMLDivElement | null>(null)
-  const homeRef = useRef<HTMLElement | null>(null)
+  const homeRef = useRef<HTMLDivElement | null>(null)
+  const thumbnailStripRef = useRef<HTMLDivElement | null>(null)
   const detailRef = useRef<HTMLElement | null>(null)
   const pendingScrollAnchor = useRef<ListScrollAnchor | null>(null)
+  const thumbnailScrollRequest = useRef(false)
   const marketUpdatePolls = useRef(new Set<string>())
   const dismissedMarketOperationIds = useRef(new Set<string>())
+  const pendingInstallActivation = useRef<string | null>(null)
   const skinsRef = useRef<CatalogSkin[]>([])
   const selectedIdRef = useRef('')
   const userSelectedRef = useRef(false)
+
+  const buildApprovalOperation = busy !== null
+    && busy.phase === 'failed'
+    && busy.failure?.action === 'approve-build'
+    && busy.id !== dismissedBuildApprovalId
+    ? busy
+    : null
 
   const acceptCatalog = useCallback((incoming: CatalogSkin[], runtimeStates: RuntimeSkin[] = []) => {
     pendingScrollAnchor.current = captureListScroll(skinListRef.current)
@@ -726,9 +744,26 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     const isNarrow = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 959px)').matches
     const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (!browserOpen || (!showDetail && isNarrow) || galleryPaused || lightboxOpen || shotCount < 2 || reduceMotion) return
-    const timer = window.setTimeout(() => setShotIndex(current => (current + 1) % shotCount), GALLERY_INTERVAL_MS)
+    const timer = window.setTimeout(() => {
+      thumbnailScrollRequest.current = true
+      setShotIndex(current => (current + 1) % shotCount)
+    }, GALLERY_INTERVAL_MS)
     return () => window.clearTimeout(timer)
   }, [browserOpen, carouselEpoch, galleryPaused, lightboxOpen, selected?.id, shotCount, shotIndex, showDetail])
+
+  useEffect(() => {
+    if (!thumbnailScrollRequest.current) return
+    thumbnailScrollRequest.current = false
+    const selectedThumbnail = thumbnailStripRef.current?.querySelector<HTMLElement>('[data-selected="true"]')
+    selectedThumbnail?.scrollIntoView?.({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+  }, [selected?.id, shotIndex])
+
+  useEffect(() => {
+    thumbnailScrollRequest.current = false
+    if (!browserOpen) return
+    const thumbnailStrip = thumbnailStripRef.current
+    if (thumbnailStrip !== null) thumbnailStrip.scrollLeft = 0
+  }, [browserOpen, selected?.id])
 
   useEffect(() => {
     setGalleryPaused(false)
@@ -747,8 +782,10 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         return
       }
       if (shotCount < 2) return
-      if (event.key === 'ArrowLeft') setShotIndex(current => (current - 1 + shotCount) % shotCount)
-      if (event.key === 'ArrowRight') setShotIndex(current => (current + 1) % shotCount)
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        thumbnailScrollRequest.current = true
+        setShotIndex(current => event.key === 'ArrowLeft' ? (current - 1 + shotCount) % shotCount : (current + 1) % shotCount)
+      }
     }
     window.addEventListener('keydown', handleLightboxKeys, true)
     return () => window.removeEventListener('keydown', handleLightboxKeys, true)
@@ -760,11 +797,33 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   }
 
   const moveShot = (direction: -1 | 1) => {
-    if (shotCount > 1) setShotIndex(current => (current + direction + shotCount) % shotCount)
+    if (shotCount > 1) {
+      thumbnailScrollRequest.current = true
+      setShotIndex(current => (current + direction + shotCount) % shotCount)
+    }
   }
 
   useEffect(() => { setVisibleCount(CATALOG_BATCH_SIZE) }, [filter, query, sortBy])
   useEffect(() => { setHomeVisibleCount(CATALOG_BATCH_SIZE) }, [homeQuery, sortBy])
+
+  const copyOperationLog = useCallback(async (operationId: string) => {
+    setCopyingLogId(operationId)
+    setError(null)
+    try {
+      const response = await fetch(`/dsh-skin-market/logs?operationId=${encodeURIComponent(operationId)}`, { cache: 'no-store' })
+      if (!response.ok) throw new Error(`日志导出失败（HTTP ${response.status}）`)
+      const text = await response.text()
+      if (!navigator.clipboard?.writeText) throw new Error('当前页面没有可用的剪贴板权限')
+      await navigator.clipboard.writeText(text)
+      setCopiedLogId(operationId)
+      window.setTimeout(() => setCopiedLogId(current => current === operationId ? null : current), 2400)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason))
+    } finally {
+      setCopyingLogId(current => current === operationId ? null : current)
+    }
+  }, [])
+
   const cancelOperation = useCallback(async () => {
     if (busy === null || busy.id === 'pending' || busy.cancelable !== true) return
     const operationId = busy.id
@@ -896,6 +955,13 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     }
   }, [clientRuntime, hostKind, openRestartConfirm, refresh, runtime, skins, states])
 
+  const activateSkin = useCallback((skinId: string) => {
+    pendingInstallActivation.current = null
+    try { window.localStorage.setItem(ACTIVATION_WARNING_KEY, 'true') } catch { /* storage may be unavailable */ }
+    setActivationWarningAccepted(true)
+    void runForSkin(skinId, 'activate')
+  }, [runForSkin])
+
   const retrySkinOperation = useCallback(async () => {
     const operation = busy
     const action = operation?.failure?.action
@@ -904,21 +970,22 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
       const result = await json<{ operationId: string }>(`/dsh-skin-market/operations/${operation.id}/retry`, {
         method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action }),
       })
-      await runForSkin(operation.skinId, operation.kind, result.operationId)
+      const retried = await runForSkin(operation.skinId, operation.kind, result.operationId)
+      if (retried && operation.kind === 'install' && pendingInstallActivation.current === operation.skinId) activateSkin(operation.skinId)
     } catch (reason) {
       const message = reason instanceof Error ? reason.message : String(reason)
       setBusy(current => current?.id === operation.id ? { ...current, message } : current)
       setError(null)
     }
-  }, [busy, runForSkin])
+  }, [activateSkin, busy, runForSkin])
+
+  const approveBuildAndRetry = useCallback(() => {
+    if (buildApprovalOperation === null) return
+    setDismissedBuildApprovalId(buildApprovalOperation.id)
+    void retrySkinOperation()
+  }, [buildApprovalOperation, retrySkinOperation])
 
   const run = useCallback(async (kind: MutationKind) => selected === undefined ? false : runForSkin(selected.id, kind), [runForSkin, selected])
-
-  const activateSkin = useCallback((skinId: string) => {
-    try { window.localStorage.setItem(ACTIVATION_WARNING_KEY, 'true') } catch { /* storage may be unavailable */ }
-    setActivationWarningAccepted(true)
-    void runForSkin(skinId, 'activate')
-  }, [runForSkin])
 
   const activateSelected = useCallback(() => {
     if (selected === undefined) return
@@ -926,10 +993,13 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   }, [activateSkin, selected])
 
   const installAndActivate = useCallback(async () => {
-    if (selected !== undefined && await runForSkin(selected.id, 'install')) activateSkin(selected.id)
+    if (selected === undefined) return
+    pendingInstallActivation.current = selected.id
+    if (await runForSkin(selected.id, 'install')) activateSkin(selected.id)
   }, [activateSkin, runForSkin, selected])
 
   const installAndActivateSkin = useCallback(async (skinId: string) => {
+    pendingInstallActivation.current = skinId
     if (await runForSkin(skinId, 'install')) activateSkin(skinId)
   }, [activateSkin, runForSkin])
 
@@ -1046,6 +1116,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   }
 
   const renderSkinOperationBanner = (className?: string) => busy === null ? null : <OperationBanner
+    operationId={busy.id}
+    copyingLog={copyingLogId === busy.id}
+    copiedLog={copiedLogId === busy.id}
     className={className}
     title={`${phases[busy.phase]}“${skins.find(skin => skin.id === busy.skinId)?.name.zh ?? busy.skinId}”`}
     startedAt={busy.startedAt}
@@ -1055,11 +1128,19 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     failed={busy.phase === 'failed'}
     cancelable={busy.cancelable === true}
     onCancel={() => { void cancelOperation() }}
-    action={recoveryActionLabel(busy.failure?.action) === undefined ? undefined : <Button variant="outline" size="sm" onClick={() => { void retrySkinOperation() }}>{recoveryActionLabel(busy.failure?.action)}</Button>}
+    onCopyLog={() => { void copyOperationLog(busy.id) }}
+    action={busy.failure?.action === 'approve-build'
+      ? <Button variant="outline" size="sm" onClick={() => setDismissedBuildApprovalId(null)}>查看批准说明</Button>
+      : recoveryActionLabel(busy.failure?.action) === undefined
+        ? undefined
+        : <Button variant="outline" size="sm" onClick={() => { void retrySkinOperation() }}>{recoveryActionLabel(busy.failure?.action)}</Button>}
     onDismiss={busy.phase === 'failed' || busy.phase === 'cancelled' || busy.phase === 'done' ? () => setBusy(null) : undefined}
   />
 
   const renderMarketOperationBanner = (className?: string) => marketOperation === null || (marketOperation.phase === 'done' && pendingRestart !== null) ? null : <OperationBanner
+    operationId={marketOperation.id}
+    copyingLog={copyingLogId === marketOperation.id}
+    copiedLog={copiedLogId === marketOperation.id}
     className={className}
     title={marketOperationTitles[marketOperation.phase]}
     startedAt={marketOperation.startedAt}
@@ -1069,6 +1150,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     failed={marketOperation.phase === 'failed'}
     cancelable={marketOperation.cancelable === true}
     onCancel={() => { void cancelMarketUpdate() }}
+    onCopyLog={() => { void copyOperationLog(marketOperation.id) }}
     action={recoveryActionLabel(marketOperation.failure?.action) === undefined ? undefined : <Button variant="outline" size="sm" onClick={() => { void retryMarketUpdate() }}>{recoveryActionLabel(marketOperation.failure?.action)}</Button>}
     onDismiss={marketOperation.phase === 'failed' || marketOperation.phase === 'cancelled' || marketOperation.phase === 'done' ? () => { dismissedMarketOperationIds.current.add(marketOperation.id); setMarketOperation(null) } : undefined}
   />
@@ -1088,15 +1170,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     <section className={css.root} data-dsh-skin-market data-detail={showDetail ? 'open' : 'closed'} data-browser-open={browserOpen ? 'true' : 'false'}>
       {browserOpen && selected !== undefined && <GalleryPreloads skin={selected} screenshots={selectedScreenshots} />}
       {settingsNavIconHost !== null && createPortal(<TShirtIcon size={16} weight="regular" aria-hidden="true" />, settingsNavIconHost)}
-      <main className={css.home} hidden={browserOpen} ref={homeRef} onScroll={event => {
-        const home = event.currentTarget
-        setHomeCompact(current => current
-          ? home.scrollTop > HOME_COMPACT_EXIT_SCROLL
-          : home.scrollTop > HOME_COMPACT_ENTER_SCROLL)
-        if (discoverySkins.length > homeVisibleCount && home.scrollHeight - home.scrollTop - home.clientHeight < 560) {
-          setHomeVisibleCount(value => Math.min(discoverySkins.length, value + CATALOG_BATCH_SIZE))
-        }
-      }}>
+      <main className={css.home} hidden={browserOpen}>
         <header className={css.homeHeader} data-compact={homeCompact ? 'true' : undefined}>
           <div className={css.homeTitleRow}>
             <div><h2>{t('title')}</h2><p>{skins.length} 款社区皮肤</p></div>
@@ -1111,7 +1185,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
                 disabled={marketUpdating || marketUpdateActive || busy !== null}
                 data-updating={marketUpdating || marketUpdateActive ? 'true' : undefined}
                 onClick={() => { void updateMarket() }}
-              >{marketUpdating ? '更新中' : '更新'}</Button>}
+              ><span className={css.marketUpdateLabel}>{marketUpdating ? '更新中' : '更新'}</span></Button>}
               <Button className={css.homeGithubAction} variant="outline" size="sm" icon={<MarkGithubIcon size={15} aria-hidden="true" />} aria-label="打开 GitHub 仓库" title="打开 GitHub 仓库" onClick={() => window.open(REGISTRY_REPOSITORY, '_blank', 'noopener,noreferrer')}><span className={css.homeGithubLabel}>GitHub</span></Button>
               <Button className={css.homeSubmitAction} variant="outline" size="sm" icon={<UploadSimpleIcon size={15} aria-hidden="true" />} onClick={() => { setShowSubmission(true); setSubmissionCopied(false) }}>提交皮肤</Button>
             </div>
@@ -1123,7 +1197,15 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
           {renderPendingRestartBanner(css.homeOperation)}
         </header>
 
-        <div className={css.homeContent}>
+        <div className={css.homeContent} ref={homeRef} onScroll={event => {
+          const home = event.currentTarget
+          setHomeCompact(current => current
+            ? home.scrollTop > HOME_COMPACT_EXIT_SCROLL
+            : home.scrollTop > HOME_COMPACT_ENTER_SCROLL)
+          if (discoverySkins.length > homeVisibleCount && home.scrollHeight - home.scrollTop - home.clientHeight < 560) {
+            setHomeVisibleCount(value => Math.min(discoverySkins.length, value + CATALOG_BATCH_SIZE))
+          }
+        }}>
           {homeQuery.trim() === '' && (loading || installedSkins.length > 0) && <section className={css.homeSection} aria-labelledby="installed-skins-title">
             <div className={css.homeSectionTitle}><h3 id="installed-skins-title">已安装</h3><span>正在使用、常驻优先，其余按最近操作排序</span></div>
             {loading ? <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties} role="status" aria-label="正在加载已安装皮肤"><span className={css.srOnly}>正在加载已安装皮肤…</span>{Array.from({ length: installedSlots }, (_, index) => <article className={css.installedSkeletonCard} key={index} aria-hidden="true"><span /><span><i /><i /></span></article>)}</div> : <div className={css.installedRow} style={{ '--installed-columns': installedSlots } as CSSProperties}>
@@ -1146,13 +1228,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         </div>
       </main>
 
-      <Modal open={browserOpen} onClose={closeBrowser} title="皮肤详情" closeLabel="关闭" headless className={css.browserModal}>
+      <Modal open={browserOpen} onClose={closeBrowser} title="皮肤详情" closeLabel="关闭" className={css.browserModal} contentClassName={css.browserContent}>
       <section className={css.browser} data-detail={showDetail ? 'open' : 'closed'} aria-label="皮肤详情">
         <div className={css.browserPanel}>
-        <header className={css.browserTitlebar}>
-          <span><strong>{browserOrigin === 'installed' ? '已安装皮肤' : '皮肤详情'}</strong><small>{selected === undefined ? '' : githubRepoLabel(selected.repo)}</small></span>
-          <Button className={css.browserClose} variant="outline" size="sm" icon={<XIcon size={15} />} aria-label="关闭皮肤详情" title="关闭当前详情，返回皮肤市场" onClick={closeBrowser}>关闭详情</Button>
-        </header>
       <aside className={css.catalog} aria-label={t('catalog')}>
         <div className={css.catalogHeader}>
           <Input value={query} onChange={event => setQuery(event.currentTarget.value)} icon={<IconSearchOutline16 />} placeholder={t('search')} aria-label={t('search')} />
@@ -1251,8 +1329,8 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
               </button>
               {shotCount > 1 && <><Button className={`${css.heroNav} ${css.heroPrev}`} variant="ghost" icon={<IconChevronLeftOutline14 size={18} />} aria-label="上一张截图" onClick={() => moveShot(-1)} /><Button className={`${css.heroNav} ${css.heroNext}`} variant="ghost" icon={<IconChevronLeftOutline14 size={18} />} aria-label="下一张截图" onClick={() => moveShot(1)} /></>}
             </div>
-            {selectedScreenshots.length > 1 && <div className={css.thumbnails} aria-label="截图选择">
-              {selectedScreenshots.map((shot, index) => <Button className="dsh-skin-media-hover" variant="ghost" key={shot} data-selected={index === shotIndex} onClick={() => { setShotIndex(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" />{index === shotIndex && <span className={css.thumbnailProgress} key={`${selected.id}:${shotIndex}:${carouselEpoch}`} aria-hidden="true" />}</Button>)}
+            {selectedScreenshots.length > 1 && <div className={css.thumbnails} ref={thumbnailStripRef} aria-label="截图选择">
+              {selectedScreenshots.map((shot, index) => <span className={css.thumbnailFrame} key={shot}><Button className="dsh-skin-media-hover" variant="ghost" data-selected={index === shotIndex} onClick={() => { setShotIndex(index); setCarouselEpoch(current => current + 1) }}><PreviewMedia skin={selected} src={shot} alt={`${selected.name.zh} 截图 ${index + 1}`} kind="thumbnail" loading="lazy" /></Button>{index === shotIndex && <span className={css.thumbnailProgress} key={`${selected.id}:${shotIndex}:${carouselEpoch}`} aria-hidden="true" />}</span>)}
             </div>}
           </div>
 
@@ -1276,6 +1354,17 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
         {shotCount > 1 && <div className={css.lightboxThumbnails} aria-label="全屏截图选择">{selectedScreenshots.map((shot, index) => <Button className="dsh-skin-media-hover" variant="ghost" key={shot} data-selected={index === shotIndex} aria-label={`查看截图 ${index + 1}`} onClick={() => setShotIndex(index)}><PreviewMedia skin={selected} src={shot} alt="" kind="thumbnail" loading="lazy" /></Button>)}</div>}
       </section>, document.body)}
 
+      <Modal
+        open={buildApprovalOperation !== null}
+        onClose={() => setDismissedBuildApprovalId(buildApprovalOperation?.id ?? null)}
+        title="需要批准构建脚本"
+        closeLabel="关闭"
+        description={buildApprovalOperation?.failure?.message ?? ''}
+        footer={<><Button variant="outline" size="sm" onClick={() => setDismissedBuildApprovalId(buildApprovalOperation?.id ?? null)}>稍后</Button><Button variant="primary" size="sm" onClick={approveBuildAndRetry}>批准并重试</Button></>}
+      >
+        <p className={css.notice}>pnpm 默认阻止依赖执行安装构建脚本。确认后只批准这次报错中列出的精确构建项，不会开启全局构建脚本。</p>
+        {buildApprovalOperation?.failure?.packageName !== undefined && <p className={css.notice}>精确构建项：<code>{buildApprovalOperation.failure.packageName}</code></p>}
+      </Modal>
       <Modal open={confirmUninstall} onClose={() => setConfirmUninstall(false)} title="卸载皮肤" closeLabel="关闭" description={state?.activation === 'active' ? '当前皮肤会先停用并恢复 DSH 默认外观，然后删除安装包。' : '将从当前 DSH profile 删除这个皮肤安装包。'} footer={<><Button variant="outline" size="sm" onClick={() => setConfirmUninstall(false)}>取消</Button><Button variant="primary" size="sm" onClick={() => { setConfirmUninstall(false); void run('uninstall') }}>确认卸载</Button></>} />
       <Modal open={confirmPin} onClose={() => setConfirmPin(false)} title="常驻使用此皮肤" closeLabel="关闭" description="开启后，切换其他皮肤时不会自动停用此皮肤。适合宠物、音效等可叠加插件；多个皮肤可能同时修改样式、页面结构或功能，相关冲突风险由用户自行承担。" footer={<><Button variant="outline" size="sm" onClick={() => setConfirmPin(false)}>取消</Button><Button variant="primary" size="sm" onClick={() => { setConfirmPin(false); void run('pin') }}>确认常驻</Button></>}><p className={css.pinWarning}>如果发生冲突或页面无法操作，请停止 DSH，然后查看 <ResetHelpLink /> 中的修复命令。</p></Modal>
       <Modal

@@ -9,7 +9,31 @@ vi.mock('@deepseek-ai/dsh-client-ui-primitives', () => {
     Button: ({ icon: leading, children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { icon?: React.ReactNode }) => React.createElement('button', props, leading, children),
     Input: ({ icon: leading, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { icon?: React.ReactNode }) => React.createElement('label', null, leading, React.createElement('input', props)),
     Pill: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => React.createElement('button', props, children),
-    Modal: ({ open, title, description, footer, children }: { open: boolean; title: string; description?: string; footer?: React.ReactNode; children?: React.ReactNode }) => open ? React.createElement('div', { role: 'dialog', 'aria-label': title }, description, children, footer) : null,
+    Modal: ({
+      open,
+      title,
+      closeLabel = '关闭',
+      onClose,
+      description,
+      footer,
+      children,
+    }: {
+      open: boolean
+      title: string
+      closeLabel?: string
+      onClose?: () => void
+      description?: string
+      footer?: React.ReactNode
+      children?: React.ReactNode
+    }) => open ? React.createElement(
+      'div',
+      { role: 'dialog', 'aria-label': title },
+      React.createElement('h2', null, title),
+      React.createElement('button', { type: 'button', 'aria-label': closeLabel, onClick: onClose }),
+      description,
+      children,
+      footer,
+    ) : null,
     IconChevronLeftOutline14: icon, IconChevronDownOutline14: icon, IconCopyOutline16: icon, IconDownloadOutline16: icon, IconLinkOutline16: icon, IconLoadingOutline16: icon,
     IconRefreshOutline16: icon, IconSearchOutline16: icon, IconTrashOutline16: icon,
   }
@@ -270,8 +294,9 @@ describe('client market', () => {
 
     await openSkinCard()
     expect(screen.getByRole('dialog', { name: '皮肤详情' })).toBeTruthy()
-    const close = screen.getByRole('button', { name: '关闭皮肤详情' })
-    expect(close.textContent).toContain('关闭详情')
+    expect(screen.getByRole('heading', { name: '皮肤详情' })).toBeTruthy()
+    const close = screen.getByRole('button', { name: '关闭' })
+    expect(close.textContent).toBe('')
     fireEvent.click(close)
     expect(screen.queryByRole('dialog', { name: '皮肤详情' })).toBeNull()
   })
@@ -577,7 +602,8 @@ describe('client market', () => {
 
     await screen.findByRole('button', { name: /测试皮肤 0 界面预览/ })
     expect(screen.getAllByRole('button', { name: /测试皮肤 \d+ 界面预览/ })).toHaveLength(CATALOG_BATCH_SIZE)
-    const feed = screen.getByRole('main')
+    const feed = document.querySelector<HTMLElement>('[class*="homeContent"]')
+    if (feed === null) throw new Error('home content scroll area not found')
     Object.defineProperties(feed, { scrollHeight: { configurable: true, value: 2000 }, clientHeight: { configurable: true, value: 500 } })
     feed.scrollTop = 1300
     fireEvent.scroll(feed)
@@ -854,6 +880,40 @@ describe('client market', () => {
     await waitFor(() => expect(screen.getAllByRole('status').some(item => item.textContent?.includes('GitHub 插件下载超时'))).toBe(true))
   })
 
+  it('keeps a long failure on one line and copies the operation diagnostic log', async () => {
+    let operationRequests = 0
+    const longMessage = '依赖 @deepseek-ai/dsh-compact 无法从 npm registry 找到；这是一个很长的 pnpm 诊断信息，需要在横幅中单行省略而不能挤开右侧操作按钮。'
+    const clipboard = vi.fn(async () => undefined)
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: clipboard } })
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null, runtime: dshRuntime }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-copy' }) }
+      if (url.endsWith('/logs?operationId=install-copy')) return { ok: true, text: async () => '# dsh-skin-market diagnostic log\nredacted' }
+      if (url.endsWith('/operations/install-copy')) {
+        operationRequests += 1
+        return { ok: true, json: async () => operationRequests === 1
+          ? { id: 'install-copy', kind: 'install', skinId: skin.id, phase: 'downloading', startedAt: new Date().toISOString() }
+          : { id: 'install-copy', kind: 'install', skinId: skin.id, phase: 'failed', startedAt: new Date().toISOString(), message: longMessage } }
+      }
+      throw new Error(`Unexpected request: ${url}`)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+    fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
+
+    const banner = await screen.findByRole('status')
+    await waitFor(() => expect(banner.textContent).toContain('@deepseek-ai/dsh-compact'))
+    const message = within(banner).getByTitle(longMessage)
+    expect(message.textContent).toContain('dsh-compact')
+    const copyButton = within(banner).getByRole('button', { name: '复制日志' })
+    expect(copyButton).toBeTruthy()
+    fireEvent.click(copyButton)
+    await waitFor(() => expect(clipboard).toHaveBeenCalledWith(expect.stringContaining('diagnostic log')))
+    expect(within(banner).getByRole('button', { name: '日志已复制' })).toBeTruthy()
+  })
+
   it('offers a retry action for a classified install failure', async () => {
     let operationRequests = 0
     let retryRequests = 0
@@ -883,6 +943,82 @@ describe('client market', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '重试' })[0]!)
 
     await waitFor(() => expect(retryRequests).toBe(1))
+  })
+
+  it('puts build approval in a confirmation modal instead of the failure banner', async () => {
+    let operationRequests = 0
+    let retryRequests = 0
+    vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null, runtime: dshRuntime }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-build-approval' }) }
+      if (url.endsWith('/operations/install-build-approval/retry') && init?.method === 'POST') {
+        retryRequests += 1
+        expect(JSON.parse(String(init.body))).toEqual({ action: 'approve-build' })
+        return { ok: true, json: async () => ({ operationId: 'install-build-approval-retry' }) }
+      }
+      if (url.endsWith('/operations/install-build-approval')) {
+        operationRequests += 1
+        return { ok: true, json: async () => operationRequests === 1
+          ? { id: 'install-build-approval', kind: 'install', skinId: skin.id, phase: 'downloading', startedAt: new Date().toISOString() }
+          : { id: 'install-build-approval', kind: 'install', skinId: skin.id, phase: 'failed', startedAt: new Date().toISOString(), message: '依赖 node-pty 等 2 个依赖包含被 pnpm 阻止的构建脚本；请批准后重试', failure: { kind: 'build-approval', message: '依赖 node-pty 等 2 个依赖包含被 pnpm 阻止的构建脚本；请批准后重试', packageName: 'node-pty', action: 'approve-build' } } }
+      }
+      if (url.endsWith('/operations/install-build-approval-retry')) return { ok: true, json: async () => ({ id: 'install-build-approval-retry', kind: 'install', skinId: skin.id, phase: 'failed', startedAt: new Date().toISOString(), message: '仍然失败', failure: { kind: 'build-approval', message: '仍然失败', packageName: 'node-pty', action: 'approve-build' } }) }
+      throw new Error(`Unexpected request: ${url}`)
+    }))
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
+
+    const dialog = await screen.findByRole('dialog', { name: '需要批准构建脚本' })
+    expect(within(dialog).getByText('精确构建项：')).toBeTruthy()
+    expect(within(dialog).getByText('node-pty')).toBeTruthy()
+    expect(screen.queryByRole('button', { name: '批准构建并重试' })).toBeNull()
+    expect(screen.getByRole('button', { name: '批准并重试' })).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: '稍后' }))
+    expect(screen.queryByRole('dialog', { name: '需要批准构建脚本' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: '查看批准说明' }))
+    expect(await screen.findByRole('dialog', { name: '需要批准构建脚本' })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: '批准并重试' }))
+    await waitFor(() => expect(retryRequests).toBe(1))
+  })
+
+  it('keeps the install-and-use intent after approving a build retry', async () => {
+    let sourceRequests = 0
+    let retryRequests = 0
+    let activateRequests = 0
+    vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.endsWith('/catalog')) return { ok: true, json: async () => ({ skins: [skin] }) }
+      if (url.endsWith('/state')) return { ok: true, json: async () => ({ skins: [], operation: null, runtime: dshRuntime }) }
+      if (url.endsWith('/install') && init?.method === 'POST') return { ok: true, json: async () => ({ operationId: 'install-intent-source' }) }
+      if (url.endsWith('/activate') && init?.method === 'POST') {
+        activateRequests += 1
+        return { ok: true, json: async () => ({ operationId: 'activate-after-approval' }) }
+      }
+      if (url.endsWith('/operations/install-intent-source/retry') && init?.method === 'POST') {
+        retryRequests += 1
+        return { ok: true, json: async () => ({ operationId: 'install-intent-retry' }) }
+      }
+      if (url.endsWith('/operations/install-intent-source')) {
+        sourceRequests += 1
+        return { ok: true, json: async () => sourceRequests === 1
+          ? { id: 'install-intent-source', kind: 'install', skinId: skin.id, phase: 'downloading', startedAt: new Date().toISOString() }
+          : { id: 'install-intent-source', kind: 'install', skinId: skin.id, phase: 'failed', startedAt: new Date().toISOString(), message: '需要批准', failure: { kind: 'build-approval', message: '需要批准', packageName: 'node-pty', action: 'approve-build' } } }
+      }
+      if (url.endsWith('/operations/install-intent-retry')) return { ok: true, json: async () => ({ id: 'install-intent-retry', kind: 'install', skinId: skin.id, phase: 'done' }) }
+      if (url.endsWith('/operations/activate-after-approval')) return { ok: true, json: async () => ({ id: 'activate-after-approval', kind: 'activate', skinId: skin.id, phase: 'done' }) }
+      throw new Error(`Unexpected request: ${url}`)
+    }))
+    render(<SkinMarketSection t={key => key} />)
+    await openSkinCard()
+
+    fireEvent.click(await screen.findByRole('button', { name: '安装并使用' }))
+    fireEvent.click(await screen.findByRole('button', { name: '批准并重试' }))
+
+    await waitFor(() => expect(retryRequests).toBe(1))
+    await waitFor(() => expect(activateRequests).toBe(1))
   })
 
   it('shows available byte progress in one banner and cancels the download', async () => {
