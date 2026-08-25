@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { SquaresFourIcon, TShirtIcon, UploadSimpleIcon, XIcon } from '@phosphor-icons/react'
+import { SquaresFourIcon, UploadSimpleIcon, XIcon } from '@phosphor-icons/react'
 import { MarkGithubIcon, StarIcon } from '@primer/octicons-react'
 import {
   Button,
@@ -420,7 +420,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const [pendingRestart, setPendingRestart] = useState<PendingRestartNotice | null>(null)
   const [compatibilityNotice, setCompatibilityNotice] = useState<{ skin: CatalogSkin; assessment: CompatibilityAssessment } | null>(null)
   const [compatibilityWarning, setCompatibilityWarning] = useState<CompatibilityAssessment | null>(null)
-  const [settingsNavIconHost, setSettingsNavIconHost] = useState<HTMLElement | null>(null)
   const [homeCompact, setHomeCompact] = useState(false)
   const skinListRef = useRef<HTMLDivElement | null>(null)
   const homeRef = useRef<HTMLDivElement | null>(null)
@@ -678,23 +677,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     document.head.appendChild(style)
     return () => style.remove()
   }, [])
-  useEffect(() => {
-    const market = document.querySelector('[data-dsh-skin-market]')
-    const currentNav = market?.closest('[role="dialog"]')?.querySelector('nav button[aria-current="true"]')
-    const defaultIcon = currentNav?.querySelector('svg')
-    if (!(currentNav instanceof HTMLElement) || !(defaultIcon instanceof SVGElement)) return
-    const host = document.createElement('span')
-    host.className = css.settingsNavIcon
-    host.setAttribute('aria-hidden', 'true')
-    defaultIcon.dataset.dshSkinMarketDefaultIcon = 'hidden'
-    defaultIcon.insertAdjacentElement('beforebegin', host)
-    setSettingsNavIconHost(host)
-    return () => {
-      defaultIcon.removeAttribute('data-dsh-skin-market-default-icon')
-      host.remove()
-    }
-  }, [])
-
   const selected = skins.find(skin => skin.id === selectedId) ?? skins[0]
   const selectedScreenshots = selected === undefined ? [] : getCatalogScreenshotUrls(selected)
   const shotCount = selectedScreenshots.length
@@ -1169,7 +1151,6 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   return (
     <section className={css.root} data-dsh-skin-market data-detail={showDetail ? 'open' : 'closed'} data-browser-open={browserOpen ? 'true' : 'false'}>
       {browserOpen && selected !== undefined && <GalleryPreloads skin={selected} screenshots={selectedScreenshots} />}
-      {settingsNavIconHost !== null && createPortal(<TShirtIcon size={16} weight="regular" aria-hidden="true" />, settingsNavIconHost)}
       <main className={css.home} hidden={browserOpen}>
         <header className={css.homeHeader} data-compact={homeCompact ? 'true' : undefined}>
           <div className={css.homeTitleRow}>

@@ -180,9 +180,6 @@
 }
 .browserHomeBack { display: none; align-self: flex-start; }
 
-.settingsNavIcon { display: inline-flex; width: 16px; height: 16px; flex: none; align-items: center; justify-content: center; }
-.settingsNavIcon svg { display: block; width: 16px; height: 16px; }
-:global(svg[data-dsh-skin-market-default-icon="hidden"]) { display: none; }
 .srOnly { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 
 .catalog {

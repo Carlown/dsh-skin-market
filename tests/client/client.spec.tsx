@@ -301,6 +301,24 @@ describe('client market', () => {
     expect(screen.queryByRole('dialog', { name: '皮肤详情' })).toBeNull()
   })
 
+  it('does not mutate the host settings navigation DOM', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
+    render(
+      <div role="dialog" aria-label="设置" data-test-settings-dialog>
+        <nav>
+          <button type="button" aria-current="true"><svg aria-hidden="true" /></button>
+        </nav>
+        <SkinMarketSection t={key => key} />
+      </div>,
+    )
+
+    await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
+
+    const navButton = document.querySelector('[data-test-settings-dialog] nav button')
+    expect(navButton?.querySelector('span')).toBeNull()
+    expect(navButton?.querySelector('[data-dsh-skin-market-default-icon="hidden"]')).toBeNull()
+  })
+
   it('uses the same installed ordering on home and in the sidebar', async () => {
     const installedSkins = Array.from({ length: 6 }, (_, index) => ({
       ...skin,
