@@ -28,10 +28,12 @@ compatibility:
   dsh: unverified
   platform:
     - web
-screenshots: []
+screenshots:
+  - https://raw.githubusercontent.com/huabai-flowerwhite/dsh-ui-skin/c7c01e5fc9d205d6020078e95739c96d08a6b5ab/How%E2%80%91to%20Showcase1.png
+  - https://raw.githubusercontent.com/huabai-flowerwhite/dsh-ui-skin/c7c01e5fc9d205d6020078e95739c96d08a6b5ab/How%E2%80%91to%20Showcase2.png
 review:
   compatibility: unverified
-  preview: repository-card
+  preview: verified
   installation: verified
 health:
   status: improvements

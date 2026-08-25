@@ -30,10 +30,14 @@ compatibility:
   platform:
     - web
 screenshots:
-  - https://opengraph.githubassets.com/placeholder/zhijun-dai.solarized-dsh-theme
+  - https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/preview.webp
+  - https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/solarized-dark.webp
+  - https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/solarized-light.webp
+  - https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/selenized-dark.webp
+  - https://raw.githubusercontent.com/zhijun-dai/Solarized-dsh-theme/6b0614e53a4314c1705967b7e3c437b64dee64f2/assets/selenized-light.webp
 review:
   compatibility: verified
-  preview: repository-card
+  preview: verified
   installation: verified
 health:
   status: healthy
