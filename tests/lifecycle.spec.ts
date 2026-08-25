@@ -871,16 +871,20 @@ describe('skin lifecycle', () => {
 
     expect((await finished(lifecycle.begin('install', one.id))).phase).toBe('done')
     expect(readDependencies(dir)).toMatchObject({ [companion.package]: companion.target, [one.package]: one.install.target })
+    expect(readMarketState(dir).managedCompanions).toEqual({ [companion.package]: { ownerSkinIds: [one.id], installedByMarket: true } })
 
     expect((await finished(lifecycle.begin('install', two.id))).phase).toBe('done')
     expect(readDependencies(dir)[companion.package]).toBe(companion.target)
+    expect(readMarketState(dir).managedCompanions).toEqual({ [companion.package]: { ownerSkinIds: [one.id, two.id], installedByMarket: true } })
 
     expect((await finished(lifecycle.begin('uninstall', one.id))).phase).toBe('done')
     expect(readDependencies(dir)[companion.package]).toBe(companion.target)
     expect(readDependencies(dir)[one.package]).toBeUndefined()
+    expect(readMarketState(dir).managedCompanions).toEqual({ [companion.package]: { ownerSkinIds: [two.id], installedByMarket: true } })
 
     expect((await finished(lifecycle.begin('uninstall', two.id))).phase).toBe('done')
     expect(readDependencies(dir)).toEqual({})
+    expect(readMarketState(dir).managedCompanions).toBeUndefined()
   })
 
   it('installs a missing companion when the parent skin is already installed', async () => {
@@ -918,6 +922,90 @@ describe('skin lifecycle', () => {
 
     expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
     expect(readDependencies(dir)).toMatchObject({ [skin.package]: skin.install.target, [companion.package]: companion.target })
+  })
+
+  it('links but does not remove a companion that was already installed by the user', async () => {
+    const dir = fixture()
+    const commit = 'a'.repeat(40)
+    const companion = {
+      package: '@dsh-external/dsh-client-ui-skin-deep-whale-manager',
+      target: `github:example/repo#${commit}&path:/skin-manager`,
+      version: '0.1.0',
+      commit,
+      rowId: 'ui-skin-deep-whale-manager',
+    }
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = {
+      ...base,
+      id: 'companion.external-owner',
+      package: 'skin-one',
+      rowId: 'skin-one',
+      review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'verified' as const },
+      install: { target: `github:example/repo#${commit}&path:/one`, version: '1.0.0', commit, companions: [companion] },
+    }
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [companion.package]: companion.target } })
+    writeBundlePackage(dir, { package: companion.package, rowId: companion.rowId, install: { version: companion.version } })
+    const calls: string[][] = []
+    const runner: PluginRunner = async (_profile, args) => {
+      calls.push([...args])
+      if (args[0] === 'add' && args.includes('--dir')) return success()
+      if (args[0] === 'add' && args[1] === skin.install.target) {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { ...readDependencies(dir), [skin.package]: skin.install.target } })
+        writeBundlePackage(dir, skin)
+      }
+      if (args[0] === 'remove' && args[1] === skin.package) {
+        const dependencies = { ...readDependencies(dir) }
+        delete dependencies[skin.package]
+        atomicWriteJson(join(dir, 'package.json'), { dependencies })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
+    expect(calls.some(args => args[0] === 'add' && args[1] === companion.target)).toBe(false)
+    expect(readMarketState(dir).managedCompanions).toEqual({
+      [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: false },
+    })
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).toContain(companion.rowId)
+
+    expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
+    expect(readDependencies(dir)).toEqual({ [companion.package]: companion.target })
+    expect(readMarketState(dir).managedCompanions).toBeUndefined()
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).not.toContain('disabled: true')
+  })
+
+  it('migrates a pre-ownership companion into enable/disable linkage without delete rights', async () => {
+    const dir = fixture()
+    const commit = 'a'.repeat(40)
+    const companion = {
+      package: 'legacy-companion',
+      target: `github:example/companion#${commit}`,
+      version: '1.0.0',
+      commit,
+      rowId: 'legacy-companion',
+    }
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = {
+      ...base,
+      id: 'legacy.owner',
+      package: 'legacy-owner',
+      rowId: 'legacy-owner',
+      install: { target: `github:example/owner#${commit}`, version: '1.0.0', commit, companions: [companion] },
+    }
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target, [companion.package]: companion.target } })
+    writeBundlePackage(dir, skin)
+    writeBundlePackage(dir, { package: companion.package, rowId: companion.rowId, install: { version: companion.version } })
+    const live = { disabled: false }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [{ options: { id: companion.rowId, name: companion.package }, update: async ({ disabled }) => { live.disabled = disabled === true } }] } }, { profile: 'test', profileDir: dir, runner: async () => success() }, [skin])
+
+    await lifecycle.replay()
+    expect(readMarketState(dir).managedCompanions).toEqual({
+      [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: false },
+    })
+    expect(live.disabled).toBe(true)
   })
 
   it('disables a companion in settings until an owning skin is in use', async () => {

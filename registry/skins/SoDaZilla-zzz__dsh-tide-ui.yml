@@ -29,11 +29,8 @@ install:
       commit: 3fbca87bf6d68af66f1669c592bae1e6e6ab4463
       rowId: liquid-glass-balance-card
   desktop:
-    mode: managed
-    registry: npm
-    packageName: dsh-tide-ui
-    packageVersion: 0.1.0
-    integrity: sha512-Ksv7nPLe51GHKA6zh+6c3qzWqy8dZ9YM51YOd+CXNFJ/FG7YS3P8z3VRWenxZTX5LgZitPTcVl7ondeFwBwP+w==
+    mode: manual-only
+    reason: companion-not-desktop-installable
 compatibility:
   dsh: unverified
   platform:

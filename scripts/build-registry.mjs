@@ -39,6 +39,9 @@ for (const file of files) {
     if (match === null) throw new Error(`${file}: companion ${companion.package} has an invalid target`)
     if (match[2] !== companion.commit) throw new Error(`${file}: companion ${companion.package} commit must match companion.commit`)
   }
+  if ((skin.install.companions?.length ?? 0) > 0 && skin.install.desktop?.mode === 'managed') {
+    throw new Error(`${file}: Desktop managed install cannot install companions`)
+  }
   const npm = skin.install.npm
   if (npm !== undefined) {
     const npmRepo = npm.repository.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')

@@ -32,6 +32,7 @@ describe('catalog', () => {
       target: 'github:SoDaZilla-zzz/dsh-liquid-glass-balance-card#3fbca87bf6d68af66f1669c592bae1e6e6ab4463',
     })
     expect(catalog.skins.some(skin => skin.package === 'dsh-liquid-glass-balance-card')).toBe(false)
+    expect(tide?.install.desktop).toEqual({ mode: 'manual-only', reason: 'companion-not-desktop-installable' })
   })
 
   it('keeps the Chinese homepage description for dsh-ads', () => {

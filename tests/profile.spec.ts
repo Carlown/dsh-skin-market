@@ -17,6 +17,20 @@ describe('profile state', () => {
     expect(readMarketState(dir)).toEqual({ version: 1, activeSkinId: 'a', disabledSkinIds: ['b'] })
   })
 
+  it('does not infer companion delete rights from legacy ownership state', () => {
+    const dir = fixture()
+    atomicWriteJson(join(dir, '.dsh-skin-market', 'state.json'), {
+      version: 1,
+      activeSkinId: null,
+      disabledSkinIds: [],
+      managedCompanions: { companion: { ownerSkinIds: ['owner'] } },
+    })
+
+    expect(readMarketState(dir).managedCompanions).toEqual({
+      companion: { ownerSkinIds: ['owner'], installedByMarket: false },
+    })
+  })
+
   it('removes market-managed skin bundles while preserving dependencies and core bundles', () => {
     const dir = fixture()
     atomicWriteJson(join(dir, 'package.json'), {

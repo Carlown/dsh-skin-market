@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { loadCatalog } from '../src/catalog.ts'
+import { companionAsSkin } from '../src/install-resolution.ts'
 import { atomicWriteJson, atomicWriteText, profilePatchFile, readMarketState, writeMarketState } from '../src/profile.ts'
 import { resetManagedSkins } from '../src/reset.ts'
 
@@ -36,6 +37,34 @@ describe('emergency skin reset', () => {
     expect(patch.filter(operation => skins.some(skin => skin.rowId === operation.id))).toEqual(skins.map(skin => ({ id: skin.rowId, disabled: true })))
     expect(readMarketState(dir).activeSkinId).toBeNull()
     expect(readMarketState(dir).pinnedSkinIds).toEqual([])
+  })
+
+  it('disables market-managed companions during reset', () => {
+    const dir = fixture()
+    const skin = loadCatalog().skins.find(item => (item.install.companions ?? []).length > 0)!
+    const companion = skin.install.companions![0]!
+    const companionSkin = companionAsSkin(skin, companion)
+    atomicWriteJson(join(dir, 'package.json'), {
+      dependencies: { [skin.package]: skin.install.target, [companion.package]: companion.target },
+    })
+    for (const installed of [skin, companionSkin]) {
+      const packageDir = join(dir, 'node_modules', ...installed.package.split('/'))
+      mkdirSync(packageDir, { recursive: true })
+      atomicWriteJson(join(packageDir, 'package.json'), { name: installed.package, version: installed.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
+      atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${installed.rowId}\n      name: ${JSON.stringify(installed.package)}\n`)
+    }
+    writeMarketState(dir, {
+      version: 1,
+      activeSkinId: skin.id,
+      disabledSkinIds: [],
+      managedCompanions: { [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: true } },
+    })
+
+    resetManagedSkins(dir, [skin])
+
+    const patch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string; disabled?: boolean }>
+    expect(patch.some(operation => operation.id === companion.rowId && operation.disabled === true)).toBe(true)
+    expect(readMarketState(dir).managedCompanions).toEqual({ [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: true } })
   })
 
   it('rolls every file back when a registration conflicts', () => {

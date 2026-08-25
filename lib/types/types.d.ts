@@ -190,6 +190,13 @@ export interface PersistedMarketState {
     disabledSkinIds: string[];
     pinnedSkinIds?: string[];
     activity?: Record<string, SkinActivity>;
+    /** Companion packages linked to installed owner skins. */
+    managedCompanions?: Record<string, ManagedCompanionState>;
+}
+export interface ManagedCompanionState {
+    ownerSkinIds: string[];
+    /** Only packages installed by the market may be removed with their last owner. */
+    installedByMarket: boolean;
 }
 export interface SkinActivity {
     installedAt?: string;

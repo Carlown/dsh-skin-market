@@ -323,7 +323,9 @@ export class SkinLifecycle {
     for (const skin of installed) {
       await this.setEntryDisabled(skin, !enabled.has(skin.id))
     }
+    const previousCompanions = JSON.stringify(state.managedCompanions)
     await this.syncInstalledCompanions(state, true)
+    if (previousCompanions !== JSON.stringify(state.managedCompanions)) writeMarketState(this.options.profileDir, state)
   }
 
   states(): SkinRuntimeState[] {
@@ -459,7 +461,7 @@ export class SkinLifecycle {
     })
   }
 
-  private async installPackage(skin: SkinEntry, operation: Operation): Promise<void> {
+  private async installPackage(skin: SkinEntry, operation: Operation, state: PersistedMarketState): Promise<void> {
     if (this.hostKind === 'desktop') {
       const capability = skin.install.desktop
       if (capability?.mode !== 'managed') throw new Error(desktopInstallError(capability))
@@ -494,61 +496,97 @@ export class SkinLifecycle {
     this.update(operation, 'installing')
     const buildApprovalKey = buildApprovalKeyForTarget(skin, target) ?? effectiveBuildApprovalKey(skin)
     if (buildApprovalKey !== undefined) ensureBuildAllowed(this.options.profileDir, buildApprovalKey)
-    await this.installCompanions(skin, operation)
+    await this.installCompanions(skin, operation, state)
     await this.run(['add', target, '--prefer-offline', ...(isNpmInstallTarget(skin, target) ? ['--save-exact'] : [])], operation)
   }
 
-  private async installCompanions(skin: SkinEntry, operation: Operation): Promise<void> {
-    const enabled = enabledSkinIds(readMarketState(this.options.profileDir))
+  private async installCompanions(skin: SkinEntry, operation: Operation, state: PersistedMarketState): Promise<void> {
+    const enabled = enabledSkinIds(state)
     for (const companion of skin.install.companions ?? []) {
-      if (companionNeedsInstall(this.options.profileDir, companion)) {
+      const existingSpec = readDependencies(this.options.profileDir)[companion.package]
+      const linked = state.managedCompanions?.[companion.package]
+      if (existingSpec === undefined || (linked?.installedByMarket === true && companionNeedsInstall(this.options.profileDir, companion))) {
         await this.run(['add', companion.target, '--prefer-offline'], operation)
+        this.claimManagedCompanion(state, companion.package, skin.id, true)
+      } else {
+        // Existing packages are linked for enable/disable, but the market does
+        // not acquire permission to update or remove them.
+        this.claimManagedCompanion(state, companion.package, skin.id, false)
       }
       ensureSkinRegistration(
         this.options.profileDir,
         companionAsSkin(skin, companion),
-        !this.companionOwnersEnabled(companion.package, enabled),
+        !this.companionOwnersEnabled(companion.package, state, enabled),
       )
     }
   }
 
-  private companionOwnersEnabled(packageName: string, enabled: Set<string>): boolean {
-    return this.catalog.some(item =>
-      enabled.has(item.id) && (item.install.companions ?? []).some(companion => companion.package === packageName),
-    )
+  private claimManagedCompanion(state: PersistedMarketState, packageName: string, ownerSkinId: string, installedByMarket: boolean): void {
+    const current = state.managedCompanions?.[packageName]
+    if (current === undefined) {
+      state.managedCompanions = {
+        ...state.managedCompanions,
+        [packageName]: { ownerSkinIds: [ownerSkinId], installedByMarket },
+      }
+      return
+    }
+    if (!current.ownerSkinIds.includes(ownerSkinId)) current.ownerSkinIds.push(ownerSkinId)
+    if (installedByMarket) current.installedByMarket = true
+  }
+
+  private companionOwnersEnabled(packageName: string, state: PersistedMarketState, enabled: Set<string>): boolean {
+    return state.managedCompanions?.[packageName]?.ownerSkinIds.some(ownerSkinId => enabled.has(ownerSkinId)) ?? false
   }
 
   private async syncInstalledCompanions(state: PersistedMarketState, live: boolean): Promise<void> {
     const enabled = enabledSkinIds(state)
     const seen = new Set<string>()
     const dependencies = readDependencies(this.options.profileDir)
+    // Migrate companions installed before ownership tracking. Linking grants
+    // enable/disable control only; it deliberately does not grant delete rights.
+    for (const item of this.catalog) {
+      if (dependencies[item.package] === undefined) continue
+      for (const companion of item.install.companions ?? []) {
+        if (dependencies[companion.package] !== undefined) {
+          this.claimManagedCompanion(state, companion.package, item.id, false)
+        }
+      }
+    }
     for (const item of this.catalog) {
       for (const companion of item.install.companions ?? []) {
-        if (seen.has(companion.package) || dependencies[companion.package] === undefined) continue
+        if (seen.has(companion.package) || dependencies[companion.package] === undefined || state.managedCompanions?.[companion.package] === undefined) continue
         seen.add(companion.package)
         const entry = companionAsSkin(item, companion)
-        const disabled = !this.companionOwnersEnabled(companion.package, enabled)
+        const disabled = !this.companionOwnersEnabled(companion.package, state, enabled)
         ensureSkinRegistration(this.options.profileDir, entry, disabled)
         if (live) await this.setEntryDisabled(entry, disabled)
       }
     }
   }
 
-  private companionStillNeeded(packageName: string, exceptSkinId: string): boolean {
-    return this.catalog.some(item => {
-      if (item.id === exceptSkinId) return false
-      if (!(item.install.companions ?? []).some(companion => companion.package === packageName)) return false
-      return readDependencies(this.options.profileDir)[item.package] !== undefined
-    })
+  private companionStillNeeded(packageName: string, exceptSkinId: string, state: PersistedMarketState): boolean {
+    return state.managedCompanions?.[packageName]?.ownerSkinIds.some(ownerSkinId => ownerSkinId !== exceptSkinId) ?? false
   }
 
-  private async uninstallUnusedCompanions(skin: SkinEntry, operation: Operation): Promise<void> {
+  private async uninstallUnusedCompanions(skin: SkinEntry, operation: Operation, state: PersistedMarketState): Promise<void> {
     for (const companion of skin.install.companions ?? []) {
-      if (this.companionStillNeeded(companion.package, skin.id)) continue
-      if (readDependencies(this.options.profileDir)[companion.package] === undefined) continue
-      await this.run(['remove', companion.package], operation)
-      removeSkinRegistration(this.options.profileDir, companionAsSkin(skin, companion))
+      const managed = state.managedCompanions?.[companion.package]
+      if (managed === undefined) continue
+      if (this.companionStillNeeded(companion.package, skin.id, state)) {
+        managed.ownerSkinIds = managed.ownerSkinIds.filter(ownerSkinId => ownerSkinId !== skin.id)
+        continue
+      }
+      if (managed.installedByMarket && readDependencies(this.options.profileDir)[companion.package] !== undefined) {
+        await this.run(['remove', companion.package], operation)
+        removeSkinRegistration(this.options.profileDir, companionAsSkin(skin, companion))
+      } else if (!managed.installedByMarket && readDependencies(this.options.profileDir)[companion.package] !== undefined) {
+        const entry = companionAsSkin(skin, companion)
+        ensureSkinRegistration(this.options.profileDir, entry, false)
+        await this.setEntryDisabled(entry, false)
+      }
+      delete state.managedCompanions?.[companion.package]
     }
+    if (state.managedCompanions !== undefined && Object.keys(state.managedCompanions).length === 0) delete state.managedCompanions
   }
 
   private assertRuntimeLoaderConflicts(skin: SkinEntry): void {
@@ -609,12 +647,12 @@ export class SkinLifecycle {
         throw new Error(`installed package ${skin.package} does not match the reviewed source/version; use Update to replace it with ${skin.install.target}`)
       }
       const snapshot = snapshotInstallFiles(this.options.profileDir, skin.package, skin.install.version)
+      const state = readMarketState(this.options.profileDir)
       try {
-        await this.installCompanions(skin, operation)
+        await this.installCompanions(skin, operation, state)
         await this.applyCompatibility(skin, operation)
         validation = validateInstalledSkin(this.options.profileDir, skin)
         if (!validation.ok) throw new Error(validation.reason)
-        const state = readMarketState(this.options.profileDir)
         ensureSkinRegistration(this.options.profileDir, skin, !enabledSkinIds(state).has(skin.id))
         this.reconcileDisabledSkinIds(state)
         writeMarketState(this.options.profileDir, state)
@@ -637,7 +675,8 @@ export class SkinLifecycle {
     try {
       await this.syncPnpmMetadata(operation, '正在清理旧的兼容适配')
       this.update(operation, 'downloading')
-      await this.installPackage(skin, operation)
+      const state = readMarketState(this.options.profileDir)
+      await this.installPackage(skin, operation, state)
       await this.applyCompatibility(skin, operation)
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
@@ -647,7 +686,6 @@ export class SkinLifecycle {
       }
       assertNoLoaderConflicts(this.options.profileDir, skin)
       ensureSkinRegistration(this.options.profileDir, skin)
-      const state = readMarketState(this.options.profileDir)
       state.activeSkinId = state.activeSkinId === skin.id ? null : state.activeSkinId
       if (!state.disabledSkinIds.includes(skin.id)) state.disabledSkinIds.push(skin.id)
       recordActivity(state, skin.id, 'installedAt', operation.startedAt)
@@ -791,7 +829,7 @@ export class SkinLifecycle {
     try {
       await this.syncPnpmMetadata(operation, '正在清理旧的兼容适配')
       this.update(operation, 'downloading')
-      await this.installPackage(skin, operation)
+      await this.installPackage(skin, operation, previousState)
       await this.applyCompatibility(skin, operation)
       this.update(operation, 'validating')
       const validation = validateInstalledSkin(this.options.profileDir, skin)
@@ -832,11 +870,11 @@ export class SkinLifecycle {
       if (enabledSkinIds(state).has(skin.id)) await this.deactivate(operation)
       this.update(operation, 'downloading')
       await this.run(['remove', skin.package], operation)
-      await this.uninstallUnusedCompanions(skin, operation)
       detachedPatchFiles = detachCompatibilityPatches(this.options.profileDir, skin.package)
       await this.syncPnpmMetadata(operation, '正在清理兼容适配并同步 pnpm 锁文件')
       removeSkinRegistration(this.options.profileDir, skin)
       const next = readMarketState(this.options.profileDir)
+      await this.uninstallUnusedCompanions(skin, operation, next)
       next.disabledSkinIds = next.disabledSkinIds.filter(id => id !== skin.id)
       next.pinnedSkinIds = pinnedSkinIds(next).filter(id => id !== skin.id)
       if (next.activeSkinId === skin.id) next.activeSkinId = null

@@ -4,7 +4,7 @@ import { homedir } from 'node:os'
 import { dirname, join, resolve, sep } from 'node:path'
 import { parse, stringify } from 'yaml'
 import { effectiveBuildApprovalKey } from './build-approval.ts'
-import type { InstallConflict, InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
+import type { InstallConflict, InstalledClientPlugin, ManagedCompanionState, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
 
 export function resolveProfileDir(profile: string, explicit?: string): string {
   if (explicit !== undefined) return explicit
@@ -39,7 +39,29 @@ export function readMarketState(profileDir: string): PersistedMarketState {
   if (value.version !== 1 || !Array.isArray(value.disabledSkinIds)) return fallback
   if (value.pinnedSkinIds !== undefined && !Array.isArray(value.pinnedSkinIds)) delete value.pinnedSkinIds
   if (value.activity !== undefined && (typeof value.activity !== 'object' || value.activity === null || Array.isArray(value.activity))) delete value.activity
+  if (value.managedCompanions !== undefined) {
+    const normalized = normalizeManagedCompanions(value.managedCompanions)
+    if (normalized === undefined) delete value.managedCompanions
+    else value.managedCompanions = normalized
+  }
   return value
+}
+
+function normalizeManagedCompanions(value: unknown): Record<string, ManagedCompanionState> | undefined {
+  if (!isRecord(value)) return undefined
+  const normalized: Record<string, ManagedCompanionState> = {}
+  for (const [packageName, entry] of Object.entries(value)) {
+    if (packageName.length === 0) continue
+    if (!isRecord(entry) || !Array.isArray(entry.ownerSkinIds)) continue
+    const ownerSkinIds = [...new Set(entry.ownerSkinIds.filter((id): id is string => typeof id === 'string' && id.length > 0))]
+    if (ownerSkinIds.length > 0) normalized[packageName] = {
+      ownerSkinIds,
+      // Missing provenance never grants delete rights. This keeps older or
+      // partially written state conservative during migration.
+      installedByMarket: typeof entry.installedByMarket === 'boolean' ? entry.installedByMarket : false,
+    }
+  }
+  return Object.keys(normalized).length > 0 ? normalized : undefined
 }
 
 export function writeMarketState(profileDir: string, state: PersistedMarketState): void {
@@ -190,7 +212,14 @@ export function companionNeedsInstall(profileDir: string, companion: { package: 
 }
 
 export function companionsNeedInstall(profileDir: string, skin: SkinEntry): boolean {
-  return (skin.install.companions ?? []).some(companion => companionNeedsInstall(profileDir, companion))
+  const dependencies = readDependencies(profileDir)
+  const state = readMarketState(profileDir)
+  return (skin.install.companions ?? []).some(companion => {
+    // A package that predates market provenance is external. It must not make
+    // the parent look updateable when the market cannot safely update it.
+    if (dependencies[companion.package] !== undefined && state.managedCompanions?.[companion.package] === undefined) return false
+    return companionNeedsInstall(profileDir, companion)
+  })
 }
 
 export { effectiveBuildApprovalKey }
