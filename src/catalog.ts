@@ -44,7 +44,6 @@ export function validateCatalog(value: unknown): CatalogFile {
     for (const companion of entry.install.companions ?? []) {
       const parts = parseGithubTarget(companion.target)
       if (parts === null) throw new Error(`invalid companion target for ${entry.id}: ${companion.package}`)
-      if (parts.repository !== repo) throw new Error(`companion ${companion.package} for ${entry.id} must use the same GitHub repository`)
       if (parts.commit !== companion.commit) throw new Error(`invalid companion commit for ${entry.id}: ${companion.package}`)
       if (companion.target !== githubInstallTarget(parts.repository, companion.commit, parts.subpath)) {
         throw new Error(`invalid companion path for ${entry.id}: ${companion.package}`)

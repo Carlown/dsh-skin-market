@@ -61,6 +61,7 @@ export function companionAsSkin(skin: SkinEntry, companion: SkinCompanion): Skin
   const parts = parseGithubTarget(companion.target)
   return {
     ...skin,
+    ...(parts === null ? {} : { repo: `https://github.com/${parts.repository}` }),
     package: companion.package,
     rowId: companion.rowId,
     ...(parts?.subpath === undefined ? { subpath: undefined } : { subpath: parts.subpath }),

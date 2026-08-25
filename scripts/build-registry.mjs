@@ -35,9 +35,8 @@ for (const file of files) {
   const expected = `github:${repo}#${skin.install.commit}${skin.subpath ? `&path:/${String(skin.subpath).replace(/^\/+/, '')}` : ''}`
   if (skin.install.target !== expected) throw new Error(`${file}: install.target must equal ${expected}`)
   for (const companion of skin.install.companions ?? []) {
-    const match = /^github:([^#]+)#([0-9a-f]{40})&path:\/([A-Za-z0-9._/-]+)$/i.exec(companion.target)
+    const match = /^github:([^#]+)#([0-9a-f]{40})(?:&path:\/([A-Za-z0-9._/-]+))?$/i.exec(companion.target)
     if (match === null) throw new Error(`${file}: companion ${companion.package} has an invalid target`)
-    if (match[1] !== repo) throw new Error(`${file}: companion ${companion.package} must use the same GitHub repository`)
     if (match[2] !== companion.commit) throw new Error(`${file}: companion ${companion.package} commit must match companion.commit`)
   }
   const npm = skin.install.npm

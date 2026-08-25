@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { atomicWriteJson } from '../src/profile.ts'
-import { discoverMonorepoTarget, githubInstallTarget, githubPathQuery, npmInstallTarget, parseGithubTarget, preferredInstallTarget } from '../src/install-resolution.ts'
+import { companionAsSkin, discoverMonorepoTarget, githubInstallTarget, githubPathQuery, npmInstallTarget, parseGithubTarget, preferredInstallTarget } from '../src/install-resolution.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 describe('install resolution', () => {
@@ -61,5 +61,20 @@ describe('install resolution', () => {
     expect(parseGithubTarget(`github:owner/repo#${commit}&path:maid-atelier`))
       .toEqual({ repository: 'owner/repo', commit, subpath: 'maid-atelier' })
     expect(() => githubPathQuery('../escape')).toThrow('invalid github subpath')
+  })
+
+  it('accepts root companions from another GitHub repository', () => {
+    const base = loadCatalog().skins.find(skin => skin.id === 'sodazilla-zzz.dsh-tide-ui')!
+    const companion = base.install.companions![0]!
+    expect(parseGithubTarget(companion.target)).toEqual({
+      repository: 'SoDaZilla-zzz/dsh-liquid-glass-balance-card',
+      commit: companion.commit,
+    })
+    expect(companionAsSkin(base, companion)).toMatchObject({
+      repo: 'https://github.com/SoDaZilla-zzz/dsh-liquid-glass-balance-card',
+      package: companion.package,
+      rowId: companion.rowId,
+      subpath: undefined,
+    })
   })
 })

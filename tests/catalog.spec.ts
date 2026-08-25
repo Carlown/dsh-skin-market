@@ -24,6 +24,14 @@ describe('catalog', () => {
       rowId: 'ui-skin-deep-whale-manager',
     })
     expect(maid?.install.companions?.[0]?.target).toContain('&path:/skin-manager')
+
+    const tide = catalog.skins.find(skin => skin.id === 'sodazilla-zzz.dsh-tide-ui')
+    expect(tide?.install.companions?.[0]).toMatchObject({
+      package: 'dsh-liquid-glass-balance-card',
+      rowId: 'liquid-glass-balance-card',
+      target: 'github:SoDaZilla-zzz/dsh-liquid-glass-balance-card#3fbca87bf6d68af66f1669c592bae1e6e6ab4463',
+    })
+    expect(catalog.skins.some(skin => skin.package === 'dsh-liquid-glass-balance-card')).toBe(false)
   })
 
   it('keeps the Chinese homepage description for dsh-ads', () => {

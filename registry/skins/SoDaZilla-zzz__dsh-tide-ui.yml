@@ -22,6 +22,12 @@ install:
   target: github:SoDaZilla-zzz/dsh-tide-ui#b7f6cea136a052bfe5b3cbebcc4e29788b5eb30a
   version: 0.1.0
   commit: b7f6cea136a052bfe5b3cbebcc4e29788b5eb30a
+  companions:
+    - package: dsh-liquid-glass-balance-card
+      target: github:SoDaZilla-zzz/dsh-liquid-glass-balance-card#3fbca87bf6d68af66f1669c592bae1e6e6ab4463
+      version: 0.2.0
+      commit: 3fbca87bf6d68af66f1669c592bae1e6e6ab4463
+      rowId: liquid-glass-balance-card
   desktop:
     mode: managed
     registry: npm
