@@ -1333,6 +1333,56 @@ describe('skin lifecycle', () => {
     expect(live.disabled).toBe(false)
   })
 
+  it('activates a receipt-linked companion without granting delete rights', async () => {
+    const dir = fixture()
+    const commit = 'a'.repeat(40)
+    const companion = {
+      package: '@dsh-external/dsh-client-ui-skin-deep-whale-manager',
+      target: `github:example/whale#${commit}&path:/skin-manager`,
+      version: '0.1.0',
+      commit,
+      rowId: 'ui-skin-deep-whale-manager',
+    }
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = {
+      ...base,
+      id: 'small-tailqwq.orca-link',
+      package: '@dsh-external/dsh-client-ui-skin-orca-link',
+      rowId: 'ui-skin-orca-link',
+      install: { target: `github:example/whale#${commit}&path:/orca-link`, version: '0.1.0', commit, companions: [companion] },
+    }
+    atomicWriteJson(join(dir, 'package.json'), {
+      dependencies: { [skin.package]: skin.install.target, [companion.package]: companion.target },
+      dsh: { profile: { bundles: [skin.package, companion.package] } },
+    })
+    writeBundlePackage(dir, skin)
+    writeBundlePackage(dir, { package: companion.package, rowId: companion.rowId, install: { version: companion.version } })
+    atomicWriteText(profilePatchFile(dir), `- id: ${companion.rowId}\n  disabled: true\n`)
+    writeMarketState(dir, {
+      version: 1,
+      activeSkinId: skin.id,
+      disabledSkinIds: [],
+      managedCompanions: { [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: false } },
+    })
+    const live = { disabled: true }
+    const entry: LoaderEntry = {
+      options: { id: companion.rowId, name: companion.package, disabled: true },
+      fiber: {},
+      update: async ({ disabled }) => { live.disabled = disabled === true },
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [entry] } }, { profile: 'test', profileDir: dir, runner: async () => success() }, [skin])
+
+    await lifecycle.replay()
+
+    expect(readMarketState(dir).managedCompanions).toEqual({
+      [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: false },
+    })
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).not.toContain(companion.rowId)
+    expect(live.disabled).toBe(false)
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles).toContain(companion.package)
+  })
+
   it('disables a companion in settings until an owning skin is in use', async () => {
     const dir = fixture()
     const commit = 'a'.repeat(40)

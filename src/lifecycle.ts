@@ -626,8 +626,10 @@ export class SkinLifecycle {
       if (existingSpec === undefined || (linked?.installedByMarket === true && companionNeedsInstall(this.options.profileDir, companion))) {
         await this.run(['add', companion.target, '--prefer-offline'], operation)
         this.claimManagedCompanion(state, companion.package, skin.id, true)
-      } else if (linked?.installedByMarket === true) {
-        this.claimManagedCompanion(state, companion.package, skin.id, true)
+      } else if (linked !== undefined) {
+        // An existing ownership receipt grants activation linkage, while its
+        // installedByMarket bit continues to govern delete/update rights.
+        this.claimManagedCompanion(state, companion.package, skin.id, linked.installedByMarket)
       } else {
         // A package that predates this market install belongs to the user.
         // Do not acquire enable/disable or delete rights over it.
@@ -664,7 +666,7 @@ export class SkinLifecycle {
     const dependencies = readDependencies(this.options.profileDir)
     for (const item of this.catalog) {
       for (const companion of item.install.companions ?? []) {
-        if (seen.has(companion.package) || dependencies[companion.package] === undefined || state.managedCompanions?.[companion.package]?.installedByMarket !== true) continue
+        if (seen.has(companion.package) || dependencies[companion.package] === undefined || state.managedCompanions?.[companion.package] === undefined) continue
         seen.add(companion.package)
         const entry = companionAsSkin(item, companion)
         const disabled = !this.companionOwnersEnabled(companion.package, state, enabled)
@@ -689,6 +691,12 @@ export class SkinLifecycle {
       if (managed.installedByMarket && readDependencies(this.options.profileDir)[companion.package] !== undefined) {
         await this.run(['remove', companion.package], operation)
         removeSkinRegistration(this.options.profileDir, companionAsSkin(skin, companion))
+      } else if (readDependencies(this.options.profileDir)[companion.package] !== undefined) {
+        // Activation-linked but user-owned companions survive the last owner
+        // and return to their independent enabled state.
+        const entry = companionAsSkin(skin, companion)
+        ensureSkinRegistration(this.options.profileDir, entry, false)
+        await this.setEntryDisabled(entry, false)
       }
       delete state.managedCompanions?.[companion.package]
     }
