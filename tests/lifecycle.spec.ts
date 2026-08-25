@@ -383,6 +383,7 @@ describe('skin lifecycle', () => {
     expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).not.toContain('patchedDependencies')
     expect(() => readFileSync(patchFile, 'utf8')).toThrow()
     expect(patchedDependenciesNeedSync(dir)).toBe(false)
+    expect(installArgs.filter(args => args[0] === 'install')).toHaveLength(1)
     expect(installArgs.find(args => args[0] === 'install')).toContain('--no-frozen-lockfile')
   })
 
@@ -423,8 +424,9 @@ describe('skin lifecycle', () => {
     expect(readDependencies(dir)[skin.package]).toBe(skin.install.target)
     expect(() => readFileSync(oldPatch, 'utf8')).toThrow()
     expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).not.toContain('@example/update-skin@1.0.0')
+    expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).not.toContain('@example/update-skin@1.0.0')
     expect(patchedDependenciesNeedSync(dir)).toBe(false)
-    expect(installArgs.find(args => args[0] === 'install')).toContain('--no-frozen-lockfile')
+    expect(installArgs.some(args => args[0] === 'install')).toBe(false)
   })
 
   it('installs the curated npm source before the GitHub fallback and saves it exactly', async () => {

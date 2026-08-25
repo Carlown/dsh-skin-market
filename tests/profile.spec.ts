@@ -194,11 +194,14 @@ describe('profile state', () => {
     atomicWriteText(otherPatch, 'other patch')
     ensurePatchedDependency(dir, '@example/skin', '1.0.0', '.dsh-skin-market/patches/_example_skin_1.0.0.patch')
     ensurePatchedDependency(dir, '@example/other', '1.0.0', '.dsh-skin-market/patches/_example_other_1.0.0.patch')
+    atomicWriteText(join(dir, 'pnpm-lock.yaml'), `lockfileVersion: '9.0'\npatchedDependencies:\n  '@example/skin@1.0.0': skin-hash\n  '@example/other@1.0.0': other-hash\n`)
 
     removeCompatibilityPatches(dir, '@example/skin')
 
     expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).not.toContain('@example/skin@1.0.0')
     expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).toContain('@example/other@1.0.0')
+    expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).not.toContain('@example/skin@1.0.0')
+    expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).toContain('@example/other@1.0.0')
     expect(() => readFileSync(skinPatch, 'utf8')).toThrow()
     expect(readFileSync(otherPatch, 'utf8')).toBe('other patch')
   })

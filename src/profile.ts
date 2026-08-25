@@ -506,30 +506,40 @@ export function patchedDependenciesNeedSync(profileDir: string): boolean {
 
 /** Remove a package's patch settings but keep patch files available for rollback. */
 export function detachCompatibilityPatches(profileDir: string, packageName: string): string[] {
-  const file = pnpmWorkspaceFile(profileDir)
-  if (!existsSync(file)) return []
-  const parsed = parse(readFileSync(file, 'utf8')) as unknown
-  if (!isRecord(parsed)) return []
-  const patchedDependencies = parsed.patchedDependencies
-  if (!isRecord(patchedDependencies)) return []
-  const next = { ...patchedDependencies }
   const retainedFiles: string[] = []
   const prefix = packageName + '@'
   const patchRoot = resolve(compatibilityPatchDir(profileDir))
-  let changed = false
-  for (const [key, value] of Object.entries(patchedDependencies)) {
-    if (!key.startsWith(prefix)) continue
-    delete next[key]
-    changed = true
+  const workspaceFile = pnpmWorkspaceFile(profileDir)
+  for (const value of removePatchedDependencyEntries(workspaceFile, key => key.startsWith(prefix))) {
     if (typeof value !== 'string') continue
     const patchFile = resolve(profileDir, value)
     if (patchFile.startsWith(patchRoot + sep) && existsSync(patchFile)) retainedFiles.push(patchFile)
+  }
+  // pnpm keeps a hash-only copy in pnpm-lock.yaml. Leaving that copy behind
+  // after the workspace entry is detached makes the next install fail with
+  // ERR_PNPM_UNUSED_PATCH before pnpm can clean its own lockfile.
+  removePatchedDependencyEntries(pnpmLockfile(profileDir), key => key.startsWith(prefix))
+  return retainedFiles
+}
+
+function removePatchedDependencyEntries(file: string, matches: (key: string) => boolean): unknown[] {
+  if (!existsSync(file)) return []
+  const parsed = parse(readFileSync(file, 'utf8')) as unknown
+  if (!isRecord(parsed) || !isRecord(parsed.patchedDependencies)) return []
+  const next = { ...parsed.patchedDependencies }
+  const removed: unknown[] = []
+  let changed = false
+  for (const [key, value] of Object.entries(parsed.patchedDependencies)) {
+    if (!matches(key)) continue
+    delete next[key]
+    removed.push(value)
+    changed = true
   }
   if (!changed) return []
   if (Object.keys(next).length === 0) delete parsed.patchedDependencies
   else parsed.patchedDependencies = next
   atomicWriteText(file, stringify(parsed, { lineWidth: 0 }))
-  return retainedFiles
+  return removed
 }
 
 export function cleanupCompatibilityPatchFiles(files: readonly string[]): void {
@@ -537,18 +547,9 @@ export function cleanupCompatibilityPatchFiles(files: readonly string[]): void {
 }
 
 export function removePatchedDependency(profileDir: string, packageName: string, version: string): void {
-  const file = pnpmWorkspaceFile(profileDir)
-  if (!existsSync(file)) return
-  const parsed = parse(readFileSync(file, 'utf8')) as unknown
-  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return
-  const workspace = parsed as Record<string, unknown>
-  const patchedDependencies = workspace.patchedDependencies
-  if (typeof patchedDependencies !== 'object' || patchedDependencies === null || Array.isArray(patchedDependencies)) return
-  const next = { ...(patchedDependencies as Record<string, unknown>) }
-  delete next[`${packageName}@${version}`]
-  if (Object.keys(next).length === 0) delete workspace.patchedDependencies
-  else workspace.patchedDependencies = next
-  atomicWriteText(file, stringify(workspace, { lineWidth: 0 }))
+  const key = `${packageName}@${version}`
+  removePatchedDependencyEntries(pnpmWorkspaceFile(profileDir), candidate => candidate === key)
+  removePatchedDependencyEntries(pnpmLockfile(profileDir), candidate => candidate === key)
 }
 
 export function removeCompatibilityPatch(profileDir: string, packageName: string, version: string): void {
