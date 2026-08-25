@@ -7,7 +7,7 @@ description: 终末地工业风 DSH Web 工作台主题：Host 静态素材、�
 repo: https://github.com/rison114514/dsh-endfield-ui
 subpath: endfield-ui-plugin
 package: "@rison/dsh-endfield-ui"
-rowId: better-sidebar
+rowId: endfield-ui
 category: theme
 tags:
   - endfield

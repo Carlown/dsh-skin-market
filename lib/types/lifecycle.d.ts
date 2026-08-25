@@ -37,6 +37,9 @@ export declare class SkinLifecycle {
     private get runtime();
     private applyCompatibility;
     private syncPnpmMetadata;
+    private applyPendingBuildApprovals;
+    private prefetchBuildApprovals;
+    private preparePrefetchDirectory;
     private repairMaterializedPackage;
     replaceCatalog(catalog: SkinEntry[]): Promise<void>;
     start(): void;
@@ -44,12 +47,16 @@ export declare class SkinLifecycle {
     skin(id: string): SkinEntry;
     private entriesFor;
     private setEntryDisabled;
+    private setLoaderDisabled;
+    private claimManagedLoaders;
+    private releaseManagedLoaders;
+    private syncManagedLoaders;
     private reconcileDisabledSkinIds;
     private requiresRestartForTransition;
     replay(): Promise<void>;
     states(): SkinRuntimeState[];
     currentOperation(): Operation | null;
-    begin(kind: OperationKind, skinId: string, approvedBuildKey?: string): Operation;
+    begin(kind: OperationKind, skinId: string, approvedBuildKeys?: readonly string[] | string): Operation;
     retry(id: string, action: 'retry' | 'approve-build'): Operation;
     private update;
     cancel(id: string): Operation;

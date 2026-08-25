@@ -3,7 +3,11 @@ import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { PluginRunner } from './commands.ts'
-import { PnpmCommandError, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
+import { PnpmCommandError, failureDiagnostic, runPnpmWithRecovery, type PnpmFailure } from './pnpm-recovery.ts'
+import { pluginArgsFor } from './pnpm-compat.ts'
+import { cleanOrphanedStore } from './store.ts'
+import { logEvent } from './log.ts'
+import { resolveProfileDir } from './profile.ts'
 import { compareVersions, parseVersion } from './semver.ts'
 import type { OperationFailure } from './types.ts'
 
@@ -111,7 +115,7 @@ export interface MarketUpdater {
   readonly restartRequired: boolean
 }
 
-function packageVersion(): string {
+export function packageVersion(): string {
   const packageFile = join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json')
   const value = JSON.parse(readFileSync(packageFile, 'utf8')) as { version?: unknown }
   if (typeof value.version !== 'string') throw new Error('皮肤市场 package.json 缺少版本号')
@@ -163,20 +167,31 @@ export function createMarketUpdater(
       }
       const run = async (args: readonly string[]) => {
         await runner.ensurePnpm?.({ signal: controller.signal })
-        await runPnpmWithRecovery(args, {
-          attempt: (attemptArgs, attemptOptions) => runner(profile, attemptArgs, {
-            signal: controller.signal,
-            // Keep self-update on the same 10 minute network budget as ordinary
-            // skin installs without writing a persistent .npmrc into the user's
-            // profile. The update target is the immutable npm package version,
-            // so repository-only assets such as market screenshots are not
-            // included in the downloaded package.
-            env: { pnpm_config_fetch_timeout: String(PNPM_FETCH_TIMEOUT_MS), ...attemptOptions?.env },
-            onStdout: report,
-            onStderr: report,
-          }),
-          onRetry: failure => setOperation(operation, { message: recoveryMessage(failure) }),
-        })
+        const profileDir = resolveProfileDir(profile)
+        const effectiveArgs = pluginArgsFor(profileDir, args)
+        try {
+          await runPnpmWithRecovery(effectiveArgs, {
+            profileDir,
+            attempt: (attemptArgs, attemptOptions) => runner(profile, attemptArgs, {
+              signal: controller.signal,
+              // Keep self-update on the same 10 minute network budget as ordinary
+              // skin installs without writing a persistent .npmrc into the user's
+              // profile. The update target is the immutable npm package version,
+              // so repository-only assets such as market screenshots are not
+              // included in the downloaded package.
+              env: { pnpm_config_fetch_timeout: String(PNPM_FETCH_TIMEOUT_MS), ...attemptOptions?.env },
+              onStdout: report,
+              onStderr: report,
+            }),
+            onRetry: failure => setOperation(operation, { message: recoveryMessage(failure) }),
+          })
+        } catch (error) {
+          if (!controller.signal.aborted) await cleanOrphanedStore(runner, profile, operation.id)
+          if (error instanceof PnpmCommandError) {
+            logEvent('error', 'market-update-pnpm', `kind=${error.failure.kind}${error.failure.packageName === undefined ? '' : ` package=${error.failure.packageName}`} ${failureDiagnostic(error.result)}`, operation.id)
+          }
+          throw error
+        }
       }
 
       // Run one profile update only. A temporary prefetch followed by a
@@ -204,6 +219,7 @@ export function createMarketUpdater(
             ...(action === undefined ? {} : { action }),
           }
         }
+        if (!(error instanceof PnpmCommandError)) logEvent('error', 'market-update', error instanceof Error ? error.message : String(error), operation.id)
         setOperation(operation, { phase: 'failed', message: error instanceof Error ? error.message : String(error) })
       }
     } finally {

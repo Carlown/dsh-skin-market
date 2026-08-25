@@ -31,6 +31,7 @@ export interface MarketUpdater {
     retry(id: string): MarketUpdateOperation;
     readonly restartRequired: boolean;
 }
+export declare function packageVersion(): string;
 export { compareVersions } from './semver.ts';
 export declare function createMarketUpdater(profile: string, runner: PluginRunner, options?: {
     currentVersion?: string;

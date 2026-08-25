@@ -6,6 +6,11 @@ export function sendJson(response: ServerResponse, status: number, value: unknow
   response.end(body)
 }
 
+export function sendText(response: ServerResponse, status: number, value: string): void {
+  response.writeHead(status, { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' })
+  response.end(value)
+}
+
 export function sameOrigin(request: IncomingMessage): boolean {
   const origin = request.headers.origin
   const host = request.headers.host

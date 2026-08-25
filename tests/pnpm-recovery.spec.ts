@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { classifyPnpmFailure, PnpmCommandError, runPnpmWithRecovery } from '../src/pnpm-recovery.ts'
+import { classifyPnpmFailure, failureDiagnostic, PnpmCommandError, runPnpmWithRecovery } from '../src/pnpm-recovery.ts'
 import type { CommandResult } from '../src/commands.ts'
 
 function failed(output: string): CommandResult {
@@ -54,6 +54,40 @@ describe('pnpm recovery', () => {
       packageName: '@linxin666/dsh-web-ui-all',
       buildKey: '@linxin666/dsh-web-ui-all@https://codeload.github.com/springbrand-lab/dsh-skin-universe/tar.gz/29fa777bdd8c9f7d93700c56c11a96a32634d967#path:packages/dsh-web-ui-all',
     })
+
+    const punctuated = classifyPnpmFailure(failed([
+      'ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED',
+      '@captain1275/dsh-client-ui-skin-aurora@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/251119cedac66dbd31ca8ce6cb112369b60b359b#path:/packages/skins/aurora: build scripts are not in allowBuilds',
+    ].join('\n')))
+    expect(punctuated.buildKey).toBe('@captain1275/dsh-client-ui-skin-aurora@https://codeload.github.com/CAPTAIN1275/dsh-ui-web/tar.gz/251119cedac66dbd31ca8ce6cb112369b60b359b#path:/packages/skins/aurora')
+  })
+
+  it('keeps raw pnpm output and embedded credentials out of diagnostics', () => {
+    const diagnostic = failureDiagnostic(failed('ERR_PNPM_FETCH_404 GET https://user:secret@registry.example/pkg'))
+    expect(diagnostic).toContain('ERR_PNPM_FETCH_404')
+    expect(diagnostic).not.toContain('user')
+    expect(diagnostic).not.toContain('secret')
+    expect(diagnostic).not.toContain('registry.example')
+  })
+
+  it('classifies pnpm ignored builds and normalizes exact package approval keys', () => {
+    const failure = classifyPnpmFailure(failed([
+      'ERR_PNPM_IGNORED_BUILDS',
+      'Ignored build scripts: node-pty@1.1.0, @example/native-addon@2.0.0.',
+      'Run "pnpm approve-builds" to pick which dependencies should be allowed to run scripts.',
+    ].join('\n')))
+
+    expect(failure).toMatchObject({
+      kind: 'build-approval',
+      packageName: 'node-pty',
+      buildKey: 'node-pty',
+      buildKeys: ['node-pty', '@example/native-addon'],
+    })
+
+    const malformed = classifyPnpmFailure(failed('ERR_PNPM_IGNORED_BUILDS\nIgnored build scripts: "code":"ERR_PNPM_IGNORED_BUILDS"'))
+    expect(malformed).toMatchObject({ kind: 'build-approval' })
+    expect(malformed.buildKeys).toBeUndefined()
+    expect(malformed.buildKey).toBeUndefined()
   })
 
   it('does not let the generic DSH build hint hide a timeout', () => {
@@ -74,7 +108,7 @@ describe('pnpm recovery', () => {
     ].join('\n')))
 
     expect(failure).toMatchObject({
-      kind: 'command',
+      kind: 'fetch-404',
       packageName: '@deepseek-ai/dsh-compact',
     })
   })
@@ -109,7 +143,7 @@ describe('pnpm recovery', () => {
       attempt: async () => failed('[ERR_PNPM_FETCH_404] GET https://registry.npmjs.org/@deepseek-ai%2Fdsh-compact: Not Found - 404'),
     })).rejects.toMatchObject({
       name: 'PnpmCommandError',
-      failure: { kind: 'command', packageName: '@deepseek-ai/dsh-compact' },
+      failure: { kind: 'fetch-404', packageName: '@deepseek-ai/dsh-compact' },
     } satisfies Partial<PnpmCommandError>)
   })
 

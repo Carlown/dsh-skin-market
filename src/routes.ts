@@ -2,13 +2,14 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import { randomUUID } from 'node:crypto'
 import { join } from 'node:path'
 import { CatalogStore, catalogWithStars } from './catalog.ts'
-import { readOperationRetryAction, readRestartTarget, readSkinId, sameOrigin, sendJson } from './http.ts'
+import { readOperationRetryAction, readRestartTarget, readSkinId, sameOrigin, sendJson, sendText } from './http.ts'
 import { SkinLifecycle, type LifecycleHost } from './lifecycle.ts'
 import { installedClientPlugins } from './profile.ts'
 import type { PluginRunner } from './commands.ts'
 import type { DshRuntime, MarketHostKind, OperationKind } from './types.ts'
 import type { RestartScheduler } from './restart.ts'
-import { createMarketUpdater, type MarketUpdater } from './self-update.ts'
+import { createMarketUpdater, packageVersion, type MarketUpdater } from './self-update.ts'
+import { exportLogs } from './log.ts'
 
 export interface WebServerService {
   register(route: {
@@ -106,6 +107,20 @@ export function mountRoutes(host: SkinMarketHost, options: RouteOptions): () => 
       } catch (error) {
         sendJson(response, 502, { error: error instanceof Error ? error.message : String(error) })
       }
+    } }),
+    host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/logs', handler: (request, response) => {
+      if (!method(request, response, 'GET')) return
+      const url = new URL(request.url ?? '/', 'http://localhost')
+      const operationId = url.searchParams.get('operationId') ?? undefined
+      if (operationId !== undefined && !/^[A-Za-z0-9_-]{1,128}$/.test(operationId)) {
+        return sendText(response, 400, 'invalid operationId')
+      }
+      sendText(response, 200, exportLogs({
+        marketVersion: packageVersion(),
+        profile: options.profile,
+        hostKind,
+        dshVersion: options.runtime?.version ?? 'unknown',
+      }, operationId))
     } }),
     host.webServer.register({ kind: 'exact', path: '/dsh-skin-market/state', handler: (request, response) => {
       if (!method(request, response, 'GET')) return

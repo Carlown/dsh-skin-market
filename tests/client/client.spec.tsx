@@ -990,7 +990,7 @@ describe('client market', () => {
     fireEvent.click(await screen.findByRole('button', { name: '仅安装' }))
 
     const dialog = await screen.findByRole('dialog', { name: '需要批准构建脚本' })
-    expect(within(dialog).getByText('精确构建项：')).toBeTruthy()
+    expect(within(dialog).getByText('涉及依赖：')).toBeTruthy()
     expect(within(dialog).getByText('node-pty')).toBeTruthy()
     expect(screen.queryByRole('button', { name: '批准构建并重试' })).toBeNull()
     expect(screen.getByRole('button', { name: '批准并重试' })).toBeTruthy()

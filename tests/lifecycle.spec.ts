@@ -5,7 +5,7 @@ import { basename, join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse, stringify } from 'yaml'
 import { SkinLifecycle } from '../src/lifecycle.ts'
-import { atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensurePatchedDependency, patchedDependenciesNeedSync, pnpmWorkspaceFile, profilePatchFile, readDependencies, readMarketState } from '../src/profile.ts'
+import { atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensurePatchedDependency, patchedDependenciesNeedSync, pnpmWorkspaceFile, profilePatchFile, readDependencies, readMarketState, writeMarketState } from '../src/profile.ts'
 import type { CommandResult, PluginInstallRequest, PluginRunner } from '../src/commands.ts'
 import type { LoaderEntry, Operation } from '../src/types.ts'
 
@@ -42,6 +42,13 @@ function writeBundlePackage(dir: string, skin: { package: string; rowId: string;
   mkdirSync(packageDir, { recursive: true })
   atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: {} } })
   atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: ${skin.rowId}\n      name: ${JSON.stringify(skin.package)}\n`)
+}
+
+function writeBundleRows(dir: string, skin: { package: string; install: { version: string } }, rows: Array<{ id: string; name: string }>): void {
+  const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+  mkdirSync(packageDir, { recursive: true })
+  atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { bundle: { patch: './cordis.patch.yml' }, client: { platform: 'web' } } })
+  atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n${rows.map(row => `    - id: ${row.id}\n      name: ${JSON.stringify(row.name)}`).join('\n')}\n`)
 }
 
 function syncPatchLockfile(dir: string): void {
@@ -93,6 +100,158 @@ describe('skin lifecycle', () => {
 
     expect(lifecycle.skin(added.id)).toEqual(added)
     expect(lifecycle.states().some(state => state.skinId === added.id)).toBe(true)
+  })
+
+  it('keeps every loader inserted by a bundle in lockstep with its owning skin', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = { ...base, id: 'bundle-owner.skin', package: '@example/bundle-owner', rowId: 'bundle-owner' }
+    const rows = [
+      { id: 'shared-sidebar', name: 'shared-sidebar' },
+      { id: 'editor-settings', name: 'editor-settings' },
+      { id: skin.rowId, name: skin.package },
+    ]
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    writeBundleRows(dir, skin, rows)
+    writeMarketState(dir, {
+      version: 1,
+      activeSkinId: null,
+      disabledSkinIds: [skin.id],
+      pinnedSkinIds: [],
+      managedLoaders: Object.fromEntries(rows.slice(0, -1).map(row => [row.id, { ...row, packageName: skin.package, ownerSkinIds: [skin.id] }])),
+    })
+    const updates: string[] = []
+    const entries: LoaderEntry[] = rows.map(row => {
+      const entry: LoaderEntry = {
+        options: { id: row.id, name: row.name },
+        fiber: {},
+        update: async value => {
+          entry.options.disabled = value.disabled
+          updates.push(`${row.id}:${String(value.disabled)}`)
+        },
+      }
+      return entry
+    })
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => entries } }, { profile: 'test', profileDir: dir, runner: async () => success() }, [skin])
+
+    await lifecycle.replay()
+
+    let operations = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string; disabled?: boolean }>
+    expect(operations).toEqual([])
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).not.toContain(skin.package)
+    expect(updates).toEqual(expect.arrayContaining(rows.map(row => `${row.id}:true`)))
+
+    updates.length = 0
+    writeMarketState(dir, { ...readMarketState(dir), activeSkinId: skin.id, disabledSkinIds: [] })
+    await lifecycle.replay()
+
+    operations = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string; disabled?: boolean }>
+    expect(operations).toEqual([])
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).toContain(skin.package)
+    expect(updates).toEqual(expect.arrayContaining(rows.map(row => `${row.id}:null`)))
+  })
+
+  it('does not adopt bundle child loaders from a legacy install without a receipt', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = { ...base, id: 'legacy-bundle.skin', package: '@example/legacy-bundle', rowId: 'legacy-bundle' }
+    const child = { id: 'user-editor', name: 'user-editor' }
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    writeBundleRows(dir, skin, [child, { id: skin.rowId, name: skin.package }])
+    writeMarketState(dir, { version: 1, activeSkinId: null, disabledSkinIds: [skin.id], pinnedSkinIds: [] })
+    const updates: string[] = []
+    const childEntry: LoaderEntry = {
+      options: child,
+      fiber: {},
+      update: async value => { updates.push(String(value.disabled)) },
+    }
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'remove') atomicWriteJson(join(dir, 'package.json'), { dependencies: {} })
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [childEntry] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    await lifecycle.replay()
+
+    const operations = existsSync(profilePatchFile(dir)) ? parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string }> : []
+    expect(operations.some(operation => operation.id === child.id)).toBe(false)
+    expect(updates).toEqual([])
+    expect(readMarketState(dir).managedLoaders).toBeUndefined()
+
+    expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
+    expect(updates).toEqual(['true'])
+    expect(readMarketState(dir).managedLoaders).toBeUndefined()
+  })
+
+  it('preserves a user-authored override even for a loader recorded by the market', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = { ...base, id: 'override-owner.skin', package: '@example/override-owner', rowId: 'override-owner' }
+    const child = { id: 'editor-settings', name: 'editor-settings' }
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    writeBundleRows(dir, skin, [child, { id: skin.rowId, name: skin.package }])
+    atomicWriteText(profilePatchFile(dir), `- id: ${child.id}\n  disabled: false\n  config:\n    theme: user-choice\n`)
+    writeMarketState(dir, {
+      version: 1,
+      activeSkinId: null,
+      disabledSkinIds: [skin.id],
+      pinnedSkinIds: [],
+      managedLoaders: { [child.id]: { ...child, packageName: skin.package, ownerSkinIds: [skin.id] } },
+    })
+    const updates: string[] = []
+    const childEntry: LoaderEntry = {
+      options: child,
+      fiber: {},
+      update: async value => { updates.push(String(value.disabled)) },
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [childEntry] } }, { profile: 'test', profileDir: dir, runner: async () => success() }, [skin])
+
+    await lifecycle.replay()
+
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).toContain('theme: user-choice')
+    expect(readFileSync(profilePatchFile(dir), 'utf8')).toContain('disabled: false')
+    expect(updates).toEqual([])
+  })
+
+  it('records only non-primary loaders introduced by a fresh market install', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = { ...base, id: 'receipt-owner.skin', package: '@example/receipt-owner', rowId: 'receipt-owner' }
+    const child = { id: 'receipt-editor', name: 'receipt-editor' }
+    const rows = [child, { id: skin.rowId, name: skin.package }]
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args[0] === 'add' && args.includes('--dir')) {
+        const temporary = args[args.indexOf('--dir') + 1]!
+        atomicWriteJson(join(temporary, 'package.json'), { private: true, dependencies: { [skin.package]: skin.install.target } })
+        writeBundleRows(temporary, skin, rows)
+        return success()
+      }
+      if (args[0] === 'add') {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        writeBundleRows(dir, skin, rows)
+      }
+      if (args[0] === 'remove') atomicWriteJson(join(dir, 'package.json'), { dependencies: {} })
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation.phase).toBe('done')
+    expect(readMarketState(dir).managedLoaders).toEqual({
+      [child.id]: { ...child, packageName: skin.package, ownerSkinIds: [skin.id] },
+    })
+    const operations = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string; disabled?: boolean }>
+    expect(operations).toEqual([])
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).not.toContain(skin.package)
+
+    expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
+    expect(readMarketState(dir).managedLoaders).toBeUndefined()
+    expect((parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string }>).some(row => row.id === child.id)).toBe(false)
   })
 
   it('gates market installation by installation readiness, not compatibility verification', () => {
@@ -276,6 +435,10 @@ describe('skin lifecycle', () => {
       },
     }
     const runner: PluginRunner = async (_profile, args) => {
+      if (args.includes('--dir')) {
+        const temporary = args[args.indexOf('--dir') + 1]!
+        expect(readFileSync(join(temporary, 'pnpm-workspace.yaml'), 'utf8')).toContain(`${allowBuild}#path:/packages/dsh-web-ui-all`)
+      }
       if (args[0] === 'add' && !args.includes('--dir')) {
         atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
         const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
@@ -287,7 +450,7 @@ describe('skin lifecycle', () => {
     const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
 
     expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
-    expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain(`${allowBuild}#path:packages/dsh-web-ui-all`)
+    expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain(`${allowBuild}#path:/packages/dsh-web-ui-all`)
   })
 
   it('applies a generic compatibility adapter during live install', async () => {
@@ -366,10 +529,16 @@ describe('skin lifecycle', () => {
     const patchFile = compatibilityPatchFile(dir, skin.package, skin.install.version)
     atomicWriteText(patchFile, 'compatibility patch\n')
     ensurePatchedDependency(dir, skin.package, skin.install.version, '.dsh-skin-market/patches/' + basename(patchFile))
+    syncPatchLockfile(dir)
     const installArgs: Array<readonly string[]> = []
     const runner: PluginRunner = async (_profile, args) => {
       installArgs.push(args)
-      if (args[0] === 'remove') atomicWriteJson(join(dir, 'package.json'), { dependencies: {} })
+      if (args[0] === 'remove') {
+        if (readFileSync(pnpmWorkspaceFile(dir), 'utf8').includes(skin.package + '@' + skin.install.version)) {
+          return { ...success(), exitCode: 1, stderr: 'ERR_PNPM_UNUSED_PATCH' }
+        }
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: {} })
+      }
       if (args[0] === 'install') syncPatchLockfile(dir)
       return success()
     }
@@ -383,8 +552,7 @@ describe('skin lifecycle', () => {
     expect(readFileSync(join(dir, 'pnpm-lock.yaml'), 'utf8')).not.toContain('patchedDependencies')
     expect(() => readFileSync(patchFile, 'utf8')).toThrow()
     expect(patchedDependenciesNeedSync(dir)).toBe(false)
-    expect(installArgs.filter(args => args[0] === 'install')).toHaveLength(1)
-    expect(installArgs.find(args => args[0] === 'install')).toContain('--no-frozen-lockfile')
+    expect(installArgs.filter(args => args[0] === 'install')).toHaveLength(0)
   })
 
   it('detaches old compatibility patches before updating a package', async () => {
@@ -416,7 +584,12 @@ describe('skin lifecycle', () => {
       }
       return success()
     }
-    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+    const runtimeEntry: LoaderEntry = {
+      options: { id: skin.rowId, name: skin.rowId },
+      fiber: {},
+      update: async value => { runtimeEntry.options.disabled = value.disabled },
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [runtimeEntry] } }, { profile: 'test', profileDir: dir, runner }, [skin])
 
     const operation = await finished(lifecycle.begin('update', skin.id))
 
@@ -465,8 +638,18 @@ describe('skin lifecycle', () => {
     const buildKey = '@example/skin@https://codeload.github.com/example/skin/tar.gz/0123456789abcdef0123456789abcdef01234567'
     const skin = { ...base, id: 'build-approval.skin', install: { ...base.install, target: 'github:example/skin#0123456789abcdef0123456789abcdef01234567', commit: '0123456789abcdef0123456789abcdef01234567', allowBuild: undefined } }
     let rejected = false
+    const prefetchApprovals: string[] = []
     const runner: PluginRunner = async (_profile, args) => {
-      if (args.includes('--dir')) return success()
+      if (args.includes('--dir')) {
+        const temporary = args[args.indexOf('--dir') + 1]!
+        const workspaceFile = join(temporary, 'pnpm-workspace.yaml')
+        if (!existsSync(workspaceFile) || !readFileSync(workspaceFile, 'utf8').includes(buildKey)) {
+          rejected = true
+          return { ...success(), exitCode: 1, stderr: `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED\n${buildKey} needs to execute build scripts but is not in allowBuilds` }
+        }
+        prefetchApprovals.push(readFileSync(workspaceFile, 'utf8'))
+        return success()
+      }
       if (args[0] === 'add' && !rejected) {
         rejected = true
         return { ...success(), exitCode: 1, stderr: `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED\n${buildKey} needs to execute build scripts but is not in allowBuilds` }
@@ -488,6 +671,79 @@ describe('skin lifecycle', () => {
 
     expect(retried.phase).toBe('done')
     expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain(buildKey)
+    expect(prefetchApprovals).toHaveLength(1)
+  })
+
+  it('seeds a reviewed exact build key into the temporary prefetch workspace', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const buildKey = '@example/reviewed-skin@https://codeload.github.com/example/reviewed-skin/tar.gz/0123456789abcdef0123456789abcdef01234567'
+    const skin = {
+      ...base,
+      id: 'reviewed-build.skin',
+      package: '@example/reviewed-skin',
+      rowId: 'reviewed-skin',
+      subpath: undefined,
+      install: {
+        ...base.install,
+        target: 'github:example/reviewed-skin#0123456789abcdef0123456789abcdef01234567',
+        version: '1.0.0',
+        commit: '0123456789abcdef0123456789abcdef01234567',
+        allowBuild: buildKey,
+      },
+    }
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args.includes('--dir')) {
+        const temporary = args[args.indexOf('--dir') + 1]!
+        expect(readFileSync(join(temporary, 'pnpm-workspace.yaml'), 'utf8')).toContain(buildKey)
+        return success()
+      }
+      if (args[0] === 'add') {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+        mkdirSync(packageDir, { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation.phase).toBe('done')
+    expect(readFileSync(pnpmWorkspaceFile(dir), 'utf8')).toContain(buildKey)
+  })
+
+  it('approves transitive pnpm ignored builds and retries the install', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = probe.catalog.find(item => item.review?.installation !== 'manual-only')!
+    const skin = { ...base, id: 'ignored-build.skin', install: { ...base.install, allowBuild: undefined } }
+    let rejected = false
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args.includes('--dir')) return success()
+      if (args[0] === 'add' && !rejected) {
+        rejected = true
+        return { ...success(), exitCode: 1, stderr: 'ERR_PNPM_IGNORED_BUILDS\nIgnored build scripts: node-pty@1.1.0' }
+      }
+      if (args[0] === 'add') {
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+        mkdirSync(packageDir, { recursive: true })
+        atomicWriteJson(join(packageDir, 'package.json'), { name: skin.package, version: skin.install.version, dsh: { client: { platform: 'web' } } })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const failedOperation = await finished(lifecycle.begin('install', skin.id))
+    expect(failedOperation).toMatchObject({ phase: 'failed', failure: { kind: 'build-approval', action: 'approve-build', packageName: 'node-pty' } })
+
+    const retried = await finished(lifecycle.retry(failedOperation.id, 'approve-build'))
+
+    expect(retried.phase).toBe('done')
+    expect(parse(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8'))).toMatchObject({ allowBuilds: { 'node-pty': true } })
   })
 
   it('reconciles an already installed package instead of failing the install action', async () => {
@@ -788,6 +1044,71 @@ describe('skin lifecycle', () => {
     expect(readDependencies(dir)).toEqual({})
   })
 
+  it('rejects a catalog row id mismatch from the prefetched immutable bundle', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = { ...base, id: 'metadata-mismatch.skin', rowId: 'better-sidebar' }
+    let liveAdd = 0
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args.includes('--dir')) {
+        const temporary = args[args.indexOf('--dir') + 1]!
+        atomicWriteJson(join(temporary, 'package.json'), { private: true, dependencies: { [skin.package]: skin.install.target } })
+        writeBundlePackage(temporary, { package: skin.package, rowId: 'actual-primary', install: { version: skin.install.version } })
+        return success()
+      }
+      if (args[0] === 'add') liveAdd += 1
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation.phase).toBe('failed')
+    expect(operation.message).toContain('市场目录元数据与包实际声明不一致')
+    expect(operation.message).toContain('实际主 loader id=actual-primary')
+    expect(liveAdd).toBe(0)
+  })
+
+  it('removes a package and restores the profile after a post-install loader conflict', async () => {
+    const dir = fixture()
+    const probe = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner: async () => success() })
+    const base = firstInstallable(probe)
+    const skin = { ...base, id: 'post-install-conflict.skin', rowId: 'incoming-loader' }
+    let liveAdd = 0
+    let removeCalls = 0
+    const runner: PluginRunner = async (_profile, args) => {
+      if (args.includes('--dir')) {
+        const temporary = args[args.indexOf('--dir') + 1]!
+        atomicWriteJson(join(temporary, 'package.json'), { private: true, dependencies: { [skin.package]: skin.install.target } })
+        writeBundlePackage(temporary, { package: skin.package, rowId: skin.rowId, install: { version: skin.install.version } })
+        return success()
+      }
+      if (args[0] === 'add') {
+        liveAdd += 1
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+        writeBundlePackage(dir, skin)
+        atomicWriteText(profilePatchFile(dir), `- insert:\n    - id: ${skin.rowId}\n      name: another-installed-plugin\n`)
+        return success()
+      }
+      if (args[0] === 'remove') {
+        removeCalls += 1
+        atomicWriteJson(join(dir, 'package.json'), { dependencies: {} })
+      }
+      return success()
+    }
+    const lifecycle = new SkinLifecycle({ loader: { entries: () => [] } }, { profile: 'test', profileDir: dir, runner }, [skin])
+
+    const operation = await finished(lifecycle.begin('install', skin.id))
+
+    expect(operation).toMatchObject({ phase: 'failed', failure: { kind: 'conflict' } })
+    expect(operation.message).toContain('another-installed-plugin')
+    expect(liveAdd).toBe(1)
+    expect(removeCalls).toBe(1)
+    expect(readDependencies(dir)).toEqual({})
+    expect(existsSync(profilePatchFile(dir))).toBe(false)
+  })
+
   it('pre-approves an exact build artifact and restores profile metadata after a failed install', async () => {
     const dir = fixture()
     const originalLockfile = 'lockfileVersion: "9.0"\n\nimporters:\n  .: {}\n'
@@ -946,20 +1267,26 @@ describe('skin lifecycle', () => {
       review: { compatibility: 'verified' as const, preview: 'verified' as const, installation: 'verified' as const },
       install: { target: `github:example/repo#${commit}&path:/one`, version: '1.0.0', commit, companions: [companion] },
     }
-    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [companion.package]: companion.target } })
+    atomicWriteJson(join(dir, 'package.json'), {
+      dependencies: { [companion.package]: companion.target },
+      dsh: { profile: { bundles: [companion.package] } },
+    })
     writeBundlePackage(dir, { package: companion.package, rowId: companion.rowId, install: { version: companion.version } })
     const calls: string[][] = []
     const runner: PluginRunner = async (_profile, args) => {
       calls.push([...args])
       if (args[0] === 'add' && args.includes('--dir')) return success()
       if (args[0] === 'add' && args[1] === skin.install.target) {
-        atomicWriteJson(join(dir, 'package.json'), { dependencies: { ...readDependencies(dir), [skin.package]: skin.install.target } })
+        atomicWriteJson(join(dir, 'package.json'), {
+          dependencies: { ...readDependencies(dir), [skin.package]: skin.install.target },
+          dsh: { profile: { bundles: [companion.package] } },
+        })
         writeBundlePackage(dir, skin)
       }
       if (args[0] === 'remove' && args[1] === skin.package) {
         const dependencies = { ...readDependencies(dir) }
         delete dependencies[skin.package]
-        atomicWriteJson(join(dir, 'package.json'), { dependencies })
+        atomicWriteJson(join(dir, 'package.json'), { dependencies, dsh: { profile: { bundles: [companion.package] } } })
       }
       return success()
     }
@@ -967,18 +1294,16 @@ describe('skin lifecycle', () => {
 
     expect((await finished(lifecycle.begin('install', skin.id))).phase).toBe('done')
     expect(calls.some(args => args[0] === 'add' && args[1] === companion.target)).toBe(false)
-    expect(readMarketState(dir).managedCompanions).toEqual({
-      [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: false },
-    })
-    expect(readFileSync(profilePatchFile(dir), 'utf8')).toContain(companion.rowId)
+    expect(readMarketState(dir).managedCompanions).toBeUndefined()
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).toContain(companion.package)
 
     expect((await finished(lifecycle.begin('uninstall', skin.id))).phase).toBe('done')
     expect(readDependencies(dir)).toEqual({ [companion.package]: companion.target })
     expect(readMarketState(dir).managedCompanions).toBeUndefined()
-    expect(readFileSync(profilePatchFile(dir), 'utf8')).not.toContain('disabled: true')
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).toContain(companion.package)
   })
 
-  it('migrates a pre-ownership companion into enable/disable linkage without delete rights', async () => {
+  it('does not acquire enable/disable rights over a pre-ownership companion', async () => {
     const dir = fixture()
     const commit = 'a'.repeat(40)
     const companion = {
@@ -1004,10 +1329,8 @@ describe('skin lifecycle', () => {
     const lifecycle = new SkinLifecycle({ loader: { entries: () => [{ options: { id: companion.rowId, name: companion.package }, update: async ({ disabled }) => { live.disabled = disabled === true } }] } }, { profile: 'test', profileDir: dir, runner: async () => success() }, [skin])
 
     await lifecycle.replay()
-    expect(readMarketState(dir).managedCompanions).toEqual({
-      [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: false },
-    })
-    expect(live.disabled).toBe(true)
+    expect(readMarketState(dir).managedCompanions).toBeUndefined()
+    expect(live.disabled).toBe(false)
   })
 
   it('disables a companion in settings until an owning skin is in use', async () => {
@@ -1056,12 +1379,12 @@ describe('skin lifecycle', () => {
 
     expect((await finished(lifecycle.begin('install', owner.id))).phase).toBe('done')
     expect((await finished(lifecycle.begin('install', other.id))).phase).toBe('done')
-    expect(readFileSync(profilePatchFile(dir), 'utf8')).toMatch(/id:\s*ui-skin-deep-whale-manager[\s\S]*disabled:\s*true/)
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).not.toContain(companion.package)
 
     expect((await finished(lifecycle.begin('activate', owner.id))).phase).toBe('done')
-    expect(readFileSync(profilePatchFile(dir), 'utf8')).not.toMatch(/id:\s*ui-skin-deep-whale-manager[\s\S]*disabled:\s*true/)
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).toContain(companion.package)
 
     expect((await finished(lifecycle.begin('activate', other.id))).phase).toBe('done')
-    expect(readFileSync(profilePatchFile(dir), 'utf8')).toMatch(/id:\s*ui-skin-deep-whale-manager[\s\S]*disabled:\s*true/)
+    expect((JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }).dsh?.profile?.bundles ?? []).not.toContain(companion.package)
   })
 })

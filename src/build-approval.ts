@@ -20,8 +20,9 @@ export function effectiveBuildApprovalKey(skin: BuildApprovalSkin): string | und
 export function buildApprovalKeyForTarget(skin: BuildApprovalSkin, target: string): string | undefined {
   const key = skin.install.allowBuild
   if (key === undefined) return undefined
-  const subpath = /^github:[^#]+#[0-9a-f]{40}&path:\/?([A-Za-z0-9._/-]+)$/i.exec(target)?.[1]
-  if (subpath === undefined) return key
+  const match = /^github:[^#]+#[0-9a-f]{40}&path:(\/?)([A-Za-z0-9._/-]+)$/i.exec(target)
+  if (match === null) return key
+  const subpath = `${match[1]}${match[2]}`
   const pathMarker = '#path:'
   const markerIndex = key.indexOf(pathMarker)
   const base = markerIndex === -1 ? key : key.slice(0, markerIndex)

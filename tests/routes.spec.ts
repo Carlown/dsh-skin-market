@@ -49,6 +49,7 @@ describe('market routes', () => {
     expect(routes).not.toContainEqual({ kind: 'exact', path: '/dsh-skin-market/catalog/refresh' })
     expect(routes).toContainEqual({ kind: 'exact', path: '/dsh-skin-market/market-update' })
     expect(routes).toContainEqual({ kind: 'prefix', path: '/dsh-skin-market/market-update/operations' })
+    expect(routes).toContainEqual({ kind: 'exact', path: '/dsh-skin-market/logs' })
     expect(routes).toContainEqual({ kind: 'exact', path: '/dsh-skin-market/pin' })
     expect(routes).toContainEqual({ kind: 'exact', path: '/dsh-skin-market/unpin' })
     dispose()
@@ -89,6 +90,37 @@ describe('market routes', () => {
       },
     } as unknown as ServerResponse
     await handlers.get('/dsh-skin-market/state')?.({ method: 'GET', headers: {} } as IncomingMessage, response)
+    dispose()
+  })
+
+  it('exports a bounded diagnostic log as plain text', async () => {
+    const handlers = new Map<string, (request: IncomingMessage, response: ServerResponse) => void | Promise<void>>()
+    const webServer: WebServerService = {
+      register(route) {
+        handlers.set(route.path, route.handler)
+        return () => undefined
+      },
+    }
+    const dispose = mountRoutes({
+      webServer,
+      agents: { list: () => [] },
+      loader: { entries: (): Iterable<LoaderEntry> => [] },
+    }, {
+      profile: 'test',
+      profileDir: '/tmp/dsh-skin-market-route-test-missing-profile',
+      runner: async () => ({ exitCode: 0, stdout: '', stderr: '', timedOut: false }),
+    })
+
+    let contentType = ''
+    let body = ''
+    const response = {
+      writeHead: (_status: number, headers: Record<string, string>) => { contentType = headers['content-type'] ?? '' },
+      end: (value: string) => { body = value },
+    } as unknown as ServerResponse
+    await handlers.get('/dsh-skin-market/logs')?.({ method: 'GET', url: '/dsh-skin-market/logs?operationId=test-operation', headers: {} } as IncomingMessage, response)
+    expect(contentType).toContain('text/plain')
+    expect(body).toContain('# dsh-skin-market diagnostic log')
+    expect(body).toContain('operationId: test-operation')
     dispose()
   })
 })

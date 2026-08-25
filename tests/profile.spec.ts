@@ -4,8 +4,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
-import { effectiveBuildApprovalKey } from '../src/build-approval.ts'
-import { assertNoLoaderConflicts, atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensureBuildAllowed, ensurePatchedDependency, ensureSkinRegistration, InstallConflictError, installedClientPlugins, installedSpecMatches, patchedDependenciesNeedSync, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeCompatibilityPatches, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
+import { buildApprovalKeyForTarget, effectiveBuildApprovalKey } from '../src/build-approval.ts'
+import { assertLoaderMetadata, assertNoLoaderConflicts, atomicWriteJson, atomicWriteText, compatibilityPatchFile, ensureBuildAllowed, ensurePatchedDependency, ensureSkinRegistration, InstallConflictError, installedClientPlugins, installedSpecMatches, patchedDependenciesNeedSync, pnpmWorkspaceFile, profilePatchFile, readMarketState, removeCompatibilityPatches, removeProfileBundles, removeSkinRegistration, runtimeState, validateInstalledSkin, writeMarketState } from '../src/profile.ts'
 import { loadCatalog } from '../src/catalog.ts'
 
 function fixture() { return mkdtempSync(join(tmpdir(), 'skin-profile-')) }
@@ -110,7 +110,52 @@ describe('profile state', () => {
     expect(() => assertNoLoaderConflicts(dir, skin)).toThrow(skin.rowId)
   })
 
-  it('overrides a bundle-owned loader row without duplicating the composed entry', () => {
+  it('rejects a catalog row id that does not match the bundle-owned primary loader', () => {
+    const dir = fixture()
+    const base = loadCatalog().skins[0]
+    const skin = { ...base, rowId: 'better-sidebar' }
+    const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(packageDir, { recursive: true })
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [skin.package]: skin.install.target } })
+    atomicWriteJson(join(packageDir, 'package.json'), {
+      name: skin.package,
+      version: skin.install.version,
+      dsh: { bundle: { patch: './cordis.patch.yml' }, client: { platform: 'web' } },
+    })
+    atomicWriteText(join(packageDir, 'cordis.patch.yml'), `- insert:\n    - id: better-sidebar\n      name: dsh-better-sidebar\n    - id: actual-primary\n      name: ${JSON.stringify(skin.package)}\n`)
+
+    expect(() => assertLoaderMetadata(dir, skin)).toThrow('市场目录元数据与包实际声明不一致')
+    expect(() => assertNoLoaderConflicts(dir, skin)).toThrow('实际主 loader id=actual-primary')
+  })
+
+  it('reports the owner of a duplicate loader from an installed bundle', () => {
+    const dir = fixture()
+    const base = loadCatalog().skins[0]
+    const skin = { ...base, package: '@example/incoming-loader', rowId: 'incoming-loader' }
+    const other = '@example/existing-loader'
+    atomicWriteJson(join(dir, 'package.json'), { dependencies: { [other]: 'file:/existing-loader' } })
+    const otherDir = join(dir, 'node_modules', ...other.split('/'))
+    mkdirSync(otherDir, { recursive: true })
+    atomicWriteJson(join(otherDir, 'package.json'), {
+      name: other,
+      version: '1.0.0',
+      dsh: { bundle: { patch: './cordis.patch.yml' }, client: { platform: 'web' } },
+    })
+    atomicWriteText(join(otherDir, 'cordis.patch.yml'), `- insert:\n    - id: shared-loader\n      name: ${JSON.stringify(other)}\n`)
+    const incomingDir = join(dir, 'node_modules', ...skin.package.split('/'))
+    mkdirSync(incomingDir, { recursive: true })
+    atomicWriteJson(join(incomingDir, 'package.json'), {
+      name: skin.package,
+      version: skin.install.version,
+      dsh: { bundle: { patch: './cordis.patch.yml' }, client: { platform: 'web' } },
+    })
+    atomicWriteText(join(incomingDir, 'cordis.patch.yml'), `- insert:\n    - id: shared-loader\n      name: shared-loader-owner\n    - id: incoming-loader\n      name: ${JSON.stringify(skin.package)}\n`)
+
+    expect(() => assertNoLoaderConflicts(dir, skin)).toThrow('shared-loader')
+    expect(() => assertNoLoaderConflicts(dir, skin)).toThrow(other)
+  })
+
+  it('removes an inactive bundle from the stack and restores it without duplicating its row', () => {
     const dir = fixture()
     const skin = loadCatalog().skins[0]
     const packageDir = join(dir, 'node_modules', ...skin.package.split('/'))
@@ -134,22 +179,13 @@ describe('profile state', () => {
     const inserted = bundlePatch.flatMap(operation => Array.isArray(operation.insert) ? operation.insert as Array<Record<string, unknown>> : [])
     const overrides = profilePatch.filter(operation => operation.id === skin.rowId)
     expect(inserted).toHaveLength(1)
-    expect(overrides).toEqual([{ id: skin.rowId, disabled: true }])
-    expect(JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).dsh.profile.bundles).toContain(skin.package)
-
-    const composed = [...inserted.map(row => ({ ...row })), ...overrides].reduce((rows, patch) => {
-      const target = rows.find(row => row.id === patch.id)
-      if (target === undefined) rows.push({ ...patch })
-      else Object.assign(target, patch)
-      return rows
-    }, [] as Array<Record<string, unknown>>)
-    expect(composed.filter(row => row.id === skin.rowId)).toEqual([{
-      id: skin.rowId, name: skin.package, marker: 'bundle-owned', disabled: true,
-    }])
+    expect(overrides).toEqual([])
+    expect(JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).dsh.profile.bundles).not.toContain(skin.package)
 
     ensureSkinRegistration(dir, skin, false)
     const enabledPatch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<Record<string, unknown>>
     expect(enabledPatch.filter(operation => operation.id === skin.rowId)).toEqual([])
+    expect(JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).dsh.profile.bundles).toContain(skin.package)
     removeSkinRegistration(dir, skin)
     const removedPatch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as unknown[]
     expect(removedPatch).toEqual([])
@@ -229,6 +265,9 @@ describe('profile state', () => {
       subpath: 'packages/dsh-web-ui-all',
       install: { allowBuild: '@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567#path:old' },
     })).toBe('@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567#path:packages/dsh-web-ui-all')
+    expect(buildApprovalKeyForTarget({
+      install: { allowBuild: '@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567#path:old' },
+    }, 'github:example/repo#0123456789abcdef0123456789abcdef01234567&path:/packages/dsh-web-ui-all')).toBe('@scope/package@https://codeload.github.com/example/repo/tar.gz/0123456789abcdef0123456789abcdef01234567#path:/packages/dsh-web-ui-all')
   })
 
   it('rejects a materialized package that does not match the reviewed package', () => {

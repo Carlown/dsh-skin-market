@@ -1,5 +1,7 @@
 import { effectiveBuildApprovalKey } from './build-approval.ts';
+import { type LoaderIdentity } from './loader-ownership.ts';
 import type { InstallConflict, InstalledClientPlugin, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts';
+export type { LoaderIdentity } from './loader-ownership.ts';
 export declare function resolveProfileDir(profile: string, explicit?: string): string;
 export declare function manifestFile(profileDir: string): string;
 export declare function profilePatchFile(profileDir: string): string;
@@ -32,18 +34,33 @@ export declare function companionNeedsInstall(profileDir: string, companion: {
 }): boolean;
 export declare function companionsNeedInstall(profileDir: string, skin: SkinEntry): boolean;
 export { effectiveBuildApprovalKey };
-export interface LoaderIdentity {
-    id?: string;
-    name?: string;
-    packageName?: string;
+export interface PackageLoaderOwnership {
+    packageName: string;
+    hasBundle: boolean;
+    rows: LoaderIdentity[];
 }
 export declare class InstallConflictError extends Error {
     readonly conflicts: InstallConflict[];
     constructor(conflicts: InstallConflict[]);
 }
+export declare class LoaderMetadataError extends Error {
+    constructor(message: string);
+}
+export declare function packageLoaderOwnershipAt(packageDirectory: string, packageName: string): PackageLoaderOwnership;
 export declare function packageLoaderIdentities(profileDir: string, packageName: string): LoaderIdentity[];
 export declare function installedLoaderIdentities(profileDir: string, excludePackage?: string): LoaderIdentity[];
-export declare function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry): void;
+export declare function assertLoaderMetadata(profileDir: string, skin: SkinEntry): void;
+export declare function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry, incomingRows?: readonly LoaderIdentity[]): void;
+/** Whether a profile-level row already targets this loader. */
+export declare function hasLoaderOverride(profileDir: string, identity: LoaderIdentity): boolean;
+/**
+ * Toggle a receipt-owned loader without taking over a user-authored row.
+ * The market creates only the minimal `{id, disabled:true}` shape and removes
+ * only that exact shape. Any richer row is treated as user-owned and left
+ * untouched.
+ * @returns true when the market still controls the row and live state may be updated.
+ */
+export declare function setManagedLoaderOverride(profileDir: string, identity: LoaderIdentity, disabled: boolean): boolean;
 export declare function ensureBuildAllowed(profileDir: string, key: string): void;
 export declare function ensurePatchedDependency(profileDir: string, packageName: string, version: string, patchFile: string): void;
 /**

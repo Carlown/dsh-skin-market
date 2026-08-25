@@ -118,7 +118,7 @@ export interface Operation {
   totalBytes?: number
   bytesPerSecond?: number
   failure?: {
-    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'compatibility' | 'conflict' | 'command'
+    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'fetch-404' | 'adding-to-root' | 'not-a-workspace' | 'compatibility' | 'conflict' | 'command'
     message: string
     packageName?: string
     action?: 'retry' | 'approve-build'

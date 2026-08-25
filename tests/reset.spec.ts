@@ -32,9 +32,9 @@ describe('emergency skin reset', () => {
     expect(result.disabledPackages).toEqual(skins.map(skin => skin.package))
     const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; dsh: { profile: { bundles: string[] } } }
     expect(Object.keys(manifest.dependencies)).toEqual(skins.map(skin => skin.package))
-    expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', 'dsh-skin-market', ...skins.map(skin => skin.package)])
+    expect(manifest.dsh.profile.bundles).toEqual(['@deepseek-ai/dsh-base', 'dsh-skin-market'])
     const patch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string; disabled?: boolean }>
-    expect(patch.filter(operation => skins.some(skin => skin.rowId === operation.id))).toEqual(skins.map(skin => ({ id: skin.rowId, disabled: true })))
+    expect(patch.filter(operation => skins.some(skin => skin.rowId === operation.id))).toEqual([])
     expect(readMarketState(dir).activeSkinId).toBeNull()
     expect(readMarketState(dir).pinnedSkinIds).toEqual([])
   })
@@ -63,7 +63,9 @@ describe('emergency skin reset', () => {
     resetManagedSkins(dir, [skin])
 
     const patch = parse(readFileSync(profilePatchFile(dir), 'utf8')) as Array<{ id?: string; disabled?: boolean }>
-    expect(patch.some(operation => operation.id === companion.rowId && operation.disabled === true)).toBe(true)
+    expect(patch.some(operation => operation.id === companion.rowId)).toBe(false)
+    const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as { dsh?: { profile?: { bundles?: string[] } } }
+    expect(manifest.dsh?.profile?.bundles ?? []).not.toContain(companion.package)
     expect(readMarketState(dir).managedCompanions).toEqual({ [companion.package]: { ownerSkinIds: [skin.id], installedByMarket: true } })
   })
 

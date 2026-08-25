@@ -11466,7 +11466,7 @@
       "repo": "https://github.com/rison114514/dsh-endfield-ui",
       "subpath": "endfield-ui-plugin",
       "package": "@rison/dsh-endfield-ui",
-      "rowId": "better-sidebar",
+      "rowId": "endfield-ui",
       "category": "theme",
       "tags": [
         "endfield",

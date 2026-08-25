@@ -4,7 +4,10 @@ import { homedir } from 'node:os'
 import { dirname, join, resolve, sep } from 'node:path'
 import { parse, stringify } from 'yaml'
 import { effectiveBuildApprovalKey } from './build-approval.ts'
-import type { InstallConflict, InstalledClientPlugin, ManagedCompanionState, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
+import { parseInsertedLoaderRows, primaryLoaderCandidates, sharedLoaderIdentifiers, type LoaderIdentity } from './loader-ownership.ts'
+import type { InstallConflict, InstalledClientPlugin, ManagedCompanionState, ManagedLoaderState, PersistedMarketState, SkinActivity, SkinEntry, SkinRuntimeState } from './types.ts'
+
+export type { LoaderIdentity } from './loader-ownership.ts'
 
 export function resolveProfileDir(profile: string, explicit?: string): string {
   if (explicit !== undefined) return explicit
@@ -44,6 +47,11 @@ export function readMarketState(profileDir: string): PersistedMarketState {
     if (normalized === undefined) delete value.managedCompanions
     else value.managedCompanions = normalized
   }
+  if (value.managedLoaders !== undefined) {
+    const normalized = normalizeManagedLoaders(value.managedLoaders)
+    if (normalized === undefined) delete value.managedLoaders
+    else value.managedLoaders = normalized
+  }
   return value
 }
 
@@ -59,6 +67,23 @@ function normalizeManagedCompanions(value: unknown): Record<string, ManagedCompa
       // Missing provenance never grants delete rights. This keeps older or
       // partially written state conservative during migration.
       installedByMarket: typeof entry.installedByMarket === 'boolean' ? entry.installedByMarket : false,
+    }
+  }
+  return Object.keys(normalized).length > 0 ? normalized : undefined
+}
+
+function normalizeManagedLoaders(value: unknown): Record<string, ManagedLoaderState> | undefined {
+  if (!isRecord(value)) return undefined
+  const normalized: Record<string, ManagedLoaderState> = {}
+  for (const entry of Object.values(value)) {
+    if (!isRecord(entry) || typeof entry.id !== 'string' || entry.id.length === 0 || !Array.isArray(entry.ownerSkinIds)) continue
+    const ownerSkinIds = [...new Set(entry.ownerSkinIds.filter((id): id is string => typeof id === 'string' && id.length > 0))]
+    if (ownerSkinIds.length === 0) continue
+    normalized[entry.id] = {
+      id: entry.id,
+      ...(typeof entry.name === 'string' && entry.name.length > 0 ? { name: entry.name } : {}),
+      ...(typeof entry.packageName === 'string' && entry.packageName.length > 0 ? { packageName: entry.packageName } : {}),
+      ownerSkinIds,
     }
   }
   return Object.keys(normalized).length > 0 ? normalized : undefined
@@ -227,16 +252,23 @@ export { effectiveBuildApprovalKey }
 interface PatchOperation { insert?: unknown[]; [key: string]: unknown }
 interface PatchRow { id?: unknown; name?: unknown; disabled?: unknown; [key: string]: unknown }
 
-export interface LoaderIdentity {
-  id?: string
-  name?: string
-  packageName?: string
+export interface PackageLoaderOwnership {
+  packageName: string
+  hasBundle: boolean
+  rows: LoaderIdentity[]
 }
 
 export class InstallConflictError extends Error {
   constructor(readonly conflicts: InstallConflict[]) {
-    super(`发现插件安装冲突：${conflicts.map(conflict => `${conflict.kind} ${conflict.incoming} 与 ${conflict.existing} 冲突`).join('；')}`)
+    super(`发现插件安装冲突：${conflicts.map(conflict => `${conflict.kind} ${conflict.incoming} 与 ${conflict.existing} 冲突（loader: ${conflict.identifiers.join('、')}）`).join('；')}`)
     this.name = 'InstallConflictError'
+  }
+}
+
+export class LoaderMetadataError extends Error {
+  constructor(message: string) {
+    super(`市场目录元数据与包实际声明不一致：${message}`)
+    this.name = 'LoaderMetadataError'
   }
 }
 
@@ -256,52 +288,103 @@ function writePatchOperations(profileDir: string, operations: PatchOperation[]):
   atomicWriteText(profilePatchFile(profileDir), stringify(operations, { lineWidth: 0 }))
 }
 
-function collectLoaderIdentities(value: unknown, rows: LoaderIdentity[] = [], packageName?: string): LoaderIdentity[] {
-  if (!isRecord(value)) return rows
-  const record = value as PatchRow
-  const id = typeof record.id === 'string' ? record.id : undefined
-  const name = typeof record.name === 'string' ? record.name : undefined
-  if (id !== undefined || name !== undefined) rows.push({ id, name, packageName: packageName ?? name })
-  if (Array.isArray(record.insert)) {
-    for (const child of record.insert) collectLoaderIdentities(child, rows, packageName ?? name)
+function packageManifestAt(packageDirectory: string): Record<string, unknown> | null {
+  return readJson<Record<string, unknown> | null>(join(packageDirectory, 'package.json'), null)
+}
+
+function packageDependencyNames(manifest: Record<string, unknown>): string[] {
+  const names = new Set<string>()
+  for (const field of ['dependencies', 'optionalDependencies', 'peerDependencies']) {
+    const dependencies = manifest[field]
+    if (!isRecord(dependencies)) continue
+    for (const name of Object.keys(dependencies)) names.add(name)
   }
-  return rows
+  return [...names]
+}
+
+function packageDirectoryFor(profileDir: string, parentDirectory: string, packageName: string): string {
+  const nested = join(parentDirectory, 'node_modules', ...packageName.split('/'))
+  return existsSync(join(nested, 'package.json')) ? nested : packageDir(profileDir, packageName)
+}
+
+export function packageLoaderOwnershipAt(packageDirectory: string, packageName: string): PackageLoaderOwnership {
+  const bundle = bundlePatchOperationsAt(packageDirectory, packageName)
+  return {
+    packageName,
+    hasBundle: bundle !== null,
+    rows: bundle === null ? [] : bundle.flatMap(operation => parseInsertedLoaderRows(operation, packageName)),
+  }
 }
 
 export function packageLoaderIdentities(profileDir: string, packageName: string): LoaderIdentity[] {
-  const bundle = bundlePatchOperations(profileDir, packageName)
-  return bundle === null ? [] : bundle.flatMap(operation => collectLoaderIdentities(operation, [], packageName))
+  return packageLoaderOwnershipAt(packageDir(profileDir, packageName), packageName).rows
+}
+
+function collectInstalledPackageLoaderIdentities(profileDir: string, packageName: string, seen: Set<string>, rows: LoaderIdentity[], parentDirectory?: string): void {
+  if (seen.has(packageName)) return
+  seen.add(packageName)
+  const directory = parentDirectory === undefined ? packageDir(profileDir, packageName) : packageDirectoryFor(profileDir, parentDirectory, packageName)
+  const manifest = packageManifestAt(directory)
+  if (manifest === null) return
+  rows.push(...packageLoaderOwnershipAt(directory, packageName).rows)
+  for (const dependency of packageDependencyNames(manifest)) {
+    collectInstalledPackageLoaderIdentities(profileDir, dependency, seen, rows, directory)
+  }
 }
 
 export function installedLoaderIdentities(profileDir: string, excludePackage?: string): LoaderIdentity[] {
-  const rows = patchOperations(profileDir).flatMap(operation => collectLoaderIdentities(operation))
+  const rows = patchOperations(profileDir).flatMap(operation => parseInsertedLoaderRows(operation))
+  const seen = new Set<string>()
   for (const packageName of Object.keys(readDependencies(profileDir))) {
     if (packageName === excludePackage) continue
-    rows.push(...packageLoaderIdentities(profileDir, packageName))
+    collectInstalledPackageLoaderIdentities(profileDir, packageName, seen, rows)
   }
   return rows
 }
 
-function identityValues(identity: LoaderIdentity): string[] {
-  return [identity.id, identity.name].filter((value): value is string => value !== undefined && value !== '')
+function packageLoaderMetadata(profileDir: string, skin: SkinEntry): PackageLoaderOwnership {
+  return packageLoaderOwnershipAt(packageDir(profileDir, skin.package), skin.package)
 }
 
-export function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry): void {
-  const incoming = packageLoaderIdentities(profileDir, skin.package)
-  incoming.push({ id: skin.rowId, name: skin.package, packageName: skin.package })
-  const existing = installedLoaderIdentities(profileDir, skin.package).filter(identity =>
-    !(identity.id === skin.rowId && (identity.packageName === undefined || identity.packageName === skin.package)),
-  )
+export function assertLoaderMetadata(profileDir: string, skin: SkinEntry): void {
+  const ownership = packageLoaderMetadata(profileDir, skin)
+  if (!ownership.hasBundle) return
+  const candidates = primaryLoaderCandidates(ownership.rows, skin.package)
+  if (candidates.length === 0) {
+    throw new LoaderMetadataError(`${skin.package} 的 bundle patch 没有 name=${skin.package} 的主 loader；目录 rowId=${skin.rowId}`)
+  }
+  if (candidates.length > 1) {
+    throw new LoaderMetadataError(`${skin.package} 的 bundle patch 声明了多个主 loader：${candidates.map(row => row.id ?? '(缺少 id)').join('、')}`)
+  }
+  const actualId = candidates[0].id
+  if (actualId === undefined) {
+    throw new LoaderMetadataError(`${skin.package} 的主 loader 缺少 id；目录 rowId=${skin.rowId}`)
+  }
+  if (actualId !== skin.rowId) {
+    throw new LoaderMetadataError(`${skin.package} 的目录 rowId=${skin.rowId}，实际主 loader id=${actualId}`)
+  }
+}
+
+export function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry, incomingRows?: readonly LoaderIdentity[]): void {
+  assertLoaderMetadata(profileDir, skin)
+  const ownership = packageLoaderMetadata(profileDir, skin)
+  const incoming = incomingRows === undefined ? packageLoaderIdentities(profileDir, skin.package) : [...incomingRows]
+  if (incoming.length === 0 && !ownership.hasBundle) {
+    incoming.push({ id: skin.rowId, name: skin.package, packageName: skin.package })
+  }
+  const existing = installedLoaderIdentities(profileDir, skin.package)
   const conflicts: InstallConflict[] = []
   for (const incomingRow of incoming) {
     for (const existingRow of existing) {
-      const identifiers = identityValues(incomingRow).filter(value => identityValues(existingRow).includes(value))
+      const identifiers = sharedLoaderIdentifiers(incomingRow, existingRow)
       if (identifiers.length === 0) continue
+      if (incomingRow.packageName !== undefined && incomingRow.packageName === existingRow.packageName) continue
+      if (existingRow.packageName === undefined && incomingRow.packageName === skin.package && existingRow.id === skin.rowId) continue
       conflicts.push({
-        kind: incomingRow.name === skin.package && existingRow.name !== skin.package ? 'package' : 'loader',
-        incoming: incomingRow.packageName ?? skin.package,
+        kind: 'loader',
+        incoming: incomingRow.packageName ?? incomingRow.name ?? skin.package,
         existing: existingRow.packageName ?? existingRow.name ?? existingRow.id ?? 'unknown loader',
-        identifiers: [...new Set(identifiers)],
+        identifiers,
       })
     }
   }
@@ -309,18 +392,22 @@ export function assertNoLoaderConflicts(profileDir: string, skin: SkinEntry): vo
   if (unique.length > 0) throw new InstallConflictError(unique)
 }
 
-function bundlePatchOperations(profileDir: string, packageName: string): PatchOperation[] | null {
-  const manifest = packageManifest(profileDir, packageName)
+function bundlePatchOperationsAt(packageDirectory: string, packageName: string): PatchOperation[] | null {
+  const manifest = packageManifestAt(packageDirectory)
   const dsh = isRecord(manifest?.dsh) ? manifest.dsh : undefined
   if (dsh?.bundle === undefined) return null
   if (!isRecord(dsh.bundle) || typeof dsh.bundle.patch !== 'string') {
     throw new Error(`${packageName} declares dsh.bundle without a valid patch path`)
   }
-  const file = resolve(packageDir(profileDir, packageName), dsh.bundle.patch)
+  const file = resolve(packageDirectory, dsh.bundle.patch)
   if (!existsSync(file)) throw new Error(`${packageName} bundle patch is missing: ${dsh.bundle.patch}`)
   const value = parse(readFileSync(file, 'utf8')) as unknown
   if (!Array.isArray(value)) throw new Error(`${packageName} cordis.patch.yml must contain a YAML sequence`)
   return value as PatchOperation[]
+}
+
+function bundlePatchOperations(profileDir: string, packageName: string): PatchOperation[] | null {
+  return bundlePatchOperationsAt(packageDir(profileDir, packageName), packageName)
 }
 
 function registrationMatches(row: PatchRow, skin: SkinEntry): boolean {
@@ -420,6 +507,41 @@ function ensureProfileOverride(operations: PatchOperation[], skin: SkinEntry, di
   })
   operations.splice(0, operations.length, ...next)
   if (!found && disabled) operations.push({ id: skin.rowId, disabled: true })
+}
+
+/** Whether a profile-level row already targets this loader. */
+export function hasLoaderOverride(profileDir: string, identity: LoaderIdentity): boolean {
+  if (identity.id === undefined) return false
+  return patchOperations(profileDir).some(operation =>
+    isRecord(operation) && operation.id === identity.id && !Array.isArray(operation.insert),
+  )
+}
+
+/**
+ * Toggle a receipt-owned loader without taking over a user-authored row.
+ * The market creates only the minimal `{id, disabled:true}` shape and removes
+ * only that exact shape. Any richer row is treated as user-owned and left
+ * untouched.
+ * @returns true when the market still controls the row and live state may be updated.
+ */
+export function setManagedLoaderOverride(profileDir: string, identity: LoaderIdentity, disabled: boolean): boolean {
+  if (identity.id === undefined) return false
+  const operations = patchOperations(profileDir)
+  const matching = operations.filter(operation => isRecord(operation) && operation.id === identity.id && !Array.isArray(operation.insert))
+  if (matching.length > 1) return false
+  const existing = matching[0]
+  if (existing !== undefined) {
+    const keys = Object.keys(existing).sort()
+    const marketOwned = keys.length === 2 && keys[0] === 'disabled' && keys[1] === 'id' && existing.disabled === true
+    if (!marketOwned) return false
+    if (disabled) return true
+    writePatchOperations(profileDir, operations.filter(operation => operation !== existing))
+    return true
+  }
+  if (!disabled) return true
+  const next = [...operations, { id: identity.id, disabled: true }]
+  writePatchOperations(profileDir, next)
+  return true
 }
 
 function ensureProfileBundle(profileDir: string, packageName: string): void {
@@ -566,11 +688,23 @@ export function ensureSkinRegistration(profileDir: string, skin: SkinEntry, disa
   const bundle = bundlePatchOperations(profileDir, skin.package)
   const operations = patchOperations(profileDir)
   const selfDeclared = bundle !== null && bundle.some(operation => declaredBundleRows(operation, skin).length > 0)
-  if (selfDeclared) {
-    // The bundle owns the loader row. The profile layer only overrides it.
+  if (bundle !== null && disabled) {
+    // Disabling only the skin's primary row leaves every other insert/config
+    // operation in its bundle patch active. Remove the entire bundle from the
+    // composition stack instead, and remove now-orphaned primary rows. The
+    // dependency remains installed and enabling adds the bundle back.
     removeProfileInsertedRows(operations, skin)
     removeEmptyInsertOperations(operations)
-    ensureProfileOverride(operations, skin, disabled)
+    removeProfileOverrides(operations, skin)
+    writePatchOperations(profileDir, operations)
+    removeProfileBundles(profileDir, [skin.package])
+    return
+  }
+  if (selfDeclared) {
+    // The enabled bundle owns the loader row; no profile override is needed.
+    removeProfileInsertedRows(operations, skin)
+    removeEmptyInsertOperations(operations)
+    ensureProfileOverride(operations, skin, false)
   } else {
     // Client-only plugins, and bundles that do not declare this row, need a
     // profile-level insert. Remove stale overrides from older market versions.

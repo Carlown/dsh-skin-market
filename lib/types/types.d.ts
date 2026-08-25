@@ -164,7 +164,7 @@ export type OperationKind = 'install' | 'activate' | 'deactivate' | 'pin' | 'unp
 export type OperationPhase = 'queued' | 'resolving' | 'downloading' | 'installing' | 'validating' | 'activating' | 'cancelling' | 'cancelled' | 'done' | 'failed';
 export type OperationRetryAction = 'retry' | 'approve-build';
 export interface OperationFailure {
-    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'compatibility' | 'conflict' | 'command';
+    kind: 'release-age' | 'network' | 'fetch-timeout' | 'build-approval' | 'fetch-404' | 'adding-to-root' | 'not-a-workspace' | 'compatibility' | 'conflict' | 'command';
     message: string;
     packageName?: string;
     action?: OperationRetryAction;
@@ -192,11 +192,19 @@ export interface PersistedMarketState {
     activity?: Record<string, SkinActivity>;
     /** Companion packages linked to installed owner skins. */
     managedCompanions?: Record<string, ManagedCompanionState>;
+    /** Non-primary loader rows introduced by a market install. */
+    managedLoaders?: Record<string, ManagedLoaderState>;
 }
 export interface ManagedCompanionState {
     ownerSkinIds: string[];
     /** Only packages installed by the market may be removed with their last owner. */
     installedByMarket: boolean;
+}
+export interface ManagedLoaderState {
+    id: string;
+    name?: string;
+    packageName?: string;
+    ownerSkinIds: string[];
 }
 export interface SkinActivity {
     installedAt?: string;

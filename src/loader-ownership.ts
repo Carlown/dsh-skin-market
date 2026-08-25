@@ -1,0 +1,58 @@
+export interface LoaderIdentity {
+  id?: string
+  name?: string
+  packageName?: string
+}
+
+interface PatchRecord {
+  id?: unknown
+  name?: unknown
+  insert?: unknown
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function identityFromRecord(value: Record<string, unknown>, packageName?: string): LoaderIdentity | null {
+  const id = typeof value.id === 'string' && value.id.length > 0 ? value.id : undefined
+  const name = typeof value.name === 'string' && value.name.length > 0 ? value.name : undefined
+  if (id === undefined && name === undefined) return null
+  return { id, name, packageName: packageName ?? name }
+}
+
+/**
+ * Return only loader rows introduced by `insert` operations.
+ * Top-level patch operations can be overrides or other Cordis instructions;
+ * treating their id as package ownership is the source of the old false
+ * conflict reports.
+ */
+export function parseInsertedLoaderRows(value: unknown, packageName?: string, rows: LoaderIdentity[] = []): LoaderIdentity[] {
+  if (Array.isArray(value)) {
+    for (const child of value) parseInsertedLoaderRows(child, packageName, rows)
+    return rows
+  }
+  if (!isRecord(value)) return rows
+  const record = value as PatchRecord
+  if (!Array.isArray(record.insert)) return rows
+  for (const child of record.insert) {
+    if (!isRecord(child)) continue
+    const identity = identityFromRecord(child, packageName)
+    if (identity !== null) rows.push(identity)
+    parseInsertedLoaderRows(child, packageName, rows)
+  }
+  return rows
+}
+
+export function loaderIdentifiers(identity: LoaderIdentity): string[] {
+  return [identity.id, identity.name].filter((value): value is string => value !== undefined && value !== '')
+}
+
+export function sharedLoaderIdentifiers(left: LoaderIdentity, right: LoaderIdentity): string[] {
+  const rightValues = new Set(loaderIdentifiers(right))
+  return [...new Set(loaderIdentifiers(left).filter(value => rightValues.has(value)))]
+}
+
+export function primaryLoaderCandidates(rows: readonly LoaderIdentity[], packageName: string): LoaderIdentity[] {
+  return rows.filter(row => row.name === packageName)
+}
