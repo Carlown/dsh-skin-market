@@ -17,9 +17,9 @@ tags:
 modes:
   - light
 install:
-  target: github:Carlown/majia7-dsh-skin#af1e224fee1bb7383245702a65b1bee18778f175
+  target: github:Carlown/majia7-dsh-skin#cee84e41791c629cec7c3274c3c7996078cce80a
   version: 0.3.2
-  commit: af1e224fee1bb7383245702a65b1bee18778f175
+  commit: cee84e41791c629cec7c3274c3c7996078cce80a
   desktop:
     mode: manual-only
     reason: npm-package-not-found
@@ -28,10 +28,10 @@ compatibility:
   platform:
     - web
 screenshots:
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-off.jpeg
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-low.jpeg
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-high.jpeg
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-max.jpeg
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-off.jpeg
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-low.jpeg
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-high.jpeg
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-max.jpeg
 review:
   compatibility: verified
   preview: verified
@@ -46,9 +46,9 @@ health:
     topic: pass
   suggestions: []
 license:
-  code: NOASSERTION
-  commercialUse: false
-  notice: 仓库当前未声明许可证；四张档位图与文档截图为作者自有素材。安装和再分发前请向作者确认授权。
+  code: MIT
+  commercialUse: true
+  notice: MIT。四张档位图与文档截图为作者自有素材，随 MIT 许可证一并发布。
 featuredRank: 0
 starsSnapshot: 0
 releaseUpdatedAt: 2026-08-26T11:54:32.000Z
