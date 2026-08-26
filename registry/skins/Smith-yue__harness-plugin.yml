@@ -1,0 +1,67 @@
+id: smith-yue.harness-plugin
+name:
+  zh: harness-plugin
+  en: harness-plugin
+author: Smith-yue
+description: 为 DeepSeek Harness Web 与桌面端提供两套可切换主题、内置及本地文件夹背景轮播和逐会话 Token 用量明细。
+repo: https://github.com/Smith-yue/harness-plugin
+package: dsh-skin-token-dashboard
+rowId: skin-token-dashboard
+category: theme
+tags:
+  - theme
+modes:
+  - dark
+install:
+  target: github:Smith-yue/harness-plugin#86c26ca4a4382a08243873f576e50e1b8ef01a2b
+  version: 0.1.0
+  commit: 86c26ca4a4382a08243873f576e50e1b8ef01a2b
+  desktop:
+    mode: manual-only
+    reason: npm-lifecycle-scripts:prepare
+  allowBuild: dsh-skin-token-dashboard@https://codeload.github.com/Smith-yue/harness-plugin/tar.gz/86c26ca4a4382a08243873f576e50e1b8ef01a2b
+compatibility:
+  dsh: ^0.1.0-rc.8
+  platform:
+    - web
+marketScreenshots:
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Smith-yue__harness-plugin/86c26ca4a4382a08243873f576e50e1b8ef01a2b/home.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Smith-yue__harness-plugin/86c26ca4a4382a08243873f576e50e1b8ef01a2b/conversation.png
+  - https://kingofsoysauce.github.io/dsh-skin-market/skin-screenshots/Smith-yue__harness-plugin/86c26ca4a4382a08243873f576e50e1b8ef01a2b/settings.png
+screenshots: []
+review:
+  compatibility: verified
+  preview: verified
+  installation: manual-only
+health:
+  status: improvements
+  checks:
+    readmeScreenshots: improve
+    compatibility: pass
+    installation: improve
+    installCommand: pass
+    topic: pass
+  suggestions:
+    - 建议在 README 中加入至少一张仓库内的真实界面截图，并让图片路径随仓库一起版本化，方便用户预览和市场稳定展示。
+    - 建议补全稳定的 package 名称、dsh.client Web 声明、row ID 和已构建客户端入口，以符合 dsh 插件要求并获得更顺畅的一键安装体验。
+    - 固定版本静态扫描无法完成，市场暂不提供该版本的一键安装。
+  scan:
+    commit: 86c26ca4a4382a08243873f576e50e1b8ef01a2b
+    packageVersion: 0.1.0
+    scannerVersion: static-v2
+    dshVersion: ^0.1.0-rc.8
+    mode: static
+    result: unknown
+    checkedAt: 2026-08-26T03:56:06.572Z
+    findings:
+      - code: client-source-unavailable
+        message: 无法读取固定版本的 client 入口，静态扫描结果未知。
+license:
+  code: MIT
+  commercialUse: true
+featuredRank: 1000
+starsSnapshot: 1
+releaseUpdatedAt: 2026-08-26T04:29:23.153Z
+metadataUpdatedAt: 2026-08-26T04:29:23.153Z
+starsUpdatedAt: 2026-08-26T04:26:57.966Z
+updatedAt: 2026-08-26T04:29:23.153Z
