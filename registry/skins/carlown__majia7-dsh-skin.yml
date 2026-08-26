@@ -18,7 +18,7 @@ modes:
   - light
 install:
   target: github:Carlown/majia7-dsh-skin#cee84e41791c629cec7c3274c3c7996078cce80a
-  version: 0.3.2
+  version: 0.3.3
   commit: cee84e41791c629cec7c3274c3c7996078cce80a
   desktop:
     mode: manual-only
