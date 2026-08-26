@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-25T07:15:14.817Z",
+  "generatedAt": "2026-08-26T01:55:21.177Z",
   "skins": [
     {
       "id": "univerfv.dsh-furina-theme",
@@ -11489,7 +11489,7 @@
       "repo": "https://github.com/rison114514/dsh-endfield-ui",
       "subpath": "endfield-ui-plugin",
       "package": "@rison/dsh-endfield-ui",
-      "rowId": "better-sidebar",
+      "rowId": "endfield-ui",
       "category": "theme",
       "tags": [
         "endfield",
