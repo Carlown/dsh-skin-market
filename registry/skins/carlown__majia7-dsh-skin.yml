@@ -17,9 +17,9 @@ tags:
 modes:
   - light
 install:
-  target: github:Carlown/majia7-dsh-skin#8d81fcecdac2ed013053927f719f23a42cdf49fd
+  target: github:Carlown/majia7-dsh-skin#af1e224fee1bb7383245702a65b1bee18778f175
   version: 0.3.2
-  commit: 8d81fcecdac2ed013053927f719f23a42cdf49fd
+  commit: af1e224fee1bb7383245702a65b1bee18778f175
   desktop:
     mode: manual-only
     reason: npm-package-not-found
@@ -28,10 +28,10 @@ compatibility:
   platform:
     - web
 screenshots:
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/8d81fcecdac2ed013053927f719f23a42cdf49fd/docs/screenshots/px-tier0.png
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/8d81fcecdac2ed013053927f719f23a42cdf49fd/docs/screenshots/px-tier1.png
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/8d81fcecdac2ed013053927f719f23a42cdf49fd/docs/screenshots/px-tier2.png
-  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/8d81fcecdac2ed013053927f719f23a42cdf49fd/docs/screenshots/px-tier3.png
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-off.jpeg
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-low.jpeg
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-high.jpeg
+  - https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/af1e224fee1bb7383245702a65b1bee18778f175/docs/screenshots/screenshot-max.jpeg
 review:
   compatibility: verified
   preview: verified
