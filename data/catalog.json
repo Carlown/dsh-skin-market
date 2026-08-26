@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-26T07:41:42.635Z",
+  "generatedAt": "2026-08-26T14:17:13.822Z",
   "skins": [
     {
       "id": "univerfv.dsh-furina-theme",
@@ -103,6 +103,101 @@
           {
             "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/a5a2ee5b7b407d096a9295f058e0f587.preview.webp",
             "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/a5a2ee5b7b407d096a9295f058e0f587.full.webp"
+          }
+        ]
+      }
+    },
+    {
+      "id": "carlown.majia7-skin",
+      "name": {
+        "zh": "马加七皮肤",
+        "en": "Majia7 Skin"
+      },
+      "author": "Carlown",
+      "description": "四档\"图+配色+人设\"三位一体推理滑块皮肤：off 灰 / low 蓝（原版观感）/ high 亮青 / max 粉",
+      "repo": "https://github.com/Carlown/majia7-dsh-skin",
+      "package": "dsh-client-majia7-skin",
+      "rowId": "majia7-skin",
+      "category": "interactive",
+      "tags": [
+        "four-tier",
+        "pink",
+        "reasoning-slider",
+        "composer",
+        "persona"
+      ],
+      "modes": [
+        "light"
+      ],
+      "install": {
+        "target": "github:Carlown/majia7-dsh-skin#297cdd037e52f5a5c9e4c080a5dc8fd7d42fb730",
+        "version": "0.3.4",
+        "commit": "297cdd037e52f5a5c9e4c080a5dc8fd7d42fb730",
+        "desktop": {
+          "mode": "manual-only",
+          "reason": "npm-package-not-found"
+        }
+      },
+      "compatibility": {
+        "dsh": "0.1.1-rc.2",
+        "platform": [
+          "web"
+        ]
+      },
+      "screenshots": [
+        "https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-off.jpeg",
+        "https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-low.jpeg",
+        "https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-high.jpeg",
+        "https://raw.githubusercontent.com/Carlown/majia7-dsh-skin/cee84e41791c629cec7c3274c3c7996078cce80a/docs/screenshots/screenshot-max.jpeg"
+      ],
+      "review": {
+        "compatibility": "verified",
+        "preview": "verified",
+        "installation": "verified"
+      },
+      "health": {
+        "status": "healthy",
+        "checks": {
+          "readmeScreenshots": "pass",
+          "compatibility": "pass",
+          "installation": "pass",
+          "installCommand": "pass",
+          "topic": "pass"
+        },
+        "suggestions": []
+      },
+      "license": {
+        "code": "MIT",
+        "commercialUse": true,
+        "notice": "MIT。四张档位图与文档截图为作者自有素材，随 MIT 许可证一并发布。"
+      },
+      "featuredRank": 0,
+      "starsSnapshot": 0,
+      "releaseUpdatedAt": "2026-08-26T11:54:32.000Z",
+      "metadataUpdatedAt": "2026-08-26T11:54:32.000Z",
+      "starsUpdatedAt": "2026-08-26T11:54:32.000Z",
+      "updatedAt": "2026-08-26T11:54:32.000Z",
+      "media": {
+        "list": {
+          "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/5bc6cb484b41a3ea6008f7d7798c5812.preview.webp",
+          "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/5bc6cb484b41a3ea6008f7d7798c5812.full.webp"
+        },
+        "screenshots": [
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/5bc6cb484b41a3ea6008f7d7798c5812.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/5bc6cb484b41a3ea6008f7d7798c5812.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/0897fff6cee31050fb2a5ed52c7b7907.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/0897fff6cee31050fb2a5ed52c7b7907.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/642887c26a5ec14a4b415711860fa6a5.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/642887c26a5ec14a4b415711860fa6a5.full.webp"
+          },
+          {
+            "preview": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/a3aa1c872c4626677c292e2c521378a4.preview.webp",
+            "full": "https://kingofsoysauce.github.io/dsh-skin-market/skin-media/v1/a3aa1c872c4626677c292e2c521378a4.full.webp"
           }
         ]
       }
