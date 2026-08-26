@@ -6,7 +6,7 @@ author: ReLuckyLucy
 description: English | 中文
 repo: https://github.com/ReLuckyLucy/dsh_Rhine_Lab_themo
 package: dsh-theme-rhine-lab
-rowId: ui-theme-rhine-lab
+rowId: rhine-lab-theme
 category: theme
 tags:
   - motion
@@ -58,6 +58,6 @@ license:
 featuredRank: 118
 starsSnapshot: 1
 releaseUpdatedAt: 2026-08-23T05:34:40.558Z
-metadataUpdatedAt: 2026-08-23T05:34:40.558Z
+metadataUpdatedAt: 2026-08-26T03:30:18.885Z
 starsUpdatedAt: 2026-08-25T07:12:41.574Z
-updatedAt: 2026-08-25T07:12:41.574Z
+updatedAt: 2026-08-26T03:30:18.885Z

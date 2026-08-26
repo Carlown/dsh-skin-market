@@ -17,9 +17,9 @@ modes:
   - light
   - dark
 install:
-  target: github:lengzhanbao/dsh-taffy-theme#c72629384adb82b4c5e684e6a66dc11bf180f556
+  target: github:lengzhanbao/dsh-taffy-theme#49ac124e7854463d2b418009d528bc0d4c465221
   version: 0.1.2
-  commit: c72629384adb82b4c5e684e6a66dc11bf180f556
+  commit: 49ac124e7854463d2b418009d528bc0d4c465221
   desktop:
     mode: manual-only
     reason: npm-package-not-found
@@ -28,14 +28,14 @@ compatibility:
   platform:
     - web
 screenshots:
+  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/49ac124e7854463d2b418009d528bc0d4c465221/preview/light.webp
+  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/49ac124e7854463d2b418009d528bc0d4c465221/preview/dark.webp
+  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/49ac124e7854463d2b418009d528bc0d4c465221/preview/light-v2.webp
+  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/49ac124e7854463d2b418009d528bc0d4c465221/preview/dark-v2.webp
   - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/c72629384adb82b4c5e684e6a66dc11bf180f556/preview/light.webp
   - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/c72629384adb82b4c5e684e6a66dc11bf180f556/preview/dark.webp
   - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/9236efc3bd279df3d732134e96b48192971bbbf6/preview/light.webp
   - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/9236efc3bd279df3d732134e96b48192971bbbf6/preview/dark.webp
-  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/8a803b0901bf23d8af39f1b363dd232700941d00/preview/light.webp
-  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/8a803b0901bf23d8af39f1b363dd232700941d00/preview/dark.webp
-  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/6e40b87b2f706abad8dcfa1be06aea02e4abdbe3/preview/light.webp
-  - https://raw.githubusercontent.com/lengzhanbao/dsh-taffy-theme/6e40b87b2f706abad8dcfa1be06aea02e4abdbe3/preview/dark.webp
 review:
   compatibility: verified
   preview: verified
@@ -50,20 +50,20 @@ health:
     topic: pass
   suggestions: []
   scan:
-    commit: c72629384adb82b4c5e684e6a66dc11bf180f556
+    commit: 49ac124e7854463d2b418009d528bc0d4c465221
     packageVersion: 0.1.2
     scannerVersion: static-v2
     dshVersion: 0.1.0-rc.6
     mode: static
     result: pass
-    checkedAt: 2026-08-23T15:31:11.494Z
+    checkedAt: 2026-08-26T03:29:43.200Z
     findings: []
 license:
   code: MIT
   commercialUse: true
 featuredRank: 1017
 starsSnapshot: 2
-releaseUpdatedAt: 2026-08-23T15:31:11.566Z
-metadataUpdatedAt: 2026-08-23T15:31:11.566Z
+releaseUpdatedAt: 2026-08-26T03:29:43.313Z
+metadataUpdatedAt: 2026-08-26T03:29:43.313Z
 starsUpdatedAt: 2026-08-25T07:11:11.638Z
-updatedAt: 2026-08-25T07:11:11.638Z
+updatedAt: 2026-08-26T03:29:43.313Z

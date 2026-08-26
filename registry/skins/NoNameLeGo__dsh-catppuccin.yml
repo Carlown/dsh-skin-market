@@ -18,24 +18,24 @@ modes:
   - light
   - dark
 install:
-  target: github:NoNameLeGo/dsh-catppuccin#4c2b1448a9869a7deaf6687027244f8258431bc7
-  version: 0.3.1
-  commit: 4c2b1448a9869a7deaf6687027244f8258431bc7
+  target: github:NoNameLeGo/dsh-catppuccin#bd74dc445210aa01b52cc241ec8e6ef4a71ca1be
+  version: 0.4.0
+  commit: bd74dc445210aa01b52cc241ec8e6ef4a71ca1be
   desktop:
     mode: manual-only
     reason: npm-repository-mismatch
-  allowBuild: "@nonamelego/dsh-catppuccin@https://codeload.github.com/NoNameLeGo/dsh-catppuccin/tar.gz/4c2b1448a9869a7deaf6687027244f8258431bc7"
+  allowBuild: "@nonamelego/dsh-catppuccin@https://codeload.github.com/NoNameLeGo/dsh-catppuccin/tar.gz/bd74dc445210aa01b52cc241ec8e6ef4a71ca1be"
 compatibility:
   dsh: ^0.1.0-rc.6
   platform:
     - web
 screenshots:
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/bd74dc445210aa01b52cc241ec8e6ef4a71ca1be/assets/previews/latte.png
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/bd74dc445210aa01b52cc241ec8e6ef4a71ca1be/assets/previews/frappe.png
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/bd74dc445210aa01b52cc241ec8e6ef4a71ca1be/assets/previews/macchiato.png
+  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/bd74dc445210aa01b52cc241ec8e6ef4a71ca1be/assets/previews/mocha.png
   - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/4c2b1448a9869a7deaf6687027244f8258431bc7/assets/previews/latte.png
   - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/4c2b1448a9869a7deaf6687027244f8258431bc7/assets/previews/frappe.png
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/4c2b1448a9869a7deaf6687027244f8258431bc7/assets/previews/macchiato.png
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/4c2b1448a9869a7deaf6687027244f8258431bc7/assets/previews/mocha.png
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/fc84074e810e4777468c2a95f4665e5b82420c3b/assets/previews/latte.png
-  - https://raw.githubusercontent.com/NoNameLeGo/dsh-catppuccin/fc84074e810e4777468c2a95f4665e5b82420c3b/assets/previews/frappe.png
 review:
   compatibility: verified
   preview: verified
@@ -52,13 +52,13 @@ health:
     - 建议补全稳定的 package 名称、dsh.client Web 声明、row ID 和已构建客户端入口，以符合 dsh 插件要求并获得更顺畅的一键安装体验。
     - 固定版本静态扫描无法完成，市场暂不提供该版本的一键安装。
   scan:
-    commit: 4c2b1448a9869a7deaf6687027244f8258431bc7
-    packageVersion: 0.3.1
+    commit: bd74dc445210aa01b52cc241ec8e6ef4a71ca1be
+    packageVersion: 0.4.0
     scannerVersion: static-v2
     dshVersion: ^0.1.0-rc.6
     mode: static
     result: unknown
-    checkedAt: 2026-08-23T15:26:50.300Z
+    checkedAt: 2026-08-26T03:22:39.204Z
     findings:
       - code: client-source-unavailable
         message: 无法读取固定版本的 client 入口，静态扫描结果未知。
@@ -66,8 +66,8 @@ license:
   code: MIT
   commercialUse: true
 featuredRank: 5
-starsSnapshot: 18
-releaseUpdatedAt: 2026-08-23T15:26:50.391Z
-metadataUpdatedAt: 2026-08-23T15:26:50.391Z
-starsUpdatedAt: 2026-08-23T15:26:50.391Z
-updatedAt: 2026-08-23T15:26:50.391Z
+starsSnapshot: 20
+releaseUpdatedAt: 2026-08-26T03:22:39.335Z
+metadataUpdatedAt: 2026-08-26T03:22:39.335Z
+starsUpdatedAt: 2026-08-26T03:22:39.335Z
+updatedAt: 2026-08-26T03:22:39.335Z
