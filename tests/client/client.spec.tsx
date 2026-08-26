@@ -817,11 +817,13 @@ describe('client market', () => {
   })
 
   it('filters the catalog from the native search input', async () => {
-    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin] } : { skins: [] } })))
+    const descriptionMatch = { ...skin, id: 'description.match', name: { zh: '描述皮肤', en: 'Description Skin' }, description: '终末地风格的深色主题' }
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/catalog') ? { skins: [skin, descriptionMatch] } : { skins: [] } })))
     render(<SkinMarketSection t={key => key} />)
     await screen.findByRole('button', { name: /测试皮肤 界面预览/ })
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'missing' } })
-    expect(screen.getByText('没有匹配的皮肤')).toBeTruthy()
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '终末地' } })
+    expect(screen.getByRole('button', { name: /描述皮肤 界面预览/ })).toBeTruthy()
+    expect(screen.queryByRole('button', { name: /测试皮肤 界面预览/ })).toBeNull()
   })
 
   it('keeps Stars and latest sorting on the discovery feed', async () => {

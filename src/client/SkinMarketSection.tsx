@@ -26,6 +26,7 @@ import { CLI_INSTALL_WARNING, createSkinInstallCommand, createSkinInstallPrompt,
 import { switchClientSkin, type ClientSkinRuntime } from './index.ts'
 import { displayTitle, githubRepoLabel } from '../display-title.ts'
 import { assessCompatibility, type CompatibilityAssessment } from '../compatibility.ts'
+import { matchesCatalogSearch } from '../catalog-search.ts'
 import type { CatalogSkin, DshRuntime, InstalledClientPlugin, MarketHostKind, Operation, RuntimeSkin } from './types.ts'
 
 export interface SkinMarketSectionProps {
@@ -699,8 +700,7 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
     : '该仓库距离市场的一键安装规范还差少量信息；可参考右侧仓库健康建议完善，当前请按维护者说明安装。'
   const autoInstallable = !manualOnly
   const filtered = useMemo(() => skins.filter(skin => {
-    const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
-    if (!haystack.includes(query.trim().toLowerCase())) return false
+    if (!matchesCatalogSearch(skin, query)) return false
     if (filter === 'installed') return runtimeFor(states, skin.id).installation !== 'missing'
     return true
   }).sort((a, b) => filter === 'installed' ? compareInstalledSkinOrder(a, b, states) : compareSkinOrder(a, b, sortBy)), [skins, states, filter, query, sortBy])
@@ -714,10 +714,9 @@ export function SkinMarketSection({ t, clientRuntime, catalogCache = browserCata
   const installedSkins = useMemo(() => skins
     .filter(skin => runtimeFor(states, skin.id).installation !== 'missing')
     .sort((a, b) => compareInstalledSkinOrder(a, b, states)), [skins, states])
-  const discoverySkins = useMemo(() => skins.filter(skin => {
-    const haystack = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
-    return haystack.includes(homeQuery.trim().toLowerCase())
-  }).sort((a, b) => compareSkinOrder(a, b, sortBy)), [homeQuery, skins, sortBy])
+  const discoverySkins = useMemo(() => skins
+    .filter(skin => matchesCatalogSearch(skin, homeQuery))
+    .sort((a, b) => compareSkinOrder(a, b, sortBy)), [homeQuery, skins, sortBy])
   const visibleDiscoverySkins = useMemo(() => discoverySkins.slice(0, homeVisibleCount), [discoverySkins, homeVisibleCount])
   const installedRowSkins = installedSkins.length > installedSlots ? installedSkins.slice(0, Math.max(1, installedSlots - 1)) : installedSkins
   const installedOverflow = installedSkins.length > installedRowSkins.length

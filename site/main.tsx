@@ -10,6 +10,7 @@ import { useLazyMedia } from '../src/media-visibility.ts'
 import type { CatalogMedia } from '../src/types.ts'
 import { CLI_INSTALL_WARNING, MARKET_CLI_COMMAND, MARKET_PROMPT, MARKET_PUBLIC_URL, MARKET_REPOSITORY, skinCommand, skinPrompt } from './prompts.ts'
 import { displayTitle, githubRepoLabel } from '../src/display-title.ts'
+import { matchesCatalogSearch } from '../src/catalog-search.ts'
 import './site.css'
 import '../src/client/media-hover.module.css'
 
@@ -101,10 +102,9 @@ function App({ skins }: { skins: Skin[] }) {
   const selected = skins.find(item => item.id === selectedId) ?? skins[0]
   const selectedScreenshots = selected === undefined ? [] : getCatalogScreenshotUrls(selected)
   const shotCount = selectedScreenshots.length
-  const filtered = useMemo(() => skins.filter(skin => {
-    const text = `${skin.name.zh} ${skin.name.en} ${skin.author} ${skin.tags.join(' ')}`.toLowerCase()
-    return text.includes(query.trim().toLowerCase())
-  }).sort((a, b) => comparePublicCatalogOrder(a, b, sort)), [query, sort])
+  const filtered = useMemo(() => skins
+    .filter(skin => matchesCatalogSearch(skin, query))
+    .sort((a, b) => comparePublicCatalogOrder(a, b, sort)), [query, sort])
   const visibleSkins = filtered.slice(0, visibleCount)
 
   const recommendations = selected === undefined
