@@ -17,9 +17,9 @@ tags:
 modes:
   - light
 install:
-  target: github:Carlown/majia7-dsh-skin#297cdd037e52f5a5c9e4c080a5dc8fd7d42fb730
-  version: 0.3.4
-  commit: 297cdd037e52f5a5c9e4c080a5dc8fd7d42fb730
+  target: github:Carlown/majia7-dsh-skin#4f3829544ecda2732a38c2db420adb26d8a62923
+  version: 0.3.5
+  commit: 4f3829544ecda2732a38c2db420adb26d8a62923
   desktop:
     mode: manual-only
     reason: npm-package-not-found
